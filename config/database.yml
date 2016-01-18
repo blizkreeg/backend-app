@@ -3,6 +3,7 @@ default: &default
   encoding: unicode
   pool: 5
   timeout: 5000
+  template: template0
 
 development:
   <<: *default
@@ -17,7 +18,11 @@ development:
 test:
   <<: *default
   database: ekcoffee_test
+  username: ekcoffee
+  password: <%= ENV['PG_PASS'] %>
 
 production:
   <<: *default
   database: ekcoffee_production
+  username: ekcoffee
+  password: <%= ENV['PG_PASS'] %>
