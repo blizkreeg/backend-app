@@ -12,29 +12,35 @@ produces:
 paths:
   /profiles:
     post:
-      summary: Create a new user profile
+      tags:
+        - Profiles
+      summary: Create Profile/New User Signup
       description: The parameters required to create a new profile should include the full Facebook OAuth response object.
       parameters:
-        - name: profile
+        - name: body
           in: body
-          description: profile object
+          description: Parameters for profile to be created
           required: true
           schema:
             type: object
-            required: ["facebook_auth_hash", "intent", "latitude", "longitude"]
+            required:
+              - facebook_auth_hash
+              - intent
+              - latitude
+              - longitude
             properties:
               intent:
-                description: person's dating intention
+                description: dating intention
                 type: string
                 enum:
                   - Dating
                   - Relationship
               latitude:
-                description: person's latitude as on profile
+                description: latitude as on profile
                 type: number
                 format: double
               longitude:
-                description: person's longitude as on profile
+                description: longitude as on profile
                 type: number
                 format: double
               facebook_auth_hash:
@@ -57,10 +63,41 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
-  /accounts/login:
+  /profiles/:uuid:
+    delete:
+      tags:
+        - Profiles
+      summary: Delete Profile/User Account
+      description: This is effectively a 'delete account' method. The client should log the user out upon successful response.
+      responses:
+        500:
+          description: 'Unexpected Error'
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      tags:
+        - Profiles
+      summary: Get Profile Details
+      responses:
+        500:
+          description: 'Unexpected Error'
+          schema:
+            $ref: '#/definitions/Error'
     post:
+      tags:
+        - Profiles
+      summary: Update Profile
+      responses:
+        500:
+          description: 'Unexpected Error'
+          schema:
+            $ref: '#/definitions/Error'
+  /profiles/sign_in:
+    post:
+      tags:
+        - Profiles
       summary: Login an existing user
-      description: Login an existing user with their FB credentials
+      description: Login existing user with their FB credentials
       parameters:
         - name: facebook_auth_hash
           in: body
@@ -82,6 +119,46 @@ paths:
           description: Unexpected error
           schema:
             $ref: '#/definitions/Error'
+  /profiles/:uuid/photos:
+    post:
+      tags:
+        - Photos
+      summary: Add new photo to profile
+      responses:
+        500:
+          description: 'Unexpected Error'
+          schema:
+            $ref: '#/definitions/Error'
+  /profiles/:uuid/photos/:id:
+    delete:
+      tags:
+        - Photos
+      summary: Delete photo
+      responses:
+        500:
+          description: 'Unexpected Error'
+          schema:
+            $ref: '#/definitions/Error'
+  /profiles/:uuid/photos:
+    get:
+      tags:
+        - Photos
+      summary: Get all profile photos
+      responses:
+        500:
+          description: 'Unexpected Error'
+          schema:
+            $ref: '#/definitions/Error'
+  /profiles/:uuid/photos/:id:
+    get:
+      tags:
+        - Photos
+      summary: Get a specific photo
+      responses:
+        500:
+          description: 'Unexpected Error'
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   Profile:
     type: object
@@ -90,19 +167,19 @@ definitions:
         description: profile UUID
         type: string
       age:
-        description: person's age
+        description: age
         type: integer
         format: int32
         minimum: 21
         maximum: 99
       gender:
-        description: person's gender
+        description: gender
         type: string
         enum:
           - Male
           - Female
       height:
-        description: person's height
+        description: height
         type: string
         enum:
           - 4'0"
@@ -144,14 +221,14 @@ definitions:
         type: string
         maximum: 50
       highest_degree:
-        description: person's highest degree
+        description: highest degree
         type: string
         enum:
           - Bachelors
           - Masters
           - Doctorate
       faith:
-        description: person's faith/religion/belief
+        description: faith/religion/belief
         type: string
         enum:
           - Agnostic
@@ -165,11 +242,11 @@ definitions:
           - Sikh
           - Spiritual
       last_known_latitude:
-        description: person's current/last known latitude
+        description: current/last known latitude
         type: number
         format: double
       last_known_longitude:
-        description: person's current/last known longitude
+        description: current/last known longitude
         type: number
         format: double
   Error:
