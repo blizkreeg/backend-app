@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-NUM_USERS = 1_000
+NUM_USERS = 100
 BORN_ON_YEARS = (1960..Date.today.year-21).to_a
 BORN_ON_MONTHS = (1..12).to_a
 BORN_ON_MONTH_DAYS = {
