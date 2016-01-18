@@ -1,0 +1,86 @@
+---
+- hosts: all
+  sudo: yes
+
+  vars:
+    postgres_version: 9.4
+    ruby_version: 2.2.3
+    ruby_url: 'ftp://ftp.ruby-lang.org//pub/ruby/2.2/ruby-{{ ruby_version }}.tar.gz'
+
+  # roles:
+  #   - role: znzj.rbenv
+  #     rbenv_root: "/usr/local/rbenv"
+  #     rbenv_ruby_version: 2.2.1
+
+  tasks:
+    - name: Install ruby dependencies
+      apt: name={{ item }} state=installed update_cache=yes
+      with_items:
+        - build-essential
+        - git-core
+        - libcurl4-openssl-dev
+        - libreadline-dev
+        - libssl-dev
+        - libxslt-dev
+        - libxml2-dev
+        - libyaml-dev
+        - libgdbm-dev
+        - libreadline6-dev
+        - libyaml-dev
+        - libsqlite3-dev
+        - sqlite3
+        - libgdbm-dev
+        - libncurses5-dev
+        - libtool
+        - bison
+        - libffi-dev
+        - libdigest-hmac-perl
+        - unzip
+        - zlib1g
+        - zlib1g-dev
+        - libmysqlclient-dev
+        - libpq-dev
+
+    - name: Download ruby
+      get_url: url={{ ruby_url }} dest=/home/vagrant/ruby-{{ ruby_version }}.tar.gz
+
+    - name: Extract ruby
+      command: tar -zxf /home/vagrant/ruby-{{ ruby_version }}.tar.gz creates=/home/vagrant/ruby-{{ ruby_version }}
+
+    - name: Configure ruby
+      command: ./configure --disable-install-doc --disable-install-rdoc chdir=/home/vagrant/ruby-{{ ruby_version }}
+      sudo: yes
+
+    - name: Make ruby
+      command: make chdir=/home/vagrant/ruby-{{ ruby_version }}
+      sudo: yes
+
+    - name: Install ruby
+      command: make install chdir=/home/vagrant/ruby-{{ ruby_version }}
+      sudo: yes
+
+    # - name: Configure gem installs
+    #   command: echo {{item}} >> ~/.gemrc
+    #   with_items:
+    #     - "---"
+    #     - "gem: --no-rdoc --no-ri"
+
+    - name: Install bundler
+      shell: gem install bundler
+      sudo: yes
+
+    - name: Install node
+      apt: name=nodejs update_cache=yes
+      sudo: yes
+
+    - name: Install Postgres dependencies
+      apt: name={{ item }} update_cache=yes
+      with_items:
+        # - postgresql-{{postgres_version}}
+        # - postgresql-contrib-{{postgres_version}}
+        # - postgresql-{{postgres_version}}-plv8
+        - libpq-dev
+
+    # - name: Set PG host
+    #   shell: echo "export PG_HOST=`netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10`" >> ~/.bashrc
+    #   remote_user: vagrant

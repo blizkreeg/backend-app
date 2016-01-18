@@ -1,0 +1,180 @@
+swagger: '2.0'
+info:
+  title: ekCoffee API
+  description: ekCoffee api
+  version: 1.0.0
+host: api.ekcoffee.com
+schemes:
+  - https
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /profiles:
+    post:
+      summary: Create a new user profile
+      description: The parameters required to create a new profile should include the full Facebook OAuth response object.
+      parameters:
+        - name: profile
+          in: body
+          description: profile object
+          required: true
+          schema:
+            type: object
+            required: ["facebook_auth_hash", "intent", "latitude", "longitude"]
+            properties:
+              intent:
+                description: person's dating intention
+                type: string
+                enum:
+                  - Dating
+                  - Relationship
+              latitude:
+                description: person's latitude as on profile
+                type: number
+                format: double
+              longitude:
+                description: person's longitude as on profile
+                type: number
+                format: double
+              facebook_auth_hash:
+                description: full response object from auth provider
+                type: string
+      responses:
+        200:
+          description: newly created profile object
+          schema:
+            $ref: '#/definitions/Profile'
+        400:
+          description: Validation failed. Bad data.
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: Forbidden. Operation not permitted for this profile.
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /accounts/login:
+    post:
+      summary: Login an existing user
+      description: Login an existing user with their FB credentials
+      parameters:
+        - name: facebook_auth_hash
+          in: body
+          description: full auth hash from FB login response
+          required: true
+          schema:
+            type: string
+            description: omniauth hash
+      responses:
+        200:
+          description: user profile
+          schema:
+            $ref: '#/definitions/Profile'
+        404:
+          description: User not found
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Profile:
+    type: object
+    properties:
+      uuid:
+        description: profile UUID
+        type: string
+      age:
+        description: person's age
+        type: integer
+        format: int32
+        minimum: 21
+        maximum: 99
+      gender:
+        description: person's gender
+        type: string
+        enum:
+          - Male
+          - Female
+      height:
+        description: person's height
+        type: string
+        enum:
+          - 4'0"
+          - 4'1"
+          - 4'2"
+          - 4'3"
+          - 4'4"
+          - 4'5"
+          - 4'6"
+          - 4'7"
+          - 4'8"
+          - 4'9"
+          - 4'10"
+          - 4'11"
+          - 5'
+          - 5'1"
+          - 5'2"
+          - 5'3"
+          - 5'4"
+          - 5'5"
+          - 5'6"
+          - 5'7"
+          - 5'8"
+          - 5'9"
+          - 5'10"
+          - 5'11"
+          - 6'
+          - 6'1"
+          - 6'2"
+          - 6'3"
+          - 6'4"
+          - 6'5"
+          - 6'6"
+          - 6'7"
+          - 6'8"
+          - 6'9"
+      profession:
+        description: occupation
+        type: string
+        maximum: 50
+      highest_degree:
+        description: person's highest degree
+        type: string
+        enum:
+          - Bachelors
+          - Masters
+          - Doctorate
+      faith:
+        description: person's faith/religion/belief
+        type: string
+        enum:
+          - Agnostic
+          - Atheist
+          - Baha'i
+          - Buddhist
+          - Jain
+          - Hindu
+          - Muslim
+          - Parsi/Zoroastrian
+          - Sikh
+          - Spiritual
+      last_known_latitude:
+        description: person's current/last known latitude
+        type: number
+        format: double
+      last_known_longitude:
+        description: person's current/last known longitude
+        type: number
+        format: double
+  Error:
+    type: object
+    properties:
+      message:
+        type: string
+        description: error string
