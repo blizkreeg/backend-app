@@ -1,5 +1,6 @@
 module Constants
-  TOKEN_EXPIRATION_TIME_STR = 365.days.from_now.iso8601
+  TOKEN_EXPIRATION_TIME = 365.days.from_now
+  TOKEN_EXPIRATION_TIME_STR = TOKEN_EXPIRATION_TIME.iso8601
 
   MIN_AGE = 21
   FAITHS = %w(

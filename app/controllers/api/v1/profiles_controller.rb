@@ -1,54 +1,59 @@
 class Api::V1::ProfilesController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:create]
-  before_action :authenticate_user!, except: [:create]
+  respond_to :json
 
-  def sign_in
-  end
+  skip_before_action :verify_authenticity_token, only: [:create, :sign_in]
+  before_action :restrict_to_authenticated_clients, except: [:create, :sign_in]
+
+  rescue_from ActiveRecord::RecordNotFound, with: :profile_not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :validation_error
 
   def create
-    # puts params[:profile].inspect
+    # extract the facebook hash from parameters
+    facebook_auth_hash = params[:data][:facebook_auth_hash]
+    params[:data].except!(:facebook_auth_hash)
 
-    properties_hash = Profile.properties_hash_from_fb_auth_hash(params[:profile][:facebook_auth_hash])
-    properties_hash.merge!({
-      intent: params[:profile][:intent],
-      latitude: params[:profile][:latitude],
-      longitude: params[:profile][:longitude]
-    })
+    # create profile
+    @profile = Profile.new(profile_params)
+    derived_properties = Profile.properties_derived_from_facebook(facebook_auth_hash)
+    derived_properties.map { |key, value| @profile.send("#{key}=", derived_properties[key]) }
+    @profile.social_authentications.build(
+      oauth_uid: facebook_auth_hash[:uid],
+      oauth_provider: facebook_auth_hash[:provider],
+      oauth_token: facebook_auth_hash[:credentials][:token],
+      oauth_token_expiration: facebook_auth_hash[:credentials][:expires_at],
+      oauth_hash: facebook_auth_hash
+    )
+    @profile.save!
 
-    puts "\n **** PROPERTIES_HASH #{properties_hash}"
-    @create_params = ActionController::Parameters.new(properties_hash)
+    # set authenticated user
+    set_current_profile(@profile)
 
-    puts "\n***** STRONG ATTRS #{@create_params.inspect}"
-    user = Profile.create!(@create_params)
-    puts "___"
+    render status: 201
+  rescue ActiveRecord::RecordNotUnique
+    respond_with_error('Profile already exists', 400)
+  end
 
-    puts user.inspect
-    if user
-      respond_to do |format|
-        format.json {
-          render json: { auth_token: JsonWebToken.encode(user.auth_token_payload), expires_at: Constants::TOKEN_EXPIRATION_TIME_STR }, status: 200
-        }
-      end
-    else
-      respond_to do |format|
-        format.json {
-          render json: { message: 'Failed to create user' }, status: 400
-        }
-      end
-    end
+  def sign_in
+    facebook_auth_hash = params[:data][:facebook_auth_hash]
+    social_auth = SocialAuthentication.where(oauth_uid: facebook_auth_hash[:uid], oauth_provider: facebook_auth_hash[:provider]).take!
+    @profile = social_auth.profile
 
-  # rescue StandardError
-  #   respond_to do |format|
-  #     format.json {
-  #       render json: { message: 'Failed to create user' }, status: 400
-  #     }
-  #   end
+    # set authenticated user
+    set_current_profile(@profile)
+
+    render status: 200
   end
 
   def show
+    @profile = Profile.find(params[:uuid])
+    render status: 200
   end
 
   def update
+    @profile = Profile.find(params[:uuid])
+    @profile.update!(profile_params)
+    @profile.reload
+    render status: 200
   end
 
   def destroy
@@ -57,6 +62,14 @@ class Api::V1::ProfilesController < ApplicationController
   private
 
   def profile_params
-    @create_params.permit(*Profile::EDITABLE_ATTRIBUTES)
+    params.require(:data).permit(*Profile::EDITABLE_ATTRIBUTES)
+  end
+
+  def profile_not_found
+    respond_with_error('Profile not found', 404)
+  end
+
+  def validation_error
+    respond_with_error(@profile.errors.full_messages.join(', '), 400)
   end
 end

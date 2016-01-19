@@ -7,6 +7,8 @@ class CreatePhotos < ActiveRecord::Migration
       t.timestamps null: false
     end
 
-    add_foreign_key :photos, :profiles, primary_key: 'uuid', column: 'profile_uuid'
+    add_foreign_key :photos, :profiles, primary_key: "uuid", column: "profile_uuid"
+
+    add_index :photos, :profile_uuid
   end
 end

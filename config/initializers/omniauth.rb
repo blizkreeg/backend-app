@@ -1,4 +1,4 @@
-OmniAuth.config.logger = Rails.logger
+OmniAuth.config.logger = EKC.logger
 
 FACEBOOK_APP_ID =
 case Rails.env

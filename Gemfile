@@ -14,6 +14,9 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'default_value_for', '~> 3.0.0'
 gem 'email_validator'
+gem 'responders'
+gem 'oj'
+gem 'oj_mimic_json'
 
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

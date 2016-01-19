@@ -1,14 +1,26 @@
 swagger: '2.0'
 info:
-  title: ekCoffee API
-  description: ekCoffee api
+  title: API
   version: 1.0.0
-host: api.ekcoffee.com
+host: ekcoffee2-3000.terminal.com
 schemes:
   - https
 basePath: /v1
 produces:
   - application/json
+consumes:
+  - application/json
+tags:
+  - name: Profiles
+    description: CRUD operations on a user profile
+  - name: Photos
+    description: CRUD operations on a user's profile photos
+  - name: Matches
+    description: Operations on a user's matches
+  - name: Conversations
+    description: CRUD operations for user conversations
+  - name: Accounts
+    description: Operations for a user's account settings
 paths:
   /profiles:
     post:
@@ -17,7 +29,7 @@ paths:
       summary: Create Profile/New User Signup
       description: The parameters required to create a new profile should include the full Facebook OAuth response object.
       parameters:
-        - name: body
+        - name: data
           in: body
           description: Parameters for profile to be created
           required: true
@@ -29,6 +41,9 @@ paths:
               - latitude
               - longitude
             properties:
+              facebook_auth_hash:
+                description: full response object from auth provider
+                type: string
               intent:
                 description: dating intention
                 type: string
@@ -43,26 +58,43 @@ paths:
                 description: longitude as on profile
                 type: number
                 format: double
-              facebook_auth_hash:
-                description: full response object from auth provider
-                type: string
       responses:
-        200:
+        201:
           description: newly created profile object
           schema:
-            $ref: '#/definitions/Profile'
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Profile'
+              auth:
+                $ref: '#/definitions/AuthToken'
         400:
           description: Validation failed. Bad data.
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
         403:
           description: Forbidden. Operation not permitted for this profile.
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
         500:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
   /profiles/:uuid:
     delete:
       tags:
@@ -73,25 +105,48 @@ paths:
         500:
           description: 'Unexpected Error'
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
     get:
       tags:
         - Profiles
       summary: Get Profile Details
       responses:
+        200:
+          description: profile object
+          schema:
+            $ref: '#/definitions/Profile'
         500:
           description: 'Unexpected Error'
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
     post:
       tags:
         - Profiles
       summary: Update Profile
       responses:
+        200:
+          description: updated profile object
+          schema:
+            $ref: '#/definitions/Profile'
         500:
           description: 'Unexpected Error'
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
   /profiles/sign_in:
     post:
       tags:
@@ -108,17 +163,27 @@ paths:
             description: omniauth hash
       responses:
         200:
-          description: user profile
+          description: logged-in profile object
           schema:
             $ref: '#/definitions/Profile'
         404:
           description: User not found
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
         500:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
   /profiles/:uuid/photos:
     post:
       tags:
@@ -128,8 +193,13 @@ paths:
         500:
           description: 'Unexpected Error'
           schema:
-            $ref: '#/definitions/Error'
-  /profiles/:uuid/photos/:id:
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
+  /profiles/:uuid/photos/:uuid:
     delete:
       tags:
         - Photos
@@ -138,7 +208,12 @@ paths:
         500:
           description: 'Unexpected Error'
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
   /profiles/:uuid/photos:
     get:
       tags:
@@ -148,8 +223,13 @@ paths:
         500:
           description: 'Unexpected Error'
           schema:
-            $ref: '#/definitions/Error'
-  /profiles/:uuid/photos/:id:
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
+  /profiles/:uuid/photos/:uuid:
     get:
       tags:
         - Photos
@@ -158,23 +238,43 @@ paths:
         500:
           description: 'Unexpected Error'
           schema:
-            $ref: '#/definitions/Error'
+            type: object
+            properties:
+              error:
+                $ref: '#/definitions/Error'
+              auth:
+                $ref: '#/definitions/AuthToken'
 definitions:
   Profile:
     type: object
     properties:
       uuid:
-        description: profile UUID
+        description: profile uuid
         type: string
+        readOnly: true
+      email:
+        description: email address
+        type: string
+        readOnly: true
+      firstname:
+        description: first name
+        type: string
+        readOnly: true
+      lastname:
+        description: last name
+        type: string
+        readOnly: true
       age:
         description: age
         type: integer
+        readOnly: true
         format: int32
         minimum: 21
         maximum: 99
       gender:
         description: gender
         type: string
+        readOnly: true
         enum:
           - Male
           - Female
@@ -249,9 +349,23 @@ definitions:
         description: current/last known longitude
         type: number
         format: double
+  AuthToken:
+    type: object
+    properties:
+      auth_token:
+        type: string
+        description: auth token (json web token)
+      expires_at:
+        type: string
+        description: auth token expiration DateTime in iso8601 format
+        format: date-time
   Error:
     type: object
     properties:
       message:
         type: string
         description: error string
+      code:
+        type: integer
+        description: HTTP status code
+        format: int32

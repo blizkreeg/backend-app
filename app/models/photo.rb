@@ -1,5 +1,5 @@
 class Photo < ActiveRecord::Base
-  belongs_to :profile
+  belongs_to :profile, foreign_key: "profile_uuid"
 
   EDITABLE_ATTRIBUTES = %i(
     primary

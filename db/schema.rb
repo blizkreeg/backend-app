@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160114205729) do
+ActiveRecord::Schema.define(version: 20160119001947) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,16 +25,7 @@ ActiveRecord::Schema.define(version: 20160114205729) do
     t.datetime "updated_at",                null: false
   end
 
-  create_table "profile_authentications", force: :cascade do |t|
-    t.string   "uid"
-    t.string   "type"
-    t.string   "token"
-    t.string   "token_expiration"
-    t.jsonb    "auth_hash"
-    t.uuid     "profile_uuid",     null: false
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-  end
+  add_index "photos", ["profile_uuid"], name: "index_photos_on_profile_uuid", using: :btree
 
   create_table "profiles", primary_key: "uuid", force: :cascade do |t|
     t.jsonb    "properties", default: {}, null: false
@@ -45,6 +36,20 @@ ActiveRecord::Schema.define(version: 20160114205729) do
   add_index "profiles", ["created_at"], name: "index_profiles_on_created_at", using: :btree
   add_index "profiles", ["updated_at"], name: "index_profiles_on_updated_at", using: :btree
 
+  create_table "social_authentications", force: :cascade do |t|
+    t.string   "oauth_uid"
+    t.string   "oauth_provider"
+    t.string   "oauth_token"
+    t.string   "oauth_token_expiration"
+    t.jsonb    "oauth_hash"
+    t.uuid     "profile_uuid",           null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  add_index "social_authentications", ["oauth_provider", "oauth_uid"], name: "index_social_authentications_on_oauth_provider_and_oauth_uid", unique: true, using: :btree
+  add_index "social_authentications", ["profile_uuid"], name: "index_social_authentications_on_profile_uuid", using: :btree
+
   add_foreign_key "photos", "profiles", column: "profile_uuid", primary_key: "uuid"
-  add_foreign_key "profile_authentications", "profiles", column: "profile_uuid", primary_key: "uuid"
+  add_foreign_key "social_authentications", "profiles", column: "profile_uuid", primary_key: "uuid"
 end

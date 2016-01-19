@@ -1,4 +1,8 @@
 class Api::V1::PhotosController < ApplicationController
+  respond_to :json
+
+  before_action :restrict_to_authenticated_clients
+
   def create
   end
 

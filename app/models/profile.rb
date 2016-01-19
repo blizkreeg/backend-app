@@ -4,7 +4,8 @@ class Profile < ActiveRecord::Base
   # since we don't have a serial id column
   default_scope { order('created_at ASC') }
 
-  has_many :photos, dependent: :destroy
+  has_many :social_authentications, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
+  has_many :photos, primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
 
   EDITABLE_ATTRIBUTES = %i(
     age
@@ -18,7 +19,7 @@ class Profile < ActiveRecord::Base
     profession
     latitude
     longitude
-    facebook_auth_hash
+    # facebook_auth_hash
     last_known_latitude
     last_known_longitude
     intent
@@ -58,11 +59,11 @@ class Profile < ActiveRecord::Base
 
   # required properties
   validates :email, :born_on_year, :born_on_month, :born_on_day, :gender, :latitude, :longitude, :intent, presence: true
-  validates :email, email: true
+  validates :email, email: true, jsonb_uniqueness: true
   validates :born_on_year, numericality: { only_integer: true, less_than_or_equal_to: Date.today.year-Constants::MIN_AGE }
   validates :born_on_month, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 12 }
   validates :born_on_day, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 31 }
-  validates :gender, inclusion: { in: %w(Male Female) }
+  validates :gender, inclusion: { in: %w(male female) }
   validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
   validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
   validates :intent, inclusion: { in: Constants::INTENTIONS }
@@ -82,7 +83,7 @@ class Profile < ActiveRecord::Base
   end
 
   class << self
-    def properties_hash_from_fb_auth_hash(auth_hash)
+    def properties_derived_from_facebook(auth_hash)
       auth_hash = auth_hash.with_indifferent_access
 
       dob = Date.parse(auth_hash[:extra][:raw_info][:birthday]) rescue nil
@@ -121,7 +122,7 @@ class Profile < ActiveRecord::Base
     timezone = Timezone::Zone.new :latlon => [self.latitude, self.longitude]
     self.time_zone = timezone.zone if ActiveSupport::TimeZone::MAPPING.values.include?(timezone.zone)
   rescue Timezone::Error::NilZone => e
-    Rails.logger.error "No timezone was found for user #{self.uuid}, lat: #{self.latitude}, long: #{self.longitude}"
+    EKC.logger.error "No timezone was found for user #{self.uuid}, lat: #{self.latitude}, long: #{self.longitude}"
     true
   end
 end

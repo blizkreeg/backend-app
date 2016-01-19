@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-NUM_USERS = 100
+NUM_USERS = 10
 BORN_ON_YEARS = (1960..Date.today.year-21).to_a
 BORN_ON_MONTHS = (1..12).to_a
 BORN_ON_MONTH_DAYS = {
@@ -26,25 +26,25 @@ BORN_ON_MONTH_DAYS = {
 
 Faker::Config.locale = 'en-IND'
 
-Profile.create!(email: 'vinthanedar@gmail.com',
-                firstname: 'Vineet',
-                lastname: 'Thanedar',
-                gender: 'Male',
-                born_on_year: 1980,
-                born_on_month: 9,
-                born_on_day: 9,
-                latitude: 18.96670,
-                longitude: 72.83330,
-                intent: Constants::INTENTIONS[rand(2)],
-                height: "5'11\""
-              )
+# Profile.create!(email: 'vinthanedar@gmail.com',
+#                 firstname: 'Vineet',
+#                 lastname: 'Thanedar',
+#                 gender: 'Male',
+#                 born_on_year: 1980,
+#                 born_on_month: 9,
+#                 born_on_day: 9,
+#                 latitude: 18.96670,
+#                 longitude: 72.83330,
+#                 intent: Constants::INTENTIONS[rand(2)],
+#                 height: "5'11\""
+#               )
 
 NUM_USERS.times do |idx|
   Profile.create!(
     email: Forgery(:internet).email_address,
     firstname: Faker::Name.first_name,
     lastname: Faker::Name.last_name,
-    gender: Forgery('personal').gender,
+    gender: Forgery('personal').gender.downcase,
     born_on_year: BORN_ON_YEARS[rand(BORN_ON_YEARS.size)],
     born_on_month: month = BORN_ON_MONTHS[rand(BORN_ON_MONTHS.size)],
     born_on_day: 1 + rand(BORN_ON_MONTH_DAYS[month.to_s]),
