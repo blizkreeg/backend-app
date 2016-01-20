@@ -29,38 +29,43 @@ paths:
       summary: Create Profile/New User Signup
       description: The parameters required to create a new profile should include the full Facebook OAuth response object.
       parameters:
-        - name: data
+        - name: body
           in: body
           description: Parameters for profile to be created
           required: true
           schema:
             type: object
             required:
-              - facebook_auth_hash
-              - intent
-              - latitude
-              - longitude
+              - data
             properties:
-              facebook_auth_hash:
-                description: full response object from auth provider
-                type: string
-              intent:
-                description: dating intention
-                type: string
-                enum:
-                  - Dating
-                  - Relationship
-              latitude:
-                description: latitude as on profile
-                type: number
-                format: double
-              longitude:
-                description: longitude as on profile
-                type: number
-                format: double
+              data:
+                type: object
+                required:
+                  - facebook_auth_hash
+                  - intent
+                  - longitude
+                  - latitude
+                properties:
+                  facebook_auth_hash:
+                    description: full response object from auth provider
+                    type: string
+                  intent:
+                    description: dating intention
+                    type: string
+                    enum:
+                      - Dating
+                      - Relationship
+                  latitude:
+                    description: latitude as on profile
+                    type: number
+                    format: double
+                  longitude:
+                    description: longitude as on profile
+                    type: number
+                    format: double
       responses:
         201:
-          description: newly created profile object
+          description: Profile created
           schema:
             type: object
             properties:
@@ -71,82 +76,115 @@ paths:
         400:
           description: Validation failed. Bad data.
           schema:
-            type: object
-            properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
-        403:
-          description: Forbidden. Operation not permitted for this profile.
-          schema:
-            type: object
-            properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
+            $ref: '#/definitions/400'
         500:
-          description: Unexpected error
+          description: Server error
           schema:
-            type: object
-            properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
+            $ref: '#/definitions/500'
   /profiles/:uuid:
     delete:
       tags:
         - Profiles
       summary: Delete Profile/User Account
-      description: This is effectively a 'delete account' method. The client should log the user out upon successful response.
-      responses:
-        500:
-          description: 'Unexpected Error'
+      description: This is effectively a 'delete account' method. The app should log the user out upon successful response.
+      parameters:
+        - name: body
+          in: body
+          description: delete reason
+          required: true
           schema:
             type: object
+            required:
+              - data
             properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
+              data:
+                type: object
+                properties:
+                  reason:
+                    description: reason to delete their profile
+                    type: string
+      responses:
+        200:
+          description: Deleted profile/account
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
     get:
       tags:
         - Profiles
-      summary: Get Profile Details
+      summary: Get profile details for a user
       responses:
         200:
-          description: profile object
-          schema:
-            $ref: '#/definitions/Profile'
-        500:
-          description: 'Unexpected Error'
+          description: Profile details
           schema:
             type: object
             properties:
-              error:
-                $ref: '#/definitions/Error'
+              data:
+                $ref: '#/definitions/Profile'
               auth:
                 $ref: '#/definitions/AuthToken'
-    post:
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+    patch:
       tags:
         - Profiles
       summary: Update Profile
-      responses:
-        200:
-          description: updated profile object
+      parameters:
+        - name: body
+          in: body
+          description: properties to be updated
+          required: true
           schema:
             $ref: '#/definitions/Profile'
-        500:
-          description: 'Unexpected Error'
+      responses:
+        200:
+          description: Updated profile
           schema:
             type: object
             properties:
-              error:
-                $ref: '#/definitions/Error'
+              data:
+                $ref: '#/definitions/Profile'
               auth:
                 $ref: '#/definitions/AuthToken'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
   /profiles/sign_in:
     post:
       tags:
@@ -163,98 +201,153 @@ paths:
             description: omniauth hash
       responses:
         200:
-          description: logged-in profile object
+          description: Sign in successful
           schema:
-            $ref: '#/definitions/Profile'
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Profile'
+              auth:
+                $ref: '#/definitions/AuthToken'
         404:
-          description: User not found
+          description: Not found
           schema:
-            type: object
-            properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
+            $ref: '#/definitions/404'
         500:
-          description: Unexpected error
+          description: Server error
           schema:
-            type: object
-            properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
+            $ref: '#/definitions/500'
   /profiles/:uuid/photos:
     post:
       tags:
         - Photos
       summary: Add new photo to profile
       responses:
-        500:
-          description: 'Unexpected Error'
+        401:
+          description: Not authenticated
           schema:
-            type: object
-            properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
   /profiles/:uuid/photos/:uuid:
     delete:
       tags:
         - Photos
       summary: Delete photo
       responses:
-        500:
-          description: 'Unexpected Error'
+        401:
+          description: Not authenticated
           schema:
-            type: object
-            properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
   /profiles/:uuid/photos:
     get:
       tags:
         - Photos
       summary: Get all profile photos
       responses:
-        500:
-          description: 'Unexpected Error'
+        401:
+          description: Not authenticated
           schema:
-            type: object
-            properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
+            $ref: '#/definitions/401'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
   /profiles/:uuid/photos/:uuid:
     get:
       tags:
         - Photos
       summary: Get a specific photo
       responses:
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
         500:
-          description: 'Unexpected Error'
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+  /profiles/featured:
+    get:
+      tags:
+        - Profiles
+      summary: Get featured people in a city
+      parameters:
+        - name: latitude
+          in: query
+          description: latitude of the requesting user
+          type: number
+          format: double
+          required: true
+          allowEmptyValue: false
+        - name: longitude
+          in: query
+          description: longitude of the requesting user
+          type: number
+          format: double
+          required: true
+          allowEmptyValue: false
+      responses:
+        200:
+          description: Featured people
           schema:
             type: object
             properties:
-              error:
-                $ref: '#/definitions/Error'
-              auth:
-                $ref: '#/definitions/AuthToken'
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/FeaturedProfile'
+  # /profiles/:uuid/matches:
+  #   get:
+  #     tags:
+  #       - Matches
+  #     summary: Get matches for profile
+  #     responses:
+  #       200:
+  #         description: List of matches
+  #         schema:
+  #           type: object
+  #           properties:
+  #             data:
+  #               type: array
+  #               items:
+  #                 type: object
+  #                 properties:
+  #                   match_data:
+  #                     $ref: '#/definitions/Match'
+  #                   profile:
+  #                     $ref: '#/definitions/Profile'
+  #             auth:
+  #               $ref: '#/definitions/AuthToken'
+
 definitions:
   Profile:
     type: object
+    description: Profile object. The properties `uuid` are read-only.
     properties:
       uuid:
         description: profile uuid
         type: string
+        format: uuid
         readOnly: true
       email:
         description: email address
         type: string
+        format: email
         readOnly: true
       firstname:
         description: first name
@@ -349,6 +442,46 @@ definitions:
         description: current/last known longitude
         type: number
         format: double
+  FeaturedProfile:
+    type: object
+    properties:
+      name:
+        type: string
+        description: name
+      age:
+        type: integer
+        description: age
+      profession:
+        type: string
+        description: profession
+      city_name:
+        type: string
+        description: city name
+  # Match:
+  #   type: object
+  #   description: Match info
+  #   properties:
+  #     id:
+  #       type: integer
+  #       format: int64
+  #     profile_uuid:
+  #       type: string
+  #       description: uuid of the profile this is a match for
+  #       format: uuid
+  #     match_profile_uuid:
+  #       type: string
+  #       description: uuid of the matched profile
+  #       format: uuid
+  #     created_at:
+  #       type: string
+  #       description: match created date+time (iso8601)
+  #       format: date-time
+  #     decision:
+  #       type: string
+  #       description: decision taken
+  #       enum:
+  #         - Pass
+  #         - Like
   AuthToken:
     type: object
     properties:
@@ -369,3 +502,39 @@ definitions:
         type: integer
         description: HTTP status code
         format: int32
+  400:
+    type: object
+    properties:
+      error:
+        $ref: '#/definitions/Error'
+      auth:
+        $ref: '#/definitions/AuthToken'
+  401:
+    type: object
+    properties:
+      error:
+        $ref: '#/definitions/Error'
+      auth:
+        description: value will be null
+        $ref: '#/definitions/AuthToken'
+  403:
+    type: object
+    properties:
+      error:
+        $ref: '#/definitions/Error'
+      auth:
+        $ref: '#/definitions/AuthToken'
+  404:
+    type: object
+    properties:
+      error:
+        $ref: '#/definitions/Error'
+      auth:
+        $ref: '#/definitions/AuthToken'
+  500:
+    type: object
+    properties:
+      error:
+        $ref: '#/definitions/Error'
+      auth:
+        $ref: '#/definitions/AuthToken'
