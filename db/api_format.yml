@@ -87,6 +87,51 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
+    get:
+      tags:
+        - Profiles
+      summary: Get featured people in a city
+      parameters:
+        - name: latitude
+          in: query
+          description: latitude of the requesting user
+          type: number
+          format: double
+          required: true
+          allowEmptyValue: false
+        - name: longitude
+          in: query
+          description: longitude of the requesting user
+          type: number
+          format: double
+          required: true
+          allowEmptyValue: false
+        - name: show
+          in: query
+          description: parameter to filter profiles
+          type: string
+          required: true
+          allowEmptyValue: false
+          enum:
+            - featured
+      responses:
+        200:
+          description: Featured people
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/FeaturedProfile'
+        404:
+          description: No profiles found
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
   /profiles/:uuid:
     delete:
       tags:
@@ -219,52 +264,6 @@ paths:
           description: Not found
           schema:
             $ref: '#/definitions/404'
-        500:
-          description: Server error
-          schema:
-            $ref: '#/definitions/500'
-  /profiles:
-    get:
-      tags:
-        - Profiles
-      summary: Get featured people in a city
-      parameters:
-        - name: latitude
-          in: query
-          description: latitude of the requesting user
-          type: number
-          format: double
-          required: true
-          allowEmptyValue: false
-        - name: longitude
-          in: query
-          description: longitude of the requesting user
-          type: number
-          format: double
-          required: true
-          allowEmptyValue: false
-        - name: show
-          in: query
-          description: parameter to filter profiles
-          type: string
-          required: true
-          allowEmptyValue: false
-          enum:
-            - featured
-      responses:
-        200:
-          description: Featured people
-          schema:
-            type: object
-            properties:
-              data:
-                type: array
-                items:
-                  $ref: '#/definitions/FeaturedProfile'
-        404:
-          description: No profiles found
-          schema:
-            $ref: '#/definitions/403'
         500:
           description: Server error
           schema:
