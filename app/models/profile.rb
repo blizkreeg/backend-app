@@ -5,7 +5,10 @@ class Profile < ActiveRecord::Base
   default_scope { order('created_at ASC') }
 
   has_many :social_authentications, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
-  has_many :photos, primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
+  has_one :facebook_authentication, -> { where(oauth_provider: 'facebook') }, primary_key: "uuid", foreign_key: "profile_uuid"
+  has_many :photos, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
+  # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
+  # set property tracking flags to 'flags'
 
   EDITABLE_ATTRIBUTES = %i(
     age
@@ -19,31 +22,31 @@ class Profile < ActiveRecord::Base
     profession
     latitude
     longitude
-    # facebook_auth_hash
     last_known_latitude
     last_known_longitude
     intent
   )
 
   ATTRIBUTES = {
-    email:          :string,
-    firstname:      :string,
-    lastname:       :string,
-    age:            :integer,
-    gender:         :string,
-    born_on_year:   :integer,
-    born_on_month:  :integer,
-    born_on_day:    :integer,
-    height:         :string,
-    faith:          :string,
-    highest_degree: :string,
-    profession:     :string,
-    time_zone:      :string,
-    latitude:       :decimal,
-    longitude:      :decimal,
-    last_known_latitude: :decimal,
+    email:                :string,
+    firstname:            :string,
+    lastname:             :string,
+    age:                  :integer,
+    gender:               :string,
+    born_on_year:         :integer,
+    born_on_month:        :integer,
+    born_on_day:          :integer,
+    height:               :string,
+    faith:                :string,
+    highest_degree:       :string,
+    profession:           :string,
+    time_zone:            :string,
+    latitude:             :decimal,
+    longitude:            :decimal,
+    last_known_latitude:  :decimal,
     last_known_longitude: :decimal,
-    intent:         :string
+    intent:               :string,
+    incomplete:           :boolean,
   }
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
@@ -100,6 +103,7 @@ class Profile < ActiveRecord::Base
           nil
         end
       earned_degrees = auth_hash[:extra][:raw_info][:education].map{} rescue nil
+      # TBD: schools
       # schools_attended =
 
       {
@@ -113,6 +117,23 @@ class Profile < ActiveRecord::Base
         highest_degree: highest_degree_earned,
         profession: (auth_hash[:extra][:raw_info][:work][0][:position][:name] rescue nil)
       }
+    end
+  end
+
+  def seed_photos_from_facebook(social_authentication)
+    # TBD: code smell
+    facebook_auth = social_authentication.becomes(FacebookAuthentication)
+    primary = true # first photo is primary
+    facebook_auth.get_profile_pictures.each do |photo_hash|
+      self.photos.build(
+        facebook_id: photo_hash["facebook_photo_id"],
+        facebook_url: photo_hash["source"],
+        url: photo_hash["source"],
+        width: photo_hash["width"],
+        height: photo_hash["height"],
+        primary: primary
+      )
+      primary = false
     end
   end
 

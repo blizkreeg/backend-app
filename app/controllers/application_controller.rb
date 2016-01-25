@@ -6,15 +6,15 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_token!
   before_action :set_current_profile
 
+  rescue_from StandardError, with: lambda { |e| Rails.logger.error("#{e.message}\n#{e.backtrace.join('\n')}"); respond_with_error(e.message, 500) } # :internal_server_error
   rescue_from ActionController::ParameterMissing, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
-  rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error('Authentication token has expired', 401) } # :unauthorized
+  rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error(e.message, 401, 'token_expired') } # :unauthorized
   rescue_from ActiveRecord::RecordNotFound, with: lambda { |e| respond_with_error(e.message, 404) } # :not_found
-  rescue_from StandardError, with: lambda { |e| respond_with_error(e.message, 500) } # :internal_server_error
 
   protected
 
   def restrict_to_authenticated_clients
-    respond_with_error('Access Restricted', 401) if @current_profile.blank? # :unauthorized
+    respond_with_error('Access Restricted', 401, 'invalid_token') if @current_profile.blank? # :unauthorized
   end
 
   def auth_response_hash
@@ -23,8 +23,8 @@ class ApplicationController < ActionController::Base
       { auth: {} }
   end
 
-  def respond_with_error(message, http_status_code)
-    response = { error: { message: message, code: http_status_code } }
+  def respond_with_error(message, http_status_code, internal_error_code=nil)
+    response = { error: { message: message, http_status: http_status_code, code: internal_error_code } }
     response.merge!(auth_response_hash)
     render json: response, status: http_status_code
   end
@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
   private
 
   def authenticate_token!
-    raise Errors::AuthTokenTimeoutError, "invalid auth token" if decoded_auth_token.present? && auth_token_expired?
+    raise Errors::AuthTokenTimeoutError, "Authentication token has expired" if decoded_auth_token.present? && auth_token_expired?
   end
 
   def set_current_profile(profile=nil)

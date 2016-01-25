@@ -1,8 +1,9 @@
 class Api::V1::ProfilesController < ApplicationController
   respond_to :json
 
-  skip_before_action :verify_authenticity_token, only: [:create, :sign_in]
+  skip_before_action :verify_authenticity_token, only: [:create, :sign_in, :featured]
   before_action :restrict_to_authenticated_clients, except: [:create, :sign_in]
+  before_action :restrict_to_authenticated_clients, only: [:index], unless: :featured_profiles?
 
   rescue_from ActiveRecord::RecordNotFound, with: :profile_not_found
   rescue_from ActiveRecord::RecordInvalid, with: :validation_error
@@ -23,6 +24,9 @@ class Api::V1::ProfilesController < ApplicationController
       oauth_token_expiration: facebook_auth_hash[:credentials][:expires_at],
       oauth_hash: facebook_auth_hash
     )
+    # load photos from facebook
+    @profile.seed_photos_from_facebook(@profile.social_authentications[0])
+
     @profile.save!
 
     # set authenticated user
@@ -56,7 +60,21 @@ class Api::V1::ProfilesController < ApplicationController
     render status: 200
   end
 
+  # parameters:
+  #   latitude, longitude
+  def index
+    # TBD: raise exception if type != featured and unless both lat/lon are present
+    # TBD: lookup based on lat/lon
+    @profiles = Profile.first(3)
+
+    render status: 200
+  end
+
   def destroy
+  end
+
+  def featured_profiles?
+    params[:show] == 'featured'
   end
 
   private

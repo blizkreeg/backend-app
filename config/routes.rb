@@ -3,15 +3,18 @@ Rails.application.routes.draw do
   # constraints subdomain :api do <-- TODO: UNCOMMENT BEFORE LAUNCH
     scope module: 'api' do
       namespace 'v1' do
-        resources :profiles, param: :uuid do
-          resources :photos
-        end
         post '/profiles/sign_in', to: 'profiles#sign_in'
+
+        resources :profiles, param: :uuid do
+          resources :photos, only:  [:create, :show, :destroy, :index]
+          resources :matches, only: [:index, :show, :update]
+        end
+
         resources :accounts
       end
     end
 
-    # get '/auth/:provider/callback', to: 'accounts#sign_in', as: :omniauth_callback
+    get '/auth/:provider/callback', to: 'accounts#sign_in', as: :omniauth_callback
   # end <-- TODO: UNCOMMENT BEFORE LAUNCH
 
   # post '/users', to: 'users#create'

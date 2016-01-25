@@ -7,7 +7,7 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 # load .env file environment variables for development
-Dotenv.load
+# Dotenv::Railtie.load
 
 module BackendApp
   class Application < Rails::Application
