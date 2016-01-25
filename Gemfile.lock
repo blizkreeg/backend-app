@@ -36,6 +36,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    addressable (2.4.0)
     arel (6.0.3)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
@@ -60,6 +61,9 @@ GEM
       activerecord (>= 3.2.0, < 5.0)
     diff-lcs (1.2.5)
     dotenv (2.1.0)
+    dotenv-rails (2.1.0)
+      dotenv (= 2.1.0)
+      railties (>= 4.0, < 5.1)
     email_validator (1.6.0)
       activemodel
     erubis (2.7.0)
@@ -85,6 +89,10 @@ GEM
       activerecord (>= 4.2.1)
       pg
     jwt (1.5.2)
+    koala (2.2.0)
+      addressable
+      faraday
+      multi_json
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -214,7 +222,7 @@ DEPENDENCIES
   capybara
   coffee-rails (~> 4.1.0)
   default_value_for (~> 3.0.0)
-  dotenv
+  dotenv-rails
   email_validator
   faker
   forgery
@@ -222,6 +230,7 @@ DEPENDENCIES
   jquery-rails
   jsonb_accessor
   jwt
+  koala (~> 2.2)
   oj
   oj_mimic_json
   omniauth-facebook

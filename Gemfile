@@ -17,6 +17,7 @@ gem 'email_validator'
 gem 'responders'
 gem 'oj'
 gem 'oj_mimic_json'
+gem "koala", "~> 2.2"
 
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -34,7 +35,7 @@ group :development, :test do
   gem 'forgery'
   gem 'rspec-rails'
   gem 'capybara'
-  gem 'dotenv'
+  gem 'dotenv-rails'
 end
 
 group :development do
