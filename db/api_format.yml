@@ -12,16 +12,22 @@ consumes:
   - application/json
 tags:
   - name: Profiles
-    description: CRUD operations on a user profile
+    description: User profile
   - name: Photos
-    description: CRUD operations on a user's profile photos
+    description: Profile photos
   - name: Matches
-    description: Operations on a user's matches
+    description: Profile matches
   - name: Conversations
-    description: CRUD operations for user conversations
+    description: User conversations
+  - name: Messages
+    description: Conversation messages
   - name: Accounts
-    description: Operations for a user's account settings
+    description: Account settings
+
+# *********************** PATHS ****************************
+
 paths:
+  # ************************** Profiles
   /profiles:
     post:
       tags:
@@ -217,12 +223,92 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
+  /profiles:
+    get:
+      tags:
+        - Profiles
+      summary: Get featured people in a city
+      parameters:
+        - name: latitude
+          in: query
+          description: latitude of the requesting user
+          type: number
+          format: double
+          required: true
+          allowEmptyValue: false
+        - name: longitude
+          in: query
+          description: longitude of the requesting user
+          type: number
+          format: double
+          required: true
+          allowEmptyValue: false
+        - name: show
+          in: query
+          description: parameter to filter profiles
+          type: string
+          required: true
+          allowEmptyValue: false
+          enum:
+            - featured
+      responses:
+        200:
+          description: Featured people
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/FeaturedProfile'
+        404:
+          description: No profiles found
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+
+  # ************************** Photos
+
   /profiles/:uuid/photos:
     post:
       tags:
         - Photos
       summary: Add new photo to profile
+      parameters:
+        - name: body
+          in: body
+          description: parameters to add new photo
+          required: true
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                properties:
+                  facebook_id:
+                    type: string
+                    description: facebook photo id
+                  primary:
+                    type: boolean
+                    description: is this a primary photo?
       responses:
+        201:
+          description: Photo created
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                description: all photos
+                items:
+                  $ref: '#/definitions/Photo'
+              auth:
+                $ref: '#/definitions/AuthToken'
         401:
           description: Not authenticated
           schema:
@@ -231,6 +317,19 @@ paths:
           description: Forbidden. User unauthorized to perform this operation.
           schema:
             $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+    get:
+      tags:
+        - Photos
+      summary: Get all profile photos
+      responses:
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
         500:
           description: Server error
           schema:
@@ -253,21 +352,6 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
-  /profiles/:uuid/photos:
-    get:
-      tags:
-        - Photos
-      summary: Get all profile photos
-      responses:
-        401:
-          description: Not authenticated
-          schema:
-            $ref: '#/definitions/401'
-        500:
-          description: Server error
-          schema:
-            $ref: '#/definitions/500'
-  /profiles/:uuid/photos/:uuid:
     get:
       tags:
         - Photos
@@ -281,58 +365,143 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
-  /profiles/featured:
+
+  # ************************** Matches
+
+  /profiles/:uuid/matches:
     get:
       tags:
-        - Profiles
-      summary: Get featured people in a city
-      parameters:
-        - name: latitude
-          in: query
-          description: latitude of the requesting user
-          type: number
-          format: double
-          required: true
-          allowEmptyValue: false
-        - name: longitude
-          in: query
-          description: longitude of the requesting user
-          type: number
-          format: double
-          required: true
-          allowEmptyValue: false
+        - Matches
+      summary: Get matches for profile
       responses:
         200:
-          description: Featured people
+          description: List of matches
           schema:
             type: object
             properties:
               data:
                 type: array
                 items:
-                  $ref: '#/definitions/FeaturedProfile'
-  # /profiles/:uuid/matches:
-  #   get:
-  #     tags:
-  #       - Matches
-  #     summary: Get matches for profile
-  #     responses:
-  #       200:
-  #         description: List of matches
-  #         schema:
-  #           type: object
-  #           properties:
-  #             data:
-  #               type: array
-  #               items:
-  #                 type: object
-  #                 properties:
-  #                   match_data:
-  #                     $ref: '#/definitions/Match'
-  #                   profile:
-  #                     $ref: '#/definitions/Profile'
-  #             auth:
-  #               $ref: '#/definitions/AuthToken'
+                  type: object
+                  properties:
+                    match_info:
+                      $ref: '#/definitions/Match'
+                    match_profile:
+                      $ref: '#/definitions/Profile'
+              auth:
+                $ref: '#/definitions/AuthToken'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        404:
+          description: No matches found
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+    patch:
+      tags:
+        - Matches
+      summary: Bulk update a list of matches
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: match properties
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Match'
+      responses:
+        200:
+          description: All matches updated
+          schema:
+            type: object
+            properties:
+              auth:
+                $ref: '#/definitions/AuthToken'
+        400:
+          description: One or more match updates failed
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    match_id:
+                      type: integer
+                      format: int64
+                    status:
+                      type: string
+                      enum:
+                        - error
+                        - success
+                    message:
+                      type: string
+              auth:
+                $ref: '#/definitions/AuthToken'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+  /profiles/:uuid/matches/:id:
+    patch:
+      tags:
+        - Matches
+      summary: Update a specific match
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: match properties
+          schema:
+            $ref: '#/definitions/Match'
+      responses:
+        200:
+          description: Match updated
+          schema:
+            type: object
+            properties:
+              auth:
+                $ref: '#/definitions/AuthToken'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        404:
+          description: Match not found
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+
+# *********************** DEFINITIONS ****************************
 
 definitions:
   Profile:
@@ -457,35 +626,63 @@ definitions:
       city_name:
         type: string
         description: city name
-  # Match:
-  #   type: object
-  #   description: Match info
-  #   properties:
-  #     id:
-  #       type: integer
-  #       format: int64
-  #     profile_uuid:
-  #       type: string
-  #       description: uuid of the profile this is a match for
-  #       format: uuid
-  #     match_profile_uuid:
-  #       type: string
-  #       description: uuid of the matched profile
-  #       format: uuid
-  #     created_at:
-  #       type: string
-  #       description: match created date+time (iso8601)
-  #       format: date-time
-  #     decision:
-  #       type: string
-  #       description: decision taken
-  #       enum:
-  #         - Pass
-  #         - Like
+  Photo:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      url:
+        type: string
+      width:
+        type: integer
+        format: int32
+      height:
+        type: integer
+        format: int32
+      primary:
+        type: boolean
+        enum:
+          - false
+          - true
+      sizes:
+        type: object
+        properties:
+          100x100:
+            type: string
+  Match:
+    type: object
+    description: Match info
+    properties:
+      id:
+        type: integer
+        format: int64
+        readOnly: true
+      profile_uuid:
+        type: string
+        description: uuid of the profile this is a match for
+        format: uuid
+        readOnly: true
+      match_profile_uuid:
+        type: string
+        description: uuid of the matched profile
+        format: uuid
+        readOnly: true
+      created_at:
+        type: string
+        description: match created date+time (iso8601)
+        format: date-time
+        readOnly: true
+      decision:
+        type: string
+        description: decision taken
+        enum:
+          - Pass
+          - Like
   AuthToken:
     type: object
     properties:
-      auth_token:
+      token:
         type: string
         description: auth token (json web token)
       expires_at:
@@ -498,10 +695,13 @@ definitions:
       message:
         type: string
         description: error string
-      code:
+      http_status:
         type: integer
         description: HTTP status code
         format: int32
+      code:
+        type: string
+        description: error code
   400:
     type: object
     properties:
