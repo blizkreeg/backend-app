@@ -1,10 +1,8 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+require 'csv'
+
+# Read in lat/lon of selected cities
+# source: https://tuxworld.wordpress.com/2010/03/23/latitiude-longitude-altitude-for-all-over-india-cities/
+cities_ind_mh = CSV.read File.join(Rails.root, "db", "cities_IND_MH.csv")
 
 NUM_USERS = 10
 BORN_ON_YEARS = (1960..Date.today.year-21).to_a
@@ -40,7 +38,7 @@ Faker::Config.locale = 'en-IND'
 #               )
 
 NUM_USERS.times do |idx|
-  Profile.create!(
+  profile = Profile.create!(
     email: Forgery(:internet).email_address,
     firstname: Faker::Name.first_name,
     lastname: Faker::Name.last_name,
@@ -48,9 +46,25 @@ NUM_USERS.times do |idx|
     born_on_year: BORN_ON_YEARS[rand(BORN_ON_YEARS.size)],
     born_on_month: month = BORN_ON_MONTHS[rand(BORN_ON_MONTHS.size)],
     born_on_day: 1 + rand(BORN_ON_MONTH_DAYS[month.to_s]),
-    latitude: Forgery(:geo).latitude,
-    longitude: Forgery(:geo).longitude,
+    latitude: cities_ind_mh[rand(cities_ind_mh.size)][1], #Forgery(:geo).latitude,
+    longitude: cities_ind_mh[rand(cities_ind_mh.size)][2], #Forgery(:geo).longitude,
     intent: Constants::INTENTIONS[rand(2)],
-    height: Constants::HEIGHT_RANGE[rand(Constants::HEIGHT_RANGE.size)]
+    height: Constants::HEIGHT_RANGE[rand(Constants::HEIGHT_RANGE.size)],
+    profession: Faker::Company.profession.camelize
   )
+  num_photos = 1 + rand(6)
+  w = 400 + rand(400)
+  h = 300 + rand(300)
+  primary = rand(num_photos)
+  bg = Faker::Color.hex_color[1..-1]
+  type = %w(jpg png)[rand(2)]
+  photos_array = num_photos.times.map.with_index { |i, idx|
+                    {
+                      width: w,
+                      height: h,
+                      primary: (idx == primary),
+                      url: Faker::Placeholdit.image("#{w}x#{h}", type, bg, 'ffffff', 'photo')
+                    }
+                 }
+  profile.photos.create! photos_array
 end
