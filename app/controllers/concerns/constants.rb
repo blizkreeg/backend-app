@@ -2,6 +2,9 @@ module Constants
   TOKEN_EXPIRATION_TIME = 365.days.from_now
   TOKEN_EXPIRATION_TIME_STR = TOKEN_EXPIRATION_TIME.iso8601
 
+  LATEST_API_VERSION = "1"
+  SUPPORTED_API_VERSION = %w(1)
+
   MIN_AGE = 21
   FAITHS = %w(
     Agnostic

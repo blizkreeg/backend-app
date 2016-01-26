@@ -69,7 +69,7 @@ class Profile < ActiveRecord::Base
   validates :gender, inclusion: { in: %w(male female) }
   validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
   validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
-  validates :intent, inclusion: { in: Constants::INTENTIONS }
+  validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }
 
   # optional properties
   validates :faith, inclusion: { in: Constants::FAITHS }, allow_blank: true
@@ -80,6 +80,7 @@ class Profile < ActiveRecord::Base
   validates :profession, length: { maximum: 50 }, allow_blank: true
 
   before_save :set_tz, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
+  before_save :set_age, if: Proc.new { |profile| profile.born_on_year_changed? || profile.born_on_month_changed? || profile.born_on_day_changed? }
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
@@ -142,8 +143,14 @@ class Profile < ActiveRecord::Base
   def set_tz
     timezone = Timezone::Zone.new :latlon => [self.latitude, self.longitude]
     self.time_zone = timezone.zone if ActiveSupport::TimeZone::MAPPING.values.include?(timezone.zone)
+    true
   rescue Timezone::Error::NilZone => e
     EKC.logger.error "No timezone was found for user #{self.uuid}, lat: #{self.latitude}, long: #{self.longitude}"
+    true
+  end
+
+  def set_age
+    self.age = ((Date.today - Date.new(self.born_on_year, self.born_on_month, self.born_on_day))/365).to_i
     true
   end
 end

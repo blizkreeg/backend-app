@@ -4,6 +4,7 @@ class Api::V1::ProfilesController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:create, :sign_in, :featured]
   before_action :restrict_to_authenticated_clients, except: [:create, :sign_in]
   before_action :restrict_to_authenticated_clients, only: [:index], unless: :featured_profiles?
+  before_action :validate_json_schema, except: []
 
   rescue_from ActiveRecord::RecordNotFound, with: :profile_not_found
   rescue_from ActiveRecord::RecordInvalid, with: :validation_error
@@ -65,7 +66,7 @@ class Api::V1::ProfilesController < ApplicationController
   def index
     # TBD: raise exception if type != featured and unless both lat/lon are present
     # TBD: lookup based on lat/lon
-    @profiles = Profile.first(3)
+    @profiles = Profile.limit(3).reorder("RANDOM()")
 
     render status: 200
   end
