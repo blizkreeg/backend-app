@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   # constraints subdomain :api do <-- TODO: UNCOMMENT BEFORE LAUNCH
     scope module: 'api' do
       namespace 'v1' do
-        post '/profiles/sign_in', to: 'profiles#sign_in'
+        post '/sign_in', to: 'profiles#sign_in'
 
         resources :profiles, param: :uuid do
           resources :photos, only:  [:create, :show, :destroy, :index]
