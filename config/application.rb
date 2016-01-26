@@ -38,5 +38,7 @@ module BackendApp
     Timezone::Configure.begin do |c|
       c.username = ENV['GEONAMES_USERNAME']
     end
+
+    config.middleware.insert_before ActionDispatch::ParamsParser, "RescueJsonParseError"
   end
 end
