@@ -10,8 +10,9 @@ module JsonSchemaValidator
     http_method = request.method.downcase
 
     schema_definition = JSON.parse(File.read(File.join(Rails.root, 'db', 'api_schema.json')))
-    schema_object = schema_definition["paths"][endpoint_str][http_method]["parameters"].first["schema"]
-
-    JSON::Validator.validate!(schema_object, params)
+    schema_definition["paths"][endpoint_str][http_method]["parameters"].each do |parameter|
+      next if parameter["in"] != "body"
+      JSON::Validator.validate!(parameter["schema"], params)
+    end
   end
 end

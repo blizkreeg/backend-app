@@ -354,7 +354,7 @@
         }
       }
     },
-    "/sign_in": {
+    "/sign_in.json": {
       "post": {
         "tags": [
           "Profiles"

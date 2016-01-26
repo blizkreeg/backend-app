@@ -237,7 +237,7 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
-  /sign_in:
+  /sign_in.json:
     post:
       tags:
         - Profiles
