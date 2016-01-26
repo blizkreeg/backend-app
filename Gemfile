@@ -18,6 +18,7 @@ gem 'responders'
 gem 'oj'
 gem 'oj_mimic_json'
 gem "koala", "~> 2.2"
+gem 'json-schema'
 
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

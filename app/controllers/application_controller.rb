@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include JsonSchemaValidator
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -10,6 +12,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActionController::ParameterMissing, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
   rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error(e.message, 401, 'token_expired') } # :unauthorized
   rescue_from ActiveRecord::RecordNotFound, with: lambda { |e| respond_with_error(e.message, 404) } # :not_found
+  rescue_from JSON::Schema::ValidationError, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
 
   protected
 
