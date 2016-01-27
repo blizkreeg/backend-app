@@ -29,7 +29,7 @@ tags:
 
 paths:
   # ************************** Profiles
-  /profiles.json:
+  /profiles:
     post:
       tags:
         - Profiles
@@ -133,7 +133,7 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
-  /profiles/:uuid.json:
+  /profiles/:uuid:
     delete:
       tags:
         - Profiles
@@ -237,7 +237,7 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
-  /sign_in.json:
+  /sign_in:
     post:
       tags:
         - Profiles
@@ -282,7 +282,7 @@ paths:
 
   # ************************** Photos
 
-  /profiles/:uuid/photos.json:
+  /profiles/:profile_uuid/photos:
     post:
       tags:
         - Photos
@@ -344,7 +344,7 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
-  /profiles/:uuid/photos/:uuid.json:
+  /profiles/:profile_uuid/photos/:id:
     delete:
       tags:
         - Photos
@@ -378,7 +378,7 @@ paths:
 
   # ************************** Matches
 
-  /profiles/:uuid/matches.json:
+  /profiles/:profile_uuid/matches:
     get:
       tags:
         - Matches
@@ -396,7 +396,7 @@ paths:
                   properties:
                     match_info:
                       $ref: '#/definitions/Match'
-                    match_profile:
+                    matched_profile:
                       $ref: '#/definitions/Profile'
               auth:
                 $ref: '#/definitions/AuthToken'
@@ -474,7 +474,7 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
-  /profiles/:uuid/matches/:id.json:
+  /profiles/:profile_uuid/matches/:id:
     patch:
       tags:
         - Matches
@@ -672,14 +672,14 @@ definitions:
         type: integer
         format: int64
         readOnly: true
-      profile_uuid:
+      for_profile_uuid:
         type: string
-        description: uuid of the profile this is a match for
+        description: profile who this is a match for
         format: uuid
         readOnly: true
-      match_profile_uuid:
+      matched_profile_uuid:
         type: string
-        description: uuid of the matched profile
+        description: the matched profile
         format: uuid
         readOnly: true
       created_at:

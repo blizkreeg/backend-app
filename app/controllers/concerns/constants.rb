@@ -5,6 +5,8 @@ module Constants
   LATEST_API_VERSION = "1"
   SUPPORTED_API_VERSION = %w(1)
 
+  N_MATCHES_AT_A_TIME = 5
+
   MIN_AGE = 21
   FAITHS = %w(
     Agnostic

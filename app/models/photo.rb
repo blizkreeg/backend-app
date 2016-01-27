@@ -26,11 +26,11 @@ class Photo < ActiveRecord::Base
   # required
   # validates :external_image_id, presence: true, unless: lambda { |record| record.properties["facebook_photo_id"].present? }
 
-  before_save :set_default_values
+  before_save :set_defaults
 
   private
 
-  def set_default_values
+  def set_defaults
     self.primary ||= false
     self.approved ||= true
     self.marked_for_deletion ||= false

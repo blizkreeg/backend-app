@@ -14,8 +14,9 @@ json.data do
       if profile.photos.valid.first.blank?
         json.null!
       else
-        json.partial! 'photo', photo: profile.photos.valid.first
+        json.partial! 'api/v1/photos/photo', photo: profile.photos.valid.first
       end
     end
   end
 end
+json.partial! 'api/v1/shared/auth'

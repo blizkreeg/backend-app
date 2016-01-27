@@ -43,7 +43,7 @@
     }
   ],
   "paths": {
-    "/profiles.json": {
+    "/profiles": {
       "post": {
         "tags": [
           "Profiles"
@@ -194,7 +194,7 @@
         }
       }
     },
-    "/profiles/:uuid.json": {
+    "/profiles/:uuid": {
       "delete": {
         "tags": [
           "Profiles"
@@ -354,7 +354,7 @@
         }
       }
     },
-    "/sign_in.json": {
+    "/sign_in": {
       "post": {
         "tags": [
           "Profiles"
@@ -419,7 +419,7 @@
         }
       }
     },
-    "/profiles/:uuid/photos.json": {
+    "/profiles/:profile_uuid/photos": {
       "post": {
         "tags": [
           "Photos"
@@ -514,7 +514,7 @@
         }
       }
     },
-    "/profiles/:uuid/photos/:uuid.json": {
+    "/profiles/:profile_uuid/photos/:id": {
       "delete": {
         "tags": [
           "Photos"
@@ -562,7 +562,7 @@
         }
       }
     },
-    "/profiles/:uuid/matches.json": {
+    "/profiles/:profile_uuid/matches": {
       "get": {
         "tags": [
           "Matches"
@@ -582,7 +582,7 @@
                       "match_info": {
                         "$ref": "#/definitions/Match"
                       },
-                      "match_profile": {
+                      "matched_profile": {
                         "$ref": "#/definitions/Profile"
                       }
                     }
@@ -710,7 +710,7 @@
         }
       }
     },
-    "/profiles/:uuid/matches/:id.json": {
+    "/profiles/:profile_uuid/matches/:id": {
       "patch": {
         "tags": [
           "Matches"
@@ -964,15 +964,15 @@
           "format": "int64",
           "readOnly": true
         },
-        "profile_uuid": {
+        "for_profile_uuid": {
           "type": "string",
-          "description": "uuid of the profile this is a match for",
+          "description": "profile who this is a match for",
           "format": "uuid",
           "readOnly": true
         },
-        "match_profile_uuid": {
+        "matched_profile_uuid": {
           "type": "string",
-          "description": "uuid of the matched profile",
+          "description": "the matched profile",
           "format": "uuid",
           "readOnly": true
         },

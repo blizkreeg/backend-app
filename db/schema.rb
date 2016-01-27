@@ -11,12 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160119001947) do
+ActiveRecord::Schema.define(version: 20160126231938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
   enable_extension "pgcrypto"
+
+  create_table "matches", force: :cascade do |t|
+    t.uuid     "for_profile_uuid",                  null: false
+    t.uuid     "matched_profile_uuid",              null: false
+    t.jsonb    "properties",           default: {}, null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+  end
+
+  add_index "matches", ["for_profile_uuid"], name: "index_matches_on_for_profile_uuid", using: :btree
+  add_index "matches", ["matched_profile_uuid"], name: "index_matches_on_matched_profile_uuid", using: :btree
 
   create_table "photos", force: :cascade do |t|
     t.jsonb    "properties",   default: {}, null: false
@@ -50,6 +61,8 @@ ActiveRecord::Schema.define(version: 20160119001947) do
   add_index "social_authentications", ["oauth_provider", "oauth_uid"], name: "index_social_authentications_on_oauth_provider_and_oauth_uid", unique: true, using: :btree
   add_index "social_authentications", ["profile_uuid"], name: "index_social_authentications_on_profile_uuid", using: :btree
 
+  add_foreign_key "matches", "profiles", column: "for_profile_uuid", primary_key: "uuid"
+  add_foreign_key "matches", "profiles", column: "matched_profile_uuid", primary_key: "uuid"
   add_foreign_key "photos", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "social_authentications", "profiles", column: "profile_uuid", primary_key: "uuid"
 end
