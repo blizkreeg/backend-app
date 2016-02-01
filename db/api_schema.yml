@@ -237,7 +237,7 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
-  /sign_in:
+  /sign-in:
     post:
       tags:
         - Profiles
@@ -279,6 +279,46 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
+  /waiting-list:
+    post:
+      tags:
+        - Profiles
+      summary: Adds the user to the launch waiting list
+      description: In cities where ekcoffee hasn't launched, this builds a waiting list
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                required:
+                  - latitude
+                  - longitude
+                  - phone
+                properties:
+                  latitude:
+                    description: user's latitude
+                    type: number
+                    format: double
+                  longitude:
+                    description: user's longitude
+                    type: number
+                    format: double
+                  phone:
+                    description: user's mobile number
+                    type: string
+      responses:
+        200:
+          description: successfully added to waiting list
+        400:
+          description: Bad data
+          schema:
+            $ref: '#/definitions/404'
 
   # ************************** Photos
 

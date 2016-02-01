@@ -1,8 +1,8 @@
 class Api::V1::ProfilesController < ApplicationController
   respond_to :json
 
-  skip_before_action :verify_authenticity_token, only: [:create, :sign_in, :featured]
-  before_action :restrict_to_authenticated_clients, except: [:create, :sign_in]
+  skip_before_action :verify_authenticity_token, only: [:create, :sign_in, :featured, :add_to_waiting_list]
+  before_action :restrict_to_authenticated_clients, except: [:create, :sign_in, :add_to_waiting_list]
   before_action :restrict_to_authenticated_clients, only: [:index], unless: :featured_profiles?
   before_action :validate_json_schema, except: []
 
@@ -76,6 +76,12 @@ class Api::V1::ProfilesController < ApplicationController
 
   def featured_profiles?
     params[:show] == 'featured'
+  end
+
+  def add_to_waiting_list
+    EKC.logger.info "ADDED TO WAITING LIST lat: #{params[:data][:latitude]}, lon: #{params[:data][:longitude]}, mobile: #{params[:data][:phone]}"
+
+    render status: 200, json: {}
   end
 
   private
