@@ -64,8 +64,9 @@ class Api::V1::ProfilesController < ApplicationController
   # parameters:
   #   latitude, longitude
   def index
-    # TBD: raise exception if type != featured and unless both lat/lon are present
+    # TBD: raise exception if show != featured and unless both lat/lon are present
     # TBD: lookup based on lat/lon
+
     @profiles = Profile.limit(3).reorder("RANDOM()")
 
     render status: 200
@@ -74,17 +75,19 @@ class Api::V1::ProfilesController < ApplicationController
   def destroy
   end
 
-  def featured_profiles?
-    params[:show] == 'featured'
-  end
-
   def add_to_waiting_list
+    # TBD: where to maintain the list?
+
     EKC.logger.info "ADDED TO WAITING LIST lat: #{params[:data][:latitude]}, lon: #{params[:data][:longitude]}, mobile: #{params[:data][:phone]}"
 
     render status: 200, json: {}
   end
 
   private
+
+  def featured_profiles?
+    params[:show] == 'featured'
+  end
 
   def profile_params
     params.require(:data).permit(*Profile::EDITABLE_ATTRIBUTES)
