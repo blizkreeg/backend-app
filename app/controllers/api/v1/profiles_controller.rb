@@ -66,7 +66,7 @@ class Api::V1::ProfilesController < ApplicationController
   def index
     # TBD: raise exception if show != featured and unless both lat/lon are present
     # TBD: lookup based on lat/lon
-
+    @city = 'Mumbai'
     @profiles = Profile.limit(3).reorder("RANDOM()")
 
     render status: 200

@@ -122,9 +122,17 @@ paths:
             type: object
             properties:
               data:
-                type: array
-                items:
-                  $ref: '#/definitions/FeaturedProfile'
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      city:
+                        type: string
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/definitions/FeaturedProfile'
         404:
           description: No profiles found
           schema:
