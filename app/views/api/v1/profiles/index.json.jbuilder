@@ -3,6 +3,7 @@ json.data do
     json.firstname profile.firstname
     json.age profile.age
     json.profession profile.profession
+    json.location_city profile.location_city
     json.questions_and_answers do
       # TBD: substitute qna collection object
       json.array!([1,2]) do |obj|
