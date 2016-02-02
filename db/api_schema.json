@@ -1019,6 +1019,23 @@
         "location_city": {
           "type": "string",
           "description": "city name"
+        },
+        "questions_and_answers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": {
+                "type": "string"
+              },
+              "answer": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "photo": {
+          "$ref": "#/definitions/Photo"
         }
       }
     },
