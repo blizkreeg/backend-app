@@ -50,6 +50,9 @@ class Profile < ActiveRecord::Base
     last_known_longitude: :decimal,
     intent:               :string,
     incomplete:           :boolean,
+    location_city:        :string,
+    location_state:       :string,
+    location_country:     :string,
   }
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
@@ -81,6 +84,15 @@ class Profile < ActiveRecord::Base
   validates :last_known_latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }, allow_nil: true
   validates :last_known_longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }, allow_nil: true
   validates :profession, length: { maximum: 50 }, allow_blank: true
+
+  reverse_geocoded_by :latitude, :longitude do |profile, results|
+    if geo = results.first
+      profile.location_city = geo.city
+      profile.location_state = geo.state
+      profile.location_country = geo.country
+    end
+  end
+  after_validation :reverse_geocode, if: ->(profile){ (profile.latitude.present? && profile.latitude_changed?) || (profile.longitude.present? && profile.longitude_changed?) }
 
   before_save :set_tz, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
   before_save :set_age, if: Proc.new { |profile| profile.born_on_year_changed? || profile.born_on_month_changed? || profile.born_on_day_changed? }
@@ -148,7 +160,7 @@ class Profile < ActiveRecord::Base
     self.time_zone = timezone.zone if ActiveSupport::TimeZone::MAPPING.values.include?(timezone.zone)
     true
   rescue Timezone::Error::NilZone => e
-    EKC.logger.error "No timezone was found for user #{self.uuid}, lat: #{self.latitude}, long: #{self.longitude}"
+    EKC.logger.error "No timezone was found for user #{self.uuid}, lat,lon: #{self.latitude}, #{self.longitude}"
     true
   end
 

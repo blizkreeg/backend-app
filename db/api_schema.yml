@@ -210,7 +210,12 @@ paths:
           description: properties to be updated
           required: true
           schema:
-            $ref: '#/definitions/Profile'
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '#/definitions/Profile'
       responses:
         200:
           description: Updated profile
@@ -319,6 +324,10 @@ paths:
           description: Bad data
           schema:
             $ref: '#/definitions/404'
+        500:
+          description: Server Error
+          schema:
+            $ref: '#/definitions/500'
 
   # ************************** Photos
 
@@ -525,7 +534,12 @@ paths:
           required: true
           description: match properties
           schema:
-            $ref: '#/definitions/Match'
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: '#/definitions/Match'
       responses:
         200:
           description: Match updated
@@ -661,6 +675,12 @@ definitions:
         description: current/last known longitude
         type: number
         format: double
+      location_city:
+        description: city name
+        type: string
+      location_country:
+        description: country name
+        type: string
       photos:
         type: array
         items:
