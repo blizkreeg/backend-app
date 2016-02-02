@@ -31,7 +31,7 @@ module BackendApp
     # TODO: before going to production, check why this isn't working (SSL error) and use Google if possible
     # TODO: set IPs of production servers for the key at https://console.developers.google.com/apis/credentials/key/0?project=nifty-catfish-119105
     # Timezone::Configure.begin do |c|
-    #   c.google_api_key = ENV['GOOGLE_API_KEY']
+    #   c.google_timezone_api_key = ENV['GOOGLE_TIMEZONE_API_KEY']
     #   # c.google_client_id = 'your_google_client_id' # only if using 'Google for Work'
     # end
 
