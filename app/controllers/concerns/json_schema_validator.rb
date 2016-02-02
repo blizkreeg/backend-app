@@ -23,5 +23,9 @@ module JsonSchemaValidator
       next if parameter["in"] != "body"
       JSON::Validator.validate!(parameter["schema"], params)
     end
+
+  rescue JSON::Schema::SchemaError => e
+    # bug in the json-schema validator gem
+    raise e unless e.message.start_with?("The fragment '/definitions' does not exist on schema")
   end
 end
