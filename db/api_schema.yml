@@ -697,7 +697,7 @@ definitions:
       profession:
         type: string
         description: profession
-      city_name:
+      location_city:
         type: string
         description: city name
   Photo:
