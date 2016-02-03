@@ -1,9 +1,10 @@
 json.id photo.id
-json.url photo.url
-json.width photo.width
-json.height photo.height
+json.public_id photo.public_id
+json.original_url photo.original_url
+json.original_width photo.original_width
+json.original_height photo.original_height
 json.primary photo.primary
 
-json.sizes do
-  json.set! '100x100', photo.properties["source"]
-end
+#json.sizes do
+#  json.set! '100x100', photo.properties["source"]
+#end

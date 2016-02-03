@@ -1,0 +1,19 @@
+---
+development:
+  cloud_name: ekcoffee
+  api_key: '732927735938394'
+  api_secret: PFpuWr56g_nsRVhsKiXDohgL_Ps
+  enhance_image_tag: true
+  static_image_support: false
+production:
+  cloud_name: ekcoffee
+  api_key: '732927735938394'
+  api_secret: PFpuWr56g_nsRVhsKiXDohgL_Ps
+  enhance_image_tag: true
+  static_image_support: true
+test:
+  cloud_name: ekcoffee
+  api_key: '732927735938394'
+  api_secret: PFpuWr56g_nsRVhsKiXDohgL_Ps
+  enhance_image_tag: true
+  static_image_support: false

@@ -1,5 +1,5 @@
 json.data do
-  json.meta do
+  json._meta do
     json.city @city
   end
   json.items do

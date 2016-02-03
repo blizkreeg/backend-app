@@ -77,7 +77,12 @@ paths:
             type: object
             properties:
               data:
-                $ref: '#/definitions/Profile'
+                type: object
+                properties:
+                  _meta:
+                    type: object
+                  item:
+                    $ref: '#/definitions/Profile'
               auth:
                 $ref: '#/definitions/AuthToken'
         400:
@@ -124,7 +129,7 @@ paths:
               data:
                 type: object
                 properties:
-                  meta:
+                  _meta:
                     type: object
                     properties:
                       city:
@@ -166,6 +171,8 @@ paths:
       responses:
         200:
           description: Deleted profile/account
+          schema:
+            $ref: '#/definitions/200_nodata'
         401:
           description: Not authenticated
           schema:
@@ -193,7 +200,12 @@ paths:
             type: object
             properties:
               data:
-                $ref: '#/definitions/Profile'
+                type: object
+                properties:
+                  _meta:
+                    type: object
+                  item:
+                    $ref: '#/definitions/Profile'
               auth:
                 $ref: '#/definitions/AuthToken'
         401:
@@ -231,7 +243,12 @@ paths:
             type: object
             properties:
               data:
-                $ref: '#/definitions/Profile'
+                type: object
+                properties:
+                  _meta:
+                    type: object
+                  item:
+                    $ref: '#/definitions/Profile'
               auth:
                 $ref: '#/definitions/AuthToken'
         401:
@@ -281,7 +298,12 @@ paths:
             type: object
             properties:
               data:
-                $ref: '#/definitions/Profile'
+                type: object
+                properties:
+                  _meta:
+                    type: object
+                  item:
+                    $ref: '#/definitions/Profile'
               auth:
                 $ref: '#/definitions/AuthToken'
         404:
@@ -368,12 +390,18 @@ paths:
           description: Photo created
           schema:
             type: object
+            description: all photos
             properties:
               data:
-                type: array
-                description: all photos
-                items:
-                  $ref: '#/definitions/Photo'
+                type: object
+                properties:
+                  _meta:
+                    description: meta-data for showing photos
+                    $ref: '#/definitions/PhotoMeta'
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Photo'
               auth:
                 $ref: '#/definitions/AuthToken'
         401:
@@ -393,6 +421,23 @@ paths:
         - Photos
       summary: Get all profile photos
       responses:
+        200:
+          description: all photos
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  _meta:
+                    description: meta-data for showing photos
+                    $ref: '#/definitions/PhotoMeta'
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Photo'
+              auth:
+                $ref: '#/definitions/AuthToken'
         401:
           description: Not authenticated
           schema:
@@ -407,6 +452,10 @@ paths:
         - Photos
       summary: Delete photo
       responses:
+        200:
+          description: successfully deleted photo
+          schema:
+            $ref: '#/definitions/200_nodata'
         401:
           description: Not authenticated
           schema:
@@ -424,6 +473,19 @@ paths:
         - Photos
       summary: Get a specific photo
       responses:
+        200:
+          description: the photo
+          schema:
+            properties:
+              data:
+                type: object
+                properties:
+                  _meta:
+                    $ref: '#/definitions/PhotoMeta'
+                  item:
+                    $ref: '#/definitions/Photo'
+              auth:
+                $ref: '#/definitions/AuthToken'
         401:
           description: Not authenticated
           schema:
@@ -447,14 +509,19 @@ paths:
             type: object
             properties:
               data:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    match_info:
-                      $ref: '#/definitions/Match'
-                    matched_profile:
-                      $ref: '#/definitions/Profile'
+                type: object
+                properties:
+                  _meta:
+                    type: object
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        match_info:
+                          $ref: '#/definitions/Match'
+                        matched_profile:
+                          $ref: '#/definitions/Profile'
               auth:
                 $ref: '#/definitions/AuthToken'
         401:
@@ -690,9 +757,15 @@ definitions:
         description: country name
         type: string
       photos:
-        type: array
-        items:
-          $ref: '#/definitions/Photo'
+        type: object
+        properties:
+          _meta:
+            description: meta-data for showing photos
+            $ref: '#/definitions/PhotoMeta'
+          items:
+            type: array
+            items:
+              $ref: '#/definitions/Photo'
   FeaturedProfile:
     type: object
     properties:
@@ -719,7 +792,24 @@ definitions:
               type: string
       photo:
         $ref: '#/definitions/Photo'
-
+  PhotoMeta:
+    type: object
+    description: meta-data information to show photos
+    properties:
+      public_host:
+        type: string
+      transformations:
+        type: object
+        properties:
+          thumbnail:
+            description: transformation for thumbnail photos
+            type: string
+          profile:
+            description: transformation for photos on profile view
+            type: string
+          fullscreen:
+            description: transformation for fullscreen photos
+            type: string
   Photo:
     type: object
     properties:
@@ -796,6 +886,13 @@ definitions:
       code:
         type: string
         description: error code
+  200_nodata:
+    type: object
+    properties:
+      data:
+        type: object
+      auth:
+        $ref: '#/definitions/AuthToken'
   400:
     type: object
     properties:

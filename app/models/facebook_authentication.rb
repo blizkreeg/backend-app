@@ -19,7 +19,7 @@ class FacebookAuthentication < SocialAuthentication
     nil
   end
 
-  def get_profile_pictures(fields="images,id", limit=8)
+  def profile_pictures(fields="images,id", limit=8)
     album_id = get_album_id_by_name('Profile Pictures')
     if album_id
       photos_url = "#{album_id}/photos?limit=#{limit}&fields=#{fields}"

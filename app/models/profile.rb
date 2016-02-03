@@ -140,13 +140,13 @@ class Profile < ActiveRecord::Base
     # TBD: code smell
     facebook_auth = social_authentication.becomes(FacebookAuthentication)
     primary = true # first photo is primary
-    facebook_auth.get_profile_pictures.each do |photo_hash|
+    facebook_auth.profile_pictures.each do |photo_hash|
       self.photos.build(
         facebook_id: photo_hash["facebook_photo_id"],
         facebook_url: photo_hash["source"],
-        url: photo_hash["source"],
-        width: photo_hash["width"],
-        height: photo_hash["height"],
+        original_url: photo_hash["source"],
+        original_width: photo_hash["width"],
+        original_height: photo_hash["height"],
         primary: primary
       )
       primary = false

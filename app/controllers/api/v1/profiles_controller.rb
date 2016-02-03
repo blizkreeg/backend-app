@@ -14,7 +14,7 @@ class Api::V1::ProfilesController < ApplicationController
     facebook_auth_hash = params[:data][:facebook_auth_hash]
     params[:data].except!(:facebook_auth_hash)
 
-    # create profile
+    # build profile
     @profile = Profile.new(profile_params)
     derived_properties = Profile.properties_derived_from_facebook(facebook_auth_hash)
     derived_properties.map { |key, value| @profile.send("#{key}=", derived_properties[key]) }
@@ -25,6 +25,7 @@ class Api::V1::ProfilesController < ApplicationController
       oauth_token_expiration: facebook_auth_hash[:credentials][:expires_at],
       oauth_hash: facebook_auth_hash
     )
+
     # load photos from facebook
     @profile.seed_photos_from_facebook(@profile.social_authentications[0])
 
@@ -32,6 +33,8 @@ class Api::V1::ProfilesController < ApplicationController
 
     # set authenticated user
     set_current_profile(@profile)
+
+    Photo.delay.upload_facebook_photos_to_cloudinary(@profile.uuid)
 
     render status: 201
   rescue ActiveRecord::RecordNotUnique
