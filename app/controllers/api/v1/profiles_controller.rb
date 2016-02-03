@@ -34,7 +34,7 @@ class Api::V1::ProfilesController < ApplicationController
     # set authenticated user
     set_current_profile(@profile)
 
-    Photo.delay.upload_facebook_photos_to_cloudinary(@profile.uuid)
+    Photo.delay.upload_photos_to_cloudinary(@profile.uuid)
 
     render status: 201
   rescue ActiveRecord::RecordNotUnique

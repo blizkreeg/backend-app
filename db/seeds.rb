@@ -67,4 +67,6 @@ NUM_USERS.times do |idx|
                     }
                  }
   profile.photos.create! photos_array
+  profile.reload
+  Photo.delay.upload_photos_to_cloudinary(profile.uuid)
 end
