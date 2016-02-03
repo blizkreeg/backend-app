@@ -1,3 +1,4 @@
+# TBD: adjust pool size before going to production
 default: &default
   adapter: postgresql
   encoding: unicode

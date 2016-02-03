@@ -1,7 +1,7 @@
 class Api::V1::ProfilesController < ApplicationController
   respond_to :json
 
-  skip_before_action :verify_authenticity_token, only: [:create, :sign_in, :featured, :add_to_waiting_list]
+  # skip_before_action :verify_authenticity_token, only: [:create, :sign_in, :featured, :add_to_waiting_list]
   before_action :restrict_to_authenticated_clients, except: [:create, :sign_in, :add_to_waiting_list]
   before_action :restrict_to_authenticated_clients, only: [:index], unless: :featured_profiles?
   before_action :validate_json_schema, except: []
@@ -18,6 +18,7 @@ class Api::V1::ProfilesController < ApplicationController
     @profile = Profile.new(profile_params)
     derived_properties = Profile.properties_derived_from_facebook(facebook_auth_hash)
     derived_properties.map { |key, value| @profile.send("#{key}=", derived_properties[key]) }
+
     @profile.social_authentications.build(
       oauth_uid: facebook_auth_hash[:uid],
       oauth_provider: facebook_auth_hash[:provider],
@@ -76,6 +77,10 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def destroy
+    @profile = Profile.find(params[:uuid])
+    @profile.destroy
+
+    render status: 200, json: {}
   end
 
   def add_to_waiting_list

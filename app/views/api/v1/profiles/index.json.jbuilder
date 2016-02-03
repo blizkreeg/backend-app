@@ -17,12 +17,7 @@ json.data do
       end
       json.photo do
         json._meta do
-          json.public_host 'http://res.cloudinary.com/ekcoffee/image/upload/'
-          json.transformations do
-            json.thumbnail 'c_thumb,g_face:center,r_max'
-            json.profile 'c_fill,g_faces:center'
-            json.fullscreen 'c_fill,g_faces:center'
-          end
+          json.partial! 'api/v1/photos/meta'
         end
         if profile.photos.valid.first.blank?
           json.null!

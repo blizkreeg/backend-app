@@ -7,6 +7,8 @@ module Constants
 
   N_MATCHES_AT_A_TIME = 5
 
+  CLOUDINARY_HOST_URL = 'http://res.cloudinary.com/ekcoffee/image/upload/'
+
   MIN_AGE = 21
   FAITHS = %w(
     Agnostic
