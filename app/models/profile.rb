@@ -145,6 +145,7 @@ class Profile < ActiveRecord::Base
         facebook_id: photo_hash["facebook_photo_id"],
         facebook_url: photo_hash["source"],
         original_url: photo_hash["source"],
+        original_url: photo_hash["source"],
         original_width: photo_hash["width"],
         original_height: photo_hash["height"],
         primary: primary

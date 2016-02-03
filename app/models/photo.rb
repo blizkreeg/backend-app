@@ -48,6 +48,9 @@ class Photo < ActiveRecord::Base
       photo = Photo.find(options[:photo_id])
       photo.public_id = uploaded_hash["public_id"]
       photo.public_version = uploaded_hash["version"]
+      photo.original_url = uploaded_hash["url"]
+      photo.original_width = uploaded_hash["width"]
+      photo.original_height = uploaded_hash["height"]
       photo.save!
     end
 
@@ -57,13 +60,13 @@ class Photo < ActiveRecord::Base
     Rails.logger.error "Sidekiq: Cloudinary upload error. Possibly bad url: #{url}"
   end
 
-  def self.upload_facebook_photos_to_cloudinary(profile_uuid)
+  def self.upload_photos_to_cloudinary(profile_uuid)
     profile = Profile.find(profile_uuid)
     profile.photos.each do |photo|
       next if photo.public_id.present?
-      next if photo.facebook_url.blank?
+      next if photo.original_url.blank?
 
-      self.delay.upload_remote_photo_to_cloudinary(photo.facebook_url, photo_id: photo.id)
+      self.delay.upload_remote_photo_to_cloudinary(photo.original_url, photo_id: photo.id)
     end
   rescue ActiveRecord::RecordNotFound
     Rails.logger.error "Sidekiq: Can't find profile with uuid #{profile_uuid}"

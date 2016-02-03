@@ -60,10 +60,10 @@ NUM_USERS.times do |idx|
   type = %w(jpg png)[rand(2)]
   photos_array = num_photos.times.map.with_index { |i, idx|
                     {
-                      width: w,
-                      height: h,
+                      original_width: w,
+                      original_height: h,
                       primary: (idx == primary),
-                      url: Faker::Placeholdit.image("#{w}x#{h}", type, bg, 'ffffff', 'photo')
+                      original_url: Faker::Placeholdit.image("#{w}x#{h}", type, bg, 'ffffff', 'photo')
                     }
                  }
   profile.photos.create! photos_array
