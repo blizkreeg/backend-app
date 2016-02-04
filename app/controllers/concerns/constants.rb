@@ -67,4 +67,10 @@ module Constants
     Dating
     Relationship
   )
+  DATE_PREFERENCE_TYPES = %w(
+    Coffee
+    Brunch
+    Drinks/Dinner
+    Activities
+  )
 end

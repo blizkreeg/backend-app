@@ -67,6 +67,7 @@
                   "required": [
                     "facebook_auth_hash",
                     "intent",
+                    "date_preferences",
                     "longitude",
                     "latitude"
                   ],
@@ -82,6 +83,13 @@
                         "Dating",
                         "Relationship"
                       ]
+                    },
+                    "date_preferences": {
+                      "description": "first date preferences",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     },
                     "latitude": {
                       "description": "latitude as on profile",
@@ -824,11 +832,30 @@
             "description": "match properties",
             "schema": {
               "type": "object",
+              "required": [
+                "data"
+              ],
               "properties": {
                 "data": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/definitions/Match"
+                    "type": "object",
+                    "required": [
+                      "decision"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "description": "match id"
+                      },
+                      "decision": {
+                        "type": "string",
+                        "enum": [
+                          "Pass",
+                          "Like"
+                        ]
+                      }
+                    }
                   }
                 }
               }
@@ -920,7 +947,19 @@
               ],
               "properties": {
                 "data": {
-                  "$ref": "#/definitions/Match"
+                  "type": "object",
+                  "required": [
+                    "decision"
+                  ],
+                  "properties": {
+                    "decision": {
+                      "type": "string",
+                      "enum": [
+                        "Pass",
+                        "Like"
+                      ]
+                    }
+                  }
                 }
               }
             }

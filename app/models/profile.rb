@@ -1,4 +1,5 @@
 class Profile < ActiveRecord::Base
+  include ProfileAttributeHelpers
   # https://libraries.io/rubygems/ar_doc_store/0.0.4
   # https://github.com/devmynd/jsonb_accessor
   # since we don't have a serial id column
@@ -22,12 +23,14 @@ class Profile < ActiveRecord::Base
     height
     faith
     highest_degree
+    schools_attended
     profession
     latitude
     longitude
     last_known_latitude
     last_known_longitude
     intent
+    date_preferences
   )
 
   ATTRIBUTES = {
@@ -41,7 +44,9 @@ class Profile < ActiveRecord::Base
     born_on_day:          :integer,
     height:               :string,
     faith:                :string,
+    earned_degrees:       :string_array,
     highest_degree:       :string,
+    schools_attended:     :string_array,
     profession:           :string,
     time_zone:            :string,
     latitude:             :decimal,
@@ -53,6 +58,7 @@ class Profile < ActiveRecord::Base
     location_city:        :string,
     location_state:       :string,
     location_country:     :string,
+    date_preferences:     :string_array
   }
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
@@ -76,6 +82,7 @@ class Profile < ActiveRecord::Base
   validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
   validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
   validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }
+  validate :date_preferences_is_an_array_of_valid_date_types
 
   # optional properties
   validates :faith, inclusion: { in: Constants::FAITHS }, allow_blank: true
@@ -107,20 +114,22 @@ class Profile < ActiveRecord::Base
 
       dob = Date.parse(auth_hash[:extra][:raw_info][:birthday]) rescue nil
       dob_y, dob_m, dob_d = [dob.year, dob.month, dob.day] rescue [nil, nil, nil]
-      degrees_earned = auth_hash[:extra][:raw_info][:education].map { |t| t[:type] } rescue []
+      degree_types = auth_hash[:extra][:raw_info][:education].map { |t| t[:type] } rescue []
       highest_degree_earned =
-        if degrees_earned.include? "Graduate School"
+        if degree_types.include? "Graduate School"
           'Masters'
-        elsif degrees_earned.include? "College"
+        elsif degree_types.include? "College"
           'Bachelors'
-        elsif degrees_earned.include? "High School"
+        elsif degree_types.include? "High School"
           'High School'
         else
           nil
         end
-      earned_degrees = auth_hash[:extra][:raw_info][:education].map{} rescue nil
-      # TBD: schools
-      # schools_attended =
+
+      # FB seems to always return this in the order of high school, bachelors, grad school...
+      # We want to show in the reverse order
+      earned_degrees = auth_hash[:extra][:raw_info][:education].map { |t| t[:concentration].try(:[], :name) }.compact.reverse rescue nil
+      schools_attended = auth_hash[:extra][:raw_info][:education].map { |t| t[:school].try(:[], :name) }.compact.reverse rescue nil
 
       {
         email: (auth_hash[:info][:email] || auth_hash[:extra][:raw_info][:email] rescue nil),
@@ -131,7 +140,9 @@ class Profile < ActiveRecord::Base
         born_on_day: dob_d,
         gender: (auth_hash[:extra][:raw_info][:gender] rescue nil),
         highest_degree: highest_degree_earned,
-        profession: (auth_hash[:extra][:raw_info][:work][0][:position][:name] rescue nil)
+        profession: (auth_hash[:extra][:raw_info][:work][0][:position][:name] rescue nil),
+        earned_degrees: earned_degrees,
+        schools_attended: schools_attended
       }
     end
   end
@@ -167,5 +178,15 @@ class Profile < ActiveRecord::Base
   def set_age
     self.age = ((Date.today - Date.new(self.born_on_year, self.born_on_month, self.born_on_day))/365).to_i
     true
+  end
+
+  def date_preferences_is_an_array_of_valid_date_types
+    unless self.date_preferences.is_a? Array
+      errors.add(:date_preferences, "Date preferences should be a list") and return
+    end
+
+    self.date_preferences.each do |date_type|
+      errors.add(:date_preferences, "#{date_type} is not a valid date preference") unless Constants::DATE_PREFERENCE_TYPES.include?(date_type)
+    end
   end
 end

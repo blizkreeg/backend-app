@@ -9,15 +9,22 @@ class ApplicationController < ActionController::Base
   before_action :set_current_profile
 
   rescue_from StandardError, with: lambda { |e| Rails.logger.error("#{e.class.name}:#{e.message}\n#{e.backtrace.join('\n')}"); respond_with_error(e.message, 500) } # :internal_server_error
-  rescue_from ActionController::ParameterMissing, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
-  rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error(e.message, 401, 'token_expired') } # :unauthorized
   rescue_from ActiveRecord::RecordNotFound, with: lambda { |e| respond_with_error(e.message, 404) } # :not_found
+  rescue_from Errors::OperationNotPermitted, with: lambda { |e| respond_with_error(e.message, 403) } # :forbidden
+  rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error(e.message, 401, 'token_expired') } # :unauthorized
+  rescue_from ActionController::ParameterMissing, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
   rescue_from JSON::Schema::ValidationError, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
 
   protected
 
-  def restrict_to_authenticated_clients
+  def authenticated?
     respond_with_error('Access Restricted', 401, 'invalid_token') if @current_profile.blank? # :unauthorized
+  end
+
+  def authorized?(uuid)
+    raise ActionController::ParameterMissing, "Request not valid" if uuid.blank?
+    authenticated?
+    raise Errors::OperationNotPermitted, "Operation not permitted" if uuid != @current_profile.try(:uuid)
   end
 
   def auth_response_hash

@@ -1,9 +1,19 @@
 class Api::V1::ProfilesController < ApplicationController
   respond_to :json
 
-  # skip_before_action :verify_authenticity_token, only: [:create, :sign_in, :featured, :add_to_waiting_list]
-  before_action :restrict_to_authenticated_clients, except: [:create, :sign_in, :add_to_waiting_list]
-  before_action :restrict_to_authenticated_clients, only: [:index], unless: :featured_profiles?
+  PUBLIC_ACCESS_METHODS = [:create, :sign_in, :index, :add_to_waiting_list]
+
+  # all actions except these should be restricted to authenticated users
+  before_action :authenticated?, except: PUBLIC_ACCESS_METHODS
+  # access to list action only if showing featured profiles
+  before_action only: [:index] do
+    authenticated? unless featured_profiles?
+  end
+  # should the authenticated user be authorized to do this?
+  before_action except: PUBLIC_ACCESS_METHODS do
+    authorized?(params[:uuid])
+  end
+  # always validate schema
   before_action :validate_json_schema, except: []
 
   rescue_from ActiveRecord::RecordNotFound, with: :profile_not_found
@@ -98,7 +108,12 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:data).permit(*Profile::EDITABLE_ATTRIBUTES)
+    attributes = Profile::EDITABLE_ATTRIBUTES
+    Profile::ATTRIBUTES.each do |attr_name, type|
+      attributes.delete(attr_name.to_sym) if type == :array
+      attributes += [{ attr_name.to_sym => [] }]
+    end
+    params.require(:data).permit(*attributes)
   end
 
   def profile_not_found

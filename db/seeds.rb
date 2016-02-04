@@ -4,7 +4,7 @@ require 'csv'
 # source: https://tuxworld.wordpress.com/2010/03/23/latitiude-longitude-altitude-for-all-over-india-cities/
 cities_ind_mh = CSV.read File.join(Rails.root, "db", "cities_IND_MH.csv")
 
-NUM_USERS = 10
+NUM_USERS = 25
 BORN_ON_YEARS = (1960..Date.today.year-21).to_a
 BORN_ON_MONTHS = (1..12).to_a
 BORN_ON_MONTH_DAYS = {
@@ -49,10 +49,13 @@ NUM_USERS.times do |idx|
     latitude: cities_ind_mh[rand(cities_ind_mh.size)][1], #Forgery(:geo).latitude,
     longitude: cities_ind_mh[rand(cities_ind_mh.size)][2], #Forgery(:geo).longitude,
     intent: Constants::INTENTIONS[rand(2)],
+    date_preferences: Constants::DATE_PREFERENCE_TYPES.sample(2),
     height: Constants::HEIGHT_RANGE[rand(Constants::HEIGHT_RANGE.size)],
-    profession: Faker::Company.profession.camelize
+    profession: Faker::Company.profession.camelize,
+    highest_degree: Constants::DEGREES[rand(Constants::DEGREES.size)],
+    schools_attended: rand(3).times.map { Faker::University.name }
   )
-  num_photos = 1 + rand(6)
+  num_photos = 1 + rand(3)
   w = 400 + rand(400)
   h = 300 + rand(300)
   primary = rand(num_photos)
@@ -68,5 +71,6 @@ NUM_USERS.times do |idx|
                  }
   profile.photos.create! photos_array
   profile.reload
+
   Photo.delay.upload_photos_to_cloudinary(profile.uuid)
 end
