@@ -70,7 +70,7 @@ module Constants
   DATE_PREFERENCE_TYPES = %w(
     Coffee
     Brunch
-    Drinks/Dinner
+    Dinner
     Activities
   )
 end
