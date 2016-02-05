@@ -31,7 +31,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     @profile.social_authentications.build(
       oauth_uid: facebook_auth_hash[:uid],
-      oauth_provider: facebook_auth_hash[:provider],
+      oauth_provider: 'facebook',
       oauth_token: facebook_auth_hash[:credentials][:token],
       oauth_token_expiration: facebook_auth_hash[:credentials][:expires_at],
       oauth_hash: facebook_auth_hash

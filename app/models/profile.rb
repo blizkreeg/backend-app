@@ -112,9 +112,9 @@ class Profile < ActiveRecord::Base
     def properties_derived_from_facebook(auth_hash)
       auth_hash = auth_hash.with_indifferent_access
 
-      dob = Date.parse(auth_hash[:extra][:raw_info][:birthday]) rescue nil
+      dob = Date.strptime(auth_hash[:info][:birthday], '%m/%d/%y') rescue nil
       dob_y, dob_m, dob_d = [dob.year, dob.month, dob.day] rescue [nil, nil, nil]
-      degree_types = auth_hash[:extra][:raw_info][:education].map { |t| t[:type] } rescue []
+      degree_types = auth_hash[:info][:education].map { |t| t[:type] } rescue []
       highest_degree_earned =
         if degree_types.include? "Graduate School"
           'Masters'
@@ -128,19 +128,19 @@ class Profile < ActiveRecord::Base
 
       # FB seems to always return this in the order of high school, bachelors, grad school...
       # We want to show in the reverse order
-      earned_degrees = auth_hash[:extra][:raw_info][:education].map { |t| t[:concentration].try(:[], :name) }.compact.reverse rescue nil
-      schools_attended = auth_hash[:extra][:raw_info][:education].map { |t| t[:school].try(:[], :name) }.compact.reverse rescue nil
+      earned_degrees = auth_hash[:info][:education].map { |t| t[:concentration].try(:[], :name) }.compact.reverse rescue nil
+      schools_attended = auth_hash[:info][:education].map { |t| t[:school].try(:[], :name) }.compact.reverse rescue nil
 
       {
-        email: (auth_hash[:info][:email] || auth_hash[:extra][:raw_info][:email] rescue nil),
-        firstname: (auth_hash[:info][:first_name] || auth_hash[:extra][:raw_info][:first_name] rescue nil),
-        lastname: (auth_hash[:info][:last_name] || auth_hash[:extra][:raw_info][:last_name] rescue nil),
+        email: (auth_hash[:info][:email] || auth_hash[:info][:email] rescue nil),
+        firstname: (auth_hash[:info][:first_name] || auth_hash[:info][:first_name] rescue nil),
+        lastname: (auth_hash[:info][:last_name] || auth_hash[:info][:last_name] rescue nil),
         born_on_year: dob_y,
         born_on_month: dob_m,
         born_on_day: dob_d,
-        gender: (auth_hash[:extra][:raw_info][:gender] rescue nil),
+        gender: (auth_hash[:info][:gender] rescue nil),
         highest_degree: highest_degree_earned,
-        profession: (auth_hash[:extra][:raw_info][:work][0][:position][:name] rescue nil),
+        profession: (auth_hash[:info][:work][0][:position][:name] rescue nil),
         earned_degrees: earned_degrees,
         schools_attended: schools_attended
       }
