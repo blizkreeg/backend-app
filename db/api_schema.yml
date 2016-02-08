@@ -365,6 +365,39 @@ paths:
           schema:
             $ref: '#/definitions/500'
 
+  /profiles/:uuid/state:
+    get:
+      tags:
+        - Profiles
+      summary: Get user state
+      description: Returns the user state string and API to hit based on state (may be null)
+      responses:
+        200:
+          description: successfully got state
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/State'
+              auth:
+                $ref: '#/definitions/AuthToken'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+
   # ************************** Photos
 
   /profiles/:profile_uuid/photos:
@@ -699,6 +732,15 @@ definitions:
         format: int32
         minimum: 21
         maximum: 99
+      born_on_year:
+        type: integer
+        format: int32
+      born_on_month:
+        type: integer
+        format: int32
+      born_on_day:
+        type: integer
+        format: int32
       gender:
         description: gender
         type: string
@@ -706,6 +748,15 @@ definitions:
         enum:
           - Male
           - Female
+      intent:
+        type: string
+        description: user's dating intention
+        enum:
+          - Dating
+          - Relationship
+      intent_text:
+        type: string
+        description: string to display in the profile for intention
       height:
         description: height
         type: string
@@ -755,6 +806,11 @@ definitions:
           - Bachelors
           - Masters
           - Doctorate
+      schools_attended:
+        description: list of colleges
+        type: array
+        items:
+          type: string
       faith:
         description: faith/religion/belief
         type: string
@@ -763,12 +819,30 @@ definitions:
           - Atheist
           - Baha'i
           - Buddhist
-          - Jain
+          - Christian
           - Hindu
+          - Jain
           - Muslim
-          - Parsi/Zoroastrian
           - Sikh
           - Spiritual
+          - Zoroastrian
+          - Other
+      date_preferences:
+        description: list of user's date preferences
+        type: array
+        items:
+          type: string
+      state:
+        description: user's app state
+        type: string
+      incomplete:
+        description: is the user's profile incomplete?
+        type: boolean
+      incomplete_fields:
+        description: which fields of the profile are incomplete?
+        type: array
+        items:
+          type: string
       last_known_latitude:
         description: current/last known latitude
         type: number
@@ -890,6 +964,14 @@ definitions:
         enum:
           - Pass
           - Like
+  State:
+    type: object
+    description: User state
+    properties:
+      state:
+        type: string
+      state_endpoint:
+        type: string
   AuthToken:
     type: object
     properties:
