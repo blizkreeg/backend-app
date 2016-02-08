@@ -25,7 +25,7 @@ case Rails.env
 when "development"
 when "production"
 when "test"
-  OmniAuth.config.full_host = "http://ekcoffee1-3000.terminal.com"
+  OmniAuth.config.full_host = "http://ekcoffee2-3000.terminal.com"
 end
 
 LINKEDIN_KEY = "75ou43ja7worou"
