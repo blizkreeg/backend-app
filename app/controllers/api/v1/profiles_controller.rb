@@ -104,7 +104,7 @@ class Api::V1::ProfilesController < ApplicationController
   def get_state
     @profile = Profile.find(params[:uuid])
 
-    render status: 200
+    render 'api/v1/profiles/state', status: 200
   end
 
   private
