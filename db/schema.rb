@@ -39,12 +39,15 @@ ActiveRecord::Schema.define(version: 20160126231938) do
   add_index "photos", ["profile_uuid"], name: "index_photos_on_profile_uuid", using: :btree
 
   create_table "profiles", primary_key: "uuid", force: :cascade do |t|
-    t.jsonb    "properties", default: {}, null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.jsonb    "properties",       default: {}, null: false
+    t.string   "state",                         null: false
+    t.jsonb    "state_properties", default: {}, null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   add_index "profiles", ["created_at"], name: "index_profiles_on_created_at", using: :btree
+  add_index "profiles", ["properties"], name: "idx_gin_profiles", using: :gin
   add_index "profiles", ["updated_at"], name: "index_profiles_on_updated_at", using: :btree
 
   create_table "social_authentications", force: :cascade do |t|

@@ -11,7 +11,7 @@ class Photo < ActiveRecord::Base
 
   scope :valid, -> { where("(properties->>'marked_for_deletion')::boolean = false").order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc") }
 
-  EDITABLE_ATTRIBUTES = %i(
+  MASS_UPDATE_ATTRIBUTES = %i(
     primary
     marked_for_deletion
   )

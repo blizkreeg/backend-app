@@ -1,5 +1,8 @@
 class Profile < ActiveRecord::Base
   include ProfileAttributeHelpers
+  include AASM
+  include ProfileStateMachine
+
   # https://libraries.io/rubygems/ar_doc_store/0.0.4
   # https://github.com/devmynd/jsonb_accessor
   # since we don't have a serial id column
@@ -14,8 +17,7 @@ class Profile < ActiveRecord::Base
   # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
   # set property tracking flags to 'flags'
 
-  EDITABLE_ATTRIBUTES = %i(
-    age
+  MASS_UPDATE_ATTRIBUTES = %i(
     born_on_year
     born_on_month
     born_on_day
@@ -55,11 +57,24 @@ class Profile < ActiveRecord::Base
     last_known_longitude: :decimal,
     intent:               :string,
     incomplete:           :boolean,
+    incomplete_fields:    :string_array,
     location_city:        :string,
     location_state:       :string,
     location_country:     :string,
-    date_preferences:     :string_array
+    date_preferences:     :string_array,
   }
+
+  EDITABLE_ATTRIBUTES = %i(
+    height
+    faith
+    highest_degree
+    schools_attended
+    profession
+    intent
+    date_preferences
+    latitude
+    longitude
+  )
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
 
@@ -82,7 +97,7 @@ class Profile < ActiveRecord::Base
   validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
   validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
   validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }
-  validate :date_preferences_is_an_array_of_valid_date_types
+  validate :validate_date_preferences
 
   # optional properties
   validates :faith, inclusion: { in: Constants::FAITHS }, allow_blank: true
@@ -103,6 +118,7 @@ class Profile < ActiveRecord::Base
 
   before_save :set_tz, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
   before_save :set_age, if: Proc.new { |profile| profile.born_on_year_changed? || profile.born_on_month_changed? || profile.born_on_day_changed? }
+  after_create :signed_up!, if: Proc.new { |profile| profile.none? }
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
@@ -112,7 +128,7 @@ class Profile < ActiveRecord::Base
     def properties_derived_from_facebook(auth_hash)
       auth_hash = auth_hash.with_indifferent_access
 
-      dob = Date.strptime(auth_hash[:info][:birthday], '%m/%d/%y') rescue nil
+      dob = Date.strptime(auth_hash[:info][:birthday], '%m/%d/%Y') rescue nil
       dob_y, dob_m, dob_d = [dob.year, dob.month, dob.day] rescue [nil, nil, nil]
       degree_types = auth_hash[:info][:education].map { |t| t[:type] } rescue []
       highest_degree_earned =
@@ -164,6 +180,14 @@ class Profile < ActiveRecord::Base
     end
   end
 
+  def incomplete
+    incomplete_fields.present?
+  end
+
+  def incomplete_fields
+    fields ||= EDITABLE_ATTRIBUTES.select { |attr_sym| self.send(attr_sym).blank? ? attr_sym : nil }.compact
+  end
+
   private
 
   def set_tz
@@ -180,7 +204,7 @@ class Profile < ActiveRecord::Base
     true
   end
 
-  def date_preferences_is_an_array_of_valid_date_types
+  def validate_date_preferences
     unless self.date_preferences.is_a? Array
       errors.add(:date_preferences, "Date preferences should be a list") and return
     end

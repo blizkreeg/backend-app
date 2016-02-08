@@ -101,6 +101,12 @@ class Api::V1::ProfilesController < ApplicationController
     render status: 200, json: {}
   end
 
+  def get_state
+    @profile = Profile.find(params[:uuid])
+
+    render status: 200
+  end
+
   private
 
   def featured_profiles?
@@ -108,7 +114,7 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def profile_params
-    attributes = Profile::EDITABLE_ATTRIBUTES
+    attributes = Profile::MASS_UPDATE_ATTRIBUTES
     Profile::ATTRIBUTES.each do |attr_name, type|
       attributes.delete(attr_name.to_sym) if type == :array
       attributes += [{ attr_name.to_sym => [] }]

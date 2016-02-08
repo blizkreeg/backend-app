@@ -15,12 +15,14 @@ module Constants
     Atheist
     Baha'i
     Buddhist
-    Jain
+    Christian
     Hindu
+    Jain
     Muslim
-    Parsi/Zoroastrian
     Sikh
     Spiritual
+    Zoroastrian
+    Other
   )
   HEIGHT_RANGE = %w(
     4'0"
@@ -35,7 +37,7 @@ module Constants
     4'9"
     4'10"
     4'11"
-    5'
+    5'0"
     5'1"
     5'2"
     5'3"
@@ -47,7 +49,7 @@ module Constants
     5'9"
     5'10"
     5'11"
-    6'
+    6'0"
     6'1"
     6'2"
     6'3"
@@ -59,6 +61,7 @@ module Constants
     6'9"
   )
   DEGREES = %w(
+    Associates/Diploma
     Bachelors
     Masters
     Doctorate

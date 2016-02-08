@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :set_current_profile
 
   rescue_from StandardError, with: lambda { |e| Rails.logger.error("#{e.class.name}:#{e.message}\n#{e.backtrace.join('\n')}"); respond_with_error(e.message, 500) } # :internal_server_error
+  rescue_from ActiveRecord::UnknownAttributeError, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
   rescue_from ActiveRecord::RecordNotFound, with: lambda { |e| respond_with_error(e.message, 404) } # :not_found
   rescue_from Errors::OperationNotPermitted, with: lambda { |e| respond_with_error(e.message, 403) } # :forbidden
   rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error(e.message, 401, 'token_expired') } # :unauthorized

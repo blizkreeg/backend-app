@@ -8,17 +8,21 @@ class Match < ActiveRecord::Base
 
   ATTRIBUTES = {
     decision: :string,
-    decision_on: :date_time,
-    delivered_at: :date_time
+    decision_at: :date_time,
+    delivered_at: :date_time,
   }
 
   jsonb_accessor :properties, ATTRIBUTES
 
   before_save :set_defaults
 
+  def self.update_delivery_time(id)
+    Match.update(id, delivered_at: DateTime.now)
+  end
+
   private
 
   def set_defaults
-
+    self.decision_at = DateTime.now if self.decision_changed?
   end
 end

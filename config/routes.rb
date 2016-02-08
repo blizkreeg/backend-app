@@ -14,6 +14,8 @@ Rails.application.routes.draw do
           patch 'matches', to: 'matches#update', as: :matches_bulk
         end
 
+        get 'profiles/:uuid/state', to: 'profiles#get_state', as: :get_state
+
         resources :accounts
       end
     end
