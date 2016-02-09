@@ -1,10 +1,20 @@
 <h3>Profile Details</h3>
+<strong><%= button_to "Refresh Data", '/auth/facebook', { method: :get } %></strong> (<strong>WARNING</strong>: use this instead of browser refresh)
+<br><br>
+<strong><%= button_to "Delete Profile", { action: :destroy, uuid: @profile.uuid }, { method: :delete, data: { confirm: 'Are you sure?' } } %></strong> <%= flash[:error] %>
 <p><strong>UUID</strong>: <%= @profile.uuid %></p>
 <p><strong>Name</strong>: <%= @profile.firstname %> <%= @profile.lastname %></p>
 <p><strong>JWT token</strong>: <%= JsonWebToken.encode(@profile.auth_token_payload) %></p>
-
+<p>
+  <ul>
+  <% @profile.attributes.each do |k, v| %>
+    <% next if k == 'properties' %>
+    <li><strong><%= k %></strong>: <%= v %></li>
+  <% end %>
+  </ul>
+</p>
 <br>
-<hr />
-<strong><%= link_to "Refresh", '/auth/facebook' %></strong> (use this instead of browser refresh)
-<br><br>
-<strong><%= button_to "Delete Profile", { action: :destroy, uuid: @profile.uuid }, { method: :delete, data: { confirm: 'Are you sure?' } } %></strong> <%= flash[:error] %>
+<% @profile.photos.each do |photo| %>
+  <%= image_tag "#{Constants::CLOUDINARY_HOST_URL}w_64,h_64,r_max,c_fill,g_face:center/#{photo.public_id}.jpg" %>
+<% end %>
+
