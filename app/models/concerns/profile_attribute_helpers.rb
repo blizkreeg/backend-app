@@ -36,7 +36,10 @@ module ProfileAttributeHelpers
 
   def mutual_friends_count(logged_in_profile)
     return 0 if self.uuid == logged_in_profile.uuid
+    return 0 if self.facebook_authentication.blank?
 
     logged_in_profile.facebook_authentication.mutual_friends_count(self.facebook_authentication.oauth_uid)
+  rescue StandardError => e
+    0
   end
 end
