@@ -222,8 +222,8 @@ class Profile < ActiveRecord::Base
   end
 
   def set_about_me
-    self.about_me_ideal_weekend = (rand > 0.5 ? Faker::Lorem.sentence(10) : nil )
-    self.about_me_bucket_list = (rand > 0.5 ? Faker::Lorem.sentence(8) : nil )
-    self.about_me_quirk = (rand > 0.5 ? Faker::Lorem.sentence(6) : nil )
+    self.about_me_ideal_weekend = (rand > 0.3 ? Faker::Lorem.sentence(10) : nil )
+    self.about_me_bucket_list = (rand > 0.3 ? Faker::Lorem.sentence(8) : nil )
+    self.about_me_quirk = (rand > 0.3 ? Faker::Lorem.sentence(6) : nil )
   end
 end
