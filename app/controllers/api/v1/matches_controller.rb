@@ -33,12 +33,30 @@ class Api::V1::MatchesController < ApplicationController
 
   def update
     profile = Profile.find(params[:profile_uuid])
-    match_ids = params[:data].map { |m| m[:id] }
-    match_decisions = params[:data].map { |m| { decision: m[:decision] } }
-    Match.update(match_ids, match_decisions)
+    match_ids = params[:data].map { |match| match[:id] }
+    match_properties = params[:data].map { |match| match_params(match) }
+    Match.update(match_ids, match_properties)
 
     profile.decided_on_matches!(:waiting_for_matches) if profile.matches.undecided.count == 0
 
-    render status: 200, json: {}
+    render status: 200
+  end
+
+  def destroy
+    match = Match.find(params[:id])
+    match.unmatch!
+
+    render status: 200
+  end
+
+  private
+
+  def match_params(parameters)
+    attributes = Match::MASS_UPDATE_ATTRIBUTES
+    Match::ATTRIBUTES.each do |attr_name, type|
+      attributes.delete(attr_name.to_sym) if type == :array
+      attributes += [{ attr_name.to_sym => [] }]
+    end
+    parameters.permit(*attributes)
   end
 end

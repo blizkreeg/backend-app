@@ -17,7 +17,7 @@ class Api::V1::ProfilesController < ApplicationController
   before_action :validate_json_schema, except: []
 
   rescue_from ActiveRecord::RecordNotFound, with: :profile_not_found
-  rescue_from ActiveRecord::RecordInvalid, with: :validation_error
+  rescue_from ActiveRecord::RecordInvalid, with: lambda { |e| validation_error(e) }
 
   def create
     # extract the facebook hash from parameters
@@ -54,7 +54,7 @@ class Api::V1::ProfilesController < ApplicationController
 
   def sign_in
     facebook_auth_hash = params[:data][:facebook_auth_hash]
-    social_auth = SocialAuthentication.where(oauth_uid: facebook_auth_hash[:uid], oauth_provider: facebook_auth_hash[:provider]).take!
+    social_auth = SocialAuthentication.where(oauth_uid: facebook_auth_hash[:uid], oauth_provider: 'provider').take!
     @profile = social_auth.profile
 
     # set authenticated user
@@ -126,7 +126,13 @@ class Api::V1::ProfilesController < ApplicationController
     respond_with_error('Profile not found', 404)
   end
 
-  def validation_error
-    respond_with_error(@profile.errors.full_messages.join(', '), 400)
+  def validation_error(exception)
+    if @profile.errors.messages.try(:[], :email).first == Errors::EMAIL_EXISTS_ERROR_STR
+      error_code = 'email_already_exists'
+    else
+      error_code = nil
+    end
+
+    respond_with_error(@profile.errors.full_messages.join(', '), 400, error_code)
   end
 end

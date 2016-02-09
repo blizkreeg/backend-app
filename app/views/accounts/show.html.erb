@@ -1,0 +1,10 @@
+<h3>Profile Details</h3>
+<p><strong>UUID</strong>: <%= @profile.uuid %></p>
+<p><strong>Name</strong>: <%= @profile.firstname %> <%= @profile.lastname %></p>
+<p><strong>JWT token</strong>: <%= JsonWebToken.encode(@profile.auth_token_payload) %></p>
+
+<br>
+<hr />
+<strong><%= link_to "Refresh", '/auth/facebook' %></strong> (use this instead of browser refresh)
+<br><br>
+<strong><%= button_to "Delete Profile", { action: :destroy, uuid: @profile.uuid }, { method: :delete, data: { confirm: 'Are you sure?' } } %></strong> <%= flash[:error] %>

@@ -12,13 +12,13 @@ module ProfileStateMachine
 
     aasm column: 'state' do
       state :none, initial: true
-      # state :first_time_user_post_signup
       state :waiting_for_matches
       state :has_matches
       state :show_matches
       state :mutual_match
-      state :waiting_for_matches_and_mutual_match_response
-      state :show_matches_and_waiting_for_mutual_match_response
+      state :waiting_for_matches_and_response
+      state :has_matches_and_waiting_for_response
+      state :show_matches_and_waiting_for_response
       state :in_conversation
       state :post_date_feedback
 

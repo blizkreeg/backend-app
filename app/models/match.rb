@@ -5,11 +5,18 @@ class Match < ActiveRecord::Base
   belongs_to :matched_profile, foreign_key: "matched_profile_uuid", class_name: 'Profile'
 
   scope :undecided, -> { where("properties->>'decision' is null") }
+  scope :closed, -> { where("CAST(properties->>'closed' AS boolean) = true") }
+
+  MASS_UPDATE_ATTRIBUTES = %i(
+    decision
+  )
 
   ATTRIBUTES = {
     decision: :string,
     decision_at: :date_time,
     delivered_at: :date_time,
+    closed: :boolean,
+    closed_at: :date_time
   }
 
   jsonb_accessor :properties, ATTRIBUTES
@@ -20,9 +27,18 @@ class Match < ActiveRecord::Base
     Match.update(id, delivered_at: DateTime.now)
   end
 
+  def unmatch!
+    self.closed = true
+    self.closed_at = DateTime.now
+    self.save!
+  end
+
   private
 
   def set_defaults
+    self.closed = false if self.closed.nil?
     self.decision_at = DateTime.now if self.decision_changed?
+
+    true
   end
 end

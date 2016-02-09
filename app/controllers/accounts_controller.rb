@@ -1,44 +1,23 @@
+# TBD - DISABLE BEFORE GOING TO PROD!!
 class AccountsController < ApplicationController
-  def index
+  def login
   end
 
-  def sign_in
-    puts "UHASKLJDHKHJASDHKASHDHKJ"
-    h = request.env["omniauth.auth"]
-    render json: h.to_hash
-
-  #   auth_hash = JSON.parse(params[:facebook_auth_hash]).with_indifferent_access
-  #   Rails.logger.info "Logged in with Facebook, auth hash =====> \n#{auth_hash.inspect}"
-
-  #   uid = auth_hash[:uid]
-
-  #   Rails.logger.info "UID #{uid}"
-
-  #   render text: 'success!'
-  # rescue ActiveRecord::RecordNotFound
-  #   error
-  #   respond_to do |format|
-  #     format.json {
-  #       render json: { message: "Account with UID #{uid} not found" }, status: 404
-  #     }
-  #   end
-  # rescue StandardError => e
-  #   render json: { message: e.message }, status: 500
+  def show
+    uid = request.env["omniauth.auth"]["uid"]
+    fb = FacebookAuthentication.where(oauth_uid: uid).take!
+    @profile = fb.profile
+  rescue ActiveRecord::RecordNotFound
+    render text: 'Profile not found!'
   end
 
-  # respond_to do |format|
-  #   if status > 200
-  #     format.json {
-  #       render json: {
-  #         message: error_message
-  #       }, status: status
-  #     }
-  #   else
-  #     render json: {
-  #       auth_token: JsonWebToken.encode(user.auth_token_payload),
-  #       expires_at: Constants::TOKEN_EXPIRATION_TIME_STR,
-  #       profile: profile
-  #     }, status: 200
-  #   end
-  # end
+  def destroy
+    profile = Profile.find(params[:uuid])
+    profile.destroy
+
+    redirect_to :login
+  rescue ActiveRecord::RecordNotFound
+    flash[:error] = 'Profile not found!'
+    redirect_to :back
+  end
 end

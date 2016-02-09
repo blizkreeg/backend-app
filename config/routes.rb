@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
         resources :profiles, param: :uuid do
           resources :photos, only:  [:create, :show, :destroy, :index]
-          resources :matches, only: [:index, :show, :update], except: [:create, :destroy]
+          resources :matches, only: [:index, :show, :update, :destroy], except: [:create]
 
           # bulk update matches
           patch 'matches', to: 'matches#update', as: :matches_bulk
@@ -20,7 +20,10 @@ Rails.application.routes.draw do
       end
     end
 
-    get '/auth/:provider/callback', to: 'accounts#sign_in', as: :omniauth_callback
+    # TBD: COMMENT BEFORE GOING TO PROD!!
+    get 'login', to: 'accounts#login'
+    get '/auth/:provider/callback', to: 'accounts#show', as: :omniauth_callback
+    delete '/accounts/destroy/:uuid', to: 'accounts#destroy'
   # end <-- TODO: UNCOMMENT BEFORE LAUNCH
 
   # post '/users', to: 'users#create'
