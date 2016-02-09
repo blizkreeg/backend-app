@@ -53,7 +53,10 @@ NUM_USERS.times do |idx|
     height: Constants::HEIGHT_RANGE[rand(Constants::HEIGHT_RANGE.size)],
     profession: Faker::Company.profession.camelize,
     highest_degree: Constants::DEGREES[rand(Constants::DEGREES.size)],
-    schools_attended: rand(3).times.map { Faker::University.name }
+    schools_attended: rand(3).times.map { Faker::University.name },
+    about_me_ideal_weekend: (rand > 0.5 ? Faker::Lorem.sentence(10) : nil ),
+    about_me_bucket_list: (rand > 0.5 ? Faker::Lorem.sentence(8) : nil ),
+    about_me_quirk: (rand > 0.5 ? Faker::Lorem.sentence(6) : nil ),
   )
   num_photos = 1 + rand(3)
   w = 400 + rand(400)

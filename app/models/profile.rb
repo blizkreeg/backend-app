@@ -33,6 +33,9 @@ class Profile < ActiveRecord::Base
     last_known_longitude
     intent
     date_preferences
+    about_me_ideal_weekend
+    about_me_bucket_list
+    about_me_quirk
   )
 
   ATTRIBUTES = {
@@ -62,6 +65,9 @@ class Profile < ActiveRecord::Base
     location_state:       :string,
     location_country:     :string,
     date_preferences:     :string_array,
+    about_me_ideal_weekend: :string,
+    about_me_bucket_list:  :string,
+    about_me_quirk:       :string
   }
 
   EDITABLE_ATTRIBUTES = %i(
@@ -119,6 +125,7 @@ class Profile < ActiveRecord::Base
   before_save :set_tz, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
   before_save :set_age, if: Proc.new { |profile| profile.born_on_year_changed? || profile.born_on_month_changed? || profile.born_on_day_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
+  before_create :set_about_me, if: lambda { Rails.env.development? } # TBD: REMOVE BEFORE PRODUCTION
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
@@ -212,5 +219,11 @@ class Profile < ActiveRecord::Base
     self.date_preferences.each do |date_type|
       errors.add(:date_preferences, "#{date_type} is not a valid date preference") unless Constants::DATE_PREFERENCE_TYPES.include?(date_type)
     end
+  end
+
+  def set_about_me
+    self.about_me_ideal_weekend = (rand > 0.5 ? Faker::Lorem.sentence(10) : nil )
+    self.about_me_bucket_list = (rand > 0.5 ? Faker::Lorem.sentence(8) : nil )
+    self.about_me_quirk = (rand > 0.5 ? Faker::Lorem.sentence(6) : nil )
   end
 end
