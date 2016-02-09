@@ -33,4 +33,10 @@ module ProfileAttributeHelpers
   def about_me_order
     %w(about_me_ideal_weekend about_me_bucket_list about_me_quirk)
   end
+
+  def mutual_friends_count(logged_in_profile)
+    return 0 if self.uuid == logged_in_profile.uuid
+
+    logged_in_profile.facebook_authentication.mutual_friends_count(self.facebook_authentication.oauth_uid)
+  end
 end

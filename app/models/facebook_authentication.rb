@@ -42,19 +42,27 @@ class FacebookAuthentication < SocialAuthentication
     []
   end
 
-  def get_mutual_friends
+  def mutual_friends_count(uid)
+    graph_url = "#{uid}/?fields=context.fields(mutual_friends)"
+
+    response_hash = query_fb graph_url
+    if response_hash["context"].try(:[], "mutual_friends").present?
+      response_hash["context"]["mutual_friends"].try(:[], "summary").try(:[], "total_count") || 0
+    else
+      0
+    end
+  rescue StandardError => e
+    EKC.logger.error "Failed to get FB mutual friend count. Error: #{e.class.name}: #{e.message}"
+    0
   end
 
-  def get_mutual_friends_count
+  def query_fb(endpoint)
+    fbgraph.get_object endpoint
   end
 
   private
 
   def fbgraph
     @graph ||= Koala::Facebook::API.new self.oauth_token, ENV['FACEBOOK_APP_SECRET']
-  end
-
-  def query_fb(endpoint)
-    fbgraph.get_object endpoint
   end
 end
