@@ -54,7 +54,7 @@ class Api::V1::ProfilesController < ApplicationController
 
   def sign_in
     facebook_auth_hash = params[:data][:facebook_auth_hash]
-    social_auth = SocialAuthentication.where(oauth_uid: facebook_auth_hash[:uid], oauth_provider: 'provider').take!
+    social_auth = SocialAuthentication.where(oauth_uid: facebook_auth_hash[:uid], oauth_provider: 'facebook').take!
     @profile = social_auth.profile
 
     # set authenticated user
