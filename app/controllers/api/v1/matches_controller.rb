@@ -11,14 +11,17 @@ class Api::V1::MatchesController < ApplicationController
     # TBD implement matching logic
     opposite_gender = profile.male? ? 'female' : 'male'
     matched_profiles = Profile.with_gender(opposite_gender).limit(3).reorder("RANDOM()")
-    @matches = matched_profiles.map { |matched_profile|
+    if profile.matches.undecided.count > 0
+      @matches = profile.matches.undecided
+    else
+      @matches = matched_profiles.map { |matched_profile|
                   Match.create_with(delivered_at: DateTime.now)
                   .find_or_create_by(for_profile_uuid: profile.uuid, matched_profile_uuid: matched_profile.uuid) }
 
-    if @matches.present?
       profile.new_matches!(:has_matches, v1_profile_matches_path(profile))
       profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
     end
+
     # @matches = profile.matches.includes(:matched_profile).undecided.take(Constants::N_MATCHES_AT_A_TIME)
 
     @matches.map { |match| Match.delay.update_delivery_time(match.id) }
