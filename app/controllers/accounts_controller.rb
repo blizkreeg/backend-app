@@ -5,6 +5,7 @@ class AccountsController < ApplicationController
 
   def show
     uid = request.env["omniauth.auth"]["uid"]
+    puts request.env["omniauth.auth"]["credentials"].inspect
     fb = FacebookAuthentication.where(oauth_uid: uid).take!
     @profile = fb.profile
   rescue ActiveRecord::RecordNotFound
