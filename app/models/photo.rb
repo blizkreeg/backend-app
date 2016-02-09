@@ -5,7 +5,7 @@ class Photo < ActiveRecord::Base
   PUBLIC_ID_LENGTH = 10
   MAX_WIDTH = 1000
   MAX_HEIGHT = 1000
-  THUMBNAIL_TRANSFORMATIONS = 'c_thumb,g_face:center,r_max'
+  THUMBNAIL_TRANSFORMATIONS = 'c_fill,g_face:center,r_max'
   PROFILE_TRANSFORMATIONS = 'c_fill,g_faces:center'
   FULLSCREEN_TRANSFORMATIONS = 'c_fill,g_faces:center'
 
