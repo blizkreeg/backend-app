@@ -211,7 +211,7 @@
           "404": {
             "description": "No profiles found",
             "schema": {
-              "$ref": "#/definitions/403"
+              "$ref": "#/definitions/404"
             }
           },
           "500": {
@@ -860,7 +860,7 @@
           "404": {
             "description": "No matches found",
             "schema": {
-              "$ref": "#/definitions/403"
+              "$ref": "#/definitions/404"
             }
           },
           "500": {
@@ -1027,7 +1027,7 @@
           "404": {
             "description": "Match not found",
             "schema": {
-              "$ref": "#/definitions/403"
+              "$ref": "#/definitions/404"
             }
           },
           "500": {
@@ -1101,7 +1101,77 @@
           "404": {
             "description": "Match not found",
             "schema": {
+              "$ref": "#/definitions/404"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "#/definitions/500"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Matches"
+        ],
+        "summary": "Umatch",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "reason to unmatch",
+            "schema": {
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "reason"
+                  ],
+                  "properties": {
+                    "reason": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully unmatched",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "auth": {
+                  "$ref": "#/definitions/AuthToken"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/401"
+            }
+          },
+          "403": {
+            "description": "Forbidden. User unauthorized to perform this operation.",
+            "schema": {
               "$ref": "#/definitions/403"
+            }
+          },
+          "404": {
+            "description": "Match not found",
+            "schema": {
+              "$ref": "#/definitions/404"
             }
           },
           "500": {
@@ -1176,7 +1246,7 @@
           "404": {
             "description": "Profile not found",
             "schema": {
-              "$ref": "#/definitions/403"
+              "$ref": "#/definitions/404"
             }
           },
           "500": {

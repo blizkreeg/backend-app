@@ -7,7 +7,7 @@ class Match < ActiveRecord::Base
   STALE_EXPIRATION_DURATION = 48.hours
 
   scope :undecided, -> { where("properties->>'decision' is null") }
-  scope :closed, -> { where("CAST(properties->>'closed' AS boolean) = true") }
+  scope :unmatched, -> { where("CAST(properties->>'unmatched' AS boolean) = true") }
 
   MASS_UPDATE_ATTRIBUTES = %i(
     decision
@@ -17,8 +17,9 @@ class Match < ActiveRecord::Base
     decision: :string,
     decision_at: :date_time,
     delivered_at: :date_time,
-    closed: :boolean,
-    closed_at: :date_time,
+    unmatched: :boolean,
+    unmatched_at: :date_time,
+    unmatched_reason: :string,
     expires_at: :date_time
   }
 
@@ -30,9 +31,10 @@ class Match < ActiveRecord::Base
     Match.update(id, delivered_at: DateTime.now)
   end
 
-  def unmatch!
-    self.closed = true
-    self.closed_at = DateTime.now
+  def unmatch!(reason)
+    self.unmatched = true
+    self.unmatched_at = DateTime.now
+    self.unmatched_reason = reason
     self.save!
   end
 
@@ -43,7 +45,7 @@ class Match < ActiveRecord::Base
   private
 
   def set_defaults
-    self.closed = false if self.closed.nil?
+    self.unmatched = false if self.unmatched.nil?
     self.decision_at = DateTime.now if self.decision_changed?
 
     true

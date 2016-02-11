@@ -52,7 +52,7 @@ class Api::V1::MatchesController < ApplicationController
 
   def destroy
     match = Match.find(params[:id])
-    match.unmatch!
+    match.unmatch!(params[:data][:reason])
 
     render status: 200
   end
