@@ -561,6 +561,8 @@ paths:
                           $ref: '#/definitions/Match'
                         matched_profile:
                           $ref: '#/definitions/Profile'
+                        match_conversation:
+                          $ref: '#/definitions/Conversation'
               auth:
                 $ref: '#/definitions/AuthToken'
         401:
@@ -651,6 +653,43 @@ paths:
           schema:
             $ref: '#/definitions/500'
   /profiles/:profile_uuid/matches/:id:
+    get:
+      tags:
+        - Matches
+      summary: Get a specific match
+      responses:
+        200:
+          description: Returns the match data
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  _meta:
+                    type: object
+                  match_info:
+                    $ref: '#/definitions/Match'
+                  matched_profile:
+                    $ref: '#/definitions/Profile'
+                  match_conversation:
+                    $ref: '#/definitions/Conversation'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        404:
+          description: Match not found
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
     patch:
       tags:
         - Matches

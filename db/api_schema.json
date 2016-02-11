@@ -830,6 +830,9 @@
                           },
                           "matched_profile": {
                             "$ref": "#/definitions/Profile"
+                          },
+                          "match_conversation": {
+                            "$ref": "#/definitions/Conversation"
                           }
                         }
                       }
@@ -978,6 +981,63 @@
       }
     },
     "/profiles/:profile_uuid/matches/:id": {
+      "get": {
+        "tags": [
+          "Matches"
+        ],
+        "summary": "Get a specific match",
+        "responses": {
+          "200": {
+            "description": "Returns the match data",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "_meta": {
+                      "type": "object"
+                    },
+                    "match_info": {
+                      "$ref": "#/definitions/Match"
+                    },
+                    "matched_profile": {
+                      "$ref": "#/definitions/Profile"
+                    },
+                    "match_conversation": {
+                      "$ref": "#/definitions/Conversation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/401"
+            }
+          },
+          "403": {
+            "description": "Forbidden. User unauthorized to perform this operation.",
+            "schema": {
+              "$ref": "#/definitions/403"
+            }
+          },
+          "404": {
+            "description": "Match not found",
+            "schema": {
+              "$ref": "#/definitions/403"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "#/definitions/500"
+            }
+          }
+        }
+      },
       "patch": {
         "tags": [
           "Matches"
@@ -1040,6 +1100,81 @@
           },
           "404": {
             "description": "Match not found",
+            "schema": {
+              "$ref": "#/definitions/403"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "#/definitions/500"
+            }
+          }
+        }
+      }
+    },
+    "/profiles/:profile_uuid/conversations/:id": {
+      "patch": {
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "Add to a specific conversation",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "description": "conversation properties",
+            "schema": {
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "content"
+                  ],
+                  "properties": {
+                    "content": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully started a new conversation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "data": {
+                  "$ref": "#/definitions/Conversation"
+                },
+                "auth": {
+                  "$ref": "#/definitions/AuthToken"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/401"
+            }
+          },
+          "403": {
+            "description": "Forbidden. User unauthorized to perform this operation.",
+            "schema": {
+              "$ref": "#/definitions/403"
+            }
+          },
+          "404": {
+            "description": "Profile not found",
             "schema": {
               "$ref": "#/definitions/403"
             }
@@ -1357,6 +1492,52 @@
         }
       }
     },
+    "Message": {
+      "type": "object",
+      "properties": {
+        "sender_uuid": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "recipient_uuid": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "content": {
+          "type": "string"
+        },
+        "sent_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "read": {
+          "type": "boolean"
+        },
+        "read_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Conversation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "uuid": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Message"
+          }
+        }
+      }
+    },
     "Match": {
       "type": "object",
       "description": "Match info",
@@ -1377,6 +1558,11 @@
           "description": "the matched profile",
           "format": "uuid",
           "readOnly": true
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "date/time this match expires at (iso8601)"
         },
         "created_at": {
           "type": "string",
