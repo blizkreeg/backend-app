@@ -19,7 +19,9 @@ class Api::V1::MatchesController < ApplicationController
                   .find_or_create_by(for_profile_uuid: profile.uuid, matched_profile_uuid: matched_profile.uuid) }
 
       # TBD: creating a default conversation here. Update to do this on mutual match only!!
-      Conversation.new(participant_uuids: [profile.uuid, match.matched_profile_uuid]).save!
+      @matches.each do |match|
+        Conversation.new(participant_uuids: [profile.uuid, match.matched_profile_uuid]).save!
+      end
 
       profile.new_matches!(:has_matches, v1_profile_matches_path(profile))
       profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
