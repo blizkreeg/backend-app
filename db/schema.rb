@@ -11,12 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160126231938) do
+ActiveRecord::Schema.define(version: 20160210230509) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
   enable_extension "pgcrypto"
+
+  create_table "conversations", id: :bigserial, force: :cascade do |t|
+    t.uuid     "uuid",       default: "gen_random_uuid()"
+    t.jsonb    "properties", default: {},                  null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+  end
+
+  add_index "conversations", ["properties"], name: "idx_gin_conversations", using: :gin
+  add_index "conversations", ["uuid"], name: "index_conversations_on_uuid", using: :btree
 
   create_table "matches", force: :cascade do |t|
     t.uuid     "for_profile_uuid",                  null: false
@@ -28,6 +38,19 @@ ActiveRecord::Schema.define(version: 20160126231938) do
 
   add_index "matches", ["for_profile_uuid"], name: "index_matches_on_for_profile_uuid", using: :btree
   add_index "matches", ["matched_profile_uuid"], name: "index_matches_on_matched_profile_uuid", using: :btree
+
+  create_table "messages", id: :bigserial, force: :cascade do |t|
+    t.integer  "conversation_id", limit: 8,              null: false
+    t.uuid     "sender_uuid",                            null: false
+    t.uuid     "recipient_uuid",                         null: false
+    t.jsonb    "properties",                default: {}, null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
+  add_index "messages", ["conversation_id"], name: "index_messages_on_conversation_id", using: :btree
+  add_index "messages", ["recipient_uuid"], name: "index_messages_on_recipient_uuid", using: :btree
+  add_index "messages", ["sender_uuid"], name: "index_messages_on_sender_uuid", using: :btree
 
   create_table "photos", force: :cascade do |t|
     t.jsonb    "properties",   default: {}, null: false
@@ -66,6 +89,9 @@ ActiveRecord::Schema.define(version: 20160126231938) do
 
   add_foreign_key "matches", "profiles", column: "for_profile_uuid", primary_key: "uuid"
   add_foreign_key "matches", "profiles", column: "matched_profile_uuid", primary_key: "uuid"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "profiles", column: "recipient_uuid", primary_key: "uuid"
+  add_foreign_key "messages", "profiles", column: "sender_uuid", primary_key: "uuid"
   add_foreign_key "photos", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "social_authentications", "profiles", column: "profile_uuid", primary_key: "uuid"
 end

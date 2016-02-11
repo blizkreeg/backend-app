@@ -16,7 +16,8 @@ class Match < ActiveRecord::Base
     decision_at: :date_time,
     delivered_at: :date_time,
     closed: :boolean,
-    closed_at: :date_time
+    closed_at: :date_time,
+    starts_conversation_profile_uuid: :string
   }
 
   jsonb_accessor :properties, ATTRIBUTES
@@ -31,6 +32,10 @@ class Match < ActiveRecord::Base
     self.closed = true
     self.closed_at = DateTime.now
     self.save!
+  end
+
+  def conversation
+    Conversation.with_participant_uuids([self.for_profile_uuid, self.matched_profile_uuid]).take
   end
 
   private

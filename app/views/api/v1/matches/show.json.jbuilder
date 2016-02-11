@@ -6,5 +6,8 @@ json.data do
   json.matched_profile do
     json.partial! 'api/v1/profiles/profile', profile: @match.matched_profile
   end
+  json.match_conversation do
+    json.partial! 'api/v1/conversations/conversation', conversation: @match.conversation
+  end
 end
 json.partial! 'api/v1/shared/auth'

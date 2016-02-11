@@ -1,6 +1,7 @@
 class CreateMatches < ActiveRecord::Migration
   def change
-    create_table :matches do |t|
+    create_table :matches, id: false do |t|
+      t.primary_key :id, :bigserial, null: false
       t.uuid :for_profile_uuid, null: false
       t.uuid :matched_profile_uuid, null: false
       t.jsonb :properties, null: false, default: '{}'

@@ -9,6 +9,8 @@ Rails.application.routes.draw do
         resources :profiles, param: :uuid do
           resources :photos, only:  [:create, :show, :destroy, :index]
           resources :matches, only: [:index, :show, :update, :destroy], except: [:create]
+          resources :conversations, only: [:update, :show]
+          resources :messages, only: [:create]
 
           # bulk update matches
           patch 'matches', to: 'matches#update', as: :matches_bulk

@@ -13,6 +13,8 @@ class Profile < ActiveRecord::Base
   has_many :photos, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
   has_many :matches, primary_key: "uuid", foreign_key: "for_profile_uuid", autosave: true, dependent: :destroy
   has_many :matched_with, class_name: 'Match', primary_key: "uuid", foreign_key: "matched_profile_uuid", autosave: true, dependent: :destroy
+  has_many :sent_messages, class_name: 'Message', primary_key: "uuid", foreign_key: "sender_uuid", autosave: true, dependent: :destroy
+  has_many :received_messages, class_name: 'Message', primary_key: "uuid", foreign_key: "receipient_uuid", autosave: true, dependent: :destroy
 
   # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
   # set property tracking flags to 'flags'
@@ -193,6 +195,10 @@ class Profile < ActiveRecord::Base
 
   def incomplete_fields
     fields ||= EDITABLE_ATTRIBUTES.select { |attr_sym| self.send(attr_sym).blank? ? attr_sym : nil }.compact
+  end
+
+  def conversations
+    Conversation.participant_uuids_contains(self.uuid)
   end
 
   private
