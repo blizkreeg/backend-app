@@ -1018,11 +1018,11 @@ definitions:
         enum:
           - false
           - true
-      sizes:
-        type: object
-        properties:
-          100x100:
-            type: string
+      # sizes:
+      #   type: object
+      #   properties:
+      #     100x100:
+      #       type: string
   Message:
     type: object
     properties:
@@ -1077,6 +1077,7 @@ definitions:
         type: string
         format: date-time
         description: date/time this match expires at (iso8601)
+        readOnly: true
       created_at:
         type: string
         description: match created date+time (iso8601)

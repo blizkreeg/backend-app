@@ -4,6 +4,8 @@ class Match < ActiveRecord::Base
   # who is the match?
   belongs_to :matched_profile, foreign_key: "matched_profile_uuid", class_name: 'Profile'
 
+  STALE_EXPIRATION_DURATION = 48.hours
+
   scope :undecided, -> { where("properties->>'decision' is null") }
   scope :closed, -> { where("CAST(properties->>'closed' AS boolean) = true") }
 
@@ -17,7 +19,7 @@ class Match < ActiveRecord::Base
     delivered_at: :date_time,
     closed: :boolean,
     closed_at: :date_time,
-    starts_conversation_profile_uuid: :string
+    expires_at: :date_time
   }
 
   jsonb_accessor :properties, ATTRIBUTES

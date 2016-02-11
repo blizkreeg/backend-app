@@ -1481,14 +1481,6 @@
             false,
             true
           ]
-        },
-        "sizes": {
-          "type": "object",
-          "properties": {
-            "100x100": {
-              "type": "string"
-            }
-          }
         }
       }
     },
@@ -1562,7 +1554,8 @@
         "expires_at": {
           "type": "string",
           "format": "date-time",
-          "description": "date/time this match expires at (iso8601)"
+          "description": "date/time this match expires at (iso8601)",
+          "readOnly": true
         },
         "created_at": {
           "type": "string",

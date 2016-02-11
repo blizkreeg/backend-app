@@ -15,7 +15,7 @@ class Api::V1::MatchesController < ApplicationController
       @matches = profile.matches.undecided
     else
       @matches = matched_profiles.map { |matched_profile|
-                  Match.create_with(delivered_at: DateTime.now)
+                  Match.create_with(delivered_at: DateTime.now, expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION)
                   .find_or_create_by(for_profile_uuid: profile.uuid, matched_profile_uuid: matched_profile.uuid) }
 
       # TBD: creating a default conversation here. Update to do this on mutual match only!!
