@@ -24,8 +24,11 @@ Rails.application.routes.draw do
 
     # TBD: COMMENT BEFORE GOING TO PROD!!
     get 'login', to: 'accounts#login'
-    get '/auth/:provider/callback', to: 'accounts#show', as: :omniauth_callback
+    get 'all', to: 'accounts#index'
+    get 'show', to: 'accounts#show'
+    get '/auth/:provider/callback', to: 'accounts#callback', as: :omniauth_callback
     delete '/accounts/destroy/:uuid', to: 'accounts#destroy'
+    post 'update_state', to: 'accounts#update_state'
   # end <-- TODO: UNCOMMENT BEFORE LAUNCH
 
   # post '/users', to: 'users#create'

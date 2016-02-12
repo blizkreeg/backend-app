@@ -1,7 +1,19 @@
 <h3>Profile Details</h3>
-<strong><%= button_to "Refresh Data", '/auth/facebook', { method: :get } %></strong> (<strong>WARNING</strong>: use this instead of browser refresh)
-<br><br>
-<strong><%= button_to "Delete Profile", { action: :destroy, uuid: @profile.uuid }, { method: :delete, data: { confirm: 'Are you sure?' } } %></strong> <%= flash[:error] %>
+<table>
+  <tr>
+    <td style="padding:5px;">
+      <%= button_to "Refresh Data", '/auth/facebook', { method: :get } %><br>
+    </td>
+    <td style="padding:5px;">
+      <%= button_to "Delete Profile", { action: :destroy, uuid: @profile.uuid }, { method: :delete, data: { confirm: 'Are you sure?' } } %></strong><br>
+      <%= flash[:error] %>
+    </td>
+    <td>
+      <%= button_to "Reset State (waiting_for_matches)", { action: :update_state, state: 'waiting_for_matches', uuid: @profile.uuid }, method: :post %>
+      <strong>Current State: </strong> <%= @profile.state %><br>
+    </td>
+  </tr>
+</table>
 <p><strong>UUID</strong>: <%= @profile.uuid %></p>
 <p><strong>Name</strong>: <%= @profile.firstname %> <%= @profile.lastname %></p>
 <p><strong>JWT token</strong>: <%= JsonWebToken.encode(@profile.auth_token_payload) %></p>
