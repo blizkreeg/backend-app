@@ -2,7 +2,7 @@
 <table>
   <tr>
     <td style="padding:5px;">
-      <%= button_to "Refresh Data", '/auth/facebook', { method: :get } %><br>
+      <%= button_to "Refresh Data", { action: :show }, method: :get %><br>
     </td>
     <td style="padding:5px;">
       <%= button_to "Delete Profile", { action: :destroy, uuid: @profile.uuid }, { method: :delete, data: { confirm: 'Are you sure?' } } %></strong><br>
