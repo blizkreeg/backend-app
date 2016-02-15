@@ -4,6 +4,8 @@ class CreateConversations < ActiveRecord::Migration
       t.primary_key :id, :bigserial, null: false
       t.uuid :uuid, default: 'gen_random_uuid()', null: false
       t.jsonb :properties, null: false, default: '{}'
+      t.string :state, null: false
+      t.jsonb :state_properties, null: false, default: '{}'
       t.timestamps null: false
     end
 

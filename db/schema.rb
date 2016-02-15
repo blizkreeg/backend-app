@@ -19,10 +19,12 @@ ActiveRecord::Schema.define(version: 20160210230509) do
   enable_extension "pgcrypto"
 
   create_table "conversations", id: :bigserial, force: :cascade do |t|
-    t.uuid     "uuid",       default: "gen_random_uuid()"
-    t.jsonb    "properties", default: {},                  null: false
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
+    t.uuid     "uuid",             default: "gen_random_uuid()"
+    t.jsonb    "properties",       default: {},                  null: false
+    t.string   "state",                                          null: false
+    t.jsonb    "state_properties", default: {},                  null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
   end
 
   add_index "conversations", ["properties"], name: "idx_gin_conversations", using: :gin
