@@ -24,9 +24,9 @@ class Conversation < ActiveRecord::Base
     p1_uuid = self.participant_uuids.first
     p2_uuid = self.participant_uuids.second
 
-    if Match.where(initiates_profile_uuid: p1_uuid, matched_profile_uuid: p2_uuid).take.present?
+    if Match.where("properties->>'initiates_profile_uuid' = '#{p1_uuid}' AND matched_profile_uuid = '#{p2_uuid}'").take.present?
       Profile.find(p1_uuid)
-    elsif Match.where(initiates_profile_uuid: p2_uuid, matched_profile_uuid: p1_uuid).take.present?
+    elsif Match.where("properties->>'initiates_profile_uuid' = '#{p2_uuid}' AND matched_profile_uuid = '#{p1_uuid}'").take.present?
       Profile.find(p2_uuid)
     end
   end

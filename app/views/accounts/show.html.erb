@@ -25,8 +25,8 @@
   <strong>Endpoint: </strong><%= @profile.state_endpoint %><br>
   <% if @profile.mutual_match? %>
     <% match = @profile.matches.mutual_like.take %>
-    <%= link_to "Profile", { action: :show, profile_uuid: match.matched_profile.uuid }, target: '_blank' %>
-    &nbsp; <strong>id: </strong><%= match.id %>
+    <%= link_to "Match Profile", { action: :show, profile_uuid: match.matched_profile.uuid }, target: '_blank' %>
+    &nbsp; <strong>Match ID: </strong><%= match.id %>
   <% end %>
 </p>
 <p><strong>JWT token</strong>: <%= JsonWebToken.encode(@profile.auth_token_payload) %></p>

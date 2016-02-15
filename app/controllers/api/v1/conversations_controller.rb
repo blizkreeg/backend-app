@@ -8,6 +8,8 @@ class Api::V1::ConversationsController < ApplicationController
   def update
     @conversation = Conversation.find(params[:id])
 
+    new_conversation = @conversation.fresh?
+
     # append message to conversation
     content = params[:data][:content]
     if content.present?
@@ -19,7 +21,7 @@ class Api::V1::ConversationsController < ApplicationController
     end
 
     # was this conversation just initiated?
-    if @current_profile.initiated_conversation?(@conversation) && @conversation.fresh?
+    if @current_profile.initiated_conversation?(@conversation) && new_conversation
       # TBD: Fill in URL!
       # update state - started the conversation and now waiting for a response (but continues to get matches)
       @current_profile.started_conversation!(:waiting_for_matches_and_response, 'URLLLLL')
