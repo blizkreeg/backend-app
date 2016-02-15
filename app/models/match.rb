@@ -78,7 +78,7 @@ class Match < ActiveRecord::Base
   end
 
   def waiting_for_response_expires_at
-    self.reverse.expires_at
+    self.reverse.try(:expires_at)
   end
 
   def test_and_set_expiration!
