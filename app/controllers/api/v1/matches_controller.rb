@@ -11,11 +11,12 @@ class Api::V1::MatchesController < ApplicationController
     # TBD implement matching logic
     opposite_gender = profile.male? ? 'female' : 'male'
     matched_profiles = Profile.with_gender(opposite_gender).limit(3).reorder("RANDOM()")
+
     if profile.matches.undecided.count > 0
       @matches = profile.matches.undecided
     else
-      male_uuid = profile.male? ? profile.uuid : matched_profile.uuid
       @matches = matched_profiles.map { |matched_profile|
+                  male_uuid = profile.male? ? profile.uuid : matched_profile.uuid;
                   Match.create_with(delivered_at: DateTime.now,
                                     expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
                                     initiates_profile_uuid: male_uuid)
