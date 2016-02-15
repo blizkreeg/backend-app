@@ -8,5 +8,9 @@ json.auth do
 end
 
 json.state_data do
-  json.partial! 'api/v1/profiles/state', profile: current_profile
+  if current_profile.present?
+    json.partial! 'api/v1/profiles/state', profile: current_profile
+  else
+    json.nil!
+  end
 end

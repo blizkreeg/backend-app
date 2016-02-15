@@ -4,7 +4,7 @@ class Match < ActiveRecord::Base
   # who is the match?
   belongs_to :matched_profile, foreign_key: "matched_profile_uuid", class_name: 'Profile'
 
-  STALE_EXPIRATION_DURATION = 48.hours
+  STALE_EXPIRATION_DURATION = 2910.minutes # 48 hours, 30 minutes
   LIKE_DECISION_STR = 'Like'
   PASS_DECISION_STR = 'Pass'
 
@@ -77,15 +77,24 @@ class Match < ActiveRecord::Base
     self.decision.nil?
   end
 
-  def waiting_for_response_expires_at
-    self.reverse.try(:expires_at)
+  def waiting_for_response_expires_in_hours
+    t = self.reverse.try(:expires_at)
+    if t.present?
+      (t.to_i - DateTime.now.utc.to_i) / 1.hour
+    else
+      nil
+    end
   end
 
   def test_and_set_expiration!
     if self.expires_at.nil?
-      self.expires_at = DateTime.now + STALE_EXPIRATION_DURATION
+      self.expires_at = DateTime.now.utc + STALE_EXPIRATION_DURATION
       self.save!
     end
+  end
+
+  def expires_in_hours
+    (self.expires_at.to_i - DateTime.now.utc.to_i) / 1.hour
   end
 
   private
