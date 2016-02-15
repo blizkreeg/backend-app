@@ -14,8 +14,11 @@ class Api::V1::MatchesController < ApplicationController
     if profile.matches.undecided.count > 0
       @matches = profile.matches.undecided
     else
+      male_uuid = profile.male? ? profile.uuid : matched_profile.uuid
       @matches = matched_profiles.map { |matched_profile|
-                  Match.create_with(delivered_at: DateTime.now, expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION)
+                  Match.create_with(delivered_at: DateTime.now,
+                                    expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
+                                    initiates_profile_uuid: male_uuid)
                   .find_or_create_by(for_profile_uuid: profile.uuid, matched_profile_uuid: matched_profile.uuid) }
 
       # TBD: creating a default conversation here. Update to do this on mutual match only!!
@@ -36,6 +39,9 @@ class Api::V1::MatchesController < ApplicationController
   def show
     @match = Match.includes(:matched_profile).find(params[:id])
 
+    @match.test_and_set_expiration! if @current_profile.mutual_match?
+    Match.delay.update_delivery_time(@match.id)
+
     render status: 200
   end
 
@@ -45,7 +51,10 @@ class Api::V1::MatchesController < ApplicationController
     match_properties = params[:data].map { |match| match_params(match) }
     Match.update(match_ids, match_properties)
 
+    # TBD: here account for user who is waiting for response!
     profile.decided_on_matches!(:waiting_for_matches) if profile.matches.undecided.count == 0
+
+    Match.delay.mark_if_mutual_like(match_ids)
 
     render status: 200
   end
@@ -53,6 +62,9 @@ class Api::V1::MatchesController < ApplicationController
   def destroy
     match = Match.find(params[:id])
     match.unmatch!(params[:data][:reason])
+
+    @current_profile.unmatch!(:waiting_for_matches)
+    # TBD: after X hours, wake up the other person to see if they want to unmatch
 
     render status: 200
   end

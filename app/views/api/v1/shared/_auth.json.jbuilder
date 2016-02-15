@@ -6,3 +6,7 @@ json.auth do
     json.nil!
   end
 end
+
+json.state_data do
+  json.partial! 'api/v1/profiles/state', profile: current_profile
+end

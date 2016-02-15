@@ -1,21 +1,34 @@
 <h3>Profile Details</h3>
+<p><%= flash[:error] %></p>
 <table>
   <tr>
     <td style="padding:5px;">
-      <%= button_to "Refresh Data", { action: :show }, method: :get %><br>
+      <%= button_to "Refresh Data", { action: :show }, method: :get %>
     </td>
     <td style="padding:5px;">
-      <%= button_to "Delete Profile", { action: :destroy, uuid: @profile.uuid }, { method: :delete, data: { confirm: 'Are you sure?' } } %></strong><br>
-      <%= flash[:error] %>
+      <%= button_to "Delete Profile", { action: :destroy, uuid: @profile.uuid }, { method: :delete, data: { confirm: 'Are you sure?' } } %></strong>
     </td>
-    <td>
-      <%= button_to "Reset State (waiting_for_matches)", { action: :update_state, state: 'waiting_for_matches', uuid: @profile.uuid }, method: :post %>
-      <strong>Current State: </strong> <%= @profile.state %><br>
+    <td style="padding:5px;">
+      <%= button_to "Reset State", { action: :update_state, state: 'waiting_for_matches', uuid: @profile.uuid }, method: :post %>
     </td>
+    <% unless @profile.mutual_match? %>
+    <td style="padding:5px;">
+      <%= button_to "Generate Mutual Match", { action: :create_mutual_match, for_profile_uuid: @profile.uuid }, method: :post %>
+    </td>
+    <% end %>
   </tr>
 </table>
 <p><strong>UUID</strong>: <%= @profile.uuid %></p>
 <p><strong>Name</strong>: <%= @profile.firstname %> <%= @profile.lastname %></p>
+<p>
+  <strong>State</strong>: <%= @profile.state %><br>
+  <strong>Endpoint: </strong><%= @profile.state_endpoint %><br>
+  <% if @profile.mutual_match? %>
+    <% match = @profile.matches.mutual_like.take %>
+    <%= link_to "Profile", { action: :show, profile_uuid: match.matched_profile.uuid }, target: '_blank' %>
+    &nbsp; <strong>id: </strong><%= match.id %>
+  <% end %>
+</p>
 <p><strong>JWT token</strong>: <%= JsonWebToken.encode(@profile.auth_token_payload) %></p>
 <p>
   <ul>

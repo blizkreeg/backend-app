@@ -127,7 +127,7 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def validation_error(exception)
-    if @profile.errors.messages.try(:[], :email).first == Errors::EMAIL_EXISTS_ERROR_STR
+    if @profile.errors.messages.try(:[], :email).try(:first) == Errors::EMAIL_EXISTS_ERROR_STR
       error_code = 'email_already_exists'
     else
       error_code = nil

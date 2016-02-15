@@ -1,12 +1,12 @@
 class Profile < ActiveRecord::Base
   include ProfileAttributeHelpers
-  include AASM
   include ProfileStateMachine
 
   # https://libraries.io/rubygems/ar_doc_store/0.0.4
   # https://github.com/devmynd/jsonb_accessor
   # since we don't have a serial id column
-  default_scope { order('created_at ASC') }
+  scope :create_order, -> { order('created_at ASC') }
+  # default_scope { order('created_at ASC') }
 
   has_many :social_authentications, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
   has_one  :facebook_authentication, -> { where(oauth_provider: 'facebook') }, primary_key: "uuid", foreign_key: "profile_uuid"
@@ -199,6 +199,14 @@ class Profile < ActiveRecord::Base
 
   def conversations
     Conversation.participant_uuids_contains(self.uuid)
+  end
+
+  def initiated_conversation?(conversation)
+    self.uuid == conversation.initiator.uuid
+  end
+
+  def responding_to_conversation?(conversation)
+    self.uuid == conversation.responder.uuid
   end
 
   private

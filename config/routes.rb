@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     get '/auth/:provider/callback', to: 'accounts#callback', as: :omniauth_callback
     delete '/accounts/destroy/:uuid', to: 'accounts#destroy'
     post 'update_state', to: 'accounts#update_state'
+    post 'create-mutual-match', to: 'accounts#create_mutual_match'
   # end <-- TODO: UNCOMMENT BEFORE LAUNCH
 
   # post '/users', to: 'users#create'
