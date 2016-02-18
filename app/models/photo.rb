@@ -6,8 +6,8 @@ class Photo < ActiveRecord::Base
   MAX_WIDTH = 1000
   MAX_HEIGHT = 1000
   THUMBNAIL_TRANSFORMATIONS = 'c_fill,g_face:center,r_max'
-  PROFILE_TRANSFORMATIONS = 'c_fill,g_faces:center'
-  FULLSCREEN_TRANSFORMATIONS = 'c_fill,g_faces:center'
+  PROFILE_TRANSFORMATIONS = 'c_fill,g_face:center'
+  FULLSCREEN_TRANSFORMATIONS = 'c_fill,g_face:center'
 
   scope :valid, -> { where("(properties->>'marked_for_deletion')::boolean = false").order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc") }
 
@@ -43,8 +43,8 @@ class Photo < ActiveRecord::Base
                                                 transformation: { width: Photo::MAX_WIDTH, height: Photo::MAX_HEIGHT, crop: :limit },
                                                 # eager:[
                                                 #   { crop: :thumb, gravity: 'face:center', radius: :max },
-                                                #   { crop: :crop, gravity: 'faces:center' },
-                                                #   { crop: :fill, gravity: 'faces:center' }],
+                                                #   { crop: :crop, gravity: 'face:center' },
+                                                #   { crop: :fill, gravity: 'face:center' }],
                                                 tags: [Rails.env])
 
     if options[:photo_id]
