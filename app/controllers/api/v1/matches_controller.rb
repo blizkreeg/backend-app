@@ -40,12 +40,12 @@ class Api::V1::MatchesController < ApplicationController
     when :waiting_for_matches_and_response
       @waiting_for_response_match = profile.matches.mutual_like.take!
       if @matches.count > 0
-        profile.new_matches!(:has_matches_and_waiting_for_response, v1_profile_matches_path(profile) + "?waiting-for-response-match=true")
-        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_matches_path(profile) + "?waiting-for-response-match=true")
+        profile.new_matches!(:has_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, @waiting_for_response_match.id))
+        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, @waiting_for_response_match.id))
       end
     when :has_matches_and_waiting_for_response
       @waiting_for_response_match = profile.matches.mutual_like.take!
-      profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_matches_path(profile) + "?waiting-for-response-match=true")
+      profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, @waiting_for_response_match.id))
     when :show_matches_and_waiting_for_response
       @waiting_for_response_match = profile.matches.mutual_like.take!
     end

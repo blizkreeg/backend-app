@@ -22,14 +22,14 @@ class Api::V1::ConversationsController < ApplicationController
 
     # was this conversation just initiated?
     if @current_profile.initiated_conversation?(@conversation) && new_conversation
-      # TBD: Fill in URL!
+      recipient = @conversation.responder
+      match = Match.where(for_profile_uuid: @current_profile.uuid, matched_profile_uuid: recipient.uuid).take!
+
       # update state - started the conversation and now waiting for a response (but continues to get matches)
-      @current_profile.started_conversation!(:waiting_for_matches_and_response, v1_profile_matches_path(@current_profile) + "?waiting-for-response-match=true")
+      @current_profile.started_conversation!(:waiting_for_matches_and_response, v1_profile_match_path(@current_profile.uuid, match.id))
 
       # update state of the other who will now see the mutual like and the message
-      recipient = @conversation.responder
-      match = Match.where(for_profile_uuid: recipient.uuid, matched_profile_uuid: @current_profile.uuid).take!
-      recipient.got_first_message!(:mutual_match, v1_profile_match_path(recipient.uuid, match.id))
+      recipient.got_first_message!(:mutual_match, v1_profile_match_path(recipient.uuid, match.reverse.id))
     elsif @current_profile.responding_to_conversation?(@conversation)
       # if responding to the conversation starter, open the conv. for chat
       @conversation.open!
