@@ -69,7 +69,8 @@ class Profile < ActiveRecord::Base
     date_preferences:     :string_array,
     about_me_ideal_weekend: :string,
     about_me_bucket_list:  :string,
-    about_me_quirk:       :string
+    about_me_quirk:       :string,
+    possible_relationship_status: :string
   }
 
   EDITABLE_ATTRIBUTES = %i(
@@ -167,7 +168,8 @@ class Profile < ActiveRecord::Base
         highest_degree: highest_degree_earned,
         profession: (auth_hash[:info][:work][0][:position][:name] rescue nil),
         earned_degrees: earned_degrees,
-        schools_attended: schools_attended
+        schools_attended: schools_attended,
+        possible_relationship_status: (auth_hash[:info][:relationship_status] rescue nil)
       }
     end
   end
