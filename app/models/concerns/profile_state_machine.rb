@@ -33,10 +33,12 @@ module ProfileStateMachine
 
       event :new_matches do
         transitions from: :waiting_for_matches, to: :has_matches
+        transitions from: :waiting_for_matches_and_response, to: :has_matches_and_waiting_for_response
       end
 
       event :deliver_matches do
         transitions from: :has_matches, to: :show_matches
+        transitions from: :has_matches_and_waiting_for_response, to: :show_matches_and_waiting_for_response
       end
 
       event :decided_on_matches do

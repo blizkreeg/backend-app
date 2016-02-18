@@ -26,10 +26,31 @@ class Api::V1::MatchesController < ApplicationController
       @matches.each do |match|
         Conversation.new(participant_uuids: [profile.uuid, match.matched_profile_uuid]).save!
       end
-
-      profile.new_matches!(:has_matches, v1_profile_matches_path(profile))
-      profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
     end
+
+    case profile.state.to_sym
+    when :waiting_for_matches
+      if @matches.count > 0
+        profile.new_matches!(:has_matches, v1_profile_matches_path(profile))
+        profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
+      end
+    when :has_matches
+      profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
+    when :show_matches
+    when :waiting_for_matches_and_response
+      @waiting_for_response_match = profile.matches.mutual_like.take!
+      if @matches.count > 0
+        profile.new_matches!(:has_matches_and_waiting_for_response, v1_profile_matches_path(profile) + "?waiting-for-response-match=true")
+        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_matches_path(profile) + "?waiting-for-response-match=true")
+      end
+    when :has_matches_and_waiting_for_response
+      @waiting_for_response_match = profile.matches.mutual_like.take!
+      profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_matches_path(profile) + "?waiting-for-response-match=true")
+    when :show_matches_and_waiting_for_response
+      @waiting_for_response_match = profile.matches.mutual_like.take!
+    end
+
+    @current_profile.reload
 
     # @matches = profile.matches.includes(:matched_profile).undecided.take(Constants::N_MATCHES_AT_A_TIME)
 

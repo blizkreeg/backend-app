@@ -24,7 +24,7 @@ class Api::V1::ConversationsController < ApplicationController
     if @current_profile.initiated_conversation?(@conversation) && new_conversation
       # TBD: Fill in URL!
       # update state - started the conversation and now waiting for a response (but continues to get matches)
-      @current_profile.started_conversation!(:waiting_for_matches_and_response, 'URLLLLL')
+      @current_profile.started_conversation!(:waiting_for_matches_and_response, v1_profile_matches_path(@current_profile) + "?waiting-for-response-match=true")
 
       # update state of the other who will now see the mutual like and the message
       recipient = @conversation.responder
