@@ -33,7 +33,7 @@ LINKEDIN_SECRET = "YUm2akI7ZrZPasUv"
 
 Rails.application.config.middleware.use OmniAuth::Builder do
   provider :facebook, FACEBOOK_APP_ID, FACEBOOK_APP_SECRET,
-           :scope => 'email,public_profile,user_friends,user_photos,user_birthday,user_education_history,user_work_history',
+           :scope => 'email,public_profile,user_friends,user_photos,user_birthday,user_education_history,user_work_history,user_relationships',
            :display => 'page',
            :image_size => 'large',
            :info_fields => 'id, birthday, education, email, first_name, last_name, gender, location, relationship_status, work'
