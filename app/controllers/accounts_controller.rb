@@ -46,6 +46,17 @@ class AccountsController < ApplicationController
   def update_state
     profile = Profile.find(params[:uuid])
     profile.update! state: params[:state], state_endpoint: nil
+
+    if params[:state] == 'waiting_for_matches'
+      profile.matches.mutual_like.each do |match|
+        p = match.matched_profile
+        p.state = 'waiting_for_matches'
+        p.save!
+
+        match.conversation.messages.map(&:destroy)
+      end
+    end
+
     redirect_to :back
   end
 
