@@ -1,6 +1,6 @@
 class Match < ActiveRecord::Base
   # who is the match for?
-  belongs_to :for_profile, foreign_key: "for_profile_uuid"
+  belongs_to :for_profile, foreign_key: "for_profile_uuid", class_name: 'Profile'
   # who is the match?
   belongs_to :matched_profile, foreign_key: "matched_profile_uuid", class_name: 'Profile'
 
@@ -32,6 +32,8 @@ class Match < ActiveRecord::Base
   }
 
   jsonb_accessor :properties, ATTRIBUTES
+
+  validates :unmatched_reason, inclusion: { in: Constants::UNMATCH_REASONS, message: "%{value} is not a valid reason" }, allow_nil: true
 
   before_save :set_defaults
 

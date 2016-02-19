@@ -58,7 +58,7 @@ NUM_USERS.times do |idx|
     about_me_bucket_list: (rand > 0.3 ? Faker::Lorem.sentence(8) : nil ),
     about_me_quirk: (rand > 0.3 ? Faker::Lorem.sentence(6) : nil ),
   )
-  num_photos = 1 + rand(3)
+  num_photos = 1 + rand(1)
   w = 400 + rand(400)
   h = 300 + rand(300)
   primary = rand(num_photos)

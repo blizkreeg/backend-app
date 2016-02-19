@@ -86,7 +86,17 @@ class Api::V1::MatchesController < ApplicationController
     match.unmatch!(params[:data][:reason])
 
     @current_profile.unmatch!(:waiting_for_matches)
-    # TBD: after X hours, wake up the other person to see if they want to unmatch
+
+    case match.matched_profile.state.to_sym
+    when :waiting_for_matches_and_response
+      match.matched_profile.unmatch!(:waiting_for_matches)
+    when :has_matches_and_waiting_for_response
+      match.matched_profile.unmatch!(:has_matches)
+    when :show_matches_and_waiting_for_response
+      match.matched_profile.unmatch!(:show_matches)
+    when :in_conversation
+      # TBD: if in_conversation, after X hours, wake up the other person to see if they want to unmatch
+    end
 
     render status: 200
   end

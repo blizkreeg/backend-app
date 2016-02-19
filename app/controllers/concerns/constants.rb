@@ -76,4 +76,11 @@ module Constants
     Dinner
     Activities
   )
+
+  UNMATCH_REASONS = [
+    "Not interested anymore",
+    "Inappropriate behavior/talk",
+    "Feels like spam",
+    "Not getting replies"
+  ]
 end

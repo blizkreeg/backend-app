@@ -72,6 +72,9 @@ module ProfileStateMachine
       event :unmatch do
         transitions from: :mutual_match, to: :waiting_for_matches
         transitions from: :in_conversation, to: :waiting_for_matches
+        transitions from: :waiting_for_matches_and_response, to: :waiting_for_matches
+        transitions from: :has_matches_and_waiting_for_response, to: :has_matches
+        transitions from: :show_matches_and_waiting_for_response, to: :show_matches
       end
     end
   end
