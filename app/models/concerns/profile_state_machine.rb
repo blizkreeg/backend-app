@@ -43,6 +43,7 @@ module ProfileStateMachine
 
       event :decided_on_matches do
         transitions from: :show_matches, to: :waiting_for_matches
+        transitions from: :show_matches_and_waiting_for_response, to: :waiting_for_matches_and_response
       end
 
       event :got_mutual_like do

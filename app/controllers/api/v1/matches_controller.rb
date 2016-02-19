@@ -38,16 +38,16 @@ class Api::V1::MatchesController < ApplicationController
       profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
     when :show_matches
     when :waiting_for_matches_and_response
-      @waiting_for_response_match = profile.matches.mutual_like.take!
+      waiting_for_response_match = profile.matches.mutual_like.take!
       if @matches.count > 0
-        profile.new_matches!(:has_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, @waiting_for_response_match.id))
-        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, @waiting_for_response_match.id))
+        profile.new_matches!(:has_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
+        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
       end
     when :has_matches_and_waiting_for_response
-      @waiting_for_response_match = profile.matches.mutual_like.take!
-      profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, @waiting_for_response_match.id))
+      waiting_for_response_match = profile.matches.mutual_like.take!
+      profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
     when :show_matches_and_waiting_for_response
-      @waiting_for_response_match = profile.matches.mutual_like.take!
+      waiting_for_response_match = profile.matches.mutual_like.take!
     end
 
     @current_profile.reload
@@ -74,9 +74,19 @@ class Api::V1::MatchesController < ApplicationController
     Match.update(match_ids, match_properties)
 
     # TBD: here account for user who is waiting for response!
-    profile.decided_on_matches!(:waiting_for_matches) if profile.matches.undecided.count == 0
+    if profile.matches.undecided.count == 0
+      case profile.state.to_sym
+      when :show_matches
+        profile.decided_on_matches!(:waiting_for_matches)
+      when :show_matches_and_waiting_for_response
+        waiting_for_response_match = profile.matches.mutual_like.take!
+        profile.decided_on_matches!(:waiting_for_matches_and_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
+      end
+    end
 
-    Match.delay.mark_if_mutual_like(match_ids)
+    # TBD : enable this!
+    # TBD : .matches.mutual_like.take! is NOT a good way to get the pending mutual match
+    # Match.delay.mark_if_mutual_like(match_ids)
 
     render status: 200
   end
