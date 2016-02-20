@@ -54,6 +54,9 @@ class AccountsController < ApplicationController
         p.save!
 
         match.conversation.messages.map(&:destroy)
+
+        match.reverse.destroy
+        match.destroy
       end
     end
 
