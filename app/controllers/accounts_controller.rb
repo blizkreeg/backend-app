@@ -85,6 +85,20 @@ class AccountsController < ApplicationController
 
     profile.got_mutual_like!(:mutual_match, v1_profile_match_path(profile.uuid, @match.id))
 
+    if profile.male?
+      t = @match.matched_profile
+      t.state = 'mutual_match'
+      t.save!
+    else
+      c = @match.conversation
+      c.append_message!('test mesasge from guy', @match.matched_profile.uuid)
+      c.save!
+
+      t = @match.matched_profile
+      t.state = 'waiting_for_matches_and_response'
+      t.save!
+    end
+
     redirect_to :back
   end
 end

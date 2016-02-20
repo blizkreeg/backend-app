@@ -71,9 +71,7 @@ class Conversation < ActiveRecord::Base
 
   def append_message!(content, sender_uuid)
     if content.present?
-      message = Message.new(content: content,
-                            sender_uuid: sender_uuid,
-                            recipient_uuid: self.the_other_who_is_not(sender_uuid).uuid)
+      message = Message.new(content: content, sender_uuid: sender_uuid, recipient_uuid: self.the_other_who_is_not(sender_uuid).uuid)
       self.messages.push(message)
       self.save!
     end
