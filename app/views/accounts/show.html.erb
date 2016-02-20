@@ -16,6 +16,9 @@
       <%= button_to "Generate Mutual Match", { action: :create_mutual_match, for_profile_uuid: @profile.uuid }, method: :post %>
     </td>
     <% end %>
+    <td style="padding:5px;">
+      <%= button_to "Reverse Gender", { action: :reverse_gender, uuid: @profile.uuid }, method: :post %>
+    </td>
   </tr>
 </table>
 <p><strong>UUID</strong>: <%= @profile.uuid %></p>

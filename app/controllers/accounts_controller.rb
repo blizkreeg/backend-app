@@ -60,6 +60,18 @@ class AccountsController < ApplicationController
     redirect_to :back
   end
 
+  def reverse_gender
+    profile = Profile.find(params[:uuid])
+    if profile.male?
+      profile.gender = 'female'
+    else
+      profile.gender = 'male'
+    end
+    profile.save!
+
+    redirect_to :back
+  end
+
   def create_mutual_match
     profile = Profile.find params[:for_profile_uuid]
 
