@@ -211,6 +211,25 @@ class Profile < ActiveRecord::Base
     self.uuid == conversation.responder.uuid
   end
 
+  def set_next_active!
+    # if state is already mutual_match, do nothing
+    return if self.mutual_match?
+
+    self.matches.mutual.each do |match|
+      next if match.matched_profile.active_mutual_match
+
+      match.update active: true
+      match.reverse.update active: true
+
+      # TBD: transition guy's state to mutual match and send push notification to guy.
+      return
+    end
+  end
+
+  def active_mutual_match
+    self.matches.active.take
+  end
+
   private
 
   def set_tz

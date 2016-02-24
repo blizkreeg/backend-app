@@ -21,11 +21,6 @@ class Api::V1::MatchesController < ApplicationController
                                     expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
                                     initiates_profile_uuid: male_uuid)
                   .find_or_create_by(for_profile_uuid: profile.uuid, matched_profile_uuid: matched_profile.uuid) }
-
-      # TBD: creating a default conversation here. Update to do this on mutual match only!!
-      @matches.each do |match|
-        Conversation.new(participant_uuids: [profile.uuid, match.matched_profile_uuid]).save!
-      end
     end
 
     case profile.state.to_sym
@@ -38,23 +33,24 @@ class Api::V1::MatchesController < ApplicationController
       profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
     when :show_matches
     when :waiting_for_matches_and_response
-      waiting_for_response_match = profile.matches.mutual_like.take!
+      waiting_for_response_match = profile.active_mutual_match
       if @matches.count > 0
         profile.new_matches!(:has_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
         profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
       end
     when :has_matches_and_waiting_for_response
-      waiting_for_response_match = profile.matches.mutual_like.take!
+      waiting_for_response_match = profile.active_mutual_match
       profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
     when :show_matches_and_waiting_for_response
-      waiting_for_response_match = profile.matches.mutual_like.take!
+      waiting_for_response_match = profile.active_mutual_match
     end
 
     @current_profile.reload
 
     # @matches = profile.matches.includes(:matched_profile).undecided.take(Constants::N_MATCHES_AT_A_TIME)
 
-    @matches.map { |match| Match.delay.update_delivery_time(match.id) }
+    @matches.map { |match| Match.delay.update_delivery_time(match.id) } if @matches.present?
+
     render status: 200
   end
 
@@ -62,6 +58,7 @@ class Api::V1::MatchesController < ApplicationController
     @match = Match.includes(:matched_profile).find(params[:id])
 
     @match.test_and_set_expiration! if @current_profile.mutual_match?
+
     Match.delay.update_delivery_time(@match.id)
 
     render status: 200
@@ -79,14 +76,15 @@ class Api::V1::MatchesController < ApplicationController
       when :show_matches
         profile.decided_on_matches!(:waiting_for_matches)
       when :show_matches_and_waiting_for_response
-        waiting_for_response_match = profile.matches.mutual_like.take!
+        waiting_for_response_match = profile.active_mutual_match
         profile.decided_on_matches!(:waiting_for_matches_and_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
       end
     end
 
-    # TBD : enable this!
-    # TBD : .matches.mutual_like.take! is NOT a good way to get the pending mutual match
-    # Match.delay.mark_if_mutual_like(match_ids)
+    # TBD: delay this for production
+    Match.enable_mutual_flag_and_create_conversation!(match_ids)
+
+    @current_profile.set_next_active!
 
     render status: 200
   end

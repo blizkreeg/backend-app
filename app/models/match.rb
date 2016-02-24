@@ -9,11 +9,12 @@ class Match < ActiveRecord::Base
   PASS_DECISION_STR = 'Pass'
 
   scope :undecided, -> { where("properties->>'decision' is null") }
-  scope :unmatched, -> { with_unmatched(true) }
-  scope :open, -> { with_unmatched(false) }
-  scope :mutual_like, -> { with_mutual(true) }
+  scope :closed, -> { with_unmatched(true) }
+  scope :queued, -> { with_unmatched(false) }
+  scope :mutual, -> { queued.with_mutual(true) }
   scope :liked, -> { with_decision(LIKE_DECISION_STR) }
-  scope :not_liked, -> { with_decision(PASS_DECISION_STR) }
+  scope :passed, -> { with_decision(PASS_DECISION_STR) }
+  scope :active, -> { with_active(true) }
 
   MASS_UPDATE_ATTRIBUTES = %i(
     decision
@@ -28,7 +29,8 @@ class Match < ActiveRecord::Base
     unmatched_reason: :string,
     expires_at: :date_time,
     initiates_profile_uuid: :string,
-    mutual: :boolean
+    mutual: :boolean,
+    active: :boolean
   }
 
   jsonb_accessor :properties, ATTRIBUTES
@@ -36,26 +38,34 @@ class Match < ActiveRecord::Base
   validates :unmatched_reason, inclusion: { in: Constants::UNMATCH_REASONS, message: "%{value} is not a valid reason" }, allow_nil: true
 
   before_save :set_defaults
+  # after_destroy :destroy_conversation
 
   def self.update_delivery_time(id)
     Match.update(id, delivered_at: DateTime.now)
   end
 
-  def self.mark_if_mutual_like(match_ids)
+  def self.enable_mutual_flag_and_create_conversation!(match_ids)
     matches = Match.find match_ids
     matches.each do |match|
       reverse_match = match.reverse
       if reverse_match.present? && reverse_match.like?
         match.update mutual: true
         reverse_match.update mutual: true
+
+
+
+        Conversation.find_or_create_by_participants!([match.for_profile.uuid, match.matched_profile.uuid])
       end
     end
   end
 
   def unmatch!(reason)
+    # TBD: when unmatching one side, what about the other? what effects will that case if left unmatched?
     self.unmatched = true
     self.unmatched_at = DateTime.now
     self.unmatched_reason = reason
+    EKC.logger.error "Unmatching on a match that is not active! match id: #{self.id}" if !self.active
+    self.active = false
     self.save!
   end
 
@@ -105,19 +115,12 @@ class Match < ActiveRecord::Base
     self.unmatched = false if self.unmatched.nil?
     self.decision_at = DateTime.now if self.decision_changed?
     self.mutual = false if self.mutual.nil?
+    self.active = false if self.active.nil?
 
     true
   end
 
-  # def set_mutual
-  #   if self.decision_changed? && self.like?
-  #     reverse_match = self.reverse
-  #     if reverse_match.present? && reverse_match.like?
-  #       self.mutual = true
-  #       reverse_match.update mutual: true
-  #     end
-  #   end
-
-  #   true
+  # def destroy_conversation
+  #   self.conversation.destroy
   # end
 end

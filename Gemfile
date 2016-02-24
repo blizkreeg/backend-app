@@ -24,6 +24,8 @@ gem 'redis'
 gem 'sidekiq'
 gem 'cloudinary'
 gem 'aasm'
+gem 'firebase'
+gem 'firebase_token_generator'
 
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

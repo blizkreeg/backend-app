@@ -81,6 +81,8 @@ module Constants
     "Not interested anymore",
     "Inappropriate behavior/talk",
     "Feels like spam",
-    "Not getting replies"
+    "Not getting replies",
+    "Didn't start conversation", # TBD: run a timer to set unmatched=true and reason to this if time.now > expires_at
+    "Completed conversation" # TBD: when conversation is done/expired, set this
   ]
 end

@@ -13,3 +13,37 @@ body {
   margin: 0px auto;
   word-wrap: break-word;
 }
+
+.conversation {
+  width: 300px;
+  height: auto;
+  padding: 10px 10px;
+  border: 1px solid #888;
+  overflow: auto;
+}
+
+.conversation .messages {
+  clear: both;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.messages .sent {
+  clear: both;
+  float: right;
+  background-color: #319cf8;
+  color: white;
+  padding: 4px 4px;
+  border: 1px solid lightblue;
+}
+
+.messages .received {
+  clear: both;
+  float: left;
+  background-color: #efe8ec;
+  color: black;
+  padding: 4px 4px;
+  border: 1px solid gainsboro;
+}
+

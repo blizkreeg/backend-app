@@ -7,13 +7,18 @@ class Conversation < ActiveRecord::Base
 
   ATTRIBUTES = {
     participant_uuids: :string_array,
+    opened_at: :date_time,
     closes_at: :date_time,
-    open: :boolean,
+    open: :boolean
   }
 
   jsonb_accessor :properties, ATTRIBUTES
 
   before_create :set_defaults
+
+  def self.find_or_create_by_participants!(between_uuids)
+    with_participant_uuids(between_uuids).take || create!(participant_uuids: between_uuids)
+  end
 
   def fresh?
     self.messages.count == 0
@@ -49,9 +54,9 @@ class Conversation < ActiveRecord::Base
 
   # open chat line
   def open!
-    byebug
     self.open = true
-    self.closes_at = DateTime.now + CLOSE_TIME
+    self.opened_at = DateTime.now.utc
+    self.closes_at = self.opened_at + CLOSE_TIME
     self.save!
 
     # send both into chat state
@@ -60,7 +65,10 @@ class Conversation < ActiveRecord::Base
                                       Rails.application.routes.url_helpers.v1_profile_conversation_path(participant.uuid, self.id))
     end
 
-    # TBD: send push notification to both
+    $firebase_conversations.set("#{self.uuid}/metadata", { participant_uuids: self.participant_uuids,
+                                                            opened_at: self.opened_at.iso8601,
+                                                            closes_at: self.closes_at.iso8601 })
+    self.push_messages_to_firebase
   end
 
   # close when the conversation expires
@@ -75,6 +83,16 @@ class Conversation < ActiveRecord::Base
       self.messages.push(message)
       self.save!
     end
+  end
+
+  def push_messages_to_firebase
+    self.messages.each do |message|
+      $firebase_conversations.push(self.firebase_messages_endpoint, message.firebase_json)
+    end
+  end
+
+  def firebase_messages_endpoint
+    "#{self.uuid}/messages"
   end
 
   private

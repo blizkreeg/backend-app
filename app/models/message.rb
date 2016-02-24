@@ -21,6 +21,16 @@ class Message < ActiveRecord::Base
     self.created_at
   end
 
+  def firebase_json
+    {
+      sender_uuid: self.sender_uuid,
+      recipient_uuid: self.recipient_uuid,
+      content: self.content,
+      sent_at: (Time.now.to_f * 1_000).to_i,
+      ack: self.read
+    }
+  end
+
   private
 
   def set_defaults

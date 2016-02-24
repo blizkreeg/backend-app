@@ -43,21 +43,35 @@ class AccountsController < ApplicationController
     @profiles = Profile.all.order('updated_at DESC')
   end
 
-  def update_state
+  def reset_state
     profile = Profile.find(params[:uuid])
     profile.update! state: params[:state], state_endpoint: nil
 
-    if params[:state] == 'waiting_for_matches'
-      profile.matches.mutual_like.each do |match|
-        p = match.matched_profile
-        p.state = 'waiting_for_matches'
-        p.save!
+    if profile.active_mutual_match
+      match = profile.active_mutual_match
+      p = match.matched_profile
+      p.state = 'waiting_for_matches'
+      p.save!
 
+      if match.conversation
         match.conversation.messages.map(&:destroy)
-
-        match.reverse.destroy
-        match.destroy
+        match.conversation.destroy
       end
+
+      match.reverse.destroy
+      match.destroy
+    end
+
+    profile.reload
+
+    profile.matches.each do |match|
+      if match.conversation
+        match.conversation.messages.map(&:destroy)
+        match.conversation.destroy
+      end
+
+      match.reverse.destroy
+      match.destroy
     end
 
     redirect_to :back
@@ -77,42 +91,64 @@ class AccountsController < ApplicationController
 
   def create_mutual_match
     profile = Profile.find params[:for_profile_uuid]
+    profile.state = 'waiting_for_matches'
+    profile.save!
 
-    if profile.matches.liked.count > 0
+    if profile.active_mutual_match
+      @match = profile.active_mutual_match
+    elsif profile.matches.liked.count > 0
       @match = profile.matches.liked.take!
       r_match = @match.reverse
       r_match.update!(decision: 'Like') if r_match.undecided?
 
-      Match.mark_if_mutual_like([@match.id])
+      Match.enable_mutual_flag_and_create_conversation!([@match.id])
+
+      profile.set_next_active!
     else
       # TBD implement matching logic
       opposite_gender = profile.male? ? 'female' : 'male'
       matched_profile = Profile.with_gender(opposite_gender).take!
+      matched_profile.state = 'waiting_for_matches'
+      matched_profile.save!
 
       @match, r_match = Matchmaker.create_between(profile, matched_profile)
+
       Matchmaker.create_conversation([profile.uuid, matched_profile.uuid])
 
       @match.update! decision: 'Like'
       r_match.update! decision: 'Like'
 
-      Match.mark_if_mutual_like([@match.id])
+      Match.enable_mutual_flag_and_create_conversation!([@match.id])
+
+      profile.set_next_active!
     end
 
-    profile.got_mutual_like!(:mutual_match, v1_profile_match_path(profile.uuid, @match.id))
-
-    if profile.male?
-      t = @match.matched_profile
-      t.state = 'mutual_match'
-      t.save!
-    else
+    if profile.female?
       c = @match.conversation
-      c.append_message!('test mesasge from guy', @match.matched_profile.uuid)
+      c.append_message!('test message from guy', @match.matched_profile.uuid)
       c.save!
 
       t = @match.matched_profile
       t.state = 'waiting_for_matches_and_response'
       t.save!
     end
+
+    profile.got_mutual_like!(:mutual_match, v1_profile_match_path(profile.uuid, @match.id))
+
+    redirect_to :back
+  end
+
+  def start_conversation
+    match = Match.find params[:match_id]
+
+    p1 = match.for_profile
+    p2 = match.matched_profile
+
+    p1.state = 'in_conversation'
+    p1.save!
+
+    p2.state = 'in_conversation'
+    p2.save!
 
     redirect_to :back
   end

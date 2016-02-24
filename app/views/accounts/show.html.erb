@@ -1,3 +1,4 @@
+<% firebase_token = Firebase::FirebaseTokenGenerator.new("#{ENV['FIREBASE_SECRET']}").create_token({ uid: @profile.uuid }) %>
 <h3>Profile Details</h3>
 <p><%= flash[:error] %></p>
 <table>
@@ -9,7 +10,7 @@
       <%= button_to "Delete Profile", { action: :destroy, uuid: @profile.uuid }, { method: :delete, data: { confirm: 'Are you sure?' } } %></strong>
     </td>
     <td style="padding:5px;">
-      <%= button_to "Reset State", { action: :update_state, state: 'waiting_for_matches', uuid: @profile.uuid }, method: :post %>
+      <%= button_to "Reset State", { action: :reset_state, state: 'waiting_for_matches', uuid: @profile.uuid }, method: :post %>
     </td>
     <% unless @profile.mutual_match? %>
     <td style="padding:5px;">
@@ -21,19 +22,34 @@
     </td>
   </tr>
 </table>
-<p><strong>UUID</strong>: <%= @profile.uuid %></p>
-<p><strong>Name</strong>: <%= @profile.firstname %> <%= @profile.lastname %></p>
 <p>
   <strong>State</strong>: <%= @profile.state %><br>
   <strong>Endpoint: </strong><%= @profile.state_endpoint %><br>
   <% if @profile.mutual_match? %>
-    <% match = @profile.matches.mutual_like.take %>
-    <%= link_to "Match Profile", { action: :show, profile_uuid: match.matched_profile.uuid }, target: '_blank' %>
-    &nbsp; <strong>Match ID: </strong><%= match.id %>
+    <% match = @profile.active_mutual_match %>
+    <strong>Match ID: </strong><%= match.id %> &nbsp; &nbsp;
+    <%= link_to "Match Profile", { action: :show, profile_uuid: match.matched_profile.uuid }, target: '_blank', style: 'color:#087e9b;font-weight:600' %> &nbsp; &nbsp; &nbsp;
+    <strong>Conversation ID: </strong> <%= match.conversation.id %>
+    <br>
+    <%= button_to "Open Chat", { action: :start_conversation, match_id: match.id }, method: :post %>
+  <% end %>
+  <% if @profile.in_conversation? %>
+    <% match = @profile.active_mutual_match %>
+    <%= link_to "Match Profile", { action: :show, profile_uuid: match.matched_profile.uuid }, target: '_blank', style: 'color:#087e9b;font-weight:600' %> &nbsp; &nbsp;
+    <% conversation = match.conversation %>
+    <p><%= link_to "Disconnect from Chat", '#', id: 'disconnect-chat' %></p>
+    <div class='conversation'>
+      <div style='text-align:center;font-weight:600;'><%= match.matched_profile.firstname %></div>
+      <div class='messages'>
+      </div>
+      <%= text_field_tag 'message_to_send', '', placeholder: 'message to send. type and press enter.', style: 'width:90%;padding: 4px 6px;border:1px solid #888' %>
+    </div>
   <% end %>
 </p>
-<p><strong>JWT token</strong>: <%= JsonWebToken.encode(@profile.auth_token_payload) %></p>
-<p>
+<p><strong>UUID</strong>: <%= @profile.uuid %><br>
+  <strong>Name</strong>: <%= @profile.firstname %> <%= @profile.lastname %><br>
+  <strong>JWT token</strong>: <%= JsonWebToken.encode(@profile.auth_token_payload) %><br>
+  <strong>properties:</strong>
   <ul>
   <% @profile.attributes.each do |k, v| %>
     <% next if k == 'properties' %>
@@ -46,3 +62,81 @@
   <%= image_tag "#{Constants::CLOUDINARY_HOST_URL}w_64,h_64,r_max,c_fill,g_face:center/#{photo.public_id}.jpg" %>
 <% end %>
 
+
+<% if @profile.in_conversation? %>
+<script language='javascript'>
+  var profile_uuid = "<%= @profile.uuid %>";
+  var match_uuid = "<%= match.matched_profile.uuid %>";
+
+  var ref = new Firebase("https://glaring-fire-5389.firebaseio.com/");
+  ref.authWithCustomToken("<%= firebase_token %>", function(error, authData) {
+    if (error) {
+      console.log("Login Failed!", error);
+    } else {
+      console.log("Login Succeeded!", authData);
+    }
+  });
+
+  // INVOKE ON CLIENT
+  var disconnectedAtRef = new Firebase("https://glaring-fire-5389.firebaseio.com/users/<%= @profile.uuid %>/disconnectedAt");
+
+  // INVOKE ON CLIENT - RUNS ON FIREBASE
+  disconnectedAtRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP, function(err) {
+    if(err) { alert(err); }
+  });
+
+  // INVOKE ON CLIENT
+  var connectedRef = new Firebase("https://glaring-fire-5389.firebaseio.com/.info/connected");
+  connectedRef.on("value", function(snap) {
+    if (snap.val() === true) {
+      console.log("connected");
+      disconnectedAtRef.set(false, function(e) {
+        if(e) {
+          alert(e);
+        }
+      });
+    } else {
+      console.log("not connected");
+    }
+  });
+
+  var conversationRef = new Firebase("https://glaring-fire-5389.firebaseio.com/conversations/<%= conversation.uuid %>/messages");
+
+  // var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(10);
+  // firstQuery.once('value', function(messages) {
+  //   messages.forEach(function(message) {
+  //     if(message.child("sender_uuid").val() == profile_uuid) {
+  //       $('.messages').append('<div class="sent">' + message.child("content").val()  + '</div>')
+  //     } else {
+  //       $('.messages').append('<div class="received">' + message.child("content").val()  + '</div>')
+  //     }
+  //   });
+  // });
+
+  var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(25);
+
+  firstQuery.on('child_added', function(snapshot) {
+    var data = snapshot.val();
+    if(data.sender_uuid == profile_uuid) {
+      $('.messages').append('<div class="sent">' + data.content  + '</div>');
+    } else {
+      $('.messages').append('<div class="received">' + data.content  + '</div>');
+    }
+  });
+
+  $('#message_to_send').on('keypress', function(e) {
+    if(e.which == 13) {
+      conversationRef.push({ content: $(this).val(),
+                              sender_uuid: profile_uuid,
+                              recipient_uuid: match_uuid,
+                              sent_at: Date.now() })
+      $(this).val('');
+    }
+  });
+
+  $('#disconnect-chat').on('click', function() {
+    Firebase.goOffline();
+  })
+
+</script>
+<% end %>

@@ -15,7 +15,7 @@ module Matchmaker
   end
 
   def create_conversation(between_uuids=[])
-    Conversation.new(participant_uuids: between_uuids).save
+    Conversation.find_or_create_by_participants!(between_uuids)
   end
 
   module_function :create_between, :create_conversation
