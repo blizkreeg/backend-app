@@ -59,10 +59,16 @@ class Conversation < ActiveRecord::Base
     self.closes_at = self.opened_at + CLOSE_TIME
     self.save!
 
+    initiator_match = Match.where("properties->>'initiates_profile_uuid' = '#{self.initiator.uuid}' AND matched_profile_uuid = '#{self.responder.uuid}'").take
+
     # send both into chat state
     self.participants.each do |participant|
+      am_i_initiator = (self.initiator.uuid == participant.uuid)
+      match = am_i_initiator ? initiator_match : initiator_match.reverse
+      profile_uuid = am_i_initiator ? self.initiator.uuid : self.responder.uuid
+
       participant.conversation_mode!(:in_conversation,
-                                      Rails.application.routes.url_helpers.v1_profile_conversation_path(participant.uuid, self.id))
+                                      Rails.application.routes.url_helpers.v1_profile_match_path(profile_uuid, match.id))
     end
 
     $firebase_conversations.set("#{self.uuid}/metadata", { participant_uuids: self.participant_uuids,
