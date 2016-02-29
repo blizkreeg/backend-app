@@ -1,23 +1,43 @@
 class Conversation < ActiveRecord::Base
   include ConversationStateMachine
+  include FirebaseConversationHelper
 
   has_many :messages, autosave: true, dependent: :destroy
 
   CLOSE_TIME = 7.days
+  CLOSED_BECAUSE_EXPIRED = 'Expired'
+  CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
+
+  RADIO_SILENCE_DELAY = 16.hours
+  HEALTH_CHECK_DELAY = 24.hours
+  READY_TO_MEET_DELAY = 48.hours
+  CHECK_IF_MEETING_DELAY = 48.hours
+  CLOSE_NOTICE_DELAY = 24.hours
 
   ATTRIBUTES = {
     participant_uuids: :string_array,
     opened_at: :date_time,
     closes_at: :date_time,
-    open: :boolean
+    open: :boolean,
+    closed_reason: :string,
+    closed_by_uuid: :string,
+    closed_at: :date_time
   }
 
   jsonb_accessor :properties, ATTRIBUTES
 
-  before_create :set_defaults
-
   def self.find_or_create_by_participants!(between_uuids)
     with_participant_uuids(between_uuids).take || create!(participant_uuids: between_uuids)
+  end
+
+  def self.expire_conversation(id)
+    conv = Conversation.find(id) rescue nil
+    return if conv.blank?
+    conv.close! if conv.open
+
+    conv.participants.each do |participant|
+      participant.conversation_expired!(:waiting_for_matches) if participant.in_conversation?
+    end
   end
 
   def fresh?
@@ -71,41 +91,26 @@ class Conversation < ActiveRecord::Base
                                       Rails.application.routes.url_helpers.v1_profile_match_path(profile_uuid, match.id))
     end
 
-    $firebase_conversations.set("#{self.uuid}/metadata", { participant_uuids: self.participant_uuids,
-                                                            opened_at: self.opened_at.iso8601,
-                                                            closes_at: self.closes_at.iso8601 })
-    self.push_messages_to_firebase
+    initialize_firebase
+
+    # Conversation.delay_for(HEALTH_CHECK_DELAY).move_conversation_to(self.id, 'health_check')
+    # Conversation.delay_until(self.closes_at).expire_conversation(self.id)
   end
 
   # close when the conversation expires
-  def close!
+  def close!(closed_by_uuid=nil)
     self.open = false
+    self.closed_reason = closed_by_uuid.blank? ? CLOSED_BECAUSE_EXPIRED : CLOSED_BECAUSE_UNMATCHED
+    self.closed_by_uuid = closed_by_uuid
+    self.closed_at = DateTime.now.utc
     self.save!
   end
 
-  def append_message!(content, sender_uuid)
+  def add_message!(content, sender_uuid)
     if content.present?
       message = Message.new(content: content, sender_uuid: sender_uuid, recipient_uuid: self.the_other_who_is_not(sender_uuid).uuid)
       self.messages.push(message)
       self.save!
     end
-  end
-
-  def push_messages_to_firebase
-    self.messages.each do |message|
-      $firebase_conversations.push(self.firebase_messages_endpoint, message.firebase_json)
-    end
-  end
-
-  def firebase_messages_endpoint
-    "#{self.uuid}/messages"
-  end
-
-  private
-
-  def set_defaults
-    self.open = false
-
-    true
   end
 end

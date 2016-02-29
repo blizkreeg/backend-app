@@ -9,7 +9,11 @@ json.data do
         json.partial! 'api/v1/profiles/profile', profile: match.matched_profile
       end
       json.match_conversation do
-        json.partial! 'api/v1/conversations/conversation', conversation: match.conversation
+        if match.conversation.present?
+          json.partial! 'api/v1/conversations/conversation', conversation: match.conversation
+        else
+          json.null!
+        end
       end
     end
   end

@@ -92,18 +92,21 @@ class Api::V1::MatchesController < ApplicationController
   def destroy
     match = Match.find(params[:id])
     match.unmatch!(params[:data][:reason])
-
     @current_profile.unmatch!(:waiting_for_matches)
 
-    case match.matched_profile.state.to_sym
-    when :waiting_for_matches_and_response
-      match.matched_profile.unmatch!(:waiting_for_matches)
-    when :has_matches_and_waiting_for_response
-      match.matched_profile.unmatch!(:has_matches)
-    when :show_matches_and_waiting_for_response
-      match.matched_profile.unmatch!(:show_matches)
-    when :in_conversation
-      # TBD: if in_conversation, after X hours, wake up the other person to see if they want to unmatch
+    if match.conversation.open
+      match.conversation.close!(@current_profile.uuid)
+
+      case match.matched_profile.state.to_sym
+      when :waiting_for_matches_and_response
+        match.matched_profile.unmatch!(:waiting_for_matches)
+      when :has_matches_and_waiting_for_response
+        match.matched_profile.unmatch!(:has_matches)
+      when :show_matches_and_waiting_for_response
+        match.matched_profile.unmatch!(:show_matches)
+      when :in_conversation
+        # Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(match.conversation.id, 'radio_silence')
+      end
     end
 
     render status: 200

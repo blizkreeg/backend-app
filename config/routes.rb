@@ -1,4 +1,8 @@
+require 'sidekiq/web'
 Rails.application.routes.draw do
+  # monitor Sidekiq
+  # TBD: move to standalone or protected on production
+  mount Sidekiq::Web => '/sidekiq'
 
   # constraints subdomain :api do <-- TODO: UNCOMMENT BEFORE LAUNCH
     scope module: 'api' do
@@ -32,6 +36,7 @@ Rails.application.routes.draw do
     post 'create-mutual-match', to: 'accounts#create_mutual_match'
     post 'reverse-gender', to: 'accounts#reverse_gender'
     post 'start-conversation', to: 'accounts#start_conversation'
+    post 'update-conversation-state', to: 'accounts#update_conversation_state'
   # end <-- TODO: UNCOMMENT BEFORE LAUNCH
 
   # post '/users', to: 'users#create'

@@ -125,7 +125,7 @@ class AccountsController < ApplicationController
 
     if profile.female?
       c = @match.conversation
-      c.append_message!('test message from guy', @match.matched_profile.uuid)
+      c.add_message!('test message from guy', @match.matched_profile.uuid)
       c.save!
 
       t = @match.matched_profile
@@ -149,6 +149,14 @@ class AccountsController < ApplicationController
 
     p2.state = 'in_conversation'
     p2.save!
+
+    redirect_to :back
+  end
+
+  def update_conversation_state
+    conv = Conversation.find(params[:conv_id])
+    conv.state = params[:conv_state]
+    conv.save!
 
     redirect_to :back
   end

@@ -11,7 +11,7 @@ class Api::V1::ConversationsController < ApplicationController
     new_conversation = @conversation.fresh?
 
     # now append the message
-    @conversation.append_message!(params[:data][:content], @current_profile.uuid)
+    @conversation.add_message!(params[:data][:content], @current_profile.uuid)
 
     # message from the initiator?
     if @current_profile.initiated_conversation?(@conversation)
@@ -27,7 +27,7 @@ class Api::V1::ConversationsController < ApplicationController
         @conversation.responder.got_first_message!(:mutual_match, v1_profile_match_path(@conversation.responder.uuid, my_match.reverse.id))
       end
     elsif @current_profile.responding_to_conversation?(@conversation)
-      # open for chat
+      # open chat -> moves both users to 'in_conversation' state
       @conversation.open! unless @conversation.open
     end
 

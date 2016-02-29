@@ -26,6 +26,9 @@ gem 'cloudinary'
 gem 'aasm'
 gem 'firebase'
 gem 'firebase_token_generator'
+# TBD: move to standalone or protected on production
+# if you require 'sinatra' you get the DSL extended to Object
+gem 'sinatra', :require => nil
 
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

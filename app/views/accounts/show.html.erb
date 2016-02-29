@@ -38,6 +38,20 @@
     <%= link_to "Match Profile", { action: :show, profile_uuid: match.matched_profile.uuid }, target: '_blank', style: 'color:#087e9b;font-weight:600' %> &nbsp; &nbsp;
     <% conversation = match.conversation %>
     <p><%= link_to "Disconnect from Chat", '#', id: 'disconnect-chat' %></p>
+    <p>
+      <strong>Conversation State: </strong> <%= conversation.state %>
+      <%= form_tag action: 'update_conversation_state' do %>
+        <strong>Update Conversation State To:</strong>
+        <%= hidden_field_tag 'conv_id', conversation.id %>
+        <%= select_tag 'conv_state', options_for_select([['Initial State', 'none'],
+                                                          ['Screen 5a. Conversation Check', 'health_check'],
+                                                          ['Screen 4e. Ready To Meet Yet?', 'ready_to_meet'],
+                                                          ["Screen 7a. Haven't heard back", 'radio_silence'],
+                                                          ["Screen 9a. When Are You Guys Meeting?", "check_if_meeting"],
+                                                          ["Screen 10. Conversation Close Notice", "close_notice"]]) %>
+        <%= submit_tag "Update" %>
+      <% end %>
+    </p>
     <div class='conversation'>
       <div style='text-align:center;font-weight:600;'><%= match.matched_profile.firstname %></div>
       <div class='messages'>

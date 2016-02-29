@@ -99,6 +99,7 @@ conversationsRef.on('child_changed', function(snapshot) {
             if(hasPendingMessages) {
               console.log("HAS PENDING MESSAGES!!!");
               // the disconnected user has messages since being disconnected
+              // CHECK THAT THE CONV. IS STILL OPEN AND THEN SEND PUSH NOTIFICATIONS
               // TBD: Send push notification here!
             }
           });
