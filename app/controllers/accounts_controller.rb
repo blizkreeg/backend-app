@@ -58,7 +58,7 @@ class AccountsController < ApplicationController
         match.conversation.destroy
       end
 
-      match.reverse.destroy
+      match.reverse.destroy rescue nil
       match.destroy
     end
 
