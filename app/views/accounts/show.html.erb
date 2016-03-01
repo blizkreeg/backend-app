@@ -27,11 +27,13 @@
   <strong>Endpoint: </strong><%= @profile.state_endpoint %><br>
   <% if @profile.mutual_match? %>
     <% match = @profile.active_mutual_match %>
-    <strong>Match ID: </strong><%= match.id %> &nbsp; &nbsp;
-    <%= link_to "Match Profile", { action: :show, profile_uuid: match.matched_profile.uuid }, target: '_blank', style: 'color:#087e9b;font-weight:600' %> &nbsp; &nbsp; &nbsp;
-    <strong>Conversation ID: </strong> <%= match.conversation.id %>
-    <br>
-    <%= button_to "Open Chat", { action: :start_conversation, match_id: match.id }, method: :post %>
+    <% if match.present? %>
+      <strong>Match ID: </strong><%= match.id %> &nbsp; &nbsp;
+      <%= link_to "Match Profile", { action: :show, profile_uuid: match.matched_profile.uuid }, target: '_blank', style: 'color:#087e9b;font-weight:600' %> &nbsp; &nbsp; &nbsp;
+      <strong>Conversation ID: </strong> <%= match.conversation.id %>
+      <br>
+      <%= button_to "Open Chat", { action: :start_conversation, match_id: match.id }, method: :post %>
+    <% end %>
   <% end %>
   <% if @profile.in_conversation? %>
     <% match = @profile.active_mutual_match %>

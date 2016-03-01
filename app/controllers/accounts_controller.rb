@@ -70,7 +70,7 @@ class AccountsController < ApplicationController
         match.conversation.destroy
       end
 
-      match.reverse.destroy
+      match.reverse.destroy rescue nil
       match.destroy
     end
 
@@ -97,7 +97,7 @@ class AccountsController < ApplicationController
     if profile.active_mutual_match
       @match = profile.active_mutual_match
     elsif profile.matches.liked.count > 0
-      @match = profile.matches.liked.take!
+      @match = profile.matches.liked.select { |m| m.matched_profile.active_mutual_match.blank? }.first
       r_match = @match.reverse
       r_match.update!(decision: 'Like') if r_match.undecided?
 
@@ -107,7 +107,7 @@ class AccountsController < ApplicationController
     else
       # TBD implement matching logic
       opposite_gender = profile.male? ? 'female' : 'male'
-      matched_profile = Profile.with_gender(opposite_gender).take!
+      matched_profile = Profile.with_gender(opposite_gender).select { |p| p.active_mutual_match.blank? }.first
       matched_profile.state = 'waiting_for_matches'
       matched_profile.save!
 
