@@ -91,6 +91,6 @@ module Constants
     "Inappropriate offline behavior",
     "Person is married",
     "False information on profile",
-    "Other"
+    "Something else"
   ]
 end

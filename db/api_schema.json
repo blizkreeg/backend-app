@@ -597,6 +597,84 @@
         }
       }
     },
+    "/profiles/report": {
+      "post": {
+        "tags": [
+          "Profiles"
+        ],
+        "summary": "Report this profile",
+        "description": "Report this profile",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "required": [
+                    "reported_profile_uuid",
+                    "reason",
+                    "match_id"
+                  ],
+                  "properties": {
+                    "reported_profile_uuid": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "enum": [
+                        "Inappropriate talk",
+                        "Inappropriate offline behavior",
+                        "Person is married",
+                        "False information on profile",
+                        "Something else"
+                      ]
+                    },
+                    "match_id": {
+                      "type": "integer",
+                      "format": "int64"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully reported profile",
+            "schema": {
+              "$ref": "#/definitions/200_nodata"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/401"
+            }
+          },
+          "404": {
+            "description": "Reported profile not found",
+            "schema": {
+              "$ref": "#/definitions/404"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "#/definitions/500"
+            }
+          }
+        }
+      }
+    },
     "/profiles/:profile_uuid/photos": {
       "post": {
         "tags": [
@@ -643,7 +721,6 @@
                   "type": "object",
                   "properties": {
                     "_meta": {
-                      "description": "meta-data for showing photos",
                       "$ref": "#/definitions/PhotoMeta"
                     },
                     "items": {
@@ -695,7 +772,6 @@
                   "type": "object",
                   "properties": {
                     "_meta": {
-                      "description": "meta-data for showing photos",
                       "$ref": "#/definitions/PhotoMeta"
                     },
                     "items": {
@@ -1450,7 +1526,6 @@
           "type": "object",
           "properties": {
             "_meta": {
-              "description": "meta-data for showing photos",
               "$ref": "#/definitions/PhotoMeta"
             },
             "items": {
@@ -1716,7 +1791,6 @@
           "$ref": "#/definitions/Error"
         },
         "auth": {
-          "description": "value will be null",
           "$ref": "#/definitions/AuthToken"
         }
       }
