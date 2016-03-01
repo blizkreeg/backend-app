@@ -2,6 +2,7 @@ class Api::V1::ProfilesController < ApplicationController
   respond_to :json
 
   PUBLIC_ACCESS_METHODS = [:create, :sign_in, :index, :add_to_waiting_list]
+  AUTHORIZATION_NOT_REQUIRED_METHODS = [:create, :sign_in, :index, :add_to_waiting_list, :report]
 
   # all actions except these should be restricted to authenticated users
   before_action :authenticated?, except: PUBLIC_ACCESS_METHODS
@@ -10,7 +11,7 @@ class Api::V1::ProfilesController < ApplicationController
     authenticated? unless featured_profiles?
   end
   # should the authenticated user be authorized to do this?
-  before_action except: PUBLIC_ACCESS_METHODS do
+  before_action except: AUTHORIZATION_NOT_REQUIRED_METHODS do
     authorized?(params[:uuid])
   end
   # always validate schema
@@ -99,6 +100,16 @@ class Api::V1::ProfilesController < ApplicationController
     EKC.logger.info "ADDED TO WAITING LIST lat: #{params[:data][:latitude]}, lon: #{params[:data][:longitude]}, mobile: #{params[:data][:phone]}"
 
     render status: 200, json: {}
+  end
+
+  def report
+    # reported_profile_uuid
+    # reason
+    # match_id
+
+    puts params[:data].inspect
+
+    render status: 200
   end
 
   def get_state

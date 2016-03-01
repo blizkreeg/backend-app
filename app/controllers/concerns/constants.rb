@@ -85,4 +85,12 @@ module Constants
     "Didn't start conversation", # TBD: run a timer to set unmatched=true and reason to this if time.now > expires_at
     "Completed conversation" # TBD: when conversation is done/expired, set this
   ]
+
+  REPORT_REASONS = [
+    "Inappropriate talk",
+    "Inappropriate offline behavior",
+    "Person is married",
+    "False information on profile",
+    "Other"
+  ]
 end
