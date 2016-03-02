@@ -109,7 +109,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     puts params[:data].inspect
 
-    render status: 200
+    render 'api/v1/shared/nodata', status: 200
   end
 
   def get_state

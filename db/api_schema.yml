@@ -882,7 +882,92 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
-
+  /profiles/:profile_uuid/conversations/:id/health:
+    post:
+      tags:
+        - Conversations
+      summary: Update how the conversation is going
+      description: Update how the conversation is going
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                required:
+                  - value
+                properties:
+                  value:
+                    type: string
+                    enum:
+                      - Conversation fizzled
+                      - It's going okay
+                      - Going good
+                      - Great!
+      responses:
+        200:
+          description: successfully updated conversation check
+          schema:
+            $ref: '#/definitions/200_nodata'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+  /profiles/:profile_uuid/conversations/:id/ready-to-meet:
+    post:
+      tags:
+        - Conversations
+      summary: Record if the user is ready to meet
+      description: Record if the user is ready to meet
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                required:
+                  - value
+                properties:
+                  value:
+                    type: string
+                    enum:
+                      - Yes
+                      - Not Yet
+      responses:
+        200:
+          description: successfully recorded if user is ready to meet
+          schema:
+            $ref: '#/definitions/200_nodata'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
 
 # *********************** DEFINITIONS ****************************
 

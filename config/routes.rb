@@ -13,7 +13,10 @@ Rails.application.routes.draw do
         resources :profiles, param: :uuid do
           resources :photos, only:  [:create, :show, :destroy, :index]
           resources :matches, only: [:index, :show, :update, :destroy], except: [:create]
-          resources :conversations, only: [:update, :show]
+          resources :conversations, only: [:update, :show] do
+            post '/health', to: 'conversations#update_health'
+            post '/ready-to-meet', to: 'conversations#update_meeting_readiness'
+          end
           resources :messages, only: [:create]
 
           # bulk update matches

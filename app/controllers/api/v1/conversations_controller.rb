@@ -4,7 +4,7 @@ class Api::V1::ConversationsController < ApplicationController
   before_action except: [] do
     authorized?(params[:profile_uuid])
   end
-  before_action :load_conversation, only: [:update, :show]
+  before_action :load_conversation, only: [:update, :show, :update_health, :update_meeting_readiness]
 
   def update
     # beginning of the conversation?
@@ -40,9 +40,17 @@ class Api::V1::ConversationsController < ApplicationController
     render status: 200
   end
 
+  def update_health
+    render 'api/v1/shared/nodata', status: 200
+  end
+
+  def update_meeting_readiness
+    render 'api/v1/shared/nodata', status: 200
+  end
+
   private
 
   def load_conversation
-    @conversation = Conversation.find(params[:id])
+    @conversation = Conversation.find(params[:id] || params[:conversation_id])
   end
 end
