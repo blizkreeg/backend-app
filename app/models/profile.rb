@@ -230,6 +230,10 @@ class Profile < ActiveRecord::Base
     self.matches.active.take
   end
 
+  def substate
+    self.in_conversation? ? self.active_mutual_match.conversation.state : nil
+  end
+
   private
 
   def set_tz
