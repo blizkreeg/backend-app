@@ -273,6 +273,130 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
+  /profiles/:uuid/sign-out:
+    post:
+      tags:
+        - Profiles
+      summary: Logout the user
+      description: Logout the user
+      responses:
+        200:
+          description: User logged out
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+              auth:
+                $ref: '#/definitions/AuthToken'
+              state_data:
+                type: object
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+  /profiles/:uuid/deactivate:
+    post:
+      tags:
+        - Profiles
+      summary: Deactivate the user account
+      description: Deactivate the user account
+      parameters:
+        - name: body
+          in: body
+          description: reason for deactivating
+          required: true
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                type: object
+                required:
+                  - reason
+                properties:
+                  reason:
+                    type: string
+                    enum:
+                      - I am seeing someone now
+                      - I need a break for some time
+                      - I'm busy with other things
+                      - Other
+      responses:
+        200:
+          description: User account deactivated
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Profile'
+              auth:
+                $ref: '#/definitions/AuthToken'
+              state_data:
+                type: object
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+  /profiles/:uuid/activate:
+    post:
+      tags:
+        - Profiles
+      summary: Activate the user account
+      description: Activate the user account
+      responses:
+        200:
+          description: User account activated
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/definitions/Profile'
+              auth:
+                $ref: '#/definitions/AuthToken'
+              state_data:
+                type: object
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        404:
+          description: Not found
+          schema:
+            $ref: '#/definitions/404'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
   /sign-in:
     post:
       tags:
