@@ -3,10 +3,14 @@ class Conversation < ActiveRecord::Base
   include FirebaseConversationHelper
 
   has_many :messages, autosave: true, dependent: :destroy
+  has_many :conversation_healths, autosave: true, dependent: :destroy
+  has_many :meeting_readinesses, autosave: true, dependent: :destroy
+  has_many :date_suggestions, autosave: true, dependent: :destroy
 
   CLOSE_TIME = 7.days
   CLOSED_BECAUSE_EXPIRED = 'Expired'
   CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
+  MAX_PARTICIPANTS = 2
 
   RADIO_SILENCE_DELAY = 16.hours
   HEALTH_CHECK_DELAY = 24.hours
@@ -25,6 +29,9 @@ class Conversation < ActiveRecord::Base
   }
 
   jsonb_accessor :properties, ATTRIBUTES
+
+  validates_length_of :conversation_healths, maximum: MAX_PARTICIPANTS
+  validates_length_of :meeting_readinesses, maximum: MAX_PARTICIPANTS
 
   def self.find_or_create_by_participants!(between_uuids)
     with_participant_uuids(between_uuids).take || create!(participant_uuids: between_uuids)
@@ -112,5 +119,9 @@ class Conversation < ActiveRecord::Base
       self.messages.push(message)
       self.save!
     end
+  end
+
+  def both_ready_to_meet?
+    self.meeting_readinesses.ready.count == MAX_PARTICIPANTS
   end
 end

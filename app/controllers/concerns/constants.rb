@@ -93,4 +93,18 @@ module Constants
     "False information on profile",
     "Something else"
   ]
+
+  DEACTIVATION_REASONS = [
+    "I am seeing someone now",
+    "I need a break for some time",
+    "I'm busy with other things",
+    "Other"
+  ]
+
+  DELETION_REASONS = [
+    "I found someone",
+    "I don't like the quality of matches",
+    "I'm not meeting enough people",
+    "Other"
+  ]
 end

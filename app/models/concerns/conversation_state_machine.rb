@@ -16,6 +16,7 @@ module ConversationStateMachine
       state :none, initial: true
       state :health_check
       state :ready_to_meet
+      state :show_date_suggestions
       state :radio_silence
       state :check_if_meeting
       state :close_notice
@@ -23,12 +24,24 @@ module ConversationStateMachine
       after_all_transitions :record_state_time
       after_all_transitions Proc.new { |*args| set_state_endpoint(*args) }
 
+      event :reset do
+        transitions from: :none, to: :none
+        transitions from: :health_check, to: :none
+        transitions from: :ready_to_meet, to: :none
+        transitions from: :check_if_meeting, to: :none
+        transitions from: :radio_silence, to: :none
+      end
+
       event :check_for_health do
         transitions from: :none, to: :health_check
       end
 
       event :check_if_ready_to_meet do
         transitions from: :health_check, to: :ready_to_meet
+      end
+
+      event :mutual_interest_in_meeting do
+        transitions from: :ready_to_meet, to: :show_date_suggestions
       end
 
       event :check_if_ready_to_move_on do

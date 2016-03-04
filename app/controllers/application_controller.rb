@@ -49,11 +49,16 @@ class ApplicationController < ActionController::Base
   def set_current_profile(profile=nil)
     if profile.present?
       @current_profile = profile
+      @current_profile.update!(signed_in_at: DateTime.now.utc)
     elsif auth_token_data.present? && auth_token_data.try(:[], 'profile_uuid').present?
       @current_profile = Profile.find(auth_token_data['profile_uuid'])
       EKC.logger.debug "Request from #{@current_profile.uuid}, path: #{request.path}"
     end
   rescue ActiveRecord::RecordNotFound
+    @current_profile = nil
+  end
+
+  def reset_current_profile!
     @current_profile = nil
   end
 

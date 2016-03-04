@@ -4,7 +4,7 @@ class Api::V1::ConversationsController < ApplicationController
   before_action except: [] do
     authorized?(params[:profile_uuid])
   end
-  before_action :load_conversation, only: [:update, :show, :update_health, :update_meeting_readiness]
+  before_action :load_conversation, only: [:update, :show, :update_health, :update_meeting_readiness, :show_date_suggestions]
 
   def update
     # beginning of the conversation?
@@ -41,11 +41,42 @@ class Api::V1::ConversationsController < ApplicationController
   end
 
   def update_health
+    health = ConversationHealth.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
+    health.update!(value: params[:data][:value])
+
+    @conversation.reset!(:none)
+
     render 'api/v1/shared/nodata', status: 200
   end
 
   def update_meeting_readiness
+    readiness = MeetingReadiness.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
+    readiness.update!(value: params[:data][:value])
+
+    # TBD: delay this just a bit on production!
+    @conversation.mutual_interest_in_meeting!(:show_date_suggestions) if @conversation.both_ready_to_meet?
+
     render 'api/v1/shared/nodata', status: 200
+  end
+
+  # TBD: needs a proper algorithm!
+  def show_date_suggestions
+    if @conversation.date_suggestions.blank?
+
+      # TBD: prioritize common first, then others
+      preferred_dates = @conversation.participants.map(&:date_preferences).flatten.compact.first(DateSuggestion::NUM_SUGGESTIONS)
+      # TBD: restrict by preferred types
+      places = DatePlace.limit(DateSuggestion::NUM_SUGGESTIONS).order("RANDOM()")
+
+      @conversation.date_suggestions = places.map { |place|
+        type_of_date = place.date_types[rand(place.date_types.size)]
+        DateSuggestion.new(day_of_week: (Date.today.end_of_week - rand(3)), type_of_date: type_of_date, date_place_id: place.id)
+      }
+
+      @conversation.save!
+    end
+
+    render status: 200
   end
 
   private

@@ -15,6 +15,8 @@ class Profile < ActiveRecord::Base
   has_many :matched_with, class_name: 'Match', primary_key: "uuid", foreign_key: "matched_profile_uuid", autosave: true, dependent: :destroy
   has_many :sent_messages, class_name: 'Message', primary_key: "uuid", foreign_key: "sender_uuid", autosave: true, dependent: :destroy
   has_many :received_messages, class_name: 'Message', primary_key: "uuid", foreign_key: "recipient_uuid", autosave: true, dependent: :destroy
+  has_many :conversation_healths, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
+  has_many :meeting_readinesses, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
 
   # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
   # set property tracking flags to 'flags'
@@ -41,36 +43,40 @@ class Profile < ActiveRecord::Base
   )
 
   ATTRIBUTES = {
-    email:                :string,
-    firstname:            :string,
-    lastname:             :string,
-    age:                  :integer,
-    gender:               :string,
-    born_on_year:         :integer,
-    born_on_month:        :integer,
-    born_on_day:          :integer,
-    height:               :string,
-    faith:                :string,
-    earned_degrees:       :string_array,
-    highest_degree:       :string,
-    schools_attended:     :string_array,
-    profession:           :string,
-    time_zone:            :string,
-    latitude:             :decimal,
-    longitude:            :decimal,
-    last_known_latitude:  :decimal,
-    last_known_longitude: :decimal,
-    intent:               :string,
-    incomplete:           :boolean,
-    incomplete_fields:    :string_array,
-    location_city:        :string,
-    location_state:       :string,
-    location_country:     :string,
-    date_preferences:     :string_array,
-    about_me_ideal_weekend: :string,
-    about_me_bucket_list:  :string,
-    about_me_quirk:       :string,
-    possible_relationship_status: :string
+    email:                        :string,
+    firstname:                    :string,
+    lastname:                     :string,
+    age:                          :integer,
+    gender:                       :string,
+    born_on_year:                 :integer,
+    born_on_month:                :integer,
+    born_on_day:                  :integer,
+    height:                       :string,
+    faith:                        :string,
+    earned_degrees:               :string_array,
+    highest_degree:               :string,
+    schools_attended:             :string_array,
+    profession:                   :string,
+    time_zone:                    :string,
+    latitude:                     :decimal,
+    longitude:                    :decimal,
+    last_known_latitude:          :decimal,
+    last_known_longitude:         :decimal,
+    intent:                       :string,
+    incomplete:                   :boolean,
+    incomplete_fields:            :string_array,
+    location_city:                :string,
+    location_state:               :string,
+    location_country:             :string,
+    date_preferences:             :string_array,
+    about_me_ideal_weekend:       :string,
+    about_me_bucket_list:         :string,
+    about_me_quirk:               :string,
+    possible_relationship_status: :string,
+    signed_in_at:                 :date_time,
+    signed_out_at:                :date_time,
+    inactive:                     :boolean,
+    inactive_reason:              :string
   }
 
   EDITABLE_ATTRIBUTES = %i(
@@ -106,7 +112,6 @@ class Profile < ActiveRecord::Base
   validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
   validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
   validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }
-  validate :validate_date_preferences
 
   # optional properties
   validates :faith, inclusion: { in: Constants::FAITHS }, allow_blank: true
@@ -115,6 +120,9 @@ class Profile < ActiveRecord::Base
   validates :last_known_latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }, allow_nil: true
   validates :last_known_longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }, allow_nil: true
   validates :profession, length: { maximum: 50 }, allow_blank: true
+  validates :inactive_reason, inclusion: { in: Constants::DEACTIVATION_REASONS, message: "'%{value}' is not valid" }, allow_blank: true, allow_nil: true
+
+  validate :validate_date_preferences
 
   reverse_geocoded_by :latitude, :longitude do |profile, results|
     if geo = results.first
