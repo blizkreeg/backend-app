@@ -968,6 +968,34 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
+  /profiles/:profile_uuid/conversations/:id/date-suggestions:
+    get:
+      tags:
+        - Conversations
+      summary: Returns a list of date date-suggestions
+      description: Returns a list of date date-suggestions
+      responses:
+        200:
+          description: list of date date suggestions
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/DateSuggestion'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
 
 # *********************** DEFINITIONS ****************************
 
@@ -1269,6 +1297,47 @@ definitions:
         enum:
           - Pass
           - Like
+  DatePlace:
+    type: object
+    description: Date place
+    properties:
+      id:
+        type: integer
+        format: int32
+      name:
+        type: string
+      street_address:
+        type: string
+      part_of_city:
+        type: string
+      city:
+        type: string
+      price_range:
+        type: string
+      num_dates:
+        type: integer
+      photos:
+        type: object
+        properties:
+          _meta:
+            $ref: '#/definitions/PhotoMeta'
+          public_ids:
+            type: array
+            items:
+              type: string
+
+  DateSuggestion:
+    type: object
+    description: Date suggestion
+    properties:
+      day_of_week:
+        type: string
+      type_of_date:
+        type: string
+      time_window:
+        type: string
+      place:
+        $ref: '#/definitions/DatePlace'
   State:
     type: object
     description: User state

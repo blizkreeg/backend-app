@@ -1,5 +1,5 @@
 require 'openssl'
-require 'HTTParty'
+require 'httparty'
 require 'nokogiri'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
