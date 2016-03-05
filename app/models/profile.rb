@@ -298,7 +298,7 @@ class Profile < ActiveRecord::Base
     age_gap_lower = self.male? ? Matchmaker::DEFAULT_AGE_GAP_MEN.first : Matchmaker::DEFAULT_AGE_GAP_WOMEN.first
     age_gap_upper = self.male? ? Matchmaker::DEFAULT_AGE_GAP_MEN.second : Matchmaker::DEFAULT_AGE_GAP_WOMEN.second
     if self.seeking_minimum_age.blank? && self.age.present?
-      self.seeking_minimum_age = self.age + age_gap_lower
+      self.seeking_minimum_age = [self.age + age_gap_lower, Constants::MIN_AGE].min
     end
     if self.seeking_maximum_age.blank? && self.age.present?
       self.seeking_maximum_age = self.age + age_gap_upper
