@@ -52,6 +52,7 @@ class Profile < ActiveRecord::Base
     born_on_month:                :integer,
     born_on_day:                  :integer,
     height:                       :string,
+    height_in:                    :integer,
     faith:                        :string,
     earned_degrees:               :string_array,
     highest_degree:               :string,
@@ -76,7 +77,14 @@ class Profile < ActiveRecord::Base
     signed_in_at:                 :date_time,
     signed_out_at:                :date_time,
     inactive:                     :boolean,
-    inactive_reason:              :string
+    inactive_reason:              :string,
+    seeking_minimum_age:          :integer,
+    seeking_maximum_age:          :integer,
+    seeking_minimum_height:       :string,
+    seeking_maximum_height:       :string,
+    seeking_minimum_height_in:    :integer,
+    seeking_maximum_height_in:    :integer,
+    seeking_faith:                :string_array
   }
 
   EDITABLE_ATTRIBUTES = %i(
@@ -121,6 +129,8 @@ class Profile < ActiveRecord::Base
   validates :last_known_longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }, allow_nil: true
   validates :profession, length: { maximum: 50 }, allow_blank: true
   validates :inactive_reason, inclusion: { in: Constants::DEACTIVATION_REASONS, message: "'%{value}' is not valid" }, allow_blank: true, allow_nil: true
+  validates :seeking_minimum_height, inclusion: { in: Constants::HEIGHT_RANGE }, allow_blank: true
+  validates :seeking_maximum_height, inclusion: { in: Constants::HEIGHT_RANGE }, allow_blank: true
 
   validate :validate_date_preferences
 
@@ -137,6 +147,7 @@ class Profile < ActiveRecord::Base
   before_save :set_age, if: Proc.new { |profile| profile.born_on_year_changed? || profile.born_on_month_changed? || profile.born_on_day_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
   before_create :set_about_me, if: lambda { Rails.env.development? } # TBD: REMOVE BEFORE PRODUCTION
+  before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
@@ -242,6 +253,14 @@ class Profile < ActiveRecord::Base
     self.in_conversation? ? self.active_mutual_match.conversation.state : nil
   end
 
+  def any_seeking_preference_blank?
+    self.seeking_minimum_age.blank? ||
+    self.seeking_maximum_age.blank? ||
+    self.seeking_minimum_height.blank? ||
+    self.seeking_maximum_height.blank? ||
+    self.seeking_faith.blank?
+  end
+
   private
 
   def set_tz
@@ -272,5 +291,34 @@ class Profile < ActiveRecord::Base
     self.about_me_ideal_weekend = (rand > 0.3 ? Faker::Lorem.sentence(10) : nil )
     self.about_me_bucket_list = (rand > 0.3 ? Faker::Lorem.sentence(8) : nil )
     self.about_me_quirk = (rand > 0.3 ? Faker::Lorem.sentence(6) : nil )
+  end
+
+  def set_default_seeking_preference
+    # age
+    age_gap_lower = self.male? ? Matchmaker::DEFAULT_AGE_GAP_MEN.first : Matchmaker::DEFAULT_AGE_GAP_WOMEN.first
+    age_gap_upper = self.male? ? Matchmaker::DEFAULT_AGE_GAP_MEN.second : Matchmaker::DEFAULT_AGE_GAP_WOMEN.second
+    if self.seeking_minimum_age.blank? && self.age.present?
+      self.seeking_minimum_age = self.age + age_gap_lower
+    end
+    if self.seeking_maximum_age.blank? && self.age.present?
+      self.seeking_maximum_age = self.age + age_gap_upper
+    end
+
+    # height
+    height_gap_lower = self.male? ? Matchmaker::DEFAULT_HEIGHT_GAP_MEN.first : Matchmaker::DEFAULT_HEIGHT_GAP_WOMEN.first
+    height_gap_upper = self.male? ? Matchmaker::DEFAULT_HEIGHT_GAP_MEN.second : Matchmaker::DEFAULT_HEIGHT_GAP_WOMEN.second
+
+    if self.seeking_minimum_height.blank? && self.height.present?
+      self.seeking_minimum_height = Constants::HEIGHT_RANGE[[(Constants::HEIGHT_RANGE.index(self.height) + height_gap_lower), 0].max]
+    end
+
+    if self.seeking_maximum_height.blank? && self.height.present?
+      self.seeking_maximum_height = Constants::HEIGHT_RANGE[[(Constants::HEIGHT_RANGE.index(self.height) + height_gap_upper), Constants::HEIGHT_RANGE.size-1].min]
+    end
+
+    # faith
+    if self.seeking_faith.blank?
+      self.seeking_faith = Constants::FAITHS
+    end
   end
 end

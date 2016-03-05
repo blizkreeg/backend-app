@@ -1,5 +1,11 @@
 module Matchmaker
 
+  DEFAULT_AGE_GAP_MEN   = [-5, 0]
+  DEFAULT_AGE_GAP_WOMEN = [0, +5]
+
+  DEFAULT_HEIGHT_GAP_MEN    = [-7, 0]
+  DEFAULT_HEIGHT_GAP_WOMEN  = [0, +7]
+
   def create_between(p1_uuid, p2_uuid)
     profile_one = Profile.find p1_uuid
     profile_two = Profile.find p2_uuid
