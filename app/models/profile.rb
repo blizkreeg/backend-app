@@ -40,6 +40,11 @@ class Profile < ActiveRecord::Base
     about_me_ideal_weekend
     about_me_bucket_list
     about_me_quirk
+    seeking_minimum_age
+    seeking_maximum_age
+    seeking_minimum_height
+    seeking_maximum_height
+    seeking_faith
   )
 
   ATTRIBUTES = {

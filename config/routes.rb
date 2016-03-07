@@ -18,10 +18,10 @@ Rails.application.routes.draw do
           resources :photos, only:  [:create, :show, :destroy, :index]
           resources :matches, only: [:index, :show, :update, :destroy], except: [:create]
           resources :conversations, only: [:update, :show] do
-            post '/health', to: 'conversations#update_health'
-            post '/ready-to-meet', to: 'conversations#update_real_date_details'
-            get '/date-suggestions', to: 'conversations#show_date_suggestions'
-            post '/date-details', to: 'conversations#update_real_date_details'
+            post '/health',           to: 'conversations#update_health'
+            post '/ready-to-meet',    to: 'conversations#update_real_date_details'
+            get '/date-suggestions',  to: 'conversations#show_date_suggestions'
+            post '/date-details',     to: 'conversations#update_real_date_details'
           end
           resources :messages, only: [:create]
 
