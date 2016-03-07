@@ -45,6 +45,7 @@ class Profile < ActiveRecord::Base
     seeking_minimum_height
     seeking_maximum_height
     seeking_faith
+    disable_notifications_setting
   )
 
   ATTRIBUTES = {
@@ -89,7 +90,8 @@ class Profile < ActiveRecord::Base
     seeking_maximum_height:       :string,
     seeking_minimum_height_in:    :integer,
     seeking_maximum_height_in:    :integer,
-    seeking_faith:                :string_array
+    seeking_faith:                :string_array,
+    disable_notifications_setting: :boolean
   }
 
   EDITABLE_ATTRIBUTES = %i(

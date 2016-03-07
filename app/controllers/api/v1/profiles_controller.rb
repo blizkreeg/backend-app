@@ -64,28 +64,6 @@ class Api::V1::ProfilesController < ApplicationController
     render status: 200
   end
 
-  def sign_out
-    @current_profile.update!(signed_out_at: DateTime.now.utc)
-
-    reset_current_profile!
-
-    render 'api/v1/shared/nodata', status: 200
-  end
-
-  def activate
-    @profile = @current_profile
-    @profile.update!(inactive: nil, inactive_reason: nil)
-
-    render 'api/v1/profiles/show', status: 200
-  end
-
-  def deactivate
-    @profile = @current_profile
-    @profile.update!(inactive: true, inactive_reason: params[:data][:reason])
-
-    render 'api/v1/profiles/show', status: 200
-  end
-
   def show
     @profile = Profile.find(params[:uuid])
 
@@ -140,6 +118,35 @@ class Api::V1::ProfilesController < ApplicationController
     @profile = Profile.find(params[:uuid])
 
     render 'api/v1/profiles/state', status: 200
+  end
+
+  def sign_out
+    @current_profile.update!(signed_out_at: DateTime.now.utc)
+
+    reset_current_profile!
+
+    render 'api/v1/shared/nodata', status: 200
+  end
+
+  def activate
+    @profile = @current_profile
+    @profile.update!(inactive: nil, inactive_reason: nil)
+
+    render 'api/v1/profiles/show', status: 200
+  end
+
+  def deactivate
+    @profile = @current_profile
+    @profile.update!(inactive: true, inactive_reason: params[:data][:reason])
+
+    render 'api/v1/profiles/show', status: 200
+  end
+
+  def update_settings
+    @profile = @current_profile
+    @profile.update!(profile_params)
+
+    render 'api/v1/profiles/show', status: 200
   end
 
   private

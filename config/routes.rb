@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         post '/profiles/:uuid/sign-out', to: 'profiles#sign_out'
         post '/profiles/:uuid/activate', to: 'profiles#activate'
         post '/profiles/:uuid/deactivate', to: 'profiles#deactivate'
+        patch '/profiles/:uuid/settings', to: 'profiles#update_settings'
 
         resources :profiles, param: :uuid do
           resources :photos, only:  [:create, :show, :destroy, :index]
