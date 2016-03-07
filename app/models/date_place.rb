@@ -1,5 +1,6 @@
 class DatePlace < ActiveRecord::Base
   has_many :date_suggestions, dependent: :destroy
+  has_many :real_dates, dependent: :destroy
 
   PROPERTIES = {
     name:               :string,

@@ -4,7 +4,7 @@ class Conversation < ActiveRecord::Base
 
   has_many :messages, autosave: true, dependent: :destroy
   has_many :conversation_healths, autosave: true, dependent: :destroy
-  has_many :meeting_readinesses, autosave: true, dependent: :destroy
+  has_many :real_dates, autosave: true, dependent: :destroy
   has_many :date_suggestions, autosave: true, dependent: :destroy
 
   CLOSE_TIME = 7.days
@@ -31,7 +31,7 @@ class Conversation < ActiveRecord::Base
   jsonb_accessor :properties, ATTRIBUTES
 
   validates_length_of :conversation_healths, maximum: MAX_PARTICIPANTS
-  validates_length_of :meeting_readinesses, maximum: MAX_PARTICIPANTS
+  validates_length_of :real_dates, maximum: MAX_PARTICIPANTS
 
   def self.find_or_create_by_participants!(between_uuids)
     with_participant_uuids(between_uuids).take || create!(participant_uuids: between_uuids)
@@ -122,6 +122,6 @@ class Conversation < ActiveRecord::Base
   end
 
   def both_ready_to_meet?
-    self.meeting_readinesses.ready.count == MAX_PARTICIPANTS
+    self.real_dates.ready_to_meet.count == MAX_PARTICIPANTS
   end
 end

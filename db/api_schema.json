@@ -1611,10 +1611,10 @@
                 "data": {
                   "type": "object",
                   "required": [
-                    "value"
+                    "ready_to_meet"
                   ],
                   "properties": {
-                    "value": {
+                    "ready_to_meet": {
                       "type": "string",
                       "enum": [
                         true,

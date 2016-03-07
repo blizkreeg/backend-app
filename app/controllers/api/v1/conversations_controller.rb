@@ -4,7 +4,7 @@ class Api::V1::ConversationsController < ApplicationController
   before_action except: [] do
     authorized?(params[:profile_uuid])
   end
-  before_action :load_conversation, only: [:update, :show, :update_health, :update_meeting_readiness, :show_date_suggestions]
+  before_action :load_conversation, only: [:update, :show, :update_health, :update_real_date_details, :show_date_suggestions]
 
   def update
     # beginning of the conversation?
@@ -49,9 +49,9 @@ class Api::V1::ConversationsController < ApplicationController
     render 'api/v1/shared/nodata', status: 200
   end
 
-  def update_meeting_readiness
-    readiness = MeetingReadiness.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
-    readiness.update!(value: params[:data][:value])
+  def update_real_date_details
+    real_date = RealDate.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
+    real_date.update!(real_date_parameters)
 
     # TBD: delay this just a bit on production!
     @conversation.mutual_interest_in_meeting!(:show_date_suggestions) if @conversation.both_ready_to_meet?
@@ -83,5 +83,10 @@ class Api::V1::ConversationsController < ApplicationController
 
   def load_conversation
     @conversation = Conversation.find(params[:id] || params[:conversation_id])
+  end
+
+  def real_date_parameters
+    attributes = RealDate::MASS_UPDATE_ATTRIBUTES
+    params.require(:data).permit(*attributes)
   end
 end

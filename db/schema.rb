@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160303003954) do
+ActiveRecord::Schema.define(version: 20160307002132) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,18 +70,6 @@ ActiveRecord::Schema.define(version: 20160303003954) do
   add_index "matches", ["for_profile_uuid"], name: "index_matches_on_for_profile_uuid", using: :btree
   add_index "matches", ["matched_profile_uuid"], name: "index_matches_on_matched_profile_uuid", using: :btree
 
-  create_table "meeting_readinesses", id: :bigserial, force: :cascade do |t|
-    t.jsonb    "properties",                default: {}
-    t.integer  "conversation_id", limit: 8,              null: false
-    t.uuid     "profile_uuid",                           null: false
-    t.datetime "recorded_at",                            null: false
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-  end
-
-  add_index "meeting_readinesses", ["conversation_id"], name: "index_meeting_readinesses_on_conversation_id", using: :btree
-  add_index "meeting_readinesses", ["profile_uuid"], name: "index_meeting_readinesses_on_profile_uuid", using: :btree
-
   create_table "messages", id: :bigserial, force: :cascade do |t|
     t.integer  "conversation_id", limit: 8,              null: false
     t.uuid     "sender_uuid",                            null: false
@@ -116,6 +104,19 @@ ActiveRecord::Schema.define(version: 20160303003954) do
   add_index "profiles", ["properties"], name: "idx_gin_profiles", using: :gin
   add_index "profiles", ["updated_at"], name: "index_profiles_on_updated_at", using: :btree
 
+  create_table "real_dates", id: :bigserial, force: :cascade do |t|
+    t.jsonb    "properties",                default: {}
+    t.integer  "conversation_id", limit: 8,              null: false
+    t.uuid     "profile_uuid",                           null: false
+    t.integer  "date_place_id"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
+  add_index "real_dates", ["conversation_id"], name: "index_real_dates_on_conversation_id", using: :btree
+  add_index "real_dates", ["date_place_id"], name: "index_real_dates_on_date_place_id", using: :btree
+  add_index "real_dates", ["profile_uuid"], name: "index_real_dates_on_profile_uuid", using: :btree
+
   create_table "social_authentications", force: :cascade do |t|
     t.string   "oauth_uid"
     t.string   "oauth_provider"
@@ -136,11 +137,12 @@ ActiveRecord::Schema.define(version: 20160303003954) do
   add_foreign_key "date_suggestions", "date_places"
   add_foreign_key "matches", "profiles", column: "for_profile_uuid", primary_key: "uuid"
   add_foreign_key "matches", "profiles", column: "matched_profile_uuid", primary_key: "uuid"
-  add_foreign_key "meeting_readinesses", "conversations"
-  add_foreign_key "meeting_readinesses", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "messages", "conversations"
   add_foreign_key "messages", "profiles", column: "recipient_uuid", primary_key: "uuid"
   add_foreign_key "messages", "profiles", column: "sender_uuid", primary_key: "uuid"
   add_foreign_key "photos", "profiles", column: "profile_uuid", primary_key: "uuid"
+  add_foreign_key "real_dates", "conversations"
+  add_foreign_key "real_dates", "date_places"
+  add_foreign_key "real_dates", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "social_authentications", "profiles", column: "profile_uuid", primary_key: "uuid"
 end

@@ -10,6 +10,6 @@ json.messages do
   end
 end
 json.ready_to_meet do
-  json.set! conversation.initiator.uuid.to_s, conversation.meeting_readinesses.by_profile(conversation.initiator.uuid).take.try(:value)
-  json.set! conversation.responder.uuid.to_s, conversation.meeting_readinesses.by_profile(conversation.responder.uuid).take.try(:value)
+  json.set! conversation.initiator.uuid.to_s, conversation.real_dates.by_profile(conversation.initiator.uuid).take.try(:value)
+  json.set! conversation.responder.uuid.to_s, conversation.real_dates.by_profile(conversation.responder.uuid).take.try(:value)
 end
