@@ -1697,6 +1697,77 @@
           }
         }
       }
+    },
+    "/profiles/:profile_uuid/conversations/:id/date-details": {
+      "post": {
+        "tags": [
+          "Conversations"
+        ],
+        "summary": "record details of the actual date",
+        "description": "record details of the actual date",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "data"
+              ],
+              "properties": {
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "meeting_day": {
+                      "type": "string",
+                      "description": "day in the format YYYY-MM-DD"
+                    },
+                    "meeting_time": {
+                      "type": "string",
+                      "description": "time in 24 hour format e.g. 0800 or 2000"
+                    },
+                    "date_place_id": {
+                      "type": "integer",
+                      "description": "id of the date location"
+                    },
+                    "other_date_place_name": {
+                      "type": "string",
+                      "description": "name of the date place if not from the suggested list"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successfully recorded details of the date",
+            "schema": {
+              "$ref": "#/definitions/200_nodata"
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "schema": {
+              "$ref": "#/definitions/401"
+            }
+          },
+          "403": {
+            "description": "Forbidden. User unauthorized to perform this operation.",
+            "schema": {
+              "$ref": "#/definitions/403"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "#/definitions/500"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
