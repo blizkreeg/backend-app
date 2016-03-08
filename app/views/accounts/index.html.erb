@@ -2,7 +2,7 @@
 <table border="2">
 <% @profiles.each do |profile| %>
   <tr>
-    <td style="padding:5px;"><%= profile.firstname %> <%= profile.lastname %></td>
+    <td style="padding:5px;"><%= link_to "#{profile.firstname} #{profile.lastname}", "/show?profile_uuid=#{profile.uuid}", target: '_blank' %></td>
     <td style="padding:5px;"><%= profile.uuid.first(6) %></td>
     <td style="padding:5px;"><%= profile.state %></td>
     <td style="padding:5px;"><%= profile.state_endpoint %></td>
