@@ -137,7 +137,7 @@ class Profile < ActiveRecord::Base
   validates :last_known_latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }, allow_nil: true
   validates :last_known_longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }, allow_nil: true
   validates :profession, length: { maximum: 50 }, allow_blank: true
-  validates :inactive_reason, inclusion: { in: Constants::DEACTIVATION_REASONS, message: "'%{value}' is not valid" }, allow_blank: true, allow_nil: true
+  # validates :inactive_reason, inclusion: { in: Constants::DEACTIVATION_REASONS, message: "'%{value}' is not valid" }, allow_blank: true, allow_nil: true
   validates :seeking_minimum_height, inclusion: { in: Constants::HEIGHT_RANGE }, allow_blank: true
   validates :seeking_maximum_height, inclusion: { in: Constants::HEIGHT_RANGE }, allow_blank: true
 
