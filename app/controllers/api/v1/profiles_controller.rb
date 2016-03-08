@@ -94,6 +94,8 @@ class Api::V1::ProfilesController < ApplicationController
     # @profile = Profile.find(params[:uuid])
     # @profile.destroy
 
+    reset_current_profile!
+
     render 'api/v1/shared/nodata', status: 200
   end
 
