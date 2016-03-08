@@ -7,4 +7,4 @@ json.about_me_details do
     json.value profile.send(attr_name.to_sym)
   end
 end
-json.partial! 'api/v1/photos/photos', photos: profile.photos.valid
+json.partial! 'api/v1/photos/photos', photos: profile.photos.ordered

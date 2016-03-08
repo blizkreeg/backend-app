@@ -42,6 +42,18 @@ class FacebookAuthentication < SocialAuthentication
     []
   end
 
+  def get_photo(photo_id)
+    graph_url = "#{photo_id}"
+
+    response_hash = query_fb graph_url
+  end
+
+  def get_photos_for_album(album_id, limit=50, fields='images,id')
+    photos_url = "#{album_id}/photos?limit=#{limit}&fields=#{fields}"
+
+    photos = query_fb(photos_url)
+  end
+
   def mutual_friends_count(uid)
     graph_url = "#{uid}/?fields=context.fields(mutual_friends)"
 

@@ -1,7 +1,6 @@
 class Photo < ActiveRecord::Base
   belongs_to :profile, foreign_key: "profile_uuid"
 
-
   PUBLIC_ID_LENGTH = 10
   MAX_WIDTH = 1000
   MAX_HEIGHT = 1000
@@ -9,11 +8,12 @@ class Photo < ActiveRecord::Base
   PROFILE_TRANSFORMATIONS = 'c_fill,g_face:center'
   FULLSCREEN_TRANSFORMATIONS = 'c_fill,g_face:center'
 
-  scope :valid, -> { where("(properties->>'marked_for_deletion')::boolean = false").order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc") }
+  # scope :valid, -> { where("(properties->>'marked_for_deletion')::boolean = false").order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc") }
+  scope :ordered, -> { order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc").order("updated_at DESC") }
+  scope :primary, -> { where("(properties->>'primary')::boolean = true").order("updated_at DESC") }
 
   MASS_UPDATE_ATTRIBUTES = %i(
     primary
-    marked_for_deletion
   )
 
   ATTRIBUTES = {
@@ -41,14 +41,10 @@ class Photo < ActiveRecord::Base
     uploaded_hash = Cloudinary::Uploader.upload(url,
                                                 public_id: xid,
                                                 transformation: { width: Photo::MAX_WIDTH, height: Photo::MAX_HEIGHT, crop: :limit },
-                                                # eager:[
-                                                #   { crop: :thumb, gravity: 'face:center', radius: :max },
-                                                #   { crop: :crop, gravity: 'face:center' },
-                                                #   { crop: :fill, gravity: 'face:center' }],
                                                 tags: [Rails.env])
 
-    if options[:photo_id]
-      photo = Photo.find(options[:photo_id])
+    if options[:update_photo_id]
+      photo = Photo.find(options[:update_photo_id])
       photo.public_id = uploaded_hash["public_id"]
       photo.public_version = uploaded_hash["version"]
       photo.original_url = uploaded_hash["url"]
@@ -57,8 +53,9 @@ class Photo < ActiveRecord::Base
       photo.save!
     end
 
+    uploaded_hash
   rescue ActiveRecord::RecordNotFound
-    Rails.logger.error "Sidekiq: Failed to find photo with id #{options[:photo_id]}"
+    Rails.logger.error "Sidekiq: Failed to find photo with id #{options[:update_photo_id]}"
   rescue CloudinaryException
     Rails.logger.error "Sidekiq: Cloudinary upload error. Possibly bad url: #{url}"
   end
@@ -69,7 +66,7 @@ class Photo < ActiveRecord::Base
       next if photo.public_id.present?
       next if photo.original_url.blank?
 
-      self.delay.upload_remote_photo_to_cloudinary(photo.original_url, photo_id: photo.id)
+      self.delay.upload_remote_photo_to_cloudinary(photo.original_url, update_photo_id: photo.id)
     end
   rescue ActiveRecord::RecordNotFound
     Rails.logger.error "Sidekiq: Can't find profile with uuid #{profile_uuid}"

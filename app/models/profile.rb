@@ -31,6 +31,7 @@ class Profile < ActiveRecord::Base
     highest_degree
     schools_attended
     profession
+    employer_name
     latitude
     longitude
     last_known_latitude
@@ -64,6 +65,7 @@ class Profile < ActiveRecord::Base
     highest_degree:               :string,
     schools_attended:             :string_array,
     profession:                   :string,
+    employer_name:                :string,
     time_zone:                    :string,
     latitude:                     :decimal,
     longitude:                    :decimal,
@@ -266,6 +268,19 @@ class Profile < ActiveRecord::Base
     self.seeking_minimum_height.blank? ||
     self.seeking_maximum_height.blank? ||
     self.seeking_faith.blank?
+  end
+
+  def test_and_set_primary_photo!
+    num_primary = self.photos.primary.count
+    return if num_primary == 1
+
+    if num_primary == 0
+      self.photos.ordered.first.update!(primary: true)
+    else
+      self.photos.primary[1..-1].each do |photo|
+        photo.update!(primary: false)
+      end
+    end
   end
 
   private

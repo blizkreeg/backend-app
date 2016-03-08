@@ -16,7 +16,10 @@ Rails.application.routes.draw do
         patch '/profiles/:uuid/settings', to: 'profiles#update_settings'
 
         resources :profiles, param: :uuid do
-          resources :photos, only:  [:create, :show, :destroy, :index]
+          resources :photos, only:  [:create, :show, :destroy, :index, :update]
+          get '/facebook-albums', to: 'photos#show_facebook_albums'
+          get '/facebook-albums/:album_id', to: 'photos#show_facebook_album_photos'
+
           resources :matches, only: [:index, :show, :update, :destroy], except: [:create]
           resources :conversations, only: [:update, :show] do
             post '/health',           to: 'conversations#update_health'

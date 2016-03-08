@@ -19,10 +19,10 @@ json.data do
         json._meta do
           json.partial! 'api/v1/photos/meta'
         end
-        if profile.photos.valid.first.blank?
+        if profile.photos.ordered.first.blank?
           json.null!
         else
-          json.partial! 'api/v1/photos/photo', photo: profile.photos.valid.first
+          json.partial! 'api/v1/photos/photo', photo: profile.photos.ordered.first
         end
       end
     end

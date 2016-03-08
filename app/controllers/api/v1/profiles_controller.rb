@@ -90,8 +90,9 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def destroy
-    @profile = Profile.find(params[:uuid])
-    @profile.destroy
+    # TBD: figure this out before going to PROD
+    # @profile = Profile.find(params[:uuid])
+    # @profile.destroy
 
     render 'api/v1/shared/nodata', status: 200
   end
