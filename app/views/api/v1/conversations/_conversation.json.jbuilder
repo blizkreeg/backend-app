@@ -1,4 +1,4 @@
-json.(conversation, :id, :uuid, :closes_at, :state)
+json.(conversation, :id, :uuid, :closes_at, :closes_at_str, :state)
 json.messages do
   json._meta do
     json.null!

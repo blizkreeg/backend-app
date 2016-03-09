@@ -124,4 +124,10 @@ class Conversation < ActiveRecord::Base
   def both_ready_to_meet?
     self.real_dates.ready_to_meet.count == MAX_PARTICIPANTS
   end
+
+  def closes_at_str
+    return '' if closes_at.blank?
+
+    "#{self.closes_at.day.ordinalize} #{self.closes_at.strftime('%B')}"
+  end
 end
