@@ -128,6 +128,6 @@ class Conversation < ActiveRecord::Base
   def closes_at_str
     return '' if closes_at.blank?
 
-    "#{self.closes_at.day.ordinalize} #{self.closes_at.strftime('%B')}"
+    "#{self.closes_at.day.ordinalize} #{self.closes_at.strftime('%b')} at #{self.closes_at.strftime('%k:%M%P')}"
   end
 end
