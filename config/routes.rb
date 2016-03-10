@@ -28,6 +28,7 @@ Rails.application.routes.draw do
             post '/date-details',     to: 'conversations#update_real_date_details'
           end
           resources :messages, only: [:create]
+          resources :real_dates, only: [:show, :update], path: '/real-dates'
 
           # bulk update matches
           patch 'matches', to: 'matches#update', as: :matches_bulk
@@ -41,6 +42,10 @@ Rails.application.routes.draw do
     end
 
     # TBD: COMMENT BEFORE GOING TO PROD!!
+
+    # get '/admin/profile-review', to: 'admin#review_profiles'
+    # post '/admin/update-review', to: 'admin#update_review'
+
     get 'login', to: 'accounts#login'
     get 'all', to: 'accounts#index'
     get 'show', to: 'accounts#show'

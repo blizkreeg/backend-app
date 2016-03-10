@@ -9,6 +9,8 @@ class RealDate < ActiveRecord::Base
     meeting_time
     other_date_place_name
     date_place_id
+    post_date_rating
+    post_date_feedback
   )
 
   YES_VALUE = "Yes"
@@ -16,27 +18,41 @@ class RealDate < ActiveRecord::Base
 
   READY_TO_MEET_OPTIONS = [YES_VALUE, NO_VALUE]
 
+  POST_DATE_RATING_OPTIONS = [
+    "We never met",
+    "Bad",
+    "Fine, but not interested in meeting again.",
+    "Good! Would like to meet again."
+  ]
+
   scope :by_profile, -> (uuid) { where(profile_uuid: uuid) }
   scope :ready_to_meet, -> { with_ready_to_meet(YES_VALUE) }
 
   ATTRIBUTES = {
-    ready_to_meet: :string,
-    rtm_recorded_at: :date_time,
-    meeting_day: :date,
-    meeting_time: :string,
-    meeting_at: :date_time,
+    ready_to_meet:          :string,
+    rtm_recorded_at:        :date_time,
+    meeting_day:            :date,
+    meeting_time:           :string,
+    meeting_at:             :date_time,
     meeting_at_recorded_at: :date_time,
-    other_date_place_name: :string
+    other_date_place_name:  :string,
+    post_date_rating:       :string,
+    post_date_feedback:     :string
   }
 
   jsonb_accessor :properties, ATTRIBUTES
 
   validates :ready_to_meet, inclusion: { in: READY_TO_MEET_OPTIONS, message: "%{value} is not valid" }, allow_blank: true, allow_nil: true
   validates :date_place, presence: true, if: Proc.new { |real_date| real_date.date_place_id.present? }
+  validates :post_date_rating, inclusion: { in: POST_DATE_RATING_OPTIONS, message: "%{value} is not valid" }, allow_blank: true, allow_nil: true
 
   before_save :set_rtm_recorded_at, if: Proc.new { |real_date| real_date.ready_to_meet_changed? }
   before_save :set_meeting_at_recorded_at, if: Proc.new { |real_date| real_date.meeting_day_changed? || real_date.meeting_time_changed? }
   before_save :set_meeting_at, if: Proc.new { |real_date| real_date.meeting_day.present? && real_date.meeting_time.present? }
+
+  def date_profile
+    conversation.the_other_who_is_not(profile.uuid)
+  end
 
   private
 
