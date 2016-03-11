@@ -160,4 +160,38 @@ class AccountsController < ApplicationController
 
     redirect_to :back
   end
+
+  def switch_to_post_date_feedback
+    @profile = Profile.find(params[:uuid])
+
+    if @profile.real_dates.blank?
+      # byebug
+      if @profile.matches.blank?
+        opposite_gender = @profile.male? ? 'female' : 'male'
+        matched_profiles = Profile.with_gender(opposite_gender).limit(1).reorder("RANDOM()")
+        matched_profiles.map { |matched_profile|
+                              male_uuid = @profile.male? ? @profile.uuid : matched_profile.uuid;
+                              Match.create_with(delivered_at: DateTime.now,
+                                                expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
+                                                initiates_profile_uuid: male_uuid)
+                              .find_or_create_by(for_profile_uuid: @profile.uuid, matched_profile_uuid: matched_profile.uuid) }
+        @profile.reload
+      end
+      if @profile.matches.map(&:conversation).compact.blank?
+        Matchmaker.create_conversation([@profile.uuid, @profile.matches.first.matched_profile.uuid])
+        @profile.reload
+      end
+
+      a_conversation = @profile.matches.map { |m| m.conversation }.first
+      RealDate.find_or_create_by(profile_uuid: @profile.uuid, conversation_id: a_conversation.id) if a_conversation.present?
+      @profile.reload
+    end
+
+    @profile.state = 'post_date_feedback'
+    @profile.state_endpoint = v1_profile_real_date_path(@profile.uuid, @profile.real_dates.first.id)
+
+    @profile.save!
+
+    redirect_to :back
+  end
 end

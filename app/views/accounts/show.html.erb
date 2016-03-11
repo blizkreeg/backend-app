@@ -20,6 +20,9 @@
     <td style="padding:5px;">
       <%= button_to "Reverse Gender", { action: :reverse_gender, uuid: @profile.uuid }, method: :post %>
     </td>
+    <td style="padding:5px;">
+      <%= button_to "Post-date Feedback State", { action: :switch_to_post_date_feedback, uuid: @profile.uuid }, method: :post %>
+    </td>
   </tr>
 </table>
 <p>

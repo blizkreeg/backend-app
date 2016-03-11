@@ -56,6 +56,7 @@ Rails.application.routes.draw do
     post 'reverse-gender', to: 'accounts#reverse_gender'
     post 'start-conversation', to: 'accounts#start_conversation'
     post 'update-conversation-state', to: 'accounts#update_conversation_state'
+    post 'post-date-feedback', to: 'accounts#switch_to_post_date_feedback'
   # end <-- TODO: UNCOMMENT BEFORE LAUNCH
 
   # post '/users', to: 'users#create'
