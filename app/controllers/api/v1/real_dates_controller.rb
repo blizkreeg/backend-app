@@ -16,6 +16,10 @@ class Api::V1::RealDatesController < ApplicationController
     @real_date = RealDate.find(params[:id])
     @real_date.update!(real_date_parameters)
 
+    if params[:data].try(:[], :post_date_rating).present?
+      @current_profile.update!(substate: nil, substate_endpoint: nil)
+    end
+
     render 'api/v1/real_dates/show', status: 200
   end
 

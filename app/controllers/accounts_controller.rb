@@ -187,8 +187,8 @@ class AccountsController < ApplicationController
       @profile.reload
     end
 
-    @profile.state = 'post_date_feedback'
-    @profile.state_endpoint = v1_profile_real_date_path(@profile.uuid, @profile.real_dates.first.id)
+    @profile.substate = 'post_date_feedback'
+    @profile.substate_endpoint = v1_profile_real_date_path(@profile.uuid, @profile.real_dates.first.id)
 
     @profile.save!
 

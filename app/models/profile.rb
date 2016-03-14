@@ -93,7 +93,9 @@ class Profile < ActiveRecord::Base
     seeking_minimum_height_in:    :integer,
     seeking_maximum_height_in:    :integer,
     seeking_faith:                :string_array,
-    disable_notifications_setting: :boolean
+    disable_notifications_setting: :boolean,
+    substate:                     :string,
+    substate_endpoint:            :string
   }
 
   EDITABLE_ATTRIBUTES = %i(
@@ -137,7 +139,6 @@ class Profile < ActiveRecord::Base
   validates :last_known_latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }, allow_nil: true
   validates :last_known_longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }, allow_nil: true
   validates :profession, length: { maximum: 50 }, allow_blank: true
-  # validates :inactive_reason, inclusion: { in: Constants::DEACTIVATION_REASONS, message: "'%{value}' is not valid" }, allow_blank: true, allow_nil: true
   validates :seeking_minimum_height, inclusion: { in: Constants::HEIGHT_RANGE }, allow_blank: true
   validates :seeking_maximum_height, inclusion: { in: Constants::HEIGHT_RANGE }, allow_blank: true
 
@@ -259,6 +260,9 @@ class Profile < ActiveRecord::Base
   end
 
   def substate
+    substate_value = self.read_attribute(:substate)
+    return substate_value if substate_value.present?
+
     self.in_conversation? ? self.active_mutual_match.conversation.state : nil
   end
 

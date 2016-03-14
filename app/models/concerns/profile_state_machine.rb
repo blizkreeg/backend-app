@@ -22,7 +22,6 @@ module ProfileStateMachine
       state :has_matches_and_waiting_for_response
       state :show_matches_and_waiting_for_response
       state :in_conversation
-      state :post_date_feedback
 
       after_all_transitions :record_state_time
       after_all_transitions Proc.new { |*args| set_state_endpoint(*args) }
