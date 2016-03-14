@@ -21,8 +21,8 @@ class RealDate < ActiveRecord::Base
   POST_DATE_RATING_OPTIONS = [
     "We never met",
     "Bad",
-    "Fine, but not interested in meeting again.",
-    "Good! Would like to meet again."
+    "Fine, but not interested in meeting again",
+    "Good! Would like to meet again"
   ]
 
   scope :by_profile, -> (uuid) { where(profile_uuid: uuid) }
