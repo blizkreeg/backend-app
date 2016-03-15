@@ -45,7 +45,7 @@ class AccountsController < ApplicationController
 
   def reset_state
     profile = Profile.find(params[:uuid])
-    profile.update! state: params[:state], state_endpoint: nil
+    profile.update!(state: params[:state], state_endpoint: nil, substate: nil, substate_endpoint: nil)
 
     if profile.active_mutual_match
       match = profile.active_mutual_match
