@@ -51,6 +51,13 @@ class Api::V1::ConversationsController < ApplicationController
 
   def update_real_date_details
     real_date = RealDate.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
+    byebug
+    if params[:data][:meeting_at].present?
+      byebug
+      tz_offset = ActiveSupport::TimeZone.new(real_date.profile.time_zone).utc_offset / 3600 rescue 0
+      dt = Time.at((params[:data][:meeting_at]/1000).to_i)
+      params[:data][:meeting_at] = DateTime.new(dt.year, dt.month, dt.day, dt.hour, dt.min, 0, sprintf("%+d", tz_offset))
+    end
     real_date.update!(real_date_parameters)
 
     # TBD: delay this just a bit on production!
@@ -70,6 +77,8 @@ class Api::V1::ConversationsController < ApplicationController
 
       @conversation.date_suggestions = places.map { |place|
         type_of_date = place.date_types[rand(place.date_types.size)]
+        # TBD: day of week here can be wrong if it's Friday. We could end up getting a date in the past.
+        # This should be smarter!
         DateSuggestion.new(day_of_week: (Date.today.end_of_week - rand(3)), type_of_date: type_of_date, date_place_id: place.id)
       }
 
