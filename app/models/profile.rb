@@ -95,7 +95,8 @@ class Profile < ActiveRecord::Base
     seeking_faith:                :string_array,
     disable_notifications_setting: :boolean,
     substate:                     :string,
-    substate_endpoint:            :string
+    substate_endpoint:            :string,
+    butler_conversation_uuid:     :string
   }
 
   EDITABLE_ATTRIBUTES = %i(
@@ -157,6 +158,7 @@ class Profile < ActiveRecord::Base
   before_save :set_age, if: Proc.new { |profile| profile.born_on_year_changed? || profile.born_on_month_changed? || profile.born_on_day_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
   before_create :set_about_me, if: lambda { Rails.env.development? } # TBD: REMOVE BEFORE PRODUCTION
+  before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
 
   def auth_token_payload
@@ -317,6 +319,10 @@ class Profile < ActiveRecord::Base
     self.about_me_ideal_weekend = (rand > 0.3 ? Faker::Lorem.sentence(10) : nil )
     self.about_me_bucket_list = (rand > 0.3 ? Faker::Lorem.sentence(8) : nil )
     self.about_me_quirk = (rand > 0.3 ? Faker::Lorem.sentence(6) : nil )
+  end
+
+  def initialize_butler_conversation
+    self.butler_conversation_uuid = SecureRandom.uuid
   end
 
   def set_default_seeking_preference
