@@ -3,8 +3,8 @@ module FirebaseConversationHelper
 
   def initialize_firebase
     $firebase_conversations.set(self.firebase_metadata_endpoint, { participant_uuids: self.participant_uuids,
-                                                                    opened_at: self.opened_at.iso8601,
-                                                                    closes_at: self.closes_at.iso8601 })
+                                                                    opened_at: self.opened_at.try(:iso8601),
+                                                                    closes_at: self.closes_at.try(:iso8601) })
     sync_messages_to_firebase
   end
 
