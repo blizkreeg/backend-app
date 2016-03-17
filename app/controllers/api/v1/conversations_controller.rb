@@ -51,9 +51,7 @@ class Api::V1::ConversationsController < ApplicationController
 
   def update_real_date_details
     real_date = RealDate.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
-    byebug
     if params[:data][:meeting_at].present?
-      byebug
       tz_offset = ActiveSupport::TimeZone.new(real_date.profile.time_zone).utc_offset / 3600 rescue 0
       dt = Time.at((params[:data][:meeting_at]/1000).to_i)
       params[:data][:meeting_at] = DateTime.new(dt.year, dt.month, dt.day, dt.hour, dt.min, 0, sprintf("%+d", tz_offset))
