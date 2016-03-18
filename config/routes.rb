@@ -49,6 +49,7 @@ Rails.application.routes.draw do
     get 'login', to: 'accounts#login'
     get 'all', to: 'accounts#index'
     get 'show', to: 'accounts#show'
+    get 'show/butler', to: 'accounts#show_butler_chat'
     get '/auth/:provider/callback', to: 'accounts#callback', as: :omniauth_callback
     delete '/accounts/destroy/:uuid', to: 'accounts#destroy'
     post 'reset_state', to: 'accounts#reset_state'

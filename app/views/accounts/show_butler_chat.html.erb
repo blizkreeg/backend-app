@@ -1,0 +1,84 @@
+<% firebase_token = Firebase::FirebaseTokenGenerator.new("#{ENV['FIREBASE_SECRET']}").create_token({ uid: @profile.uuid }) %>
+
+<div class='conversation'>
+  <div style='text-align:center;font-weight:600;'>Butler chat with <br> <%= @profile.firstname %></div>
+  <div class='messages'>
+  </div>
+  <%= text_field_tag 'message_to_send', '', placeholder: 'message to send. type and press enter.', style: 'width:90%;padding: 4px 6px;border:1px solid #888' %>
+</div>
+
+<script language='javascript'>
+  var profile_uuid = "<%= @profile.uuid %>";
+
+  var ref = new Firebase("https://glaring-fire-5389.firebaseio.com/");
+  ref.authWithCustomToken("<%= firebase_token %>", function(error, authData) {
+    if (error) {
+      console.log("Login Failed!", error);
+    } else {
+      console.log("Login Succeeded!", authData);
+    }
+  });
+
+  // // INVOKE ON CLIENT
+  // var disconnectedAtRef = new Firebase("https://glaring-fire-5389.firebaseio.com/users/<%= @profile.uuid %>/disconnectedAt");
+
+  // // INVOKE ON CLIENT - RUNS ON FIREBASE
+  // disconnectedAtRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP, function(err) {
+  //   if(err) { alert(err); }
+  // });
+
+  // // INVOKE ON CLIENT
+  // var connectedRef = new Firebase("https://glaring-fire-5389.firebaseio.com/.info/connected");
+  // connectedRef.on("value", function(snap) {
+  //   if (snap.val() === true) {
+  //     console.log("connected");
+  //     disconnectedAtRef.set(false, function(e) {
+  //       if(e) {
+  //         alert(e);
+  //       }
+  //     });
+  //   } else {
+  //     console.log("not connected");
+  //   }
+  // });
+
+  var conversationRef = new Firebase("https://glaring-fire-5389.firebaseio.com/conversations/<%= @profile.butler_conversation_uuid %>/messages");
+
+  // var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(10);
+  // firstQuery.once('value', function(messages) {
+  //   messages.forEach(function(message) {
+  //     if(message.child("sender_uuid").val() == profile_uuid) {
+  //       $('.messages').append('<div class="sent">' + message.child("content").val()  + '</div>')
+  //     } else {
+  //       $('.messages').append('<div class="received">' + message.child("content").val()  + '</div>')
+  //     }
+  //   });
+  // });
+
+  var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(25);
+
+  firstQuery.on('child_added', function(snapshot) {
+    var data = snapshot.val();
+    console.log(data.sender_uuid);
+    if(data.sender_uuid === undefined) {
+      $('.messages').append('<div class="sent">' + data.content  + '</div>');
+    } else {
+      $('.messages').append('<div class="received">' + data.content  + '</div>');
+    }
+  });
+
+  $('#message_to_send').on('keypress', function(e) {
+    if(e.which == 13) {
+      conversationRef.push({ content: $(this).val(),
+                              sender_uuid: null,
+                              recipient_uuid: profile_uuid,
+                              sent_at: Date.now() })
+      $(this).val('');
+    }
+  });
+
+  $('#disconnect-chat').on('click', function() {
+    Firebase.goOffline();
+  })
+
+</script>

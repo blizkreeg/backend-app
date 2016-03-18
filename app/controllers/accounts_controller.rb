@@ -29,6 +29,12 @@ class AccountsController < ApplicationController
     @profile = Profile.find(uuid)
   end
 
+  def show_butler_chat
+    uuid = params[:profile_uuid] || session[:profile_uuid]
+
+    @profile = Profile.find(uuid)
+  end
+
   def destroy
     profile = Profile.find(params[:uuid])
     profile.destroy
