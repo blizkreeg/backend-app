@@ -68,6 +68,11 @@ class FacebookAuthentication < SocialAuthentication
     0
   end
 
+  def total_friends_count
+    graph_url = "me/friends"
+    response_hash = query_fb graph_url
+  end
+
   def query_fb(endpoint)
     fbgraph.get_object endpoint
   end

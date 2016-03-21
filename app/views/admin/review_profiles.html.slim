@@ -1,0 +1,6 @@
+h2 For Review (#{@profiles.count})
+
+- @profiles.each do |profile|
+  = form_tag '/admin/update-review' do |form|
+    = hidden_field_tag 'review_id', profile.review.id
+    | khasdf
