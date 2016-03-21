@@ -15,6 +15,7 @@ class Conversation < ActiveRecord::Base
   RADIO_SILENCE_DELAY = 16.hours
   HEALTH_CHECK_DELAY = 24.hours
   READY_TO_MEET_DELAY = 48.hours
+  SHOW_DATE_SUGGESTIONS_DELAY = 1.hour
   CHECK_IF_MEETING_DELAY = 48.hours
   CLOSE_NOTICE_DELAY = 24.hours
 
@@ -128,6 +129,7 @@ class Conversation < ActiveRecord::Base
   def closes_at_str
     return '' if closes_at.blank?
 
+    # TBD -- format this in the user's timezone
     "#{self.closes_at.day.ordinalize} #{self.closes_at.strftime('%b')} at #{self.closes_at.strftime('%k:%M%P')}"
   end
 end

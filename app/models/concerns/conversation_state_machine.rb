@@ -80,6 +80,10 @@ module ConversationStateMachine
         conv.check_if_ready_to_meet!
 
         Conversation.delay_for(Conversation::CHECK_IF_MEETING_DELAY).move_conversation_to(id, 'check_if_meeting')
+      when 'show_date_suggestions'
+        return unless conv.open
+
+        conv.mutual_interest_in_meeting!
       when 'check_if_meeting'
         return unless conv.open
 

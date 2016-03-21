@@ -4,7 +4,7 @@ class Api::V1::ConversationsController < ApplicationController
   before_action except: [] do
     authorized?(params[:profile_uuid])
   end
-  before_action :load_conversation, only: [:update, :show, :update_health, :update_real_date_details, :show_date_suggestions]
+  before_action :load_conversation, only: [:update, :show, :record_conversation_health, :record_ready_to_meet, :record_meeting_details, :show_date_suggestions]
 
   def update
     # beginning of the conversation?
@@ -40,7 +40,7 @@ class Api::V1::ConversationsController < ApplicationController
     render status: 200
   end
 
-  def update_health
+  def record_conversation_health
     health = ConversationHealth.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
     health.update!(value: params[:data][:value])
 
@@ -49,17 +49,23 @@ class Api::V1::ConversationsController < ApplicationController
     render 'api/v1/shared/nodata', status: 200
   end
 
-  def update_real_date_details
+  def record_ready_to_meet
     real_date = RealDate.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
-    if params[:data][:meeting_at].present?
-      tz_offset = ActiveSupport::TimeZone.new(real_date.profile.time_zone).utc_offset / 3600 rescue 0
-      dt = Time.at((params[:data][:meeting_at]/1000).to_i)
-      params[:data][:meeting_at] = DateTime.new(dt.year, dt.month, dt.day, dt.hour, dt.min, 0, sprintf("%+d", tz_offset))
-    end
     real_date.update!(real_date_parameters)
 
-    # TBD: delay this just a bit on production!
-    @conversation.mutual_interest_in_meeting!(:show_date_suggestions) if @conversation.both_ready_to_meet?
+    # TBD: send a push notification here
+    Conversation.delay_for(Conversation::SHOW_DATE_SUGGESTIONS_DELAY).move_conversation_to(@conversation.id, 'show_date_suggestions') if @conversation.both_ready_to_meet?
+
+    render 'api/v1/shared/nodata', status: 200
+  end
+
+  def record_meeting_details
+    real_date = RealDate.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
+
+    tz_offset = ActiveSupport::TimeZone.new(real_date.profile.time_zone).utc_offset / 3600 rescue 0
+    params[:data][:meeting_at] = Time.at((params[:data][:meeting_at]/1000).to_i)
+
+    real_date.update!(real_date_parameters)
 
     render 'api/v1/shared/nodata', status: 200
   end

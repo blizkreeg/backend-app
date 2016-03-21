@@ -22,10 +22,10 @@ Rails.application.routes.draw do
 
           resources :matches, only: [:index, :show, :update, :destroy], except: [:create]
           resources :conversations, only: [:update, :show] do
-            post '/health',           to: 'conversations#update_health'
-            post '/ready-to-meet',    to: 'conversations#update_real_date_details'
+            post '/health',           to: 'conversations#record_conversation_health'
+            post '/ready-to-meet',    to: 'conversations#record_ready_to_meet'
+            post '/date-details',     to: 'conversations#record_meeting_details'
             get '/date-suggestions',  to: 'conversations#show_date_suggestions'
-            post '/date-details',     to: 'conversations#update_real_date_details'
           end
           resources :messages, only: [:create]
           resources :real_dates, only: [:show, :update], path: '/real-dates'
