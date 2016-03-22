@@ -80,6 +80,11 @@ class Conversation < ActiveRecord::Base
     Profile.find(other_uuid)
   end
 
+  # TBD: remove this after testing period ends!
+  def closes_at
+    self.read_attribute(:closes_at) || (DateTime.now.utc + CLOSE_TIME)
+  end
+
   # open chat line
   def open!
     self.open = true
