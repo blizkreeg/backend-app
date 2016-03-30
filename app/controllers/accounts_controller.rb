@@ -46,7 +46,7 @@ class AccountsController < ApplicationController
   end
 
   def index
-    @profiles = Profile.all.order('updated_at DESC')
+    @profiles = Profile.all.order('updated_at DESC').limit(500)
   end
 
   def reset_state

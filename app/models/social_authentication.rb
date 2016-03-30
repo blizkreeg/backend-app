@@ -1,4 +1,6 @@
 class SocialAuthentication < ActiveRecord::Base
+  include JsonbAttributeHelpers
+
   belongs_to :profile, foreign_key: "profile_uuid"
 
   # TBD

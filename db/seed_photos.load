@@ -1,0 +1,13 @@
+LOAD CSV
+      FROM '/tmp/import_photos.csv' (properties, profile_uuid, created_at, updated_at)
+      INTO postgresql:///ekcoffee_development?photos (properties, profile_uuid, created_at, updated_at)
+
+      WITH skip header = 0,
+           fields optionally enclosed by '"',
+           fields escaped by double-quote,
+           fields terminated by ','
+
+       SET client_encoding to 'UTF8',
+           work_mem to '64MB',
+           standard_conforming_strings to 'on'
+;

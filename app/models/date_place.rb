@@ -1,8 +1,10 @@
 class DatePlace < ActiveRecord::Base
+  include JsonbAttributeHelpers
+
   has_many :date_suggestions, dependent: :destroy
   has_many :real_dates, dependent: :destroy
 
-  PROPERTIES = {
+  ATTRIBUTES = {
     name:               :string,
     street_address:     :string,
     part_of_city:       :string,
@@ -16,7 +18,8 @@ class DatePlace < ActiveRecord::Base
     photos_public_ids:  :string_array
   }
 
-  jsonb_accessor :properties, PROPERTIES
+  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  jsonb_attr_helper :properties, ATTRIBUTES
 
   def price_range
     self.read_attribute(:price_range) || 'Unknown'

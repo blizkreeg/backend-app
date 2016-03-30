@@ -1,4 +1,6 @@
 class Match < ActiveRecord::Base
+  include JsonbAttributeHelpers
+
   # who is the match for?
   belongs_to :for_profile, foreign_key: "for_profile_uuid", class_name: 'Profile'
   # who is the match?
@@ -8,7 +10,7 @@ class Match < ActiveRecord::Base
   LIKE_DECISION_STR = 'Like'
   PASS_DECISION_STR = 'Pass'
 
-  scope :undecided, -> { where("properties->>'decision' is null") }
+  scope :undecided, -> { with_decision(nil) }
   scope :closed, -> { with_unmatched(true) }
   scope :queued, -> { with_unmatched(false) }
   scope :mutual, -> { queued.with_mutual(true) }
@@ -33,7 +35,8 @@ class Match < ActiveRecord::Base
     active: :boolean
   }
 
-  jsonb_accessor :properties, ATTRIBUTES
+  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  jsonb_attr_helper :properties, ATTRIBUTES
 
   validates :unmatched_reason, inclusion: { in: Constants::UNMATCH_REASONS, message: "%{value} is not a valid reason" }, allow_nil: true
 
@@ -99,10 +102,7 @@ class Match < ActiveRecord::Base
   end
 
   def test_and_set_expiration!
-    if self.expires_at.nil?
-      self.expires_at = DateTime.now.utc + STALE_EXPIRATION_DURATION
-      self.save!
-    end
+    self.update!(expires_at: (DateTime.now.utc + STALE_EXPIRATION_DURATION)) if self.expires_at.nil?
   end
 
   def expires_in_hours

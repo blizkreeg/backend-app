@@ -1,4 +1,6 @@
 class RealDate < ActiveRecord::Base
+  include JsonbAttributeHelpers
+
   belongs_to :conversation
   belongs_to :profile, foreign_key: "profile_uuid"
   belongs_to :date_place
@@ -41,7 +43,8 @@ class RealDate < ActiveRecord::Base
     post_date_feedback:     :string
   }
 
-  jsonb_accessor :properties, ATTRIBUTES
+  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  jsonb_attr_helper :properties, ATTRIBUTES
 
   validates :ready_to_meet, inclusion: { in: READY_TO_MEET_OPTIONS, message: "%{value} is not valid" }, allow_blank: true, allow_nil: true
   validates :date_place, presence: true, if: Proc.new { |real_date| real_date.date_place_id.present? }

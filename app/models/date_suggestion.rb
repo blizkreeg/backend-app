@@ -1,4 +1,6 @@
 class DateSuggestion < ActiveRecord::Base
+  include JsonbAttributeHelpers
+
   belongs_to :conversation
   belongs_to :date_place
 
@@ -10,13 +12,14 @@ class DateSuggestion < ActiveRecord::Base
     "Activities" => "Varies"
   }
 
-  PROPERTIES = {
+  ATTRIBUTES = {
     day_of_week: :date,
     type_of_date: :string,
     formatted_suggestion: :string
   }
 
-  jsonb_accessor :properties, PROPERTIES
+  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  jsonb_attr_helper :properties, ATTRIBUTES
 
   before_save :format_suggestion_string
 

@@ -1,11 +1,11 @@
 class Profile < ActiveRecord::Base
+  include JsonbAttributeHelpers
   include ProfileAttributeHelpers
   include ProfileStateMachine
 
   # https://libraries.io/rubygems/ar_doc_store/0.0.4
-  # https://github.com/devmynd/jsonb_accessor
   # since we don't have a serial id column
-  # default_scope { order('created_at ASC') }
+  # # default_scope { order('created_at ASC') }
   scope :create_order, -> { order('profiles.created_at ASC') }
   scope :inactive, -> { is_inactive }
   scope :active, -> { where("(profiles.properties->>'inactive')::boolean IS NOT TRUE") }
@@ -135,9 +135,8 @@ class Profile < ActiveRecord::Base
     longitude
   )
 
-  # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
-
-  jsonb_accessor :properties, ATTRIBUTES
+  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  jsonb_attr_helper :properties, ATTRIBUTES
 
   # 4.2: http://apidock.com/rails/ActiveRecord/Attributes/ClassMethods/attribute
   # edge: http://edgeapi.rubyonrails.org/classes/ActiveRecord/Attributes/ClassMethods.html

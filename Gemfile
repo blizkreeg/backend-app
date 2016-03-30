@@ -8,7 +8,6 @@ gem 'omniauth-facebook'
 gem 'omniauth-linkedin'
 gem 'jwt'
 gem 'timezone'
-gem 'jsonb_accessor'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
@@ -31,6 +30,7 @@ gem 'firebase_token_generator'
 gem 'sinatra', :require => nil
 gem 'httparty'
 gem 'nokogiri'
+gem 'slim-rails'
 
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -57,5 +57,7 @@ group :development do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+
+  gem 'ruby-prof'
 end
 

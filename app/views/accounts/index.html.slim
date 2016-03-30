@@ -1,0 +1,12 @@
+h3 Everybody
+table
+  - @profiles.each do |profile|
+    tr
+      td style="padding: 5px"
+        a href="/show?profile_uuid=#{profile.uuid}" target='_blank' #{profile.firstname} #{profile.lastname}
+      td style="padding: 5px"
+        = profile.uuid.first(6)
+      td style="padding: 5px"
+        = profile.state
+      td style="padding: 5px"
+        = profile.state_endpoint

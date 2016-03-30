@@ -1,4 +1,6 @@
 class Photo < ActiveRecord::Base
+  include JsonbAttributeHelpers
+
   belongs_to :profile, foreign_key: "profile_uuid"
 
   PUBLIC_ID_LENGTH = 10
@@ -29,7 +31,8 @@ class Photo < ActiveRecord::Base
     original_height:    :integer,
   }
 
-  jsonb_accessor :properties, ATTRIBUTES
+  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  jsonb_attr_helper :properties, ATTRIBUTES
 
   # required
   # validates :public_id, presence: true, unless: lambda { |record| record.properties["facebook_photo_id"].present? }
