@@ -1,14 +1,12 @@
 module ProfileAttributeHelpers
   extend ActiveSupport::Concern
 
+  GENDER_MALE = 'male'
+  GENDER_FEMALE = 'female'
+
   def height=(ft_in_str)
     write_attribute(:height, ft_in_str)
-
-    if ft_in_str.present?
-      ft, inches = ft_in_str.split(/['"]/i)
-      ht_in = 12 * ft.to_i + inches.to_i
-    end
-
+    ht_in = Profile.height_in_inches(ft_in_str)
     write_attribute(:height_in, ht_in)
   end
 
@@ -16,12 +14,7 @@ module ProfileAttributeHelpers
 
   def seeking_minimum_height=(ft_in_str)
     write_attribute(:seeking_minimum_height, ft_in_str)
-
-    if ft_in_str.present?
-      ft, inches = ft_in_str.split(/['"]/i)
-      ht_in = 12 * ft.to_i + inches.to_i
-    end
-
+    ht_in = Profile.height_in_inches(ft_in_str)
     write_attribute(:seeking_minimum_height_in, ht_in)
   end
 
@@ -29,23 +22,18 @@ module ProfileAttributeHelpers
 
   def seeking_maximum_height=(ft_in_str)
     write_attribute(:seeking_maximum_height, ft_in_str)
-
-    if ft_in_str.present?
-      ft, inches = ft_in_str.split(/['"]/i)
-      ht_in = 12 * ft.to_i + inches.to_i
-    end
-
+    ht_in = Profile.height_in_inches(ft_in_str)
     write_attribute(:seeking_maximum_height_in, ht_in)
   end
 
   def seeking_maximum_height_in=(value); end
 
   def male?
-    self.gender == 'male'
+    self.gender == GENDER_MALE
   end
 
   def female?
-    self.gender == 'female'
+    self.gender == GENDER_FEMALE
   end
 
   def intent_text
@@ -55,6 +43,10 @@ module ProfileAttributeHelpers
     when 'Relationship'
       'Find something long-term'
     end
+  end
+
+  def about_me_i_love_label
+    "I love".upcase
   end
 
   def about_me_ideal_weekend_label
@@ -70,7 +62,7 @@ module ProfileAttributeHelpers
   end
 
   def about_me_order
-    %w(about_me_ideal_weekend about_me_bucket_list about_me_quirk)
+    %w(about_me_i_love about_me_ideal_weekend about_me_bucket_list about_me_quirk)
   end
 
   def mutual_friends_count(logged_in_profile)

@@ -5,8 +5,18 @@ class Profile < ActiveRecord::Base
   # https://libraries.io/rubygems/ar_doc_store/0.0.4
   # https://github.com/devmynd/jsonb_accessor
   # since we don't have a serial id column
-  scope :create_order, -> { order('created_at ASC') }
   # default_scope { order('created_at ASC') }
+  scope :create_order, -> { order('profiles.created_at ASC') }
+  scope :inactive, -> { is_inactive }
+  scope :active, -> { where("(profiles.properties->>'inactive')::boolean IS NOT TRUE") }
+  scope :older_than, -> (age) { age_gte(age) }
+  scope :younger_than, -> (age) { age_lte(age) }
+  scope :taller_than, -> (height_in) { height_in_gte(height_in) }
+  scope :shorter_than, -> (height_in) { height_in_lte(height_in) }
+  scope :of_faith, -> (faith) { with_faith(faith) }
+  scope :of_faiths, -> (faiths) { where("profiles.properties->>'faith' IN (?)", faiths) }
+  scope :of_gender, -> (gender) { with_gender(gender) }
+  scope :ready_for_matches, -> { where("state = 'waiting_for_matches' OR state = 'waiting_for_matches_and_response'") }
 
   has_many :social_authentications, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
   has_one  :facebook_authentication, -> { where(oauth_provider: 'facebook') }, primary_key: "uuid", foreign_key: "profile_uuid"
@@ -38,6 +48,7 @@ class Profile < ActiveRecord::Base
     last_known_longitude
     intent
     date_preferences
+    about_me_i_love
     about_me_ideal_weekend
     about_me_bucket_list
     about_me_quirk
@@ -47,9 +58,11 @@ class Profile < ActiveRecord::Base
     seeking_maximum_height
     seeking_faith
     disable_notifications_setting
+    has_new_matches
   )
 
   ATTRIBUTES = {
+    # basic properties
     email:                        :string,
     firstname:                    :string,
     lastname:                     :string,
@@ -72,20 +85,19 @@ class Profile < ActiveRecord::Base
     last_known_latitude:          :decimal,
     last_known_longitude:         :decimal,
     intent:                       :string,
-    incomplete:                   :boolean,
-    incomplete_fields:            :string_array,
     location_city:                :string,
     location_state:               :string,
     location_country:             :string,
     date_preferences:             :string_array,
+    about_me_i_love:              :string,
     about_me_ideal_weekend:       :string,
     about_me_bucket_list:         :string,
     about_me_quirk:               :string,
-    possible_relationship_status: :string,
-    signed_in_at:                 :date_time,
-    signed_out_at:                :date_time,
     inactive:                     :boolean,
     inactive_reason:              :string,
+    disable_notifications_setting: :boolean,
+
+    # match preferences
     seeking_minimum_age:          :integer,
     seeking_maximum_age:          :integer,
     seeking_minimum_height:       :string,
@@ -93,10 +105,22 @@ class Profile < ActiveRecord::Base
     seeking_minimum_height_in:    :integer,
     seeking_maximum_height_in:    :integer,
     seeking_faith:                :string_array,
-    disable_notifications_setting: :boolean,
+
+    # internal admin stuff
+    incomplete:                   :boolean,
+    incomplete_fields:            :string_array,
+    possible_relationship_status: :string,
+    signed_in_at:                 :date_time,
+    signed_out_at:                :date_time,
     substate:                     :string,
     substate_endpoint:            :string,
-    butler_conversation_uuid:     :string
+    butler_conversation_uuid:     :string,
+    has_new_queued_matches:       :boolean,
+
+    # matching related
+    # attractiveness_score:         :integer, # median of all scores by reviewers?
+    # use_of_language_score:        :integer, # objective measure?
+    # human_review_score:           :integer, # median of subjective review scores by reviewers?
   }
 
   EDITABLE_ATTRIBUTES = %i(
@@ -160,6 +184,7 @@ class Profile < ActiveRecord::Base
   before_create :set_about_me, if: lambda { Rails.env.development? } # TBD: REMOVE BEFORE PRODUCTION
   before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
+  # after_save :add_to_preferences_changed_list, if: Proc.new { |profile| profile.any_seeking_preference_changed? }
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
@@ -203,6 +228,15 @@ class Profile < ActiveRecord::Base
         possible_relationship_status: (auth_hash[:info][:relationship_status] rescue nil)
       }
     end
+
+    def height_in_inches(ft_in_str)
+      if ft_in_str.present?
+        ft, inches = ft_in_str.split(/['"]/i)
+        ht_in = 12 * ft.to_i + inches.to_i
+      end
+
+      ht_in
+    end
   end
 
   def seed_photos_from_facebook(social_authentication)
@@ -220,6 +254,10 @@ class Profile < ActiveRecord::Base
       )
       primary = false
     end
+  end
+
+  def seeking_gender
+    self.gender == GENDER_MALE ? GENDER_FEMALE : GENDER_MALE
   end
 
   def incomplete
@@ -276,6 +314,14 @@ class Profile < ActiveRecord::Base
     self.seeking_faith.blank?
   end
 
+  def any_seeking_preference_changed?
+    self.seeking_minimum_age_changed? ||
+    self.seeking_maximum_age_changed? ||
+    self.seeking_minimum_height_changed? ||
+    self.seeking_maximum_height_changed? ||
+    self.seeking_faith_changed?
+  end
+
   def test_and_set_primary_photo!
     num_primary = self.photos.primary.count
     return if num_primary == 1
@@ -316,6 +362,7 @@ class Profile < ActiveRecord::Base
   end
 
   def set_about_me
+    self.about_me_i_love = (rand > 0.3 ? Faker::Lorem.sentence(10) : nil )
     self.about_me_ideal_weekend = (rand > 0.3 ? Faker::Lorem.sentence(10) : nil )
     self.about_me_bucket_list = (rand > 0.3 ? Faker::Lorem.sentence(8) : nil )
     self.about_me_quirk = (rand > 0.3 ? Faker::Lorem.sentence(6) : nil )
@@ -326,31 +373,29 @@ class Profile < ActiveRecord::Base
   end
 
   def set_default_seeking_preference
-    # age
-    age_gap_lower = self.male? ? Matchmaker::DEFAULT_AGE_GAP_MEN.first : Matchmaker::DEFAULT_AGE_GAP_WOMEN.first
-    age_gap_upper = self.male? ? Matchmaker::DEFAULT_AGE_GAP_MEN.second : Matchmaker::DEFAULT_AGE_GAP_WOMEN.second
     if self.seeking_minimum_age.blank? && self.age.present?
-      self.seeking_minimum_age = [self.age + age_gap_lower, Constants::MIN_AGE].min
-    end
-    if self.seeking_maximum_age.blank? && self.age.present?
-      self.seeking_maximum_age = self.age + age_gap_upper
+      self.seeking_minimum_age = Matchmaker.default_min_age_pref(self.gender, self.age)
     end
 
-    # height
-    height_gap_lower = self.male? ? Matchmaker::DEFAULT_HEIGHT_GAP_MEN.first : Matchmaker::DEFAULT_HEIGHT_GAP_WOMEN.first
-    height_gap_upper = self.male? ? Matchmaker::DEFAULT_HEIGHT_GAP_MEN.second : Matchmaker::DEFAULT_HEIGHT_GAP_WOMEN.second
+    if self.seeking_maximum_age.blank? && self.age.present?
+      self.seeking_maximum_age = Matchmaker.default_max_age_pref(self.gender, self.age)
+    end
 
     if self.seeking_minimum_height.blank? && self.height.present?
-      self.seeking_minimum_height = Constants::HEIGHT_RANGE[[(Constants::HEIGHT_RANGE.index(self.height) + height_gap_lower), 0].max]
+      self.seeking_minimum_height = Matchmaker.default_min_ht_pref(self.gender, self.height)
     end
 
     if self.seeking_maximum_height.blank? && self.height.present?
-      self.seeking_maximum_height = Constants::HEIGHT_RANGE[[(Constants::HEIGHT_RANGE.index(self.height) + height_gap_upper), Constants::HEIGHT_RANGE.size-1].min]
+      self.seeking_maximum_height = Matchmaker.default_max_ht_pref(self.gender, self.height)
     end
 
-    # faith
     if self.seeking_faith.blank?
-      self.seeking_faith = Constants::FAITHS
+      self.seeking_faith = Matchmaker.default_faith_pref
     end
+  end
+
+  def add_to_preferences_changed_list
+    puts "pushing #{self.uuid} to 'preferences_updated_profiles'"
+    $redis.lpush 'preferences_updated_profiles', self.uuid
   end
 end
