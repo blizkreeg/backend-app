@@ -72,8 +72,13 @@
   <strong>properties:</strong>
   <ul>
   <% @profile.attributes.each do |k, v| %>
-    <% next if k == 'properties' %>
-    <li><strong><%= k %></strong>: <%= v %></li>
+    <% if k == 'properties' %>
+      <% v.each do |prop, val| %>
+        <li><strong><%= prop %></strong>: <%= val %></li>
+      <% end %>
+    <% else %>
+      <li><strong><%= k %></strong>: <%= v %></li>
+    <% end %>
   <% end %>
   </ul>
 </p>
