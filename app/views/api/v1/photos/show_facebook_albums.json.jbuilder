@@ -9,6 +9,7 @@ json.data do
         else
           @current_profile.facebook_authentication.get_photo(album['cover_photo'])['source']
         end
+      end
     end
   end
 end
