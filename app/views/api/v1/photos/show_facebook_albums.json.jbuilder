@@ -4,7 +4,7 @@ json.data do
       json.id album['id']
       json.name album['name']
       if album['cover_photo'].blank?
-        json.cover_photo_url json.null!
+        json.cover_photo_url nil
       else
         json.cover_photo_url @current_profile.facebook_authentication.get_photo(album['cover_photo'])['source']
       end
