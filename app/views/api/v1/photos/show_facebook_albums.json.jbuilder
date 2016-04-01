@@ -3,12 +3,10 @@ json.data do
     json.array! @facebook_albums do |album|
       json.id album['id']
       json.name album['name']
-      json.cover_photo_url do
-        if album['cover_photo'].blank?
-          json.null!
-        else
-          @current_profile.facebook_authentication.get_photo(album['cover_photo'])['source']
-        end
+      if album['cover_photo'].blank?
+        json.cover_photo_url json.null!
+      else
+        json.cover_photo_url @current_profile.facebook_authentication.get_photo(album['cover_photo'])['source']
       end
     end
   end
