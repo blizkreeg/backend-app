@@ -323,7 +323,7 @@ class Profile < ActiveRecord::Base
 
   def test_and_set_primary_photo!
     num_primary = self.photos.primary.count
-    return if num_primary == 1
+    return if num_primary == 1 || self.photos.count == 0
 
     if num_primary == 0
       self.photos.ordered.first.update!(primary: true)
