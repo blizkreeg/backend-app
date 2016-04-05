@@ -27,6 +27,11 @@ class DateSuggestion < ActiveRecord::Base
     TIME_WINDOWS[self.type_of_date]
   end
 
+  # TBD: why is this not getting read as a date??? MOVE FUNC FROM jsonb_accessor
+  def day_of_week
+    Date.parse(read_attribute(:properties)["day_of_week"])
+  end
+
   def format_day_of_week
     day =
       if (self.day_of_week - Date.today).to_i == 1
