@@ -54,6 +54,7 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def sign_in
+    # TBD: there's a security hole here!!! Someone could fake this payload.
     facebook_auth_hash = params[:data][:facebook_auth_hash]
     social_auth = SocialAuthentication.where(oauth_uid: facebook_auth_hash[:uid], oauth_provider: 'facebook').take!
     social_auth.update!(oauth_token: facebook_auth_hash[:credentials][:token],

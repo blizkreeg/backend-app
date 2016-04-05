@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     post 'start-conversation', to: 'accounts#start_conversation'
     post 'update-conversation-state', to: 'accounts#update_conversation_state'
     post 'post-date-feedback', to: 'accounts#switch_to_post_date_feedback'
+    post 'send-push-notification', to: 'accounts#send_push_notification'
   # end <-- TODO: UNCOMMENT BEFORE LAUNCH
 
   # post '/users', to: 'users#create'

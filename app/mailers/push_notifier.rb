@@ -109,7 +109,7 @@ class PushNotifier
       when: "now"
     }
 
-    pp payload_body
+    EKC.logger.debug "Sending push notification to #{uuid}, payload: #{payload_body.to_json}"
 
     conn = Faraday.new(:url => 'https://api.clevertap.com') do |faraday|
       faraday.response :logger
@@ -126,6 +126,8 @@ class PushNotifier
 
     if response.status != 200
       EKC.logger.error "ERROR: Failed to send push notification! uuid: #{uuid}, type: #{notification_type}, params: #{notification_params}, error message: #{response.body}"
+    else
+      EKC.logger.debug "Sent push notification '#{notification_type}' to #{uuid}, response: #{response.body}"
     end
   rescue StandardError => e
     EKC.logger.error "ERROR: exception on sending push notification! exception: #{e.class.name}, message: #{e.message}"
