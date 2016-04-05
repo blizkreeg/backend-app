@@ -1,4 +1,6 @@
 class FacebookAuthentication < SocialAuthentication
+  MANDATORY_FACEBOOK_PERMISSIONS = %w(email public_profile user_photos user_birthday)
+
   def get_photo_albums_list(fields="id,name", limit=25, cursor=nil)
     graph_url = "#{self.oauth_uid}/albums?limit=#{limit}"
     graph_url += "&cursor=#{cursor}" if cursor.present?
@@ -54,6 +56,18 @@ class FacebookAuthentication < SocialAuthentication
     photos = query_fb(photos_url)
   end
 
+  def granted_permissions
+    graph_url = "#{self.oauth_uid}/permissions"
+    response_hash = fbgraph.get_object(graph_url)
+    response_hash.map { |permission| permission["permission"] if permission["status"] == "granted" }.compact
+  end
+
+  def declined_permissions
+    graph_url = "#{self.oauth_uid}/permissions"
+    response_hash = fbgraph.get_object(graph_url)
+    response_hash.map { |permission| permission["permission"] if permission["status"] == "declined" }.compact
+  end
+
   def mutual_friends_count(uid)
     graph_url = "#{uid}/?fields=context.fields(mutual_friends)"
 
@@ -69,12 +83,14 @@ class FacebookAuthentication < SocialAuthentication
   end
 
   def query_fb(endpoint)
+    check_facebook_permissions!
+
     @first_try = true
     begin
       fbgraph.get_object endpoint
     rescue Koala::Facebook::AuthenticationError => e
       log_fb_error(e)
-      raise Errors::FacebookAuthenticationError, "The Facebook token was invalid"
+      raise Errors::FacebookAuthenticationError, "Your facebook session has expired. Please login again to continue."
     rescue Koala::Facebook::ClientError => e
     rescue Koala::Facebook::ServerError => e
     rescue Koala::Facebook::BadFacebookResponse => e
@@ -83,7 +99,7 @@ class FacebookAuthentication < SocialAuthentication
         retry
       end
       log_fb_error(e)
-      raise Errors::FacebookAuthenticationError, "Unknown Facebook error"
+      raise Errors::FacebookAuthenticationError, "There was a problem accessing your Facebook account. Please login again to continue."
     end
   end
 
@@ -95,5 +111,13 @@ class FacebookAuthentication < SocialAuthentication
 
   def log_fb_error(e)
     EKC.logger.error "ERROR: Facebook exception! type: #{e.fb_error_type}, code: #{e.fb_error_code}, error_subcode: #{e.fb_error_subcode}, message: #{e.fb_error_message}, profile-uuid: #{self.profile.uuid}"
+  end
+
+  def check_facebook_permissions!
+    declined_required_perms = self.declined_permissions & MANDATORY_FACEBOOK_PERMISSIONS
+
+    if declined_required_perms.present?
+      raise Errors::FacebookPermissionsError, "We require the '#{declined_required_perms.join(', ')}' permissions from your Facebook to verify authenticity of your profile. Please login again to continue."
+    end
   end
 end
