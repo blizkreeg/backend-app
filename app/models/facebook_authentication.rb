@@ -58,20 +58,20 @@ class FacebookAuthentication < SocialAuthentication
 
   def granted_permissions
     graph_url = "#{self.oauth_uid}/permissions"
-    response_hash = fbgraph.get_object(graph_url)
+    response_hash = query_fb(graph_url)
     response_hash.map { |permission| permission["permission"] if permission["status"] == "granted" }.compact
   end
 
   def declined_permissions
     graph_url = "#{self.oauth_uid}/permissions"
-    response_hash = fbgraph.get_object(graph_url)
+    response_hash = query_fb(graph_url)
     response_hash.map { |permission| permission["permission"] if permission["status"] == "declined" }.compact
   end
 
   def mutual_friends_count(uid)
     graph_url = "#{uid}/?fields=context.fields(mutual_friends)"
 
-    response_hash = query_fb graph_url
+    response_hash = query_fb(graph_url)
     if response_hash["context"].try(:[], "mutual_friends").present?
       response_hash["context"]["mutual_friends"].try(:[], "summary").try(:[], "total_count") || 0
     else
@@ -83,14 +83,16 @@ class FacebookAuthentication < SocialAuthentication
   end
 
   def query_fb(endpoint)
-    check_facebook_permissions!
+    check_facebook_permissions! unless @checking_permissions
 
+    @checking_permissions = false
     @first_try = true
+
     begin
       fbgraph.get_object endpoint
     rescue Koala::Facebook::AuthenticationError => e
       log_fb_error(e)
-      raise Errors::FacebookAuthenticationError, "Your facebook session has expired. Please login again to continue."
+      raise Errors::FacebookAuthenticationError, "Your Facebook session needs to be refreshed. Please login again to continue."
     rescue Koala::Facebook::ClientError => e
     rescue Koala::Facebook::ServerError => e
     rescue Koala::Facebook::BadFacebookResponse => e
@@ -114,10 +116,12 @@ class FacebookAuthentication < SocialAuthentication
   end
 
   def check_facebook_permissions!
+    @checking_permissions = true
+
     declined_required_perms = self.declined_permissions & MANDATORY_FACEBOOK_PERMISSIONS
 
     if declined_required_perms.present?
-      raise Errors::FacebookPermissionsError, "We require the '#{declined_required_perms.join(', ')}' permissions from your Facebook to verify authenticity of your profile. Please login again to continue."
+      raise Errors::FacebookPermissionsError, "We require the '#{declined_required_perms.join(', ')}' #{declined_required_perms.size > 1 ? 'permissions' : 'permission'} from your Facebook to verify authenticity of your profile. Please login again to continue."
     end
   end
 end

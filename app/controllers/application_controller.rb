@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
   def auth_response_hash
     @current_profile.present? ?
       { auth: { token: JsonWebToken.encode(@current_profile.auth_token_payload), expires_at: Constants::TOKEN_EXPIRATION_TIME_STR } } :
-      { auth: {} }
+      { auth: nil }
   end
 
   def respond_with_error(message, http_status_code, internal_error_code=nil)
