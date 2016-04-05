@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   rescue_from Errors::OperationNotPermitted, with: lambda { |e| respond_with_error(e.message, 403) } # :forbidden
   rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error(e.message, 401, 'token_expired') } # :unauthorized
   rescue_from ActionController::ParameterMissing, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
+  rescue_from Errors::FacebookAuthenticationError, with: lambda { |e| reset_current_profile!; respond_with_error(e.message, 401) }
   rescue_from JSON::Schema::ValidationError, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
 
   protected

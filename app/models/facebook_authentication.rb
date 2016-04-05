@@ -69,12 +69,31 @@ class FacebookAuthentication < SocialAuthentication
   end
 
   def query_fb(endpoint)
-    fbgraph.get_object endpoint
+    @first_try = true
+    begin
+      fbgraph.get_object endpoint
+    rescue Koala::Facebook::AuthenticationError => e
+      log_fb_error(e)
+      raise Errors::FacebookAuthenticationError, "The Facebook token was invalid"
+    rescue Koala::Facebook::ClientError => e
+    rescue Koala::Facebook::ServerError => e
+    rescue Koala::Facebook::BadFacebookResponse => e
+      if @first_try
+        @first_try = false
+        retry
+      end
+      log_fb_error(e)
+      raise Errors::FacebookAuthenticationError, "Unknown Facebook error"
+    end
   end
 
   private
 
   def fbgraph
     @graph ||= Koala::Facebook::API.new self.oauth_token, ENV['FACEBOOK_APP_SECRET']
+  end
+
+  def log_fb_error(e)
+    EKC.logger.error "ERROR: Facebook exception! type: #{e.fb_error_type}, code: #{e.fb_error_code}, error_subcode: #{e.fb_error_subcode}, message: #{e.fb_error_message}, profile-uuid: #{self.profile.uuid}"
   end
 end

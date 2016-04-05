@@ -14,6 +14,10 @@ class AccountsController < ApplicationController
     uid = request.env["omniauth.auth"]["uid"]
     puts uid, request.env["omniauth.auth"]["credentials"].inspect
     fb = FacebookAuthentication.where(oauth_uid: uid).take!
+    new_token = request.env["omniauth.auth"]["credentials"]["token"]
+    new_expires_at = request.env["omniauth.auth"]["credentials"]["expires_at"]
+    fb.update! oauth_token: new_token, oauth_token_expiration: new_expires_at, oauth_hash: request.env["omniauth.auth"]
+
     profile = fb.profile
 
     session[:profile_uuid] = profile.uuid
