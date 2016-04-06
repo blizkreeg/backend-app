@@ -106,6 +106,9 @@ GEM
     json (1.8.3)
     json-schema (2.5.0)
       addressable (~> 2.3)
+    jsonb_accessor (0.3.1)
+      activerecord (>= 4.2.1)
+      pg
     jwt (1.5.2)
     koala (2.2.0)
       addressable
@@ -284,6 +287,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   json-schema
+  jsonb_accessor
   jwt
   koala (~> 2.2)
   nokogiri

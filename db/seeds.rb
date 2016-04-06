@@ -57,6 +57,7 @@ def seed_users
         height_in: Profile.height_in_inches(ht),
         profession: Faker::Company.profession.camelize,
         highest_degree: Constants::DEGREES[rand(Constants::DEGREES.size)],
+        employer_name: Faker::Company.name,
         schools_attended: rand(3).times.map { Faker::University.name },
         about_me_i_love: (rand > 0.3 ? Faker::Lorem.sentence(10) : nil ),
         about_me_ideal_weekend: (rand > 0.3 ? Faker::Lorem.sentence(10) : nil ),

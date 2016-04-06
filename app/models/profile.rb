@@ -1,5 +1,5 @@
 class Profile < ActiveRecord::Base
-  include JsonbAttributeHelpers
+  # include JsonbAttributeHelpers
   include ProfileAttributeHelpers
   include ProfileStateMachine
 
@@ -135,8 +135,9 @@ class Profile < ActiveRecord::Base
     longitude
   )
 
-  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
-  jsonb_attr_helper :properties, ATTRIBUTES
+  # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  # jsonb_attr_helper :properties, ATTRIBUTES
+  jsonb_accessor :properties, ATTRIBUTES
 
   # 4.2: http://apidock.com/rails/ActiveRecord/Attributes/ClassMethods/attribute
   # edge: http://edgeapi.rubyonrails.org/classes/ActiveRecord/Attributes/ClassMethods.html

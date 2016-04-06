@@ -1,5 +1,5 @@
 class ConversationHealth < ActiveRecord::Base
-  include JsonbAttributeHelpers
+  # include JsonbAttributeHelpers
 
   belongs_to :conversation
   belongs_to :profile, foreign_key: "profile_uuid"
@@ -17,8 +17,9 @@ class ConversationHealth < ActiveRecord::Base
     value: :string
   }
 
-  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
-  jsonb_attr_helper :properties, ATTRIBUTES
+  # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  # jsonb_attr_helper :properties, ATTRIBUTES
+  jsonb_accessor :properties, ATTRIBUTES
 
   validates :value, inclusion: { in: HEALTH_CHECK_VALUES, message: "%{value} is not valid" }
 
