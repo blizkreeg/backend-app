@@ -31,6 +31,7 @@ gem 'sinatra', :require => nil
 gem 'httparty'
 gem 'nokogiri'
 gem 'slim-rails'
+gem 'jsonb_accessor'
 
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

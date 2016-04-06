@@ -10,8 +10,9 @@ module ConversationStateMachine
       entered_at: :date_time
     }
 
-    store_accessor :state_properties, *(STATE_ATTRIBUTES.keys.map(&:to_sym))
-    jsonb_attr_helper :state_properties, STATE_ATTRIBUTES
+    # store_accessor :state_properties, *(STATE_ATTRIBUTES.keys.map(&:to_sym))
+    # jsonb_attr_helper :state_properties, STATE_ATTRIBUTES
+    jsonb_accessor :state_properties, STATE_ATTRIBUTES
 
     aasm column: 'state' do
       state :none, initial: true

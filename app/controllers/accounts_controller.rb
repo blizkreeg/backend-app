@@ -50,7 +50,7 @@ class AccountsController < ApplicationController
   end
 
   def index
-    @profiles = Profile.all.order('updated_at DESC').limit(500)
+    @profiles = Profile.all.order('updated_at DESC').limit(50)
   end
 
   def reset_state
@@ -117,7 +117,7 @@ class AccountsController < ApplicationController
     else
       # TBD implement matching logic
       opposite_gender = profile.male? ? 'female' : 'male'
-      matched_profile = Profile.with_gender(opposite_gender).select { |p| p.active_mutual_match.blank? }.first
+      matched_profile = Profile.with_gender(opposite_gender).limit(25).select { |p| p.active_mutual_match.blank? }.first
       matched_profile.state = 'waiting_for_matches'
       matched_profile.save!
 
@@ -201,6 +201,16 @@ class AccountsController < ApplicationController
     @profile.substate_endpoint = v1_profile_real_date_path(@profile.uuid, @profile.real_dates.first.id)
 
     @profile.save!
+
+    redirect_to :back
+  end
+
+  def send_push_notification
+    @profile = Profile.find(params[:uuid])
+
+    PushNotifier.notify_one(params[:uuid], params[:notification_type], myname: @profile.firstname, name: @profile.active_mutual_match.try(:matched_profile).try(:firstname))
+
+    flash[:message] = "Sent Push Notification!"
 
     redirect_to :back
   end

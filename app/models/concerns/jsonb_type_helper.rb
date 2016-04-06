@@ -2,6 +2,7 @@
 # this gem is overall terrible for performance but..
 # some of the code is very helpful for scopes and queries
 # Copyright (c) 2015 Michael Crismali
+# EDIT: using the gem again since pulling the accessors functionality would be too much duplication
 CONSTANT_SEPARATOR = "::"
 module JsonbTypeHelper
   ARRAY_MATCHER = /_array\z/
@@ -38,11 +39,14 @@ module JsonbTypeHelper
     end
 
     def fetch_active_record_type(type)
+      t1 = Time.now.to_f
       class_name = type.to_s.camelize
+      t1 = Time.now.to_f
       klass = value_descendants.find do |ar_type|
         ar_type.to_s.split(CONSTANT_SEPARATOR).last == class_name
       end
-
+      t2 = Time.now.to_f
+      # puts "#{type}: #{(t2-t1) * 1000.0}"
       if klass
         klass.new
       else
@@ -51,11 +55,12 @@ module JsonbTypeHelper
     end
 
     def value_descendants
+      return @grouped_types unless @grouped_types.nil?
       grouped_types = ActiveRecord::Type::Value.descendants.group_by do |ar_type|
         !!ar_type.to_s.match(ActiveRecord::ConnectionAdapters::PostgreSQL::OID.to_s)
       end
 
-      grouped_types[true] + grouped_types[false]
+      @grouped_types ||= (grouped_types[true] + grouped_types[false])
     end
 
     def value

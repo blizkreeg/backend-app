@@ -1,5 +1,5 @@
 class DateSuggestion < ActiveRecord::Base
-  include JsonbAttributeHelpers
+  # include JsonbAttributeHelpers
 
   belongs_to :conversation
   belongs_to :date_place
@@ -18,18 +18,14 @@ class DateSuggestion < ActiveRecord::Base
     formatted_suggestion: :string
   }
 
-  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
-  jsonb_attr_helper :properties, ATTRIBUTES
+  # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  # jsonb_attr_helper :properties, ATTRIBUTES
+  jsonb_accessor :properties, ATTRIBUTES
 
   before_save :format_suggestion_string
 
   def time_window
     TIME_WINDOWS[self.type_of_date]
-  end
-
-  # TBD: why is this not getting read as a date??? MOVE FUNC FROM jsonb_accessor
-  def day_of_week
-    Date.parse(read_attribute(:properties)["day_of_week"])
   end
 
   def format_day_of_week

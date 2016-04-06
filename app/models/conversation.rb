@@ -1,5 +1,5 @@
 class Conversation < ActiveRecord::Base
-  include JsonbAttributeHelpers
+  # include JsonbAttributeHelpers
   include ConversationStateMachine
   include FirebaseConversationHelper
 
@@ -30,8 +30,9 @@ class Conversation < ActiveRecord::Base
     closed_at: :date_time
   }
 
-  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
-  jsonb_attr_helper :properties, ATTRIBUTES
+  # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  # jsonb_attr_helper :properties, ATTRIBUTES
+  jsonb_accessor :properties, ATTRIBUTES
 
   validates_length_of :conversation_healths, maximum: MAX_PARTICIPANTS
   validates_length_of :real_dates, maximum: MAX_PARTICIPANTS
