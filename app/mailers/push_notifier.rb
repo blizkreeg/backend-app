@@ -81,8 +81,8 @@ class PushNotifier
     notification_default_params = DETAILS[notification_type.to_s]
 
     payload_body = {
-      name: "Transactional Campaign",
-      estimate_only: true,
+      name: "Transactional",
+      estimate_only: false,
       where: {
         common_profile_prop: {
           profile_fields: [
