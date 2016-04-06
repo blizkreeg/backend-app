@@ -31,6 +31,7 @@ gem 'sinatra', :require => nil
 gem 'httparty'
 gem 'nokogiri'
 gem 'slim-rails'
+gem 'faraday'
 gem 'jsonb_accessor'
 
 gem 'jquery-rails'

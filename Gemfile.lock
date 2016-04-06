@@ -278,6 +278,7 @@ DEPENDENCIES
   dotenv-rails
   email_validator
   faker
+  faraday
   firebase
   firebase_token_generator
   forgery
