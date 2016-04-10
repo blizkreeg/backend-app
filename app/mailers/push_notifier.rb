@@ -117,18 +117,7 @@ class PushNotifier
 
     EKC.logger.debug "Sending push notification to #{uuid}, payload: #{payload_body.to_json}"
 
-    conn = Faraday.new(:url => 'https://api.clevertap.com') do |faraday|
-      faraday.response :logger
-      faraday.adapter  Faraday.default_adapter
-    end
-
-    response = conn.post do |req|
-      req.url '/1/targets/create.json'
-      req.headers['Content-Type'] = 'application/json'
-      req.headers['X-CleverTap-Account-ID'] = ENV['CLEVERTAP_ACCOUNT_ID']
-      req.headers['X-CleverTap-Passcode'] = ENV['CLEVERTAP_ACCOUNT_PASSCODE']
-      req.body = payload_body.to_json
-    end
+    Clevertap.post_json('/1/targets/create.json', payload_body.to_json)
 
     if response.status != 200
       EKC.logger.error "ERROR: Failed to send push notification! uuid: #{uuid}, type: #{notification_type}, params: #{notification_params}, error message: #{response.body}"

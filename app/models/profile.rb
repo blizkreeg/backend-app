@@ -185,6 +185,7 @@ class Profile < ActiveRecord::Base
   before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
   # after_save :add_to_preferences_changed_list, if: Proc.new { |profile| profile.any_seeking_preference_changed? }
+  after_update :update_clevertap
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
@@ -236,6 +237,37 @@ class Profile < ActiveRecord::Base
       end
 
       ht_in
+    end
+
+    def push_to_clevertap(uuid)
+      profile = Profile.find(uuid)
+      payload_body = {
+        d: [
+          {
+            identity: uuid,
+            type: 'profile',
+            ts: Time.now.to_i,
+            profileData: {
+              uuid: uuid,
+              email: self.email,
+              firstname: self.firstname,
+              lastname: self.lastname,
+              gender: self.gender,
+              location_city: self.location_city,
+              location_country: self.location_country,
+              inactive: self.inactive,
+              incomplete: self.incomplete,
+              "MSG-push" => !self.disable_notifications_setting
+            }
+          }
+        ]
+      }
+
+      Clevertap.post_json('/1/upload', payload_body.to_json)
+    rescue ActiveRecord::RecordNotFound
+      EKC.logger.error "ERROR: UUID #{uuid} not found. Cannot update Clevertap profile."
+    rescue StandardError => e
+      EKC.logger.error "ERROR: Failed to update Clevertap profile, exception: #{e.class.name} : #{e.message}"
     end
   end
 
@@ -397,5 +429,9 @@ class Profile < ActiveRecord::Base
   def add_to_preferences_changed_list
     puts "pushing #{self.uuid} to 'preferences_updated_profiles'"
     $redis.lpush 'preferences_updated_profiles', self.uuid
+  end
+
+  def update_clevertap
+    self.class.delay.push_to_clevertap(self.uuid)
   end
 end
