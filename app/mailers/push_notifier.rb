@@ -7,6 +7,7 @@ class PushNotifier
               new_conversation_message
               conv_health_check
               conv_ready_to_meet
+              conv_date_suggestions
               conv_are_you_meeting
               conv_close_notice
               new_butler_message
@@ -21,49 +22,54 @@ class PushNotifier
     },
     'new_mutual_match' => {
       title: "ekCoffee",
-      body: "%name is curious about you too!",
+      body: "@name is curious about you too!",
       required_parameters: ['name'],
     },
     'new_conversation_message' => {
       title: "ekCoffee",
-      body: "%name has sent you a message!",
+      body: "@name has sent you a message!",
       required_parameters: ['name'],
     },
     'conv_health_check' => {
       title: "ekCoffee",
-      body: "How is your conversation with %name going?",
+      body: "How is your conversation with @name going?",
       required_parameters: ['name'],
     },
     'conv_ready_to_meet' => {
       title: "ekCoffee",
-      body: "Are you ready to meet %name yet?",
+      body: "Are you ready to meet @name yet?",
       required_parameters: ['name'],
+    },
+    'conv_date_suggestions' => {
+      title: "ekCoffee",
+      body: "You and @name are ready to meet! Here are a few suggestions for a first date.",
+      required_parameters: ['name']
     },
     'conv_are_you_meeting' => {
       title: "ekCoffee",
-      body: "Are you and %name meeting?",
+      body: "Are you and @name meeting?",
       required_parameters: ['name'],
     },
     'conv_close_notice' => {
       title: "ekCoffee",
-      body: "Your conversation with %name will close soon.",
+      body: "Your conversation with @name will close soon.",
       required_parameters: ['name'],
     },
     'new_butler_message' => {
       title: "ekCoffee",
-      body: "%myname, you have a message from the ekCoffee Butler!",
+      body: "@myname, you have a message from the ekCoffee Butler!",
       required_parameters: ['myname'],
       ios_category: 'BUTLER_CHAT'
     },
     'profile_photo_rejected' => {
       title: "ekCoffee",
-      body: "%myname, there was a problem with your photo.",
+      body: "@myname, there was a problem with your photo.",
       required_parameters: ['myname'],
       ios_category: 'EDIT_PHOTOS'
     },
     'profile_edit_rejected' => {
       title: "ekCoffee",
-      body: "%myname, there was a problem with your profile edit.",
+      body: "@myname, there was a problem with your profile edit.",
       required_parameters: ['myname'],
       ios_category: 'EDIT_PROFILE'
     }
@@ -141,9 +147,9 @@ class PushNotifier
 
   def self.generated_body(notification_type, notification_params)
     body_message = DETAILS[notification_type.to_s][:body]
-    dynamic_body_props = body_message.scan(/\%([\w]+)/i).flatten
+    dynamic_body_props = body_message.scan(/\@([\w]+)/i).flatten
     dynamic_body_props.each do |prop_name|
-      body_message.gsub!("%#{prop_name}", notification_params[prop_name.to_sym])
+      body_message.gsub!("@#{prop_name}", notification_params[prop_name.to_sym])
     end
     body_message
   end

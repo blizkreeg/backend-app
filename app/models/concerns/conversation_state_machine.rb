@@ -72,32 +72,49 @@ module ConversationStateMachine
       case new_state
       when 'health_check'
         return unless conv.open
+        return if conv.health_check?
 
         conv.check_for_health!
+        PushNotifier.delay.notify_one(conv.initiator.uuid, 'conv_health_check', name: conv.responder.firstname)
+        PushNotifier.delay.notify_one(conv.responder.uuid, 'conv_health_check', name: conv.initiator.firstname)
 
         Conversation.delay_for(Conversation::READY_TO_MEET_DELAY).move_conversation_to(id, 'ready_to_meet')
       when 'ready_to_meet'
         return unless conv.open
+        return if conv.ready_to_meet?
 
         conv.check_if_ready_to_meet!
+        PushNotifier.delay.notify_one(conv.initiator.uuid, 'conv_ready_to_meet', name: conv.responder.firstname)
+        PushNotifier.delay.notify_one(conv.responder.uuid, 'conv_ready_to_meet', name: conv.initiator.firstname)
 
         Conversation.delay_for(Conversation::CHECK_IF_MEETING_DELAY).move_conversation_to(id, 'check_if_meeting')
       when 'show_date_suggestions'
         return unless conv.open
+        return if conv.show_date_suggestions?
 
         conv.mutual_interest_in_meeting!
+        PushNotifier.delay.notify_one(conv.initiator.uuid, 'conv_date_suggestions', name: conv.responder.firstname)
+        PushNotifier.delay.notify_one(conv.responder.uuid, 'conv_date_suggestions', name: conv.initiator.firstname)
       when 'check_if_meeting'
         return unless conv.open
+        return if conv.check_if_meeting?
 
         conv.check_if_going_to_meet!
+        PushNotifier.delay.notify_one(conv.initiator.uuid, 'conv_are_you_meeting', name: conv.responder.firstname)
+        PushNotifier.delay.notify_one(conv.responder.uuid, 'conv_are_you_meeting', name: conv.initiator.firstname)
 
         Conversation.delay_for(Conversation::CLOSE_NOTICE_DELAY).move_conversation_to(id, 'close_notice')
       when 'radio_silence'
         return if conv.closes_at <= DateTime.now.utc
+        return if conv.radio_silence?
 
         conv.check_if_ready_to_move_on!
       when 'close_notice'
+        return if conv.close_notice?
+
         conv.notify_conversation_close!
+        PushNotifier.delay.notify_one(conv.initiator.uuid, 'conv_close_notice', name: conv.responder.firstname)
+        PushNotifier.delay.notify_one(conv.responder.uuid, 'conv_close_notice', name: conv.initiator.firstname)
       end
     rescue ActiveRecord::RecordNotFound
       EKC.logger.error "Conversation not found, id: #{id}, state: #{conv.state}"
