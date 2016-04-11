@@ -59,19 +59,19 @@ class PushNotifier
       title: "ekCoffee",
       body: "@myname, you have a message from the ekCoffee Butler!",
       required_parameters: ['myname'],
-      ios_category: 'BUTLER_CHAT'
+      category: 'BUTLER_CHAT'
     },
     'profile_photo_rejected' => {
       title: "ekCoffee",
       body: "@myname, there was a problem with your photo.",
       required_parameters: ['myname'],
-      ios_category: 'EDIT_PHOTOS'
+      category: 'EDIT_PHOTOS'
     },
     'profile_edit_rejected' => {
       title: "ekCoffee",
       body: "@myname, there was a problem with your profile edit.",
       required_parameters: ['myname'],
-      ios_category: 'EDIT_PROFILE'
+      category: 'EDIT_PROFILE'
     }
   }
 
@@ -105,6 +105,7 @@ class PushNotifier
             badge_count: 1
           },
           android: {
+            category: notification_default_params[:category]
           }
         }
       },
