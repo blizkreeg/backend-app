@@ -249,15 +249,15 @@ class Profile < ActiveRecord::Base
             ts: Time.now.to_i,
             profileData: {
               uuid: uuid,
-              email: self.email,
-              firstname: self.firstname,
-              lastname: self.lastname,
-              gender: self.gender,
-              location_city: self.location_city,
-              location_country: self.location_country,
-              inactive: self.inactive,
-              incomplete: self.incomplete,
-              "MSG-push" => !self.disable_notifications_setting
+              email: profile.email,
+              firstname: profile.firstname,
+              lastname: profile.lastname,
+              gender: profile.gender,
+              location_city: profile.location_city,
+              location_country: profile.location_country,
+              inactive: profile.inactive,
+              incomplete: profile.incomplete,
+              "MSG-push" => !profile.disable_notifications_setting
             }
           }
         ]
