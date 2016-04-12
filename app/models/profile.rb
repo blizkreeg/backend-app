@@ -432,6 +432,6 @@ class Profile < ActiveRecord::Base
   end
 
   def update_clevertap
-    self.class.delay.push_to_clevertap(self.uuid)
+    self.class.delay_for(2.seconds).push_to_clevertap(self.uuid)
   end
 end
