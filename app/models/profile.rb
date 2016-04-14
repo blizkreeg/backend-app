@@ -1,5 +1,5 @@
 class Profile < ActiveRecord::Base
-  include JsonbAttributeHelpers
+  # include JsonbAttributeHelpers
   include ProfileAttributeHelpers
   include ProfileStateMachine
 
@@ -135,8 +135,9 @@ class Profile < ActiveRecord::Base
     longitude
   )
 
-  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
-  jsonb_attr_helper :properties, ATTRIBUTES
+  # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  # jsonb_attr_helper :properties, ATTRIBUTES
+  jsonb_accessor :properties, ATTRIBUTES
 
   # 4.2: http://apidock.com/rails/ActiveRecord/Attributes/ClassMethods/attribute
   # edge: http://edgeapi.rubyonrails.org/classes/ActiveRecord/Attributes/ClassMethods.html
@@ -184,6 +185,7 @@ class Profile < ActiveRecord::Base
   before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
   # after_save :add_to_preferences_changed_list, if: Proc.new { |profile| profile.any_seeking_preference_changed? }
+  after_update :update_clevertap
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
@@ -235,6 +237,37 @@ class Profile < ActiveRecord::Base
       end
 
       ht_in
+    end
+
+    def push_to_clevertap(uuid)
+      profile = Profile.find(uuid)
+      payload_body = {
+        d: [
+          {
+            identity: uuid,
+            type: 'profile',
+            ts: Time.now.to_i,
+            profileData: {
+              uuid: uuid,
+              email: profile.email,
+              firstname: profile.firstname,
+              lastname: profile.lastname,
+              gender: profile.gender,
+              location_city: profile.location_city,
+              location_country: profile.location_country,
+              inactive: profile.inactive,
+              incomplete: profile.incomplete,
+              "MSG-push" => !profile.disable_notifications_setting
+            }
+          }
+        ]
+      }
+
+      Clevertap.post_json('/1/upload', payload_body.to_json)
+    rescue ActiveRecord::RecordNotFound
+      EKC.logger.error "ERROR: UUID #{uuid} not found. Cannot update Clevertap profile."
+    rescue StandardError => e
+      EKC.logger.error "ERROR: Failed to update Clevertap profile, exception: #{e.class.name} : #{e.message}"
     end
   end
 
@@ -396,5 +429,9 @@ class Profile < ActiveRecord::Base
   def add_to_preferences_changed_list
     puts "pushing #{self.uuid} to 'preferences_updated_profiles'"
     $redis.lpush 'preferences_updated_profiles', self.uuid
+  end
+
+  def update_clevertap
+    self.class.delay_for(2.seconds).push_to_clevertap(self.uuid)
   end
 end

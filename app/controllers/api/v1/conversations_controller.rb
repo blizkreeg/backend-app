@@ -53,7 +53,6 @@ class Api::V1::ConversationsController < ApplicationController
     real_date = RealDate.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
     real_date.update!(real_date_parameters)
 
-    # TBD: send a push notification here
     Conversation.delay_for(Conversation::SHOW_DATE_SUGGESTIONS_DELAY).move_conversation_to(@conversation.id, 'show_date_suggestions') if @conversation.both_ready_to_meet?
 
     render 'api/v1/shared/nodata', status: 200

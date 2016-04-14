@@ -1,5 +1,5 @@
 class Message < ActiveRecord::Base
-  include JsonbAttributeHelpers
+  # include JsonbAttributeHelpers
 
   belongs_to :sender, foreign_key: "sender_uuid"
   belongs_to :recipient, foreign_key: "recipient_uuid"
@@ -15,8 +15,9 @@ class Message < ActiveRecord::Base
     read_at: :date_time
   }
 
-  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
-  jsonb_attr_helper :properties, ATTRIBUTES
+  # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  # jsonb_attr_helper :properties, ATTRIBUTES
+  jsonb_accessor :properties, ATTRIBUTES
 
   before_save :set_defaults
 

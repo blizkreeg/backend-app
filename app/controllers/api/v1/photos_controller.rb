@@ -20,7 +20,7 @@ class Api::V1::PhotosController < ApplicationController
       @current_profile.save!
     else
       # add photo from FB album
-      fb_photo_hash = @current_profile.facebook_authentication.get_photo(params[:data][:facebook_photo_id]) rescue nil
+      fb_photo_hash = @current_profile.facebook_authentication.get_photo(params[:data][:facebook_photo_id])
       if fb_photo_hash.present?
         fb_photo_url = fb_photo_hash['images'].first['source']
         uploaded_hash = Photo.upload_remote_photo_to_cloudinary(fb_photo_url)

@@ -1,6 +1,7 @@
 <% firebase_token = Firebase::FirebaseTokenGenerator.new("#{ENV['FIREBASE_SECRET']}").create_token({ uid: @profile.uuid }) %>
 <h3>Profile Details</h3>
 <p><%= flash[:error] %></p>
+<p><strong><%= flash[:message] %></strong></p>
 <table>
   <tr>
     <td style="padding:5px;">
@@ -25,6 +26,25 @@
     </td>
   </tr>
 </table>
+<p>
+  <%= form_tag action: 'send_push_notification' do %>
+    <strong>Send Push Notification:</strong>
+    <%= hidden_field_tag 'uuid', @profile.uuid %>
+    <%= select_tag 'notification_type', options_for_select([
+                                                      ['New Matches', 'new_matches'],
+                                                      ['Has Mutual Match', 'new_mutual_match'],
+                                                      ['New Message in Conversation', 'new_conversation_message'],
+                                                      ["Conv. Health Check", 'conv_health_check'],
+                                                      ["Conv. Ready to Meet?", 'conv_ready_to_meet'],
+                                                      ["Conv. Meeting When?", "conv_are_you_meeting"],
+                                                      ["Conv. Close Notice", "conv_close_notice"],
+                                                      ["Received New Butler Message", "new_butler_message"],
+                                                      ["Photo Rejected", "profile_photo_rejected"],
+                                                      ["Profile Update Rejected", "profile_edit_rejected"]
+                                        ]) %>
+    <%= submit_tag "Send" %>
+  <% end %>
+</p>
 <p>
   <strong>State</strong>: <%= @profile.state %><br>
   <strong>Endpoint: </strong><%= @profile.state_endpoint %><br>

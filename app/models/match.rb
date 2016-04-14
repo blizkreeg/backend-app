@@ -1,5 +1,5 @@
 class Match < ActiveRecord::Base
-  include JsonbAttributeHelpers
+  # include JsonbAttributeHelpers
 
   # who is the match for?
   belongs_to :for_profile, foreign_key: "for_profile_uuid", class_name: 'Profile'
@@ -35,8 +35,9 @@ class Match < ActiveRecord::Base
     active: :boolean
   }
 
-  store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
-  jsonb_attr_helper :properties, ATTRIBUTES
+  # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
+  # jsonb_attr_helper :properties, ATTRIBUTES
+  jsonb_accessor :properties, ATTRIBUTES
 
   validates :unmatched_reason, inclusion: { in: Constants::UNMATCH_REASONS, message: "%{value} is not a valid reason" }, allow_nil: true
 

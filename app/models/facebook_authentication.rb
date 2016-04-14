@@ -1,3 +1,4 @@
+# TBD: make sure all FB error responses are handled: https://developers.facebook.com/docs/graph-api/using-graph-api
 class FacebookAuthentication < SocialAuthentication
   MANDATORY_FACEBOOK_PERMISSIONS = %w(email public_profile user_photos user_birthday)
 
