@@ -1,3 +1,22 @@
+## Firebase Rules
+# {
+#     "rules": {
+#       ".read": "true",
+#       ".write": "true",
+#       "queue": {
+#         "tasks": {
+#           ".indexOn": "_state"
+#         }
+#       },
+#       "conversations": {
+#         "$conversation_uuid": {
+#           "messages": {
+#             ".indexOn": "sent_at"
+#           }
+#         }
+#       }
+#     }
+# }
 case Rails.env
 when 'development'
   firebase_db_uri = 'https://glaring-fire-5389.firebaseio.com/'

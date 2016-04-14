@@ -24,6 +24,7 @@ test:
 
 production:
   <<: *default
-  database: ekcoffee_production
-  username: ekcoffee
+  host: <%= ENV['PG_HOST'] %>
+  database: <%= ENV['PG_DBNAME'] %>
+  username: <%= ENV['PG_USER'] %>
   password: <%= ENV['PG_PASS'] %>

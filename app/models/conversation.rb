@@ -109,6 +109,7 @@ class Conversation < ActiveRecord::Base
 
     initialize_firebase
 
+    # TBD - check on this
     # Conversation.delay_for(HEALTH_CHECK_DELAY).move_conversation_to(self.id, 'health_check')
     # Conversation.delay_until(self.closes_at).expire_conversation(self.id)
   end
