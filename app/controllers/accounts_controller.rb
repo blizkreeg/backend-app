@@ -7,6 +7,8 @@ class AccountsController < ApplicationController
 
   include Matchmaker
 
+  before_action :set_account_profile
+
   def login
   end
 
@@ -27,10 +29,21 @@ class AccountsController < ApplicationController
     render text: 'Profile not found!'
   end
 
-  def show
-    uuid = params[:profile_uuid] || session[:profile_uuid]
+  def admin
+  end
 
-    @profile = Profile.find(uuid)
+  def show
+  end
+
+  def create_matches
+    Matchmaker.generate_new_matches_for(@profile.uuid)
+    Matchmaker.create_matches(@profile.uuid, @profile.queued_matches)
+  end
+
+  def check_mutual_match
+    if @profile.waiting_for_matches?
+
+    end
   end
 
   def show_butler_chat
@@ -213,5 +226,14 @@ class AccountsController < ApplicationController
     flash[:message] = "Sent Push Notification!"
 
     redirect_to :back
+  end
+
+  private
+
+  def set_account_profile
+    uuid = params[:profile_uuid] || session[:profile_uuid]
+    @profile = Profile.find(uuid)
+
+    redirect_to action: :login if @profile.blank?
   end
 end

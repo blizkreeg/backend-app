@@ -10,8 +10,8 @@ namespace :matches do
 
   desc "create match records"
   task :create => :environment do
-    Profile.with_has_new_matches(true).find_each(batch_size: 10) do |profile|
-      match_uuids = $redis.zrange("new_matches/#{profile.uuid}", 0, 4)
+    Profile.with_has_new_queued_matches(true).find_each(batch_size: 10) do |profile|
+      match_uuids = profile.queued_matches
       Matchmaker.delay.create_matches(profile.uuid, match_uuids) if match_uuids.present?
     end
   end

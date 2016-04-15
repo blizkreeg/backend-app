@@ -46,6 +46,10 @@ Rails.application.routes.draw do
     # get '/admin/profile-review', to: 'admin#review_profiles'
     # post '/admin/update-review', to: 'admin#update_review'
 
+    get '/admin', to: 'accounts#admin'
+    post '/admin/create-matches', to: 'accounts#create_matches'
+    post '/admin/check-mutual-matches', to: 'accounts#check_mutual_match'
+
     get 'login', to: 'accounts#login'
     get 'all', to: 'accounts#index'
     get 'show', to: 'accounts#show'

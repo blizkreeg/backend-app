@@ -13,16 +13,15 @@ module Matchmaker
   def generate_new_matches_for(profile_uuid)
     profile = Profile.find(profile_uuid)
 
-    new_match_uuids = Matchmaker.new_eligible_matches(profile).pluck(:uuid)
+    return if profile.matches.undecided.count > 0 || profile.show_matches?
 
-    # TBD: compute scores
-    scores = Array.new(new_match_uuids.size, 1)
-
-    $redis.zadd("new_matches/#{profile.uuid}", scores.product(new_match_uuids).flatten)
-
-    profile.update!(has_new_matches: true)
+    matched_profile_uuids = Matchmaker.new_eligible_matches(profile).pluck(:uuid)
+    # TBD: compute scores!
+    scores = Array.new(matched_profile_uuids.size, 1)
+    profile.add_matches_to_queue(matched_profile_uuids, scores)
+    profile.update!(has_new_queued_matches: true)
   rescue ActiveRecord::RecordNotFound
-    EKC.logger.error "#{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
+    EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
   end
 
   def create_between(p1_uuid, p2_uuid)
@@ -39,19 +38,38 @@ module Matchmaker
     [match_1, match_2]
   end
 
-  def create_matches(profile_uuid, match_uuids)
+  def create_matches(profile_uuid, matched_profile_uuids)
     profile = Profile.find(profile_uuid)
 
-    match_uuids.each do |match_uuid|
-      create_between(profile.uuid, match_uuid)
-    end
+    if matched_profile_uuids.present?
+      # create records in the matches table
+      matched_profile_uuids.each do |matched_profile_uuid|
+        create_between(profile.uuid, matched_profile_uuid)
+      end
 
-    case profile.state
-    when 'waiting_for_matches'
-      profile.new_matches!(:has_matches)
-    when 'waiting_for_matches_and_response'
-      profile.new_matches!(:has_matches_and_waiting_for_response)
+      # change the user state
+      case profile.state
+      when 'waiting_for_matches'
+        profile.new_matches!(:has_matches)
+      when 'waiting_for_matches_and_response'
+        profile.new_matches!(:has_matches_and_waiting_for_response)
+      end
+
+      PushNotifier.delay.notify_one(profile.uuid, 'new_matches')
     end
+  rescue ActiveRecord::RecordNotFound
+    EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
+  end
+
+  def determine_mutual_matches(profile_uuid)
+    profile = Profile.find(profile_uuid)
+
+    mutual_match = profile.matches.mutual.detect { |match| match.matched_profile.waiting_for_matches? }
+    profile.got_mutual_like!(:mutual_match, v1_profile_match_path(profile.uuid, mutual_match.id))
+    mutual_match.matched_profile.got_mutual_like!(:mutual_match, v1_profile_match_path(mutual_match.matched_profile.uuid, mutual_match.reverse.id))
+
+    PushNotifier.delay.notify_one(profile.uuid, 'new_mutual_match', name: mutual_match.matched_profile.firstname)
+    PushNotifier.delay.notify_one(mutual_match.matched_profile.uuid, 'new_mutual_match', name: profile.firstname)
   end
 
   def create_conversation(between_uuids=[])
@@ -59,7 +77,7 @@ module Matchmaker
   end
 
   def new_eligible_matches(profile, opts = {})
-    existing_matches = profile.matches.to_sql
+    existing_matches_sql = profile.matches.to_sql
 
     Profile
       .active
@@ -69,7 +87,14 @@ module Matchmaker
       .shorter_than(profile.seeking_maximum_height_in)
       .of_faiths(profile.seeking_faith)
       .of_gender(profile.seeking_gender)
-      .joins("LEFT OUTER JOIN (#{existing_matches}) matches ON matches.matched_profile_uuid = profiles.uuid")
+      .seeking_older_than(profile.age)
+      .seeking_younger_than(profile.age)
+      .seeking_taller_than(profile.height_in)
+      .seeking_shorter_than(profile.height_in)
+      .seeking_of_faith(profile.faith)
+      .within_distance(profile.search_lat, profile.search_lng)
+      .where.not(uuid: profile.uuid)
+      .joins("LEFT OUTER JOIN (#{existing_matches_sql}) matches ON matches.matched_profile_uuid = profiles.uuid")
       .where(matches: { matched_profile_uuid: nil })
       .limit(opts[:limit] || N_MATCHES_AT_A_TIME)
   end
