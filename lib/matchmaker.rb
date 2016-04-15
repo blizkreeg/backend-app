@@ -30,6 +30,10 @@ module Matchmaker
 
     initiator_uuid = profile_one.male? ? profile_one.uuid : profile_two.uuid
 
+    # TBD: check if delivered_at and expires_at are needed
+    # Match.create_with(delivered_at: DateTime.now,
+    #                                    expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
+    #                                    initiates_profile_uuid: male_uuid)
     match_1 = Match.create_with(initiates_profile_uuid: initiator_uuid)
                       .find_or_create_by(for_profile_uuid: profile_one.uuid, matched_profile_uuid: profile_two.uuid)
     match_2 = Match.create_with(initiates_profile_uuid: initiator_uuid)
