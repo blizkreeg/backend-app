@@ -118,7 +118,7 @@ class PushNotifier
 
     EKC.logger.debug "DEBUG: Sending push notification to #{uuid}, payload: #{payload_body.to_json}"
 
-    Clevertap.post_json('/1/targets/create.json', payload_body.to_json)
+    response = Clevertap.post_json('/1/targets/create.json', payload_body.to_json)
 
     if response.status != 200
       EKC.logger.error "ERROR: Failed to send push notification! uuid: #{uuid}, type: #{notification_type}, params: #{notification_params}, error message: #{response.body}"
