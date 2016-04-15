@@ -68,7 +68,7 @@ var queue = new Queue(queueRef, function(data, progress, resolve, reject) {
                   // the disconnected user has messages since being disconnected
                   // CHECK THAT THE CONV. IS STILL OPEN AND THEN SEND PUSH NOTIFICATIONS
                   // TBD: Send push notification here!
-                  unirest.post('http://localhost:3000/v1/accounts/send-push-notification')
+                  unirest.post(process.env.HOST_URL + '/v1/accounts/send-push-notification')
                   .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
                   .send({ "data": { "single_user": true, "uuid": uuid, "notification_type": "new_conversation_message", "notification_params": { name: senderName } } })
                   .end(function (response) {
