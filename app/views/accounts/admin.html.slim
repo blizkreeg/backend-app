@@ -1,0 +1,8 @@
+.container
+  h2 Account
+  h3 Admin Actions
+  .row
+    .col-xs-2
+      = button_to "Generate New Matches", { action: :create_matches }, method: :post
+    .col-xs-2
+      = button_to "Check for Mutual Match", { action: :check_mutual_match }, method: :post
