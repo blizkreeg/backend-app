@@ -37,6 +37,7 @@ Rails.application.routes.draw do
         post '/profiles/report', to: 'profiles#report'
         get '/profiles/:uuid/state', to: 'profiles#get_state', as: :get_state
 
+        post '/accounts/send-push-notification', to: 'accounts#send_push_notification'
         resources :accounts
       end
     end

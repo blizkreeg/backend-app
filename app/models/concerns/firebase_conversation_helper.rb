@@ -2,10 +2,7 @@ module FirebaseConversationHelper
   extend ActiveSupport::Concern
 
   def initialize_firebase
-    $firebase_conversations.set(self.firebase_metadata_endpoint, { participant_uuids: self.participant_uuids,
-                                                                    opened_at: self.opened_at.try(:iso8601),
-                                                                    closes_at: self.closes_at.try(:iso8601),
-                                                                    open: true })
+    $firebase_conversations.set(self.firebase_metadata_endpoint, self.firebase_metadata({open: true}))
     sync_messages_to_firebase
   end
 
@@ -16,10 +13,7 @@ module FirebaseConversationHelper
   end
 
   def close_conversation_firebase
-    $firebase_conversations.set(self.firebase_metadata_endpoint, { participant_uuids: self.participant_uuids,
-                                                                    opened_at: self.opened_at.try(:iso8601),
-                                                                    closes_at: self.closes_at.try(:iso8601),
-                                                                    open: false })
+    $firebase_conversations.set(self.firebase_metadata_endpoint, self.firebase_metadata({open: false}))
   end
 
   def firebase_messages_endpoint
@@ -28,5 +22,16 @@ module FirebaseConversationHelper
 
   def firebase_metadata_endpoint
     "#{self.uuid}/metadata"
+  end
+
+  def firebase_metadata(override_options = {})
+    {
+      participant_uuids: self.participant_uuids,
+      "#{self.initiator.uuid}_firstname": self.initiator.firstname,
+      "#{self.responder.uuid}_firstname": self.responder.firstname,
+      opened_at: self.opened_at.try(:iso8601),
+      closes_at: self.closes_at.try(:iso8601),
+      open: nil
+    }.merge(override_options)
   end
 end
