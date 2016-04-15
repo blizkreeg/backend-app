@@ -38,6 +38,8 @@ class AccountsController < ApplicationController
   def create_matches
     Matchmaker.generate_new_matches_for(@profile.uuid)
     Matchmaker.create_matches(@profile.uuid, @profile.queued_matches)
+
+    redirect_to :back
   end
 
   def check_mutual_match
