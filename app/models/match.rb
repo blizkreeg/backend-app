@@ -56,8 +56,6 @@ class Match < ActiveRecord::Base
         match.update mutual: true
         reverse_match.update mutual: true
 
-
-
         Conversation.find_or_create_by_participants!([match.for_profile.uuid, match.matched_profile.uuid])
       end
     end

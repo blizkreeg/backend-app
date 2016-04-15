@@ -2,6 +2,7 @@ class Profile < ActiveRecord::Base
   # include JsonbAttributeHelpers
   include ProfileAttributeHelpers
   include ProfileStateMachine
+  include ProfileMatchesHelper
 
   # https://libraries.io/rubygems/ar_doc_store/0.0.4
   # since we don't have a serial id column
@@ -16,7 +17,17 @@ class Profile < ActiveRecord::Base
   scope :of_faith, -> (faith) { with_faith(faith) }
   scope :of_faiths, -> (faiths) { where("profiles.properties->>'faith' IN (?)", faiths) }
   scope :of_gender, -> (gender) { with_gender(gender) }
+
+  # seeking
+  scope :seeking_older_than, -> (age) { where("(CAST(profiles.properties->>'seeking_minimum_age' AS integer)) <= ?", age) }
+  scope :seeking_younger_than, -> (age) { where("(CAST(profiles.properties->>'seeking_maximum_age' AS integer)) >= ?", age) }
+  scope :seeking_taller_than, -> (height_in) { where("(CAST(profiles.properties->>'seeking_minimum_height_in' AS integer)) <= ?", height_in) }
+  scope :seeking_shorter_than, -> (height_in) { where("(CAST(profiles.properties->>'seeking_maximum_height_in' AS integer)) <= ?", height_in) }
+  scope :seeking_of_faith, -> (faith) { where("profiles.properties->'seeking_faith' ? :faith", faith: faith) }
+  # scope :seeking_of_gender, -> (gender) { with_gender(gender) } # FUTURE, when opening up to LGBT
+
   scope :ready_for_matches, -> { where("state = 'waiting_for_matches' OR state = 'waiting_for_matches_and_response'") }
+  scope :within_distance, -> (lat, lng, metres=nil) { where("earth_box(ll_to_earth(?, ?), ?) @> ll_to_earth(profiles.search_lat, profiles.search_lng)", lat, lng, metres || 10000) }
 
   has_many :social_authentications, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
   has_one  :facebook_authentication, -> { where(oauth_provider: 'facebook') }, primary_key: "uuid", foreign_key: "profile_uuid"
@@ -58,7 +69,7 @@ class Profile < ActiveRecord::Base
     seeking_maximum_height
     seeking_faith
     disable_notifications_setting
-    has_new_matches
+    has_new_queued_matches
   )
 
   ATTRIBUTES = {
@@ -105,6 +116,7 @@ class Profile < ActiveRecord::Base
     seeking_minimum_height_in:    :integer,
     seeking_maximum_height_in:    :integer,
     seeking_faith:                :string_array,
+    # seeking_gender:               :string,
 
     # internal admin stuff
     incomplete:                   :boolean,
@@ -178,6 +190,7 @@ class Profile < ActiveRecord::Base
   end
   after_validation :reverse_geocode, if: ->(profile){ (profile.latitude.present? && profile.latitude_changed?) || (profile.longitude.present? && profile.longitude_changed?) }
 
+  before_save :set_search_latlng, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
   before_save :set_tz, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
   before_save :set_age, if: Proc.new { |profile| profile.born_on_year_changed? || profile.born_on_month_changed? || profile.born_on_day_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
@@ -433,5 +446,10 @@ class Profile < ActiveRecord::Base
 
   def update_clevertap
     self.class.delay_for(2.seconds).push_to_clevertap(self.uuid)
+  end
+
+  def set_search_latlng
+    self.search_lat = self.latitude
+    self.search_lng = self.longitude
   end
 end

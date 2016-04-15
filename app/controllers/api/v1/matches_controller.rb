@@ -8,48 +8,33 @@ class Api::V1::MatchesController < ApplicationController
   def index
     profile = Profile.find(params[:profile_uuid])
 
-    # TBD implement matching logic
-    opposite_gender = profile.male? ? 'female' : 'male'
-    matched_profiles = Profile.with_gender(opposite_gender).limit(3).reorder("RANDOM()")
+    @matches = profile.matches.includes(:matched_profile).undecided.take(Constants::N_MATCHES_AT_A_TIME)
 
-    if profile.matches.undecided.count > 0
-      @matches = profile.matches.undecided
-    else
-      @matches = matched_profiles.map { |matched_profile|
-                  male_uuid = profile.male? ? profile.uuid : matched_profile.uuid;
-                  Match.create_with(delivered_at: DateTime.now,
-                                    expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
-                                    initiates_profile_uuid: male_uuid)
-                  .find_or_create_by(for_profile_uuid: profile.uuid, matched_profile_uuid: matched_profile.uuid) }
-    end
-
-    case profile.state.to_sym
-    when :waiting_for_matches
-      if @matches.count > 0
+    # transition state if there are matches to show
+    if @matches.count > 0
+      case profile.state.to_sym
+      when :waiting_for_matches
         profile.new_matches!(:has_matches, v1_profile_matches_path(profile))
         profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
-      end
-    when :has_matches
-      profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
-    when :show_matches
-    when :waiting_for_matches_and_response
-      waiting_for_response_match = profile.active_mutual_match
-      if @matches.count > 0
+      when :has_matches
+        profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
+      when :show_matches
+      when :waiting_for_matches_and_response
+        waiting_for_response_match = profile.active_mutual_match
         profile.new_matches!(:has_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
         profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
+      when :has_matches_and_waiting_for_response
+        waiting_for_response_match = profile.active_mutual_match
+        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
+      when :show_matches_and_waiting_for_response
+        waiting_for_response_match = profile.active_mutual_match
       end
-    when :has_matches_and_waiting_for_response
-      waiting_for_response_match = profile.active_mutual_match
-      profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
-    when :show_matches_and_waiting_for_response
-      waiting_for_response_match = profile.active_mutual_match
+
+      # state has changed -> reload
+      @current_profile.reload
+
+      @matches.map { |match| Match.delay.update_delivery_time(match.id) }
     end
-
-    @current_profile.reload
-
-    # @matches = profile.matches.includes(:matched_profile).undecided.take(Constants::N_MATCHES_AT_A_TIME)
-
-    @matches.map { |match| Match.delay.update_delivery_time(match.id) } if @matches.present?
 
     render status: 200
   end
@@ -57,9 +42,8 @@ class Api::V1::MatchesController < ApplicationController
   def show
     @match = Match.includes(:matched_profile).find(params[:id])
 
-    @match.test_and_set_expiration! if @current_profile.mutual_match?
-
-    Match.delay.update_delivery_time(@match.id)
+    # if showing a mutual match, set the expiration time
+    @match.test_and_set_expiration! if @current_profile.mutual_match? && (@current_profile.active_mutual_match.try(:id) == @match.id)
 
     render status: 200
   end

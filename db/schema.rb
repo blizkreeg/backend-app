@@ -11,12 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160307002132) do
+ActiveRecord::Schema.define(version: 20160414224141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
   enable_extension "pgcrypto"
+  enable_extension "cube"
+  enable_extension "earthdistance"
 
   create_table "conversation_healths", id: :bigserial, force: :cascade do |t|
     t.jsonb    "properties",                default: {}
@@ -93,11 +95,13 @@ ActiveRecord::Schema.define(version: 20160307002132) do
   add_index "photos", ["profile_uuid"], name: "index_photos_on_profile_uuid", using: :btree
 
   create_table "profiles", primary_key: "uuid", force: :cascade do |t|
-    t.jsonb    "properties",       default: {}, null: false
-    t.string   "state",                         null: false
-    t.jsonb    "state_properties", default: {}, null: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.jsonb    "properties",                               default: {}, null: false
+    t.string   "state",                                                 null: false
+    t.jsonb    "state_properties",                         default: {}, null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
+    t.decimal  "search_lat",       precision: 7, scale: 4
+    t.decimal  "search_lng",       precision: 7, scale: 4
   end
 
   add_index "profiles", ["created_at"], name: "index_profiles_on_created_at", using: :btree
