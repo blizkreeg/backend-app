@@ -7,7 +7,7 @@ class AccountsController < ApplicationController
 
   include Matchmaker
 
-  before_action :set_account_profile, except: [:login]
+  before_action :set_account_profile, except: [:login, :callback]
 
   def login
   end
