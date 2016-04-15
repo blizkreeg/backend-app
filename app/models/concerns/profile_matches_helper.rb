@@ -3,7 +3,7 @@ module ProfileMatchesHelper
 
   # adds new matches to the queue, sorted by score
   def add_matches_to_queue(matched_profile_uuids, scores)
-    $redis.zadd(queued_matches_key, scores.product(matched_profile_uuids).flatten)
+    $redis.zadd(queued_matches_key, scores.product(matched_profile_uuids))
   end
 
   # returns uuids of queued matches

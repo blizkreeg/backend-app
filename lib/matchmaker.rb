@@ -16,10 +16,12 @@ module Matchmaker
     return if profile.matches.undecided.count > 0 || profile.show_matches?
 
     matched_profile_uuids = Matchmaker.new_eligible_matches(profile).pluck(:uuid)
-    # TBD: compute scores!
-    scores = Array.new(matched_profile_uuids.size, 1)
-    profile.add_matches_to_queue(matched_profile_uuids, scores)
-    profile.update!(has_new_queued_matches: true)
+    if matched_profile_uuids.present?
+      # TBD: compute scores!
+      scores = Array.new(matched_profile_uuids.size, 1)
+      profile.add_matches_to_queue(matched_profile_uuids, scores)
+      profile.update!(has_new_queued_matches: true)
+    end
   rescue ActiveRecord::RecordNotFound
     EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
   end

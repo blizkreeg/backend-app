@@ -22,7 +22,7 @@ class Profile < ActiveRecord::Base
   scope :seeking_older_than, -> (age) { where("(CAST(profiles.properties->>'seeking_minimum_age' AS integer)) <= ?", age) }
   scope :seeking_younger_than, -> (age) { where("(CAST(profiles.properties->>'seeking_maximum_age' AS integer)) >= ?", age) }
   scope :seeking_taller_than, -> (height_in) { where("(CAST(profiles.properties->>'seeking_minimum_height_in' AS integer)) <= ?", height_in) }
-  scope :seeking_shorter_than, -> (height_in) { where("(CAST(profiles.properties->>'seeking_maximum_height_in' AS integer)) <= ?", height_in) }
+  scope :seeking_shorter_than, -> (height_in) { where("(CAST(profiles.properties->>'seeking_maximum_height_in' AS integer)) >= ?", height_in) }
   scope :seeking_of_faith, -> (faith) { where("profiles.properties->'seeking_faith' ? :faith", faith: faith) }
   # scope :seeking_of_gender, -> (gender) { with_gender(gender) } # FUTURE, when opening up to LGBT
 
