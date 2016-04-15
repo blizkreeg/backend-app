@@ -86,9 +86,9 @@
     </div>
   <% end %>
 </p>
-<p><strong>UUID</strong>: <%= @profile.uuid %><br>
+<p><strong>UUID</strong>: <%= @profile.uuid %> <button class="copy-btn" data-clipboard-text="<%= @profile.uuid %>">Copy</button><br>
   <strong>Name</strong>: <%= @profile.firstname %> <%= @profile.lastname %><br>
-  <strong>JWT token</strong>: <%= JsonWebToken.encode(@profile.auth_token_payload) %><br>
+  <strong>JWT token</strong>: <%= JsonWebToken.encode(@profile.auth_token_payload) %> <button class="copy-btn" data-clipboard-text="<%= JsonWebToken.encode(@profile.auth_token_payload) %>">Copy</button><br>
   <strong>properties:</strong>
   <ul>
   <% @profile.attributes.each do |k, v| %>
@@ -107,6 +107,9 @@
   <%= image_tag "#{Constants::CLOUDINARY_HOST_URL}w_64,h_64,r_max,c_fill,g_face:center/#{photo.public_id}.jpg" %>
 <% end %>
 
+<script language='javascript'>
+  var clipboard = new Clipboard('.copy-btn');
+</script>
 
 <% if @profile.in_conversation? %>
 <script language='javascript'>
@@ -182,6 +185,5 @@
   $('#disconnect-chat').on('click', function() {
     Firebase.goOffline();
   })
-
 </script>
 <% end %>

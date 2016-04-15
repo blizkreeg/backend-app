@@ -9,6 +9,6 @@
   .row
     .col-xs-6
       h4 Upcoming Matches
-        - @profile.matches.undecided.each do |match|
-          p
-            = match.matched_profile.firstname
+      - @profile.matches.undecided.each do |match|
+        p
+          = match.matched_profile.firstname
