@@ -27,6 +27,7 @@ var Queue = require('firebase-queue'),
 var tokenGenerator = new FirebaseTokenGenerator("da9HWjJ8UIE0gLhSCk2auIjZYDmIpm4VSPmVUZyV");
 var token = tokenGenerator.createToken({ uid: '' }); // auth with no uuid
 var numCPUs = 4;
+var quitProcess = false;
 
 // if(cluster.isMaster) {
 //   var conversationsRef = new Firebase('https://glaring-fire-5389.firebaseio.com/conversations');
@@ -62,9 +63,21 @@ conversationsRef.on('child_changed', function(snapshot) {
     type: 'conversation_changed',
     'conversation_uuid': conversation_uuid
   });
+
+  if(quitProcess) {
+    process.exit();
+  }
 });
 
 // doing anything with this?
 // conversationsRef.on('child_added', function(snapshot) {
 //   console.log("new conversation started: " + snapshot.key());
 // });
+
+process.on('SIGTERM', function() {
+  quitProcess = true;
+  setTimeout(function() {
+    console.log('waited 1s...killing process');
+    process.exit();
+  }, 1000);
+});
