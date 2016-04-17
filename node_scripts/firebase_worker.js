@@ -8,18 +8,32 @@ var token = tokenGenerator.createToken({ uid: '' }); // auth with no uuid
 
 var quitProcess = false;
 
-var queueRef = new Firebase('https://glaring-fire-5389.firebaseio.com/queue');
+var dbUrl;
+
+if(process.env.RAILS_ENV == 'development') {
+  dbUrl = 'https://glaring-fire-5389.firebaseio.com'
+}
+else if(process.env.RAILS_ENV == 'test') {
+  dbUrl = 'https://glaring-fire-5389.firebaseio.com'
+}
+else if(process.env.RAILS_ENV == 'production') {
+  dbUrl = 'https://ekcoffee-production.firebaseio.com'
+}
+
+console.log('connected to ' + dbUrl);
+
+var queueRef = new Firebase(dbUrl + '/queue');
 var queue = new Queue(queueRef, function(data, progress, resolve, reject) {
   // Update the progress state of the task
   setTimeout(function() {
     progress(50);
   }, 500);
 
-  metadataRef = new Firebase("https://glaring-fire-5389.firebaseio.com/conversations/" + data.conversation_uuid + "/metadata");
+  metadataRef = new Firebase(dbUrl + "/conversations/" + data.conversation_uuid + "/metadata");
   metadataRef.once("value", function(metadata) {
     var conversationOpen = metadata.child("open").val();
     if(conversationOpen === true) {
-      var participantsRef = new Firebase("https://glaring-fire-5389.firebaseio.com/conversations/" + data.conversation_uuid + "/metadata/participant_uuids");
+      var participantsRef = new Firebase(dbUrl + "/conversations/" + data.conversation_uuid + "/metadata/participant_uuids");
       participantsRef.once('value', function(participants) {
         // check if either of the participants are disconnected
         participants.forEach(function(participant) {
@@ -27,7 +41,7 @@ var queue = new Queue(queueRef, function(data, progress, resolve, reject) {
           var token = tokenGenerator.createToken({ uid: uuid });
 
           // auth with the uuid
-          ref = new Firebase('https://glaring-fire-5389.firebaseio.com/');
+          ref = new Firebase(dbUrl + '/');
           ref.authWithCustomToken(token, function(error, authData) {
             if (error) {
               console.log(uuid + "- login failed!", error);
@@ -36,12 +50,12 @@ var queue = new Queue(queueRef, function(data, progress, resolve, reject) {
             }
           });
 
-          connectionRef = new Firebase('https://glaring-fire-5389.firebaseio.com/users/' + uuid + '/disconnectedAt');
+          connectionRef = new Firebase(dbUrl + '/users/' + uuid + '/disconnectedAt');
           connectionRef.once('value', function(snapshot) {
             var disconnectedAt = snapshot.val();
             if(disconnectedAt !== false) {
               // console.log(uuid + ' disconected at ' + disconnectedAt);
-              var messagesRef = new Firebase("https://glaring-fire-5389.firebaseio.com/conversations/" + data.conversation_uuid + "/messages");
+              var messagesRef = new Firebase(dbUrl + "/conversations/" + data.conversation_uuid + "/messages");
               var query = messagesRef.orderByChild("sent_at").startAt(disconnectedAt).limitToLast(10);
               var sentLastPushNotificationAt = metadata.child('sent_push_to_' + uuid).val();
               if(sentLastPushNotificationAt > disconnectedAt) {

@@ -19,6 +19,20 @@ when child_added to /messages list,
 
 */
 
+var dbUrl;
+
+if(process.env.RAILS_ENV == 'development') {
+  dbUrl = 'https://glaring-fire-5389.firebaseio.com'
+}
+else if(process.env.RAILS_ENV == 'test') {
+  dbUrl = 'https://glaring-fire-5389.firebaseio.com'
+}
+else if(process.env.RAILS_ENV == 'production') {
+  dbUrl = 'https://ekcoffee-production.firebaseio.com'
+}
+
+console.log('connected to ' + dbUrl);
+
 var Queue = require('firebase-queue'),
     Firebase = require('firebase'),
     FirebaseTokenGenerator = require("firebase-token-generator");
@@ -30,7 +44,7 @@ var numCPUs = 4;
 var quitProcess = false;
 
 // if(cluster.isMaster) {
-//   var conversationsRef = new Firebase('https://glaring-fire-5389.firebaseio.com/conversations');
+//   var conversationsRef = new Firebase(dbUrl + '/conversations');
 
 //   for (var i = 0; i < numCPUs; i++) {
 //     worker = cluster.fork();
@@ -42,13 +56,13 @@ var quitProcess = false;
 
 // }
 
-var conversationsRef = new Firebase('https://glaring-fire-5389.firebaseio.com/conversations');
-var taskRef = new Firebase("https://glaring-fire-5389.firebaseio.com/queue/tasks");
+var conversationsRef = new Firebase(dbUrl + '/conversations');
+var taskRef = new Firebase(dbUrl + "/queue/tasks");
 
 conversationsRef.on('child_changed', function(snapshot) {
   // auth with no uuid
   var token = tokenGenerator.createToken({ uid: '' });
-  ref = new Firebase('https://glaring-fire-5389.firebaseio.com/');
+  ref = new Firebase(dbUrl + '/');
   ref.authWithCustomToken(token, function(error, authData) {
     if (error) {
       console.log("login failed!", error);
