@@ -52,4 +52,9 @@ group :development do
   # gem 'spring'
   gem 'derailed'
   gem 'ruby-prof'
+  gem 'capistrano', '~> 3.1'
+  gem 'capistrano-rails', '~> 1.1'
+  gem 'capistrano3-puma', require: false
+  gem 'capistrano-rbenv', '~> 2.0', require: false
+  gem 'capistrano-rbenv-vars', '~> 0.1', require: false
 end
