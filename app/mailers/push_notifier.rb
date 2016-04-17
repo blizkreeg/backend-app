@@ -98,7 +98,7 @@ class PushNotifier
       },
       content: {
         title: notification_params[:title] || notification_default_params[:title],
-        body: generated_body(notification_type, notification_params) || notification_default_params[:body],
+        body: notification_params[:body] || generated_body(notification_type, notification_params) || notification_default_params[:body],
         platform_specific: {
           ios: {
             category: notification_default_params[:category],
