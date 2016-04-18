@@ -22,13 +22,13 @@ when child_added to /messages list,
 var dbUrl;
 
 if(process.env.RAILS_ENV == 'development') {
-  dbUrl = 'https://glaring-fire-5389.firebaseio.com'
+  dbUrl = 'https://glaring-fire-5389.firebaseio.com';
 }
 else if(process.env.RAILS_ENV == 'test') {
-  dbUrl = 'https://glaring-fire-5389.firebaseio.com'
+  dbUrl = 'https://glaring-fire-5389.firebaseio.com';
 }
 else if(process.env.RAILS_ENV == 'production') {
-  dbUrl = 'https://ekcoffee-production.firebaseio.com'
+  dbUrl = 'https://ekcoffee-production.firebaseio.com';
 }
 
 console.log('connected to ' + dbUrl);
@@ -38,7 +38,7 @@ var Queue = require('firebase-queue'),
     FirebaseTokenGenerator = require("firebase-token-generator");
 // var cluster = require('cluster');
 
-var tokenGenerator = new FirebaseTokenGenerator("da9HWjJ8UIE0gLhSCk2auIjZYDmIpm4VSPmVUZyV");
+var tokenGenerator = new FirebaseTokenGenerator(process.env.FIREBASE_SECRET);
 var token = tokenGenerator.createToken({ uid: '' }); // auth with no uuid
 var numCPUs = 4;
 var quitProcess = false;

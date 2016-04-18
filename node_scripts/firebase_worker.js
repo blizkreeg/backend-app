@@ -3,22 +3,22 @@ var Queue = require('firebase-queue'),
     FirebaseTokenGenerator = require("firebase-token-generator"),
     unirest = require('unirest');;
 
-var tokenGenerator = new FirebaseTokenGenerator("da9HWjJ8UIE0gLhSCk2auIjZYDmIpm4VSPmVUZyV");
-var token = tokenGenerator.createToken({ uid: '' }); // auth with no uuid
-
-var quitProcess = false;
-
 var dbUrl;
 
 if(process.env.RAILS_ENV == 'development') {
-  dbUrl = 'https://glaring-fire-5389.firebaseio.com'
+  dbUrl = 'https://glaring-fire-5389.firebaseio.com';
 }
 else if(process.env.RAILS_ENV == 'test') {
-  dbUrl = 'https://glaring-fire-5389.firebaseio.com'
+  dbUrl = 'https://glaring-fire-5389.firebaseio.com';
 }
 else if(process.env.RAILS_ENV == 'production') {
-  dbUrl = 'https://ekcoffee-production.firebaseio.com'
+  dbUrl = 'https://ekcoffee-production.firebaseio.com';
 }
+
+var tokenGenerator = new FirebaseTokenGenerator(process.env.FIREBASE_SECRET);
+var token = tokenGenerator.createToken({ uid: '' }); // auth with no uuid
+
+var quitProcess = false;
 
 console.log('connected to ' + dbUrl);
 

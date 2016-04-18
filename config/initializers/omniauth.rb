@@ -23,7 +23,9 @@ end
 
 case Rails.env
 when "development"
+  # OmniAuth.config.full_host = "http://localhost:3000"
 when "production"
+  OmniAuth.config.full_host = "http://app-api.ekcoffee.com"
 when "test"
   OmniAuth.config.full_host = "http://ekcoffee2-3000.terminal.com"
 end
