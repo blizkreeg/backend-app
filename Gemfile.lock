@@ -61,6 +61,9 @@ GEM
     capistrano-rbenv-vars (0.1.0)
       capistrano (>= 3.0)
       capistrano-rbenv (>= 2.0)
+    capistrano-sidekiq (0.5.4)
+      capistrano
+      sidekiq (>= 3.4)
     capistrano3-puma (1.2.1)
       capistrano (~> 3.0)
       puma (>= 2.6)
@@ -298,9 +301,11 @@ DEPENDENCIES
   aasm
   byebug
   capistrano (~> 3.1)
+  capistrano-bundler (~> 1.1.2)
   capistrano-rails (~> 1.1)
   capistrano-rbenv (~> 2.0)
   capistrano-rbenv-vars (~> 0.1)
+  capistrano-sidekiq
   capistrano3-puma
   capybara
   cloudinary
