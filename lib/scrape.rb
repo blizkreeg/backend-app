@@ -14,6 +14,7 @@ module Scrape
       'Coffee'
     end
     page_url = "https://www.zomato.com/#{city_name.downcase}/restaurants/#{type}"
+    puts "scraping places for city: #{city_name}, place type: #{type}"
 
     parsed = Nokogiri::HTML(HTTParty.get(page_url))
     parsed.css('ol#orig-search-list').css('li.js-search-result-li').first(10).map do |lineitem|

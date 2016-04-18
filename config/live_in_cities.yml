@@ -1,0 +1,24 @@
+# radius in meters
+development:
+  - name: 'Pune'
+    lat: 18.53
+    lng: 73.87
+    radius: 25_000
+  - name: 'Mumbai'
+    lat: 18.98
+    lng: 72.83
+    radius: 25_000
+test:
+  - name: 'Pune'
+    lat: 18.53
+    lng: 73.87
+    radius: 25_000
+  - name: 'Mumbai'
+    lat: 18.98
+    lng: 72.83
+    radius: 25_000
+production:
+  - name: 'Pune'
+    lat: 18.53
+    lng: 73.87
+    radius: 25_000

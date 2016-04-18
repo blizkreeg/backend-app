@@ -1,5 +1,5 @@
 namespace :scrape do
-  task :cafes => :environment do
-    Scrape.run('mumbai', 'cafes')
+  task :cafes, [:city] => :environment do |t, args|
+    Scrape.run(args[:city], 'cafes')
   end
 end

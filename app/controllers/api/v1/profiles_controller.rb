@@ -87,9 +87,22 @@ class Api::V1::ProfilesController < ApplicationController
   #   latitude, longitude
   def index
     # TBD: raise exception if show != featured and unless both lat/lon are present
-    # TBD: lookup based on lat/lon
-    @city = 'Mumbai'
-    @profiles = Profile.limit(3).reorder("RANDOM()")
+    from_city = Geocoder.search("#{params[:latitude]}, #{params[:longitude]}").first.city
+
+    found_city = nil
+    LIVE_CITIES.each do |city|
+      if Geocoder::Calculations.distance_between([params[:latitude], params[:longitude]], [city[:lat], city[:lng]]) * 1_000 <= city[:radius].to_f
+        found_city = city
+        break
+      end
+    end
+
+    @city = from_city
+    if found_city.blank?
+      @profiles = []
+    else
+      @profiles = Profile.within_distance(found_city[:lat], found_city[:lng]).limit(3)
+    end
 
     render status: 200
   end
