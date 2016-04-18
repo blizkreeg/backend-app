@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(version: 20160414224141) do
   add_index "date_suggestions", ["conversation_id"], name: "index_date_suggestions_on_conversation_id", using: :btree
   add_index "date_suggestions", ["date_place_id"], name: "index_date_suggestions_on_date_place_id", using: :btree
 
-  create_table "matches", force: :cascade do |t|
+  create_table "matches", id: :bigserial, force: :cascade do |t|
     t.uuid     "for_profile_uuid",                  null: false
     t.uuid     "matched_profile_uuid",              null: false
     t.jsonb    "properties",           default: {}, null: false

@@ -9,6 +9,8 @@ module Constants
 
   CLOUDINARY_HOST_URL = 'http://res.cloudinary.com/ekcoffee/image/upload/'
 
+  NEAR_DISTANCE_METERS = 25_000
+
   MIN_AGE = 21
   FAITHS = %w(
     Agnostic
