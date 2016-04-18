@@ -53,8 +53,10 @@ group :development do
   gem 'derailed'
   gem 'ruby-prof'
   gem 'capistrano', '~> 3.1'
+  gem 'capistrano-bundler', '~> 1.1.2'
   gem 'capistrano-rails', '~> 1.1'
-  gem 'capistrano3-puma', require: false
+  gem 'capistrano3-puma', github: "seuros/capistrano-puma", require: false
   gem 'capistrano-rbenv', '~> 2.0', require: false
   gem 'capistrano-rbenv-vars', '~> 0.1', require: false
+  gem 'capistrano-sidekiq'
 end
