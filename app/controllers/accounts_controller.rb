@@ -44,8 +44,14 @@ class AccountsController < ApplicationController
 
   def check_mutual_match
     if @profile.waiting_for_matches?
-
+      Matchmaker.determine_mutual_matches(@profile.uuid)
     end
+  end
+
+  def move_conversation
+    Conversation.move_conversation_to(@profile.active_mutual_match.conversation.id, params[:conv_state])
+    flash[:success] = "Done"
+    redirect_to :back
   end
 
   def show_butler_chat

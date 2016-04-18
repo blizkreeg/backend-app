@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     get '/admin', to: 'accounts#admin'
     post '/admin/create-matches', to: 'accounts#create_matches'
     post '/admin/check-mutual-matches', to: 'accounts#check_mutual_match'
+    post '/admin/move-conversation', to: 'accounts#move_conversation'
 
     get 'login', to: 'accounts#login'
     get 'all', to: 'accounts#index'

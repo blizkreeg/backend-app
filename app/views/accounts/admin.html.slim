@@ -1,14 +1,28 @@
 .container
+  - if flash[:success]
+    .alert.alert-success
+      = flash[:success]
   h2 Account
   h3 Admin Actions
   .row
     .col-xs-2
       = button_to "Generate New Matches", { action: :create_matches }, method: :post
     .col-xs-2
-      = button_to "Check for Mutual Match", { action: :check_mutual_match }, method: :post
+      = button_to "Run job: check for Mutual Matches", { action: :check_mutual_match }, method: :post
   .row
     .col-xs-6
-      h4 Upcoming Matches
+      h4 Next Matches
       - @profile.matches.undecided.each do |match|
         p
           = match.matched_profile.firstname
+  - if @profile.in_conversation?
+    = form_tag action: 'move_conversation' do
+      h4 Update Conversation State To
+      = select_tag 'conv_state', options_for_select([['Initial State', 'none'],
+                                                        ['Screen 5a. Conversation Check', 'health_check'],
+                                                        ['Screen 4e. Ready To Meet Yet?', 'ready_to_meet'],
+                                                        ["Screen 7a. Haven't heard back", 'radio_silence'],
+                                                        ["Screen 6a-6f. Show Date Suggestions", 'show_date_suggestions'],
+                                                        ["Screen 9a. When Are You Guys Meeting?", "check_if_meeting"],
+                                                        ["Screen 10. Conversation Close Notice", "close_notice"]])
+      = submit_tag "Update"
