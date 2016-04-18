@@ -99,6 +99,7 @@ module Matchmaker
       .seeking_shorter_than(profile.height_in)
       .seeking_of_faith(profile.faith)
       .within_distance(profile.search_lat, profile.search_lng)
+      .ordered_by_distance(profile.search_lat, profile.search_lng)
       .where.not(uuid: profile.uuid)
       .joins("LEFT OUTER JOIN (#{existing_matches_sql}) matches ON matches.matched_profile_uuid = profiles.uuid")
       .where(matches: { matched_profile_uuid: nil })

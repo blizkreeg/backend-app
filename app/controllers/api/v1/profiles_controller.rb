@@ -101,7 +101,7 @@ class Api::V1::ProfilesController < ApplicationController
     if found_city.blank?
       @profiles = []
     else
-      @profiles = Profile.within_distance(found_city[:lat], found_city[:lng]).limit(3)
+      @profiles = Profile.within_distance(found_city[:lat], found_city[:lng]).ordered_by_distance(params[:latitude].to_f, params[:longitude].to_f).limit(Constants::N_FEATURED_PROFILES)
     end
 
     render status: 200

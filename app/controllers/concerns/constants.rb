@@ -5,6 +5,8 @@ module Constants
   LATEST_API_VERSION = "1"
   SUPPORTED_API_VERSION = %w(1)
 
+  N_FEATURED_PROFILES = 3
+
   N_MATCHES_AT_A_TIME = 5
 
   CLOUDINARY_HOST_URL = 'http://res.cloudinary.com/ekcoffee/image/upload/'
