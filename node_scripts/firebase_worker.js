@@ -3,6 +3,13 @@ var Queue = require('firebase-queue'),
     FirebaseTokenGenerator = require("firebase-token-generator"),
     unirest = require('unirest');;
 
+var sys = require('util')
+var exec = require('child_process').exec;
+
+// TBD: support multiple workers - separate PID files
+console.log('process pid: ' + process.pid);
+exec("echo '" + process.pid + "' > tmp/pids/firebase_worker.pid");
+
 var dbUrl;
 
 if(process.env.RAILS_ENV == 'development') {

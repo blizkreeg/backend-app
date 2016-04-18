@@ -36,25 +36,17 @@ console.log('connected to ' + dbUrl);
 var Queue = require('firebase-queue'),
     Firebase = require('firebase'),
     FirebaseTokenGenerator = require("firebase-token-generator");
-// var cluster = require('cluster');
+
+var sys = require('util')
+var exec = require('child_process').exec;
+
+console.log('process pid: ' + process.pid);
+exec("echo '" + process.pid + "' > tmp/pids/firebase_master.pid");
 
 var tokenGenerator = new FirebaseTokenGenerator(process.env.FIREBASE_SECRET);
 var token = tokenGenerator.createToken({ uid: '' }); // auth with no uuid
 var numCPUs = 4;
 var quitProcess = false;
-
-// if(cluster.isMaster) {
-//   var conversationsRef = new Firebase(dbUrl + '/conversations');
-
-//   for (var i = 0; i < numCPUs; i++) {
-//     worker = cluster.fork();
-//     worker.on('message', function(message) {
-
-//     });
-//   }
-// } else {
-
-// }
 
 var conversationsRef = new Firebase(dbUrl + '/conversations');
 var taskRef = new Firebase(dbUrl + "/queue/tasks");
