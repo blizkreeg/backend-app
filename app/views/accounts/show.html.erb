@@ -116,7 +116,7 @@
   var profile_uuid = "<%= @profile.uuid %>";
   var match_uuid = "<%= match.matched_profile.uuid %>";
 
-  var ref = new Firebase("https://glaring-fire-5389.firebaseio.com/");
+  var ref = new Firebase("<%= Rails.application.config.firebase_db_url %>");
   ref.authWithCustomToken("<%= firebase_token %>", function(error, authData) {
     if (error) {
       console.log("Login Failed!", error);
@@ -126,7 +126,7 @@
   });
 
   // INVOKE ON CLIENT
-  var disconnectedAtRef = new Firebase("https://glaring-fire-5389.firebaseio.com/users/<%= @profile.uuid %>/disconnectedAt");
+  var disconnectedAtRef = new Firebase("<%= Rails.application.config.firebase_db_url %>users/<%= @profile.uuid %>/disconnectedAt");
 
   // INVOKE ON CLIENT - RUNS ON FIREBASE
   disconnectedAtRef.onDisconnect().set(Firebase.ServerValue.TIMESTAMP, function(err) {
@@ -134,7 +134,7 @@
   });
 
   // INVOKE ON CLIENT
-  var connectedRef = new Firebase("https://glaring-fire-5389.firebaseio.com/.info/connected");
+  var connectedRef = new Firebase("<%= Rails.application.config.firebase_db_url %>.info/connected");
   connectedRef.on("value", function(snap) {
     if (snap.val() === true) {
       console.log("connected");
@@ -148,7 +148,7 @@
     }
   });
 
-  var conversationRef = new Firebase("https://glaring-fire-5389.firebaseio.com/conversations/<%= conversation.uuid %>/messages");
+  var conversationRef = new Firebase("<%= Rails.application.config.firebase_db_url %>conversations/<%= conversation.uuid %>/messages");
 
   // var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(10);
   // firstQuery.once('value', function(messages) {

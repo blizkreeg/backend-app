@@ -49,14 +49,14 @@
 
 case Rails.env
 when 'development'
-  firebase_db_uri = 'https://glaring-fire-5389.firebaseio.com/'
+  Rails.application.config.firebase_db_url = 'https://glaring-fire-5389.firebaseio.com/'
 when 'test'
-  firebase_db_uri = 'https://glaring-fire-5389.firebaseio.com/'
+  Rails.application.config.firebase_db_url = 'https://glaring-fire-5389.firebaseio.com/'
 when 'production'
-  firebase_db_uri = 'https://ekcoffee-production.firebaseio.com/'
+  Rails.application.config.firebase_db_url = 'https://ekcoffee-production.firebaseio.com/'
 end
 
 # create conversations endpoint
-c_uri = firebase_db_uri + 'conversations'
+c_uri = Rails.application.config.firebase_db_url + 'conversations'
 
 $firebase_conversations = Firebase::Client.new(c_uri)
