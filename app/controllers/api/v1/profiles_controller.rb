@@ -90,6 +90,7 @@ class Api::V1::ProfilesController < ApplicationController
   #   latitude, longitude
   def index
     # TBD: raise exception if show != featured and unless both lat/lon are present
+    # TBD: for featured profiles, read from google docs or something else, not database!
     from_city = Geocoder.search("#{params[:latitude]}, #{params[:longitude]}").first.city
 
     found_city = nil
