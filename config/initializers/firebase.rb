@@ -1,4 +1,5 @@
-## Firebase Rules
+## Rules for indexing
+
 # {
 #     "rules": {
 #       ".read": "true",
@@ -17,13 +18,42 @@
 #       }
 #     }
 # }
+
+## Rules for auth
+
+# //{
+# //    "rules": {
+# //      ".read": "auth !== null",
+# //      ".write": "auth !== null",
+# //      "users": {
+# //        "$uid": {
+# //          ".read": "auth != null",
+# //          ".write": "auth != null"
+# //        }
+# //      }
+# //    }
+# //}
+# // && auth.uid == $uid
+# //{
+# //    "rules": {
+# //      ".read": "auth !== null",
+# //      ".write": "auth !== null",
+# //      "users": {
+# //        "$uid": {
+# //          ".read": "auth != null && auth.uid == $uid",
+# //          ".write": "auth != null && auth.uid == $uid"
+# //        }
+# //      }
+# //    }
+# //}
+
 case Rails.env
 when 'development'
   firebase_db_uri = 'https://glaring-fire-5389.firebaseio.com/'
 when 'test'
   firebase_db_uri = 'https://glaring-fire-5389.firebaseio.com/'
 when 'production'
-  firebase_db_uri = 'https://glaring-fire-5389.firebaseio.com/'
+  firebase_db_uri = 'https://ekcoffee-production.firebaseio.com/'
 end
 
 # create conversations endpoint

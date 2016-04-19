@@ -4,6 +4,7 @@ module ProfileAttributeHelpers
   GENDER_MALE = 'male'
   GENDER_FEMALE = 'female'
 
+  # TBD: check this bug: height_in not getting set properly - happened on prod
   def height=(ft_in_str)
     write_attribute(:height, ft_in_str)
     ht_in = Profile.height_in_inches(ft_in_str)

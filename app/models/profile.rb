@@ -266,7 +266,7 @@ class Profile < ActiveRecord::Base
               email: profile.email,
               firstname: profile.firstname,
               lastname: profile.lastname,
-              gender: profile.gender,
+              gender: (profile.gender.male? ? 'M' : 'F'),
               location_city: profile.location_city,
               location_country: profile.location_country,
               inactive: profile.inactive,
@@ -276,6 +276,8 @@ class Profile < ActiveRecord::Base
           }
         ]
       }
+
+      EKC.logger.debug "sending #{payload_body.inspect} to clevertap"
 
       Clevertap.post_json('/1/upload', payload_body.to_json)
     rescue ActiveRecord::RecordNotFound

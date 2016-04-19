@@ -49,7 +49,10 @@ class Api::V1::ProfilesController < ApplicationController
     Photo.delay.upload_photos_to_cloudinary(@profile.uuid)
 
     render status: 201
-  rescue ActiveRecord::RecordNotUnique
+  rescue ActiveRecord::RecordNotUnique => e
+    EKC.logger.error e.message
+    EKC.logger.error e.backtrace.join('\n')
+
     respond_with_error('Profile already exists', 400)
   end
 
