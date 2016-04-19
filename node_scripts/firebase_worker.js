@@ -67,7 +67,7 @@ var queue = new Queue(queueRef, function(data, progress, resolve, reject) {
               var sentLastPushNotificationAt = metadata.child('sent_push_to_' + uuid).val();
               if(sentLastPushNotificationAt > disconnectedAt) {
                 // we've already sent push notification of a message since the user disconnected. let's not spam them.
-                // console.log('user disconnected ' + (sentLastPushNotificationAt - disconnectedAt)/1000 + 's ago; not sending push notification');
+                console.log('user ' + uuid + ' disconnected ' + (sentLastPushNotificationAt - disconnectedAt)/1000 + 's ago; not sending push notification');
                 return;
               }
               query.once("value", function(messages) {

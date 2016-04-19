@@ -19,10 +19,11 @@ set :log_level, :debug
 set :pty, false
 
 set :assets_roles, [:app]
-set :keep_assets, 2
+set :keep_assets, 3
 
-# set :migration_role, :db
-# set :migration_servers, -> { primary(fetch(:migration_role)) }
+set :migration_role, :migrator
+set :migration_servers, -> { primary(fetch(:migration_role)) }
+set :conditionally_migrate, true
 
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle')
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/puma.rb', '.rbenv-vars')
@@ -63,7 +64,7 @@ namespace :firebase do
   namespace :master do
     task :start do
       on roles(:firebase) do
-        execute "cd #{current_path} && echo '#!/bin/bash' > ~/export_vars.sh && #{fetch(:rbenv_path)}/bin/rbenv vars >> ~/export_vars.sh && chmod u+x ~/export_vars.sh && cat ~/export_vars.sh && source ~/export_vars.sh && \
+        execute "cd #{current_path} && echo '#!/bin/bash' > ~/export_vars.sh && #{fetch(:rbenv_path)}/bin/rbenv vars >> ~/export_vars.sh && chmod u+x ~/export_vars.sh && source ~/export_vars.sh && \
                 (nohup node #{current_path}/node_scripts/firebase_master.js > #{shared_path}/log/firebase_master.log 2>&1 &) && sleep 2", pty: true
       end
     end
@@ -73,12 +74,20 @@ namespace :firebase do
         execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_master.pid`"
       end
     end
+
+    task :restart do
+      on roles(:firebase) do
+        invoke 'firebase:master:stop'
+        sleep 2
+        invoke 'firebase:master:start'
+      end
+    end
   end
 
   namespace :worker do
     task :start do
       on roles(:firebase) do
-        execute "cd #{current_path} && echo '#!/bin/bash' > ~/export_vars.sh && #{fetch(:rbenv_path)}/bin/rbenv vars >> ~/export_vars.sh && chmod u+x ~/export_vars.sh && cat ~/export_vars.sh && source ~/export_vars.sh && \
+        execute "cd #{current_path} && echo '#!/bin/bash' > ~/export_vars.sh && #{fetch(:rbenv_path)}/bin/rbenv vars >> ~/export_vars.sh && chmod u+x ~/export_vars.sh && source ~/export_vars.sh && \
                 (nohup node #{current_path}/node_scripts/firebase_worker.js > #{shared_path}/log/firebase_worker.log 2>&1 &) && sleep 2", pty: true
       end
     end
@@ -88,49 +97,23 @@ namespace :firebase do
         execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_worker.pid`"
       end
     end
+
+    task :restart do
+      on roles(:firebase) do
+        invoke 'firebase:worker:stop'
+        sleep 2
+        invoke 'firebase:worker:start'
+      end
+    end
   end
 end
 
 namespace :deploy do
+  after :publishing, :restart_firebase_master do
+    invoke 'firebase:master:restart'
+  end
 
-
-  # after :restart, :clear_cache do
-  #   on roles(:app), in: :groups, limit: 3, wait: 10 do
-  #     # Here we can do anything such as:
-  #     # within release_path do
-  #     #   execute :rake, 'cache:clear'
-  #     # end
-  #   end
-  # end
-
-  desc "Make sure local git is in sync with remote."
-  # task :check_revision do
-  #   on roles(:app) do
-  #     unless `git rev-parse HEAD` == `git rev-parse origin/master`
-  #       puts "WARNING: HEAD is not the same as origin/master"
-  #       puts "Run `git push` to sync changes."
-  #       exit
-  #     end
-  #   end
-  # end
-
-  # desc 'Initial Deploy'
-  # task :initial do
-  #   on roles(:app) do
-  #     before 'deploy:restart', 'puma:start'
-  #     invoke 'deploy'
-  #   end
-  # end
-
-  # desc 'Restart application'
-  # task :restart do
-  #   on roles(:app), in: :sequence, wait: 5 do
-  #     invoke 'puma:restart'
-  #   end
-  # end
-
-  # before :starting,     :check_revision
-  after  :finishing,    :compile_assets
-  after  :finishing,    :cleanup
-  # after  :finishing,    :restart
+  after :publishing, :restart_firebase_worker do
+    invoke 'firebase:worker:restart'
+  end
 end

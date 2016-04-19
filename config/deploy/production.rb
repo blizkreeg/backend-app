@@ -7,7 +7,7 @@ set :stage, :production
 
 server '128.199.234.90', user: 'deploy', roles: %w{app sidekiq}, primary: true
 server '128.199.164.71', user: 'deploy', roles: %w{app firebase}#, other_property: :other_value
-# server 'db.example.com', user: 'deploy', roles: %w{db}
+server '128.199.234.90', user: 'deploy', roles: %w{migrator}
 
 
 
@@ -22,10 +22,7 @@ server '128.199.164.71', user: 'deploy', roles: %w{app firebase}#, other_propert
 role :app, %w{deploy@128.199.234.90 deploy@128.199.164.71}#, my_property: :my_value
 role :sidekiq, %w(deploy@128.199.234.90)
 role :firebase, %w(deploy@128.199.164.71)
-# role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
-# role :db,  %w{deploy@example.com}
-
-
+role :migrator,  %w{deploy@128.199.234.90}
 
 # Configuration
 # =============

@@ -64,7 +64,7 @@ conversationsRef.on('child_changed', function(snapshot) {
   });
 
   var conversation_uuid = snapshot.key();
-  console.log("new message in conversation " + conversation_uuid);
+  console.log("new message in conversation: " + conversation_uuid + '; adding to queue.');
   taskRef.push({
     type: 'conversation_changed',
     'conversation_uuid': conversation_uuid
