@@ -39,7 +39,7 @@ module ConversationStateMachine
       end
 
       event :check_if_ready_to_meet do
-        transitions from: :health_check, to: :ready_to_meet
+        transitions from: :none, to: :ready_to_meet
       end
 
       event :mutual_interest_in_meeting do
@@ -54,7 +54,7 @@ module ConversationStateMachine
       end
 
       event :check_if_going_to_meet do
-        transitions from: :health_check, to: :check_if_meeting
+        transitions from: :none, to: :check_if_meeting
         transitions from: :ready_to_meet, to: :check_if_meeting
       end
 
