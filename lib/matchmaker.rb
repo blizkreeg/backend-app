@@ -33,31 +33,13 @@ module Matchmaker
     EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
   end
 
-  def create_between(p1_uuid, p2_uuid)
-    profile_one = Profile.find p1_uuid
-    profile_two = Profile.find p2_uuid
-
-    initiator_uuid = profile_one.male? ? profile_one.uuid : profile_two.uuid
-
-    # TBD: check if delivered_at and expires_at are needed
-    # Match.create_with(delivered_at: DateTime.now,
-    #                                    expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
-    #                                    initiates_profile_uuid: male_uuid)
-    match_1 = Match.create_with(initiates_profile_uuid: initiator_uuid)
-                      .find_or_create_by(for_profile_uuid: profile_one.uuid, matched_profile_uuid: profile_two.uuid)
-    match_2 = Match.create_with(initiates_profile_uuid: initiator_uuid)
-                      .find_or_create_by(for_profile_uuid: profile_two.uuid, matched_profile_uuid: profile_one.uuid)
-
-    [match_1, match_2]
-  end
-
-  def create_matches(profile_uuid, matched_profile_uuids)
+  def create_matches_between(profile_uuid, matched_profile_uuids)
     profile = Profile.find(profile_uuid)
 
     if matched_profile_uuids.present?
       # create records in the matches table
       matched_profile_uuids.each do |matched_profile_uuid|
-        create_between(profile.uuid, matched_profile_uuid)
+        create_two_way_match_between(profile.uuid, matched_profile_uuid)
       end
 
       # change the user state
@@ -72,6 +54,27 @@ module Matchmaker
     end
   rescue ActiveRecord::RecordNotFound
     EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
+  end
+
+  def create_two_way_match_between(p1_uuid, p2_uuid)
+    profile_one = Profile.find p1_uuid
+    profile_two = Profile.find p2_uuid
+
+    initiator_uuid = profile_one.male? ? profile_one.uuid : profile_two.uuid
+
+    # TBD: check if delivered_at and expires_at are needed
+    # Match.create_with(delivered_at: DateTime.now,
+    #                                    expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
+    #                                    initiates_profile_uuid: male_uuid)
+    match_1 = Match.create_with(initiates_profile_uuid: initiator_uuid)
+                      .find_or_create_by(for_profile_uuid: profile_one.uuid, matched_profile_uuid: profile_two.uuid)
+    # TBD: THIS NEEDS FIXING. we should create this side of the match too so
+    # that both people see each other in a reasonable time.
+    # however, how do we notify the other when the time is right for them?
+    # match_2 = Match.create_with(initiates_profile_uuid: initiator_uuid)
+    #                   .find_or_create_by(for_profile_uuid: profile_two.uuid, matched_profile_uuid: profile_one.uuid)
+
+    [match_1, match_2]
   end
 
   def determine_mutual_matches(profile_uuid)

@@ -12,7 +12,7 @@ namespace :matches do
   task :create => :environment do
     Profile.with_has_new_queued_matches(true).find_each(batch_size: 10) do |profile|
       match_uuids = profile.queued_matches
-      Matchmaker.delay.create_matches(profile.uuid, match_uuids) if match_uuids.present?
+      Matchmaker.delay.create_matches_between(profile.uuid, match_uuids) if match_uuids.present?
     end
   end
 end

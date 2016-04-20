@@ -37,7 +37,7 @@ class AccountsController < ApplicationController
 
   def create_matches
     Matchmaker.generate_new_matches_for(@profile.uuid)
-    Matchmaker.create_matches(@profile.uuid, @profile.queued_matches)
+    Matchmaker.create_matches_between(@profile.uuid, @profile.queued_matches)
 
     redirect_to :back
   end
@@ -142,7 +142,7 @@ class AccountsController < ApplicationController
       matched_profile.state = 'waiting_for_matches'
       matched_profile.save!
 
-      @match, r_match = Matchmaker.create_between(profile, matched_profile)
+      @match, r_match = Matchmaker.create_two_way_match_between(profile, matched_profile)
 
       Matchmaker.create_conversation([profile.uuid, matched_profile.uuid])
 
