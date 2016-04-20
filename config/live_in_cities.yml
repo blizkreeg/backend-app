@@ -22,3 +22,7 @@ production:
     lat: 18.53
     lng: 73.87
     radius: 25_000
+  - name: 'San Francisco'
+    lat: 37.7749
+    lng: 122.4194
+    radius: 25_000
