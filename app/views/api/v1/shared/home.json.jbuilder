@@ -1,4 +1,5 @@
 json.data do
+  json.content_type @content_type
   if @content_type == 'text'
     json.title "Section title"
     json.body "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
