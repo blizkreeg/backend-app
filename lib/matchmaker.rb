@@ -74,7 +74,7 @@ module Matchmaker
     # match_2 = Match.create_with(initiates_profile_uuid: initiator_uuid)
     #                   .find_or_create_by(for_profile_uuid: profile_two.uuid, matched_profile_uuid: profile_one.uuid)
 
-    [match_1, match_2]
+    [match_1, nil]
   end
 
   def determine_mutual_matches(profile_uuid)
