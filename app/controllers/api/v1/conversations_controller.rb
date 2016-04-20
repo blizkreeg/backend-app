@@ -25,6 +25,9 @@ class Api::V1::ConversationsController < ApplicationController
 
         # update state of my mutual match so she/he sees the mutual like and the message
         @conversation.responder.got_first_message!(:mutual_match, v1_profile_match_path(@conversation.responder.uuid, my_match.reverse.id))
+
+        # send push to the other
+        PushNotifier.delay.notify_one(@conversation.responder.uuid, 'new_mutual_match', name: @current_profile.firstname)
       end
     elsif @current_profile.responding_to_conversation?(@conversation)
       # open chat -> moves both users to 'in_conversation' state
