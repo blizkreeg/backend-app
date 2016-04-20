@@ -15,7 +15,7 @@ set :rbenv_type, :user
 set :rbenv_ruby, '2.3.0'
 set :scm, :git
 set :format, :pretty
-set :log_level, :debug
+set :log_level, :info
 set :pty, false
 
 set :assets_roles, [:app]
