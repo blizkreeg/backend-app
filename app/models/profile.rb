@@ -266,7 +266,7 @@ class Profile < ActiveRecord::Base
               email: profile.email,
               firstname: profile.firstname,
               lastname: profile.lastname,
-              gender: (profile.gender.male? ? 'M' : 'F'),
+              gender: (profile.male? ? 'M' : 'F'),
               location_city: profile.location_city,
               location_country: profile.location_country,
               inactive: profile.inactive,
@@ -347,10 +347,12 @@ class Profile < ActiveRecord::Base
     self.matches.active.take
   end
 
+  # TBD: conversation substate for user depends on what they've done so far.
   def substate
     substate_value = self.read_attribute(:substate)
     return substate_value if substate_value.present?
 
+    # TBD TBD TBD TBD!!!!!
     self.in_conversation? ? self.active_mutual_match.conversation.state : nil
   end
 
