@@ -13,7 +13,7 @@ module Matchmaker
     location: { within_radius: Constants::NEAR_DISTANCE_METERS, ordered_by_proximity: true }
   }
 
-  APPLY_MATCHING_MODELS = Rails.application.config.test_mode? %w(location) : %w(preferences location)
+  APPLY_MATCHING_MODELS = Rails.application.config.test_mode? ? %w(location) : %w(preferences location)
 
   module_function
 
