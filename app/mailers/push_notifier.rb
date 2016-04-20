@@ -78,13 +78,13 @@ class PushNotifier
   def self.notify_one(uuid, notification_type, notification_params = {})
     notification_params = notification_params.with_indifferent_access
 
-    required_params = DETAILS[notification_type.to_s][:required_parameters]
+    required_params = DETAILS[notification_type.to_s][:required_parameters].clone
     if required_params.present?
       given_params = notification_params.keys.map(&:to_s) & required_params
       raise Errors::InvalidPushNotificationPayload, "missing params #{given_params.join(', ')}" if given_params.size != required_params.size
     end
 
-    notification_default_params = DETAILS[notification_type.to_s]
+    notification_default_params = DETAILS[notification_type.to_s].clone
 
     payload_body = {
       name: "Transactional",
@@ -136,7 +136,7 @@ class PushNotifier
   end
 
   def self.generated_body(notification_type, notification_params)
-    body_message = DETAILS[notification_type.to_s][:body]
+    body_message = DETAILS[notification_type.to_s][:body].clone
     dynamic_body_props = body_message.scan(/\@([\w]+)/i).flatten
     dynamic_body_props.each do |prop_name|
       body_message.gsub!("@#{prop_name}", notification_params[prop_name.to_sym])

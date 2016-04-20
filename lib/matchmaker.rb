@@ -77,17 +77,30 @@ module Matchmaker
     [match_1, nil]
   end
 
-  def determine_mutual_matches(profile_uuid)
+  # def determine_mutual_matches(profile_uuid)
+  #   profile = Profile.find(profile_uuid)
+
+  #   # TBD: don't update the girl's state yet!
+  #   mutual_match = profile.matches.mutual.detect { |match| match.matched_profile.waiting_for_matches? }
+  #   profile.got_mutual_like!(:mutual_match, Rails.application.routes.url_helpers.v1_profile_match_path(profile.uuid, mutual_match.id))
+  #   mutual_match.matched_profile.got_mutual_like!(:mutual_match, Rails.application.routes.url_helpers.v1_profile_match_path(mutual_match.matched_profile.uuid, mutual_match.reverse.id))
+
+  #   # TBD: don't send the girl's notification here!
+  #   PushNotifier.delay.notify_one(profile.uuid, 'new_mutual_match', name: mutual_match.matched_profile.firstname)
+  #   PushNotifier.delay.notify_one(mutual_match.matched_profile.uuid, 'new_mutual_match', name: profile.firstname)
+  # end
+
+  def transition_to_mutual_match(profile_uuid, match_id)
     profile = Profile.find(profile_uuid)
+    match = Match.find(match_id)
 
-    # TBD: don't update the girl's state yet!
-    mutual_match = profile.matches.mutual.detect { |match| match.matched_profile.waiting_for_matches? }
-    profile.got_mutual_like!(:mutual_match, Rails.application.routes.url_helpers.v1_profile_match_path(profile.uuid, mutual_match.id))
-    mutual_match.matched_profile.got_mutual_like!(:mutual_match, Rails.application.routes.url_helpers.v1_profile_match_path(mutual_match.matched_profile.uuid, mutual_match.reverse.id))
+    profile.got_mutual_like!(:mutual_match, Rails.application.routes.url_helpers.v1_profile_match_path(profile.uuid, match.id))
+    match.update active: true
+    match.reverse.update active: true
 
-    # TBD: don't send the girl's notification here!
-    PushNotifier.delay.notify_one(profile.uuid, 'new_mutual_match', name: mutual_match.matched_profile.firstname)
-    PushNotifier.delay.notify_one(mutual_match.matched_profile.uuid, 'new_mutual_match', name: profile.firstname)
+    PushNotifier.delay.notify_one(profile.uuid, 'new_mutual_match', name: match.matched_profile.firstname)
+  rescue ActiveRecord::RecordNotFound
+    EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} or match #{match_id} appears to have been deleted!"
   end
 
   def create_conversation(between_uuids=[])

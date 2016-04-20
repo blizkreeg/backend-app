@@ -53,8 +53,8 @@ class Match < ActiveRecord::Base
     matches.each do |match|
       reverse_match = match.reverse
       if reverse_match.present? && reverse_match.like?
-        match.update mutual: true
-        reverse_match.update mutual: true
+        match.update(mutual: true)
+        reverse_match.update(mutual: true)
 
         Conversation.find_or_create_by_participants!([match.for_profile.uuid, match.matched_profile.uuid])
       end

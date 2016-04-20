@@ -67,7 +67,8 @@ class Api::V1::MatchesController < ApplicationController
 
     Match.delay.enable_mutual_flag_and_create_conversation!(match_ids)
 
-    @current_profile.set_next_active!
+    # TBD: IS THIS SAFE TO REMOVE?
+    # @current_profile.set_next_active!
 
     render status: 200
   end
