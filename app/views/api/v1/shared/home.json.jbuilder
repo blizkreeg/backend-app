@@ -8,8 +8,6 @@ json.data do
     json.body "Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when..."
     json.cta_button_title "Click on this"
     json.cta_url "http://ekcoffee.com"
-  elsif @content_type == 'none'
-    json.null!
   end
 end
 json.partial! 'api/v1/shared/auth'
