@@ -8,6 +8,13 @@ module Matchmaker
 
   N_MATCHES_AT_A_TIME = 5
 
+  MATCHING_MODELS = {
+    preferences: {},
+    location: { within_radius: Constants::NEAR_DISTANCE_METERS, ordered_by_proximity: true }
+  }
+
+  APPLY_MATCHING_MODELS = %w(preferences)
+
   module_function
 
   def generate_new_matches_for(profile_uuid)
@@ -87,21 +94,33 @@ module Matchmaker
   def new_eligible_matches(profile, opts = {})
     existing_matches_sql = profile.matches.to_sql
 
-    Profile
-      .active
-      .older_than(profile.seeking_minimum_age)
-      .younger_than(profile.seeking_maximum_age)
-      .taller_than(profile.seeking_minimum_height_in)
-      .shorter_than(profile.seeking_maximum_height_in)
-      .of_faiths(profile.seeking_faith)
-      .of_gender(profile.seeking_gender)
-      .seeking_older_than(profile.age)
-      .seeking_younger_than(profile.age)
-      .seeking_taller_than(profile.height_in)
-      .seeking_shorter_than(profile.height_in)
-      .seeking_of_faith(profile.faith)
-      .within_distance(profile.search_lat, profile.search_lng)
-      .ordered_by_distance(profile.search_lat, profile.search_lng)
+    matchmaking_query = Profile.active
+
+    if APPLY_MATCHING_MODELS.include? 'preferences'
+      matchmaking_query =
+        matchmaking_query
+        .older_than(profile.seeking_minimum_age)
+        .younger_than(profile.seeking_maximum_age)
+        .taller_than(profile.seeking_minimum_height_in)
+        .shorter_than(profile.seeking_maximum_height_in)
+        .of_faiths(profile.seeking_faith)
+        .of_gender(profile.seeking_gender)
+        .seeking_older_than(profile.age)
+        .seeking_younger_than(profile.age)
+        .seeking_taller_than(profile.height_in)
+        .seeking_shorter_than(profile.height_in)
+        .seeking_of_faith(profile.faith)
+    end
+
+    if APPLY_MATCHING_MODELS.include? 'location'
+      matchmaking_query = matchmaking_query.within_distance(profile.search_lat, profile.search_lng, MATCHING_MODELS[:location][:within_radius])
+      if MATCHING_MODELS[:location][:ordered_by_proximity]
+        matchmaking_query = matchmaking_query.ordered_by_distance(profile.search_lat, profile.search_lng)
+      end
+    end
+
+    matchmaking_query =
+      matchmaking_query
       .where.not(uuid: profile.uuid)
       .joins("LEFT OUTER JOIN (#{existing_matches_sql}) matches ON matches.matched_profile_uuid = profiles.uuid")
       .where(matches: { matched_profile_uuid: nil })
