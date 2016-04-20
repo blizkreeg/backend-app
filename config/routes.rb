@@ -7,6 +7,8 @@ Rails.application.routes.draw do
   # constraints subdomain :api do <-- TODO: UNCOMMENT BEFORE LAUNCH
     scope module: 'api' do
       namespace 'v1' do
+        get '/home', to: 'profiles#home'
+
         post '/sign-in', to: 'profiles#sign_in'
         post '/waiting-list', to: 'profiles#add_to_waiting_list'
 

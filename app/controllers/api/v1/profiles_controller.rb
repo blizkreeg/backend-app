@@ -2,7 +2,7 @@ class Api::V1::ProfilesController < ApplicationController
   respond_to :json
 
   PUBLIC_ACCESS_METHODS = [:create, :sign_in, :index, :add_to_waiting_list]
-  AUTHORIZATION_NOT_REQUIRED_METHODS = [:create, :sign_in, :index, :add_to_waiting_list, :report]
+  AUTHORIZATION_NOT_REQUIRED_METHODS = [:create, :sign_in, :index, :add_to_waiting_list, :report, :home]
 
   # all actions except these should be restricted to authenticated users
   before_action :authenticated?, except: PUBLIC_ACCESS_METHODS
@@ -173,6 +173,15 @@ class Api::V1::ProfilesController < ApplicationController
     @profile.update!(profile_params)
 
     render 'api/v1/profiles/show', status: 200
+  end
+
+  # TBD: move this to a different controller
+  def home
+    srand Time.now.to_i
+
+    @content_type = ((rand(10)%3) == 0) ? 'text' : (((rand(10)%3) == 1) ? 'link' : 'none')
+
+    render 'api/v1/shared/home', status: 200
   end
 
   private

@@ -72,6 +72,8 @@ module ConversationStateMachine
       return if %w(health_check ready_to_meet show_date_suggestions check_if_meeting).include?(new_state) && conv.closed?
 
       case new_state
+      when 'none'
+        conv.reset!(:none)
       when 'health_check'
         return if conv.health_check?
 
