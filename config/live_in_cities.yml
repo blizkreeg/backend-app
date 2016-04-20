@@ -3,26 +3,30 @@ development:
   - name: 'Pune'
     lat: 18.53
     lng: 73.87
-    radius: 25_000
+    radius: 100_000
   - name: 'Mumbai'
     lat: 18.98
     lng: 72.83
-    radius: 25_000
+    radius: 100_000
 test:
   - name: 'Pune'
     lat: 18.53
     lng: 73.87
-    radius: 25_000
+    radius: 100_000
   - name: 'Mumbai'
     lat: 18.98
     lng: 72.83
-    radius: 25_000
+    radius: 100_000
 production:
   - name: 'Pune'
     lat: 18.53
     lng: 73.87
-    radius: 25_000
+    radius: 100_000
   - name: 'San Francisco'
     lat: 37.7749
     lng: -122.4194
-    radius: 25_000
+    radius: 100_000
+  - name: 'Boston'
+    lat: 42.364506
+    lng: -71.038887
+    radius: 100_000
