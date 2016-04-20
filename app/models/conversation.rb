@@ -8,17 +8,26 @@ class Conversation < ActiveRecord::Base
   has_many :real_dates, autosave: true, dependent: :destroy
   has_many :date_suggestions, autosave: true, dependent: :destroy
 
-  CLOSE_TIME = 7.days
+  CLOSE_TIME = Rails.application.config.test_mode ? 1.days : 7.days
   CLOSED_BECAUSE_EXPIRED = 'Expired'
   CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
   MAX_PARTICIPANTS = 2
 
-  RADIO_SILENCE_DELAY = 16.hours
-  HEALTH_CHECK_DELAY = 24.hours
-  READY_TO_MEET_DELAY = 48.hours
-  SHOW_DATE_SUGGESTIONS_DELAY = 1.hour
-  CHECK_IF_MEETING_DELAY = 48.hours
-  CLOSE_NOTICE_DELAY = 24.hours
+  if Rails.application.config.test_mode
+    RADIO_SILENCE_DELAY = 1.minute
+    HEALTH_CHECK_DELAY = 5.minutes
+    READY_TO_MEET_DELAY = 5.minutes
+    SHOW_DATE_SUGGESTIONS_DELAY = 2.minutes
+    CHECK_IF_MEETING_DELAY = 5.minutes
+    CLOSE_NOTICE_DELAY = 5.minutes
+  else
+    RADIO_SILENCE_DELAY = 16.hours
+    HEALTH_CHECK_DELAY = 24.hours
+    READY_TO_MEET_DELAY = 48.hours
+    SHOW_DATE_SUGGESTIONS_DELAY = 1.hour
+    CHECK_IF_MEETING_DELAY = 48.hours
+    CLOSE_NOTICE_DELAY = 24.hours
+  end
 
   ATTRIBUTES = {
     participant_uuids: :string_array,

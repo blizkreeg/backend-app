@@ -65,8 +65,7 @@ class Api::V1::MatchesController < ApplicationController
       end
     end
 
-    # TBD: delay this for production
-    Match.enable_mutual_flag_and_create_conversation!(match_ids)
+    Match.delay.enable_mutual_flag_and_create_conversation!(match_ids)
 
     @current_profile.set_next_active!
 
@@ -89,7 +88,7 @@ class Api::V1::MatchesController < ApplicationController
       when :show_matches_and_waiting_for_response
         match.matched_profile.unmatch!(:show_matches)
       when :in_conversation
-        # Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(match.conversation.id, 'radio_silence')
+        Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(match.conversation.id, 'radio_silence')
       end
     end
 

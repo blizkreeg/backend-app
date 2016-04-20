@@ -106,7 +106,7 @@ class Api::V1::ProfilesController < ApplicationController
     if found_city.blank?
       @profiles = []
     else
-      render json: JSON.parse(File.open("#{Rails.root}/db/temp_featured.json", 'r')), status: 200
+      render json: JSON.parse(File.open("#{Rails.root}/db/temp_featured.json", 'r')).to_json.gsub('@city', @city), status: 200
       return
       # @profiles = Profile.within_distance(found_city[:lat], found_city[:lng]).ordered_by_distance(params[:latitude].to_f, params[:longitude].to_f).limit(Constants::N_FEATURED_PROFILES)
     end
@@ -181,7 +181,8 @@ class Api::V1::ProfilesController < ApplicationController
   def home
     srand Time.now.to_i
 
-    @content_type = 'link' #((rand(10)%3) == 0) ? 'text' : (((rand(10)%3) == 1) ? 'link' : 'none')
+    # TBD: fix before going live!
+    @content_type = ((rand(10)%3) == 0) ? 'text' : (((rand(10)%3) == 1) ? 'link' : 'none')
 
     render 'api/v1/shared/home', status: 200
   end

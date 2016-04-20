@@ -13,7 +13,7 @@ module Matchmaker
     location: { within_radius: Constants::NEAR_DISTANCE_METERS, ordered_by_proximity: true }
   }
 
-  APPLY_MATCHING_MODELS = %w(preferences)
+  APPLY_MATCHING_MODELS = Rails.application.config.test_mode? %w(location) : %w(preferences location)
 
   module_function
 
@@ -94,7 +94,7 @@ module Matchmaker
   def new_eligible_matches(profile, opts = {})
     existing_matches_sql = profile.matches.to_sql
 
-    matchmaking_query = Profile.active
+    matchmaking_query = Profile.active.of_gender(profile.seeking_gender)
 
     if APPLY_MATCHING_MODELS.include? 'preferences'
       matchmaking_query =
@@ -104,7 +104,6 @@ module Matchmaker
         .taller_than(profile.seeking_minimum_height_in)
         .shorter_than(profile.seeking_maximum_height_in)
         .of_faiths(profile.seeking_faith)
-        .of_gender(profile.seeking_gender)
         .seeking_older_than(profile.age)
         .seeking_younger_than(profile.age)
         .seeking_taller_than(profile.height_in)
