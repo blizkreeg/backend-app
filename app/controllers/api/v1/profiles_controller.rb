@@ -70,6 +70,8 @@ class Api::V1::ProfilesController < ApplicationController
     set_current_profile(@profile)
 
     render status: 200
+  rescue ActiveRecord::RecordNotFound
+    respond_with_error("We could not find your account on ekCoffee. Have you signed up first?", 404)
   end
 
   def show
