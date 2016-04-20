@@ -44,8 +44,6 @@ class Api::V1::ConversationsController < ApplicationController
     health = ConversationHealth.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
     health.update!(value: params[:data][:value])
 
-    @conversation.reset!(:none)
-
     render 'api/v1/shared/nodata', status: 200
   end
 

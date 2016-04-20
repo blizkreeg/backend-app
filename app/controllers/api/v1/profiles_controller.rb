@@ -91,7 +91,7 @@ class Api::V1::ProfilesController < ApplicationController
   def index
     # TBD: raise exception if show != featured and unless both lat/lon are present
     # TBD: for featured profiles, read from google docs or something else, not database!
-    from_city = Geocoder.search("#{params[:latitude]}, #{params[:longitude]}").first.city
+    @city = Geocoder.search("#{params[:latitude]}, #{params[:longitude]}").first.city
 
     found_city = nil
     LIVE_CITIES.each do |city|
@@ -101,11 +101,12 @@ class Api::V1::ProfilesController < ApplicationController
       end
     end
 
-    @city = from_city
     if found_city.blank?
       @profiles = []
     else
-      @profiles = Profile.within_distance(found_city[:lat], found_city[:lng]).ordered_by_distance(params[:latitude].to_f, params[:longitude].to_f).limit(Constants::N_FEATURED_PROFILES)
+      render json: JSON.parse(File.open("#{Rails.root}/db/temp_featured.json", 'r')), status: 200
+      return
+      # @profiles = Profile.within_distance(found_city[:lat], found_city[:lng]).ordered_by_distance(params[:latitude].to_f, params[:longitude].to_f).limit(Constants::N_FEATURED_PROFILES)
     end
 
     render status: 200

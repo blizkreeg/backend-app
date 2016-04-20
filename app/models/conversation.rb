@@ -55,6 +55,10 @@ class Conversation < ActiveRecord::Base
     self.messages.count == 0
   end
 
+  def closed?
+    !self.open
+  end
+
   # who is supposed to start the conv?
   def initiator
     p1_uuid = self.participant_uuids.first

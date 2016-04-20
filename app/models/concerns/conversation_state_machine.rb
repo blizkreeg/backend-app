@@ -39,7 +39,7 @@ module ConversationStateMachine
       end
 
       event :check_if_ready_to_meet do
-        transitions from: :none, to: :ready_to_meet
+        transitions from: :health_check, to: :ready_to_meet
       end
 
       event :mutual_interest_in_meeting do
@@ -69,9 +69,10 @@ module ConversationStateMachine
     def move_conversation_to(id, new_state)
       conv = Conversation.find(id)
 
+      return if %w(health_check ready_to_meet show_date_suggestions check_if_meeting).include?(new_state) && conv.closed?
+
       case new_state
       when 'health_check'
-        return unless conv.open
         return if conv.health_check?
 
         conv.check_for_health!
@@ -80,7 +81,6 @@ module ConversationStateMachine
 
         # Conversation.delay_for(Conversation::READY_TO_MEET_DELAY).move_conversation_to(id, 'ready_to_meet')
       when 'ready_to_meet'
-        return unless conv.open
         return if conv.ready_to_meet?
 
         conv.check_if_ready_to_meet!
@@ -89,14 +89,12 @@ module ConversationStateMachine
 
         # Conversation.delay_for(Conversation::CHECK_IF_MEETING_DELAY).move_conversation_to(id, 'check_if_meeting')
       when 'show_date_suggestions'
-        return unless conv.open
         return if conv.show_date_suggestions?
 
         conv.mutual_interest_in_meeting!
         PushNotifier.delay.notify_one(conv.initiator.uuid, 'conv_date_suggestions', name: conv.responder.firstname)
         PushNotifier.delay.notify_one(conv.responder.uuid, 'conv_date_suggestions', name: conv.initiator.firstname)
       when 'check_if_meeting'
-        return unless conv.open
         return if conv.check_if_meeting?
 
         conv.check_if_going_to_meet!
