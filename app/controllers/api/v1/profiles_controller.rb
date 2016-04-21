@@ -103,6 +103,11 @@ class Api::V1::ProfilesController < ApplicationController
       end
     end
 
+    # TBD: remove
+    if Rails.application.config.test_mode
+      found_city = @city
+    end
+
     if found_city.blank?
       @profiles = []
     else
