@@ -75,8 +75,8 @@ class PushNotifier
     }
   }
 
-  def self.notify_one(uuid, notification_type, notification_params = {})
-    notification_params = notification_params.with_indifferent_access
+  def self.notify_one(uuid, notification_type, params = {})
+    notification_params = params.with_indifferent_access.clone
 
     required_params = DETAILS[notification_type.to_s][:required_parameters].clone
     if required_params.present?
