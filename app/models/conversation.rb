@@ -8,18 +8,18 @@ class Conversation < ActiveRecord::Base
   has_many :real_dates, autosave: true, dependent: :destroy
   has_many :date_suggestions, autosave: true, dependent: :destroy
 
-  CLOSE_TIME = Rails.application.config.test_mode ? 1.hour : 7.days
+  CLOSE_TIME = Rails.application.config.test_mode ? 2.hours : 7.days
   CLOSED_BECAUSE_EXPIRED = 'Expired'
   CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
   MAX_PARTICIPANTS = 2
 
   if Rails.application.config.test_mode
-    RADIO_SILENCE_DELAY = 2.minutes
-    HEALTH_CHECK_DELAY = 2.minutes
-    READY_TO_MEET_DELAY = 2.minutes
-    SHOW_DATE_SUGGESTIONS_DELAY = 2.minutes
-    CHECK_IF_MEETING_DELAY = 2.minutes
-    CLOSE_NOTICE_DELAY = 2.minutes
+    RADIO_SILENCE_DELAY = 5.minutes
+    HEALTH_CHECK_DELAY = 5.minutes
+    READY_TO_MEET_DELAY = 5.minutes
+    SHOW_DATE_SUGGESTIONS_DELAY = 5.minutes
+    CHECK_IF_MEETING_DELAY = 5.minutes
+    CLOSE_NOTICE_DELAY = 5.minutes
   else
     RADIO_SILENCE_DELAY = 16.hours
     HEALTH_CHECK_DELAY = 24.hours
