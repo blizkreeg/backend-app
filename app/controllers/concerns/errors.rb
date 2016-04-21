@@ -4,6 +4,7 @@ module Errors
   class FacebookAuthenticationError < StandardError; end
   class FacebookPermissionsError < StandardError; end
   class InvalidPushNotificationPayload < StandardError; end
+  class ClevertapError < StandardError; end
 
   EMAIL_EXISTS_ERROR_STR = 'already exists'
 end

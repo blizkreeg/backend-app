@@ -2,6 +2,8 @@
 class PushNotifier
   attr_accessor :title, :body
 
+  MAX_ATTEMPTS = 3
+
   TYPES = %w(new_matches
               new_mutual_match
               new_conversation_message
@@ -118,15 +120,30 @@ class PushNotifier
 
     EKC.logger.debug "DEBUG: Sending push notification to #{uuid}, payload: #{payload_body.to_json}"
 
-    response = Clevertap.post_json('/1/targets/create.json', payload_body.to_json)
+    attempt = 1
+    begin
+      response = Clevertap.post_json('/1/targets/create.json', payload_body.to_json)
 
-    if response.status != 200
-      EKC.logger.error "ERROR: Failed to send push notification! uuid: #{uuid}, type: #{notification_type}, params: #{notification_params}, error message: #{response.body}"
-    else
-      EKC.logger.info "INFO: Sent push notification '#{notification_type}' to #{uuid}, response: #{response.body}"
+      if response.status != 200
+        EKC.logger.error "ERROR: (try #{attempt}) Failed to send push notification! uuid: #{uuid}, type: #{notification_type}, params: #{notification_params}, error message: #{response.body}"
+        raise ClevertapError, "got a non-200 status from the Clevertap API. Trying once more."
+      else
+        EKC.logger.info "INFO: Sent push notification '#{notification_type}' to #{uuid}, response: #{response.body}"
+      end
+    rescue ClevertapError => e
+      attempt += 1
+      if attempt <= MAX_ATTEMPTS
+        sleep 0.25
+        retry
+      end
+    rescue StandardError => e
+      EKC.logger.error "ERROR: (try #{attempt}) exception occured while sending push notification! exception: #{e.class.name}, message: #{e.message}"
+      attempt += MAX_ATTEMPTS
+      if attempt <= MAX_ATTEMPTS
+        sleep 0.25
+        retry
+      end
     end
-  rescue StandardError => e
-    EKC.logger.error "ERROR: exception on sending push notification! exception: #{e.class.name}, message: #{e.message}"
   end
 
   def self.notify_multi(uuids, notification_types = [], notification_params = [])
