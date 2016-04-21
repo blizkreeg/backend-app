@@ -44,7 +44,8 @@ class AccountsController < ApplicationController
 
   def check_mutual_match
     if @profile.waiting_for_matches?
-      Matchmaker.determine_mutual_matches(@profile.uuid)
+      Matchmaker.transition_to_mutual_match(@profile.uuid, @profile.matches.mutual.detect { |match| match.matched_profile.waiting_for_matches? }.id)
+      # Matchmaker.determine_mutual_matches(@profile.uuid)
     end
   end
 
