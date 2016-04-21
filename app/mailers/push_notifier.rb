@@ -126,11 +126,11 @@ class PushNotifier
 
       if response.status != 200
         EKC.logger.error "ERROR: (try #{attempt}) Failed to send push notification! uuid: #{uuid}, type: #{notification_type}, params: #{notification_params}, error message: #{response.body}"
-        raise ClevertapError, "got a non-200 status from the Clevertap API. Trying once more."
+        raise Errors::ClevertapError, "got a non-200 status from the Clevertap API. Trying once more."
       else
         EKC.logger.info "INFO: Sent push notification '#{notification_type}' to #{uuid}, response: #{response.body}"
       end
-    rescue ClevertapError => e
+    rescue Errors::ClevertapError => e
       attempt += 1
       if attempt <= MAX_ATTEMPTS
         sleep 0.25
