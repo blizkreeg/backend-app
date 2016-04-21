@@ -25,12 +25,14 @@ module FirebaseConversationHelper
   end
 
   def firebase_metadata(override_options = {})
+    opened_at = self.opened_at.present? ? self.opened_at.strftime('%Q') : nil
+    closes_at = self.closes_at.present? ? self.closes_at.strftime('%Q') : nil
     {
       participant_uuids: self.participant_uuids,
       "#{self.initiator.uuid}_firstname": self.initiator.firstname,
       "#{self.responder.uuid}_firstname": self.responder.firstname,
-      opened_at: self.opened_at.try(:iso8601),
-      closes_at: self.closes_at.try(:iso8601),
+      opened_at: opened_at,
+      closes_at: closes_at,
       open: nil
     }.merge(override_options)
   end
