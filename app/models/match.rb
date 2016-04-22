@@ -100,7 +100,11 @@ class Match < ActiveRecord::Base
   end
 
   def expires_in_hours
-    self.expires_at > DateTime.now ? ((self.expires_at.to_i - DateTime.now.utc.to_i) / 1.hour) : 0
+    if self.expires_at.present?
+      self.expires_at > DateTime.now ? ((self.expires_at.to_i - DateTime.now.utc.to_i) / 1.hour) : 0
+    else
+      nil
+    end
   end
 
   private
