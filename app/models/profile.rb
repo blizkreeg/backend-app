@@ -285,6 +285,15 @@ class Profile < ActiveRecord::Base
     rescue StandardError => e
       EKC.logger.error "ERROR: Failed to update Clevertap profile, exception: #{e.class.name} : #{e.message}"
     end
+
+    def seed_matches(uuid)
+      profile = Profile.find(uuid)
+      Matchmaker.generate_new_matches_for(profile.uuid)
+      profile.reload
+      Matchmaker.create_matches_between(profile.uuid, profile.queued_matches) if profile.has_new_queued_matches
+    rescue ActiveRecord::RecordNotFound
+      EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{uuid} appears to have been deleted!"
+    end
   end
 
   def seed_photos_from_facebook(social_authentication)
