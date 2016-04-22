@@ -92,12 +92,7 @@ class Match < ActiveRecord::Base
   end
 
   def waiting_for_response_expires_in_hours
-    t = self.reverse.try(:expires_at)
-    if t.present?
-      (t.to_i - DateTime.now.utc.to_i) / 1.hour
-    else
-      nil
-    end
+    self.reverse.expires_in_hours rescue nil
   end
 
   def test_and_set_expiration!
@@ -105,7 +100,7 @@ class Match < ActiveRecord::Base
   end
 
   def expires_in_hours
-    (self.expires_at.to_i - DateTime.now.utc.to_i) / 1.hour
+    self.expires_at > DateTime.now ? ((self.expires_at.to_i - DateTime.now.utc.to_i) / 1.hour) : 0
   end
 
   private

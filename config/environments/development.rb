@@ -40,4 +40,6 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   config.log_formatter = ::Logger::Formatter.new
+
+  config.test_mode = true
 end

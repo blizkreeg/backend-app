@@ -28,6 +28,9 @@ class Api::V1::ConversationsController < ApplicationController
 
         # send push to the other
         PushNotifier.delay.notify_one(@conversation.responder.uuid, 'new_mutual_match', name: @current_profile.firstname)
+
+        # update the expiration for the responder
+        my_match.reverse.update(expires_at: (DateTime.now + Match::STALE_EXPIRATION_DURATION))
       end
     elsif @current_profile.responding_to_conversation?(@conversation)
       # open chat -> moves both users to 'in_conversation' state
