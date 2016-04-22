@@ -33,6 +33,7 @@ gem 'slim-rails'
 gem 'faraday'
 gem 'jsonb_accessor'
 gem 'jquery-rails'
+gem 'sidekiq_parameters_logging'
 # TBD: add https://github.com/schneems/puma_worker_killer
 
 # Use ActiveModel has_secure_password

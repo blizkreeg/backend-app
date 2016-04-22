@@ -43,13 +43,13 @@ class Api::V1::ProfilesController < ApplicationController
 
     @profile.save!
 
-    # set authenticated user
-    set_current_profile(@profile)
+    # set matchmaker loooose
+    Profile.delay.seed_matches(@profile.uuid)
 
     Photo.delay.upload_photos_to_cloudinary(@profile.uuid)
 
-    # set matchmaker loooose
-    Profile.delay.seed_matches(@profile.uuid)
+    # set authenticated user
+    set_current_profile(@profile)
 
     render status: 201
   rescue ActiveRecord::RecordNotUnique => e
