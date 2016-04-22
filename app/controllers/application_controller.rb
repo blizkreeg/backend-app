@@ -8,11 +8,15 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_token!
   before_action :set_current_profile
 
+  UNAUTHORIZED_BAD_TOKEN = 'invalid_token'
+  UNAUTHORIZED_EXPIRED_TOKEN = 'token_expired'
+  UNAUTHORIZED_PROFILE_NOT_FOUND = 'profile_not_found'
+
   rescue_from StandardError, with: lambda { |e| Rails.logger.error("#{e.class.name}:#{e.message}\n#{e.backtrace.join('\n')}"); respond_with_error(e.message, 500) } # :internal_server_error
   rescue_from ActiveRecord::UnknownAttributeError, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
   rescue_from ActiveRecord::RecordNotFound, with: lambda { |e| respond_with_error(e.message, 404) } # :not_found
   rescue_from Errors::OperationNotPermitted, with: lambda { |e| respond_with_error(e.message, 403) } # :forbidden
-  rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error(e.message, 401, 'token_expired') } # :unauthorized
+  rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error(e.message, 401, UNAUTHORIZED_EXPIRED_TOKEN) } # :unauthorized
   rescue_from ActionController::ParameterMissing, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
   rescue_from Errors::FacebookAuthenticationError, with: lambda { |e| reset_current_profile!; respond_with_error(e.message, 401, 'facebook_session_invalid') }
   rescue_from Errors::FacebookPermissionsError, with: lambda { |e| reset_current_profile!; respond_with_error(e.message, 401, 'insufficient_facebook_permissions') }
@@ -21,7 +25,13 @@ class ApplicationController < ActionController::Base
   protected
 
   def authenticated?
-    respond_with_error('Access Restricted', 401, 'invalid_token') if @current_profile.blank? # :unauthorized
+    if @current_profile.blank?
+      if @profile_not_found
+        respond_with_error('Access Restricted', 401, UNAUTHORIZED_PROFILE_NOT_FOUND)
+      else
+        respond_with_error('Access Restricted', 401, UNAUTHORIZED_BAD_TOKEN)
+      end
+    end
   end
 
   def authorized?(uuid)
@@ -49,6 +59,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_profile(profile=nil)
+    @profile_not_found = false
     if profile.present?
       @current_profile = profile
       @current_profile.update!(signed_in_at: DateTime.now.utc)
@@ -58,6 +69,7 @@ class ApplicationController < ActionController::Base
     end
   rescue ActiveRecord::RecordNotFound
     @current_profile = nil
+    @profile_not_found = true
   end
 
   def reset_current_profile!
