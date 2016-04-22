@@ -149,7 +149,9 @@ module Matchmaker
     end
 
     if APPLY_MATCHING_MODELS.include? 'location'
-      matchmaking_query = matchmaking_query.within_distance(profile.search_lat, profile.search_lng, MATCHING_MODELS[:location][:within_radius])
+      unless Rails.application.config.test_mode
+        matchmaking_query = matchmaking_query.within_distance(profile.search_lat, profile.search_lng, MATCHING_MODELS[:location][:within_radius])
+      end
       if MATCHING_MODELS[:location][:ordered_by_proximity]
         matchmaking_query = matchmaking_query.ordered_by_distance(profile.search_lat, profile.search_lng)
       end
