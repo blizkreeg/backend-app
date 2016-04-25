@@ -141,13 +141,37 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def report
-    # reported_profile_uuid
-    # reason
-    # match_id
+    # validate:
+    # - reported_profile_uuid
+    # - reason
+    # - match_id
 
-    puts params[:data].inspect
+    begin
+      reported_profile = Profile.find(data[:reported_profile_uuid])
+    rescue ActiveRecord::RecordNotFound
+      respond_with_error('The reported user was not found', 500)
+      return
+    end
+
+    begin
+      match = Match.find(data[:match_id].to_i)
+    rescue ActiveRecord::RecordNotFound
+      respond_with_error('The reported match was not found', 500)
+      return
+    end
+
+    unless Constants::REPORT_REASONS.include?(data[:reason])
+      respond_with_error('Reason for reporting not valid', 500)
+      return
+    end
+
+    # TBD: file the report somewhere!
+    reported_profile.report!(:waiting_for_matches)
+    @current_profile.report!(:waiting_for_matches)
 
     render 'api/v1/shared/nodata', status: 200
+  rescue ActiveRecord::RecordNotFound
+
   end
 
   def get_state

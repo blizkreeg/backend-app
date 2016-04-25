@@ -79,6 +79,10 @@ module ProfileStateMachine
         transitions from: :show_matches_and_waiting_for_response, to: :show_matches
       end
 
+      event :report do
+        transitions from: :in_conversation, to: :waiting_for_matches
+      end
+
       event :conversation_expired do
         transitions from: :in_conversation, to: :waiting_for_matches
       end
