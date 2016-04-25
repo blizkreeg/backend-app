@@ -147,20 +147,20 @@ class Api::V1::ProfilesController < ApplicationController
     # - match_id
 
     begin
-      reported_profile = Profile.find(data[:reported_profile_uuid])
+      reported_profile = Profile.find(params[:data][:reported_profile_uuid])
     rescue ActiveRecord::RecordNotFound
       respond_with_error('The reported user was not found', 500)
       return
     end
 
     begin
-      match = Match.find(data[:match_id].to_i)
+      match = Match.find(params[:data][:match_id].to_i)
     rescue ActiveRecord::RecordNotFound
       respond_with_error('The reported match was not found', 500)
       return
     end
 
-    unless Constants::REPORT_REASONS.include?(data[:reason])
+    unless Constants::REPORT_REASONS.include?(params[:data][:reason])
       respond_with_error('Reason for reporting not valid', 500)
       return
     end
