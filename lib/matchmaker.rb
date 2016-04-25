@@ -26,13 +26,13 @@ module Matchmaker
     if matched_profile_uuids.present?
       # TBD: compute scores!
       begin
-        matched_profiles = Profile.find(matched_profile_uuids)
+        matched_profiles = matched_profile_uuids.map { |uuid| Profile.find(uuid) }
       rescue ActiveRecord::RecordNotFound
         EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: One or more profiles appear to have been deleted! #{matched_profile_uuids.inspect}"
         return
       end
       # TBD: temporarily scores are distance between the matched users
-      scores =  matched_profiles.map { |p| Geocoder::Calculations.distance_between([p.latitude, p.longitude], [profile.latitude, profile.longitude]) }
+      scores = matched_profiles.map { |p| Geocoder::Calculations.distance_between([p.latitude, p.longitude], [profile.latitude, profile.longitude]) }
       profile.add_matches_to_queue(matched_profile_uuids, scores)
       profile.update!(has_new_queued_matches: true)
     end
