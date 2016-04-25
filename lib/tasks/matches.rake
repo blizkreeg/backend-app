@@ -25,6 +25,7 @@ namespace :matches do
         next if matched_profile.active_mutual_match
 
         Matchmaker.transition_to_mutual_match(profile.uuid, match.id)
+        puts "found mutual match for #{profile.uuid}, changing state to 'mutual_match'"
 
         break
       end

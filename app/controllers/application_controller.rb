@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_token!
   before_action :set_current_profile
 
+  after_action :log_response
+
   UNAUTHORIZED_BAD_TOKEN = 'invalid_token'
   UNAUTHORIZED_EXPIRED_TOKEN = 'token_expired'
   UNAUTHORIZED_PROFILE_NOT_FOUND = 'profile_not_found'
@@ -53,6 +55,13 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def log_response
+    if response.content_type == 'application/json'
+      EKC.logger.debug "DEBUG: REQUEST  (#{@current_profile.try(:uuid) || 'noauth'}): #{request.fullpath}"
+      EKC.logger.debug "DEBUG: RESPONSE (#{@current_profile.try(:uuid) || 'noauth'}): #{response.body}"
+    end
+  end
 
   def authenticate_token!
     raise Errors::AuthTokenTimeoutError, "Authentication token has expired" if decoded_auth_token.present? && auth_token_expired?
