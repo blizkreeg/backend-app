@@ -25,12 +25,19 @@ module Matchmaker
     matched_profile_uuids = Matchmaker.new_eligible_matches(profile).map(&:uuid)
     if matched_profile_uuids.present?
       # TBD: compute scores!
-      scores = Array.new(matched_profile_uuids.size, 1)
+      begin
+        matched_profiles = Profile.find(matched_profile_uuids)
+      rescue ActiveRecord::RecordNotFound
+        EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: One or more profiles appear to have been deleted! #{matched_profile_uuids.inspect}"
+        return
+      end
+      # TBD: temporarily scores are distance between the matched users
+      scores =  matched_profiles.map { |p| Geocoder::Calculations.distance_between([p.latitude, p.longitude], [profile.latitude, profile.longitude]) }
       profile.add_matches_to_queue(matched_profile_uuids, scores)
       profile.update!(has_new_queued_matches: true)
     end
   rescue ActiveRecord::RecordNotFound
-    EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
+    EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile appears to have been deleted: #{profile_uuid}!"
   end
 
   def create_matches_between(profile_uuid, matched_profile_uuids)

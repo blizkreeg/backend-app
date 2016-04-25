@@ -63,7 +63,7 @@ class AccountsController < ApplicationController
 
   def destroy
     profile = Profile.find(params[:uuid])
-    profile.destroy
+    profile.destroy!
 
     redirect_to :login
   rescue ActiveRecord::RecordNotFound
