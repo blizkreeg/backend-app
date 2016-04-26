@@ -25,19 +25,21 @@ module Matchmaker
     matched_profile_uuids = Matchmaker.new_eligible_matches(profile).map(&:uuid)
     if matched_profile_uuids.present?
       # TBD: compute scores!
-      begin
-        matched_profiles = matched_profile_uuids.map { |uuid| Profile.find(uuid) }
-      rescue ActiveRecord::RecordNotFound
-        EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: One or more profiles appear to have been deleted! #{matched_profile_uuids.inspect}"
-        return
-      end
+      matched_profiles = matched_profile_uuids.map { |uuid|
+                            begin
+                              Profile.find(uuid)
+                            rescue ActiveRecord::RecordNotFound
+                              EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: One or more profiles appear to have been deleted! #{matched_profile_uuids.inspect}"
+                              nil
+                            end
+                          }.compact
       # TBD: temporarily scores are distance between the matched users
       scores = matched_profiles.map { |p| Geocoder::Calculations.distance_between([p.latitude, p.longitude], [profile.latitude, profile.longitude]) }
       profile.add_matches_to_queue(matched_profile_uuids, scores)
       profile.update!(has_new_queued_matches: true)
     end
   rescue ActiveRecord::RecordNotFound
-    EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile appears to have been deleted: #{profile_uuid}!"
+    EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile appears to have been deleted: #{profile_uuid}!"
   end
 
   def create_matches_between(profile_uuid, matched_profile_uuids)
@@ -46,7 +48,11 @@ module Matchmaker
     if matched_profile_uuids.present?
       # create records in the matches table
       matched_profile_uuids.each do |matched_profile_uuid|
-        create_one_way_match(profile.uuid, matched_profile_uuid)
+        begin
+          create_one_way_match(profile.uuid, matched_profile_uuid)
+        rescue ActiveRecord::RecordNotFound
+          EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile #{matched_profile_uuid} appears to have been deleted!"
+        end
       end
 
       # change the user state
@@ -60,7 +66,7 @@ module Matchmaker
       PushNotifier.delay.notify_one(profile.uuid, 'new_matches')
     end
   rescue ActiveRecord::RecordNotFound
-    EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
+    EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
   end
 
   def create_two_way_match_between(p1_uuid, p2_uuid)
@@ -128,7 +134,7 @@ module Matchmaker
 
     PushNotifier.delay.notify_one(profile.uuid, 'new_mutual_match', name: match.matched_profile.firstname)
   rescue ActiveRecord::RecordNotFound
-    EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} or match #{match_id} appears to have been deleted!"
+    EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} or match #{match_id} appears to have been deleted!"
   end
 
   def create_conversation(between_uuids=[])
