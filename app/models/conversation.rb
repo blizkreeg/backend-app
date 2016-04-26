@@ -19,7 +19,7 @@ class Conversation < ActiveRecord::Base
     READY_TO_MEET_DELAY = 5.minutes
     SHOW_DATE_SUGGESTIONS_DELAY = 5.minutes
     CHECK_IF_MEETING_DELAY = 5.minutes
-    CLOSE_NOTICE_DELAY = 5.minutes
+    CLOSE_NOTICE_DELAY = 15.minutes
   else
     RADIO_SILENCE_DELAY = 16.hours
     HEALTH_CHECK_DELAY = 24.hours

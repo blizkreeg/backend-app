@@ -313,6 +313,14 @@ class Profile < ActiveRecord::Base
     end
   end
 
+  def firstname
+    if Rails.application.config.test_mode
+      "#{self.read_attribute(:firstname)} (test)"
+    else
+      self.read_attribute(:firstname)
+    end
+  end
+
   def seeking_gender
     self.gender == GENDER_MALE ? GENDER_FEMALE : GENDER_MALE
   end
