@@ -27,7 +27,7 @@ class Api::V1::ConversationsController < ApplicationController
         @conversation.responder.got_first_message!(:mutual_match, v1_profile_match_path(@conversation.responder.uuid, my_match.reverse.id))
 
         # send push to the other
-        PushNotifier.delay.notify_one(@conversation.responder.uuid, 'new_mutual_match', name: @current_profile.firstname)
+        PushNotifier.delay.record_event(@conversation.responder.uuid, 'new_mutual_match', name: @current_profile.firstname)
 
         # update the expiration for the responder
         my_match.reverse.update(expires_at: (DateTime.now + Match::STALE_EXPIRATION_DURATION))

@@ -21,60 +21,69 @@ class PushNotifier
       title: "ekCoffee",
       body: "Meet your new matches",
       required_parameters: [],
-      event_name: 'Has New Matches'
+      event_name: 'Has New Matches',
+      has_push_notification: true
     },
     'new_mutual_match' => {
       title: "ekCoffee",
       body: "@name is curious about you too!",
       required_parameters: ['name'],
-      event_name: 'Got Mutual Match'
+      event_name: 'Got Mutual Match',
+      has_push_notification: true
     },
     'new_conversation_message' => {
       title: "ekCoffee",
       body: "@name has sent you a message!",
       required_parameters: ['name'],
       event_name: 'Has New Message',
-      event_details: { sender_type: 'User' }
+      event_details: { sender_type: 'User' },
+      has_push_notification: true
     },
     'conv_open' => {
       required_parameters: [],
       event_name: 'Conversation State Change',
-      event_details: { state: 'Open' }
+      event_details: { state: 'Open' },
+      has_push_notification: false
     },
     'conv_health_check' => {
       title: "ekCoffee",
       body: "How is your conversation with @name going?",
       required_parameters: ['name'],
       event_name: 'Conversation State Change',
-      event_details: { state: 'Health Check' }
+      event_details: { state: 'Health Check' },
+      has_push_notification: true
     },
     'conv_ready_to_meet' => {
       title: "ekCoffee",
       body: "Are you ready to meet @name yet?",
       required_parameters: ['name'],
       event_name: 'Conversation State Change',
-      event_details: { state: 'Check If Ready To Meet' }
+      event_details: { state: 'Check If Ready To Meet' },
+      has_push_notification: true
     },
     'conv_date_suggestions' => {
       title: "ekCoffee",
       body: "You and @name are ready to meet! Here are a few suggestions for a first date.",
       required_parameters: ['name'],
       event_name: 'Conversation State Change',
-      event_details: { state: 'Show Date Suggestions' }
+      event_details: { state: 'Show Date Suggestions' },
+      has_push_notification: true
     },
     'conv_are_you_meeting' => {
       title: "ekCoffee",
       body: "Are you and @name meeting?",
       required_parameters: ['name'],
       event_name: 'Conversation State Change',
-      event_details: { state: 'Check If Meeting' }
+      event_details: { state: 'Check If Meeting' },
+      has_push_notification: true
     },
     'conv_close_notice' => {
       title: "ekCoffee",
       body: "Your conversation with @name will close soon.",
       required_parameters: ['name'],
       event_name: 'Conversation State Change',
-      event_details: { state: 'Close Notice' }
+      event_details: { state: 'Close Notice' },
+      has_push_notification: true
     },
     'new_butler_message' => {
       title: "ekCoffee",
@@ -82,7 +91,8 @@ class PushNotifier
       required_parameters: ['myname'],
       category: 'BUTLER_CHAT',
       event_name: 'Has New Message',
-      event_details: { sender_type: 'Butler' }
+      event_details: { sender_type: 'Butler' },
+      has_push_notification: true
     },
     'profile_photo_rejected' => {
       title: "ekCoffee",
@@ -90,7 +100,8 @@ class PushNotifier
       required_parameters: ['myname'],
       category: 'EDIT_PHOTOS',
       event_name: 'Profile Issue',
-      event_details: { issue_type: 'Bad Photo' }
+      event_details: { issue_type: 'Bad Photo' },
+      has_push_notification: true
     },
     'profile_edit_rejected' => {
       title: "ekCoffee",
@@ -98,11 +109,12 @@ class PushNotifier
       required_parameters: ['myname'],
       category: 'EDIT_PROFILE',
       event_name: 'Profile Issue',
-      event_details: { issue_type: 'Bad Update' }
+      event_details: { issue_type: 'Bad Update' },
+      has_push_notification: true
     }
   }
 
-  def self.notify_one(uuid, notification_type, params = {})
+  def self.record_event(uuid, notification_type, params = {})
     notification_params = params.with_indifferent_access.clone
 
     required_params = DETAILS[notification_type.to_s][:required_parameters].clone
@@ -120,9 +132,12 @@ class PushNotifier
     event_data = {
       'message_title'.humanize => title,
       'message_body'.humanize => body,
-      'category'.humanize => category,
-      'badge_count'.humanize => 1
+      'category'.humanize => category
     }
+
+    if notification_default_params[:has_push_notification]
+      event_data.merge!({ 'badge_count'.humanize => 1 })
+    end
 
     if notification_default_params[:event_details].present?
       properties_with_humanized_keys = notification_default_params[:event_details].inject({}) do |hash, (key, value)|

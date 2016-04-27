@@ -230,7 +230,7 @@ class AccountsController < ApplicationController
   def send_push_notification
     @profile = Profile.find(params[:uuid])
 
-    PushNotifier.notify_one(params[:uuid], params[:notification_type], myname: @profile.firstname, name: @profile.active_mutual_match.try(:matched_profile).try(:firstname))
+    PushNotifier.record_event(params[:uuid], params[:notification_type], myname: @profile.firstname, name: @profile.active_mutual_match.try(:matched_profile).try(:firstname))
 
     flash[:message] = "Sent Push Notification!"
 

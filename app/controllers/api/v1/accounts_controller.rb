@@ -7,7 +7,7 @@ class Api::V1::AccountsController < ApplicationController
       notification_type = params[:data][:notification_type]
       notification_params = params[:data][:notification_params]
 
-      PushNotifier.delay.notify_one(uuid, notification_type, notification_params)
+      PushNotifier.delay.record_event(uuid, notification_type, notification_params)
 
       render 'api/v1/shared/nodata', status: 200
     end

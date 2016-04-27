@@ -63,7 +63,7 @@ module Matchmaker
         profile.new_matches!(:has_matches_and_waiting_for_response)
       end
 
-      PushNotifier.delay.notify_one(profile.uuid, 'new_matches')
+      PushNotifier.delay.record_event(profile.uuid, 'new_matches')
     end
   rescue ActiveRecord::RecordNotFound
     EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
@@ -120,8 +120,8 @@ module Matchmaker
   #   mutual_match.matched_profile.got_mutual_like!(:mutual_match, Rails.application.routes.url_helpers.v1_profile_match_path(mutual_match.matched_profile.uuid, mutual_match.reverse.id))
 
   #   # TBD: don't send the girl's notification here!
-  #   PushNotifier.delay.notify_one(profile.uuid, 'new_mutual_match', name: mutual_match.matched_profile.firstname)
-  #   PushNotifier.delay.notify_one(mutual_match.matched_profile.uuid, 'new_mutual_match', name: profile.firstname)
+  #   PushNotifier.delay.record_event(profile.uuid, 'new_mutual_match', name: mutual_match.matched_profile.firstname)
+  #   PushNotifier.delay.record_event(mutual_match.matched_profile.uuid, 'new_mutual_match', name: profile.firstname)
   # end
 
   def transition_to_mutual_match(profile_uuid, match_id)
@@ -132,7 +132,7 @@ module Matchmaker
     match.update(active: true, expires_at: (DateTime.now + Match::STALE_EXPIRATION_DURATION))
     match.reverse.update(active: true)
 
-    PushNotifier.delay.notify_one(profile.uuid, 'new_mutual_match', name: match.matched_profile.firstname)
+    PushNotifier.delay.record_event(profile.uuid, 'new_mutual_match', name: match.matched_profile.firstname)
   rescue ActiveRecord::RecordNotFound
     EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} or match #{match_id} appears to have been deleted!"
   end

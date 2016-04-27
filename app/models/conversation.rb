@@ -125,6 +125,10 @@ class Conversation < ActiveRecord::Base
     # TBD - check on this
     Conversation.delay_for(HEALTH_CHECK_DELAY).move_conversation_to(self.id, 'health_check')
     Conversation.delay_until(self.closes_at).expire_conversation(self.id)
+
+    self.participants.each do |participant|
+      PushNotifier.delay.record_event(participant.uuid, 'conv_open')
+    end
   end
 
   # close when the conversation expires
