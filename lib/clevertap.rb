@@ -3,7 +3,7 @@ module Clevertap
 
   def post_json(endpoint_uri, payload_json)
     conn = Faraday.new(:url => 'https://api.clevertap.com') do |faraday|
-      faraday.response(:logger) if Rails.env.development?
+      # faraday.response(:logger) if Rails.env.development?
       faraday.adapter(Faraday.default_adapter)
     end
 
