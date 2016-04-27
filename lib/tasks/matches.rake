@@ -22,7 +22,7 @@ namespace :matches do
       profile.matches.mutual.order("matches.created_at ASC").each do |match|
         matched_profile = match.matched_profile
         next if matched_profile.state == 'mutual_match' || matched_profile.state == 'in_conversation'
-        next if matched_profile.active_mutual_match
+        next if matched_profile.active_mutual_match.present?
 
         Matchmaker.transition_to_mutual_match(profile.uuid, match.id)
         puts "found mutual match for #{profile.uuid}, changing state to 'mutual_match'"
