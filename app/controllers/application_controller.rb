@@ -58,8 +58,8 @@ class ApplicationController < ActionController::Base
 
   def log_response
     if response.content_type == 'application/json'
-      EKC.logger.debug "DEBUG: REQUEST  (#{@current_profile.try(:uuid) || 'noauth'}): #{request.fullpath}"
-      EKC.logger.debug "DEBUG: RESPONSE (#{@current_profile.try(:uuid) || 'noauth'}): #{response.body}"
+      EKC.logger.debug "REQUEST  (#{@current_profile.try(:uuid) || 'noauth'}): #{request.fullpath}"
+      EKC.logger.debug "RESPONSE (#{@current_profile.try(:uuid) || 'noauth'}): #{response.body}"
     end
   end
 

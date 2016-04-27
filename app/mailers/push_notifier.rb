@@ -160,7 +160,7 @@ class PushNotifier
       ]
     }
 
-    EKC.logger.debug "DEBUG: Uploading user action '#{notification_default_params[:event_name]}' for #{uuid}, payload: #{payload_body.to_json}"
+    EKC.logger.debug "Uploading user action '#{notification_default_params[:event_name]}' for #{uuid}, payload: #{payload_body.to_json}"
 
     attempt = 1
     begin
@@ -221,7 +221,7 @@ class PushNotifier
       when: "now"
     }
 
-    EKC.logger.debug "DEBUG: Sending push notification to #{uuid}, payload: #{payload_body.to_json}"
+    EKC.logger.debug "Sending push notification to #{uuid}, payload: #{payload_body.to_json}"
 
     attempt = 1
     begin
