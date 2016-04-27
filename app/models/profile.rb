@@ -299,9 +299,9 @@ class Profile < ActiveRecord::Base
     def seed_photos_from_facebook(uuid)
       profile = Profile.find(uuid)
 
-      # facebook_auth = social_authentication.becomes(FacebookAuthentication) # TBD: code smell
+      # facebook_authentication = social_authentication.becomes(FacebookAuthentication) # TBD: code smell
       primary = true # first photo is primary
-      profile.facebook_auth.profile_pictures.each do |photo_hash|
+      profile.facebook_authentication.profile_pictures.each do |photo_hash|
         profile.photos.build(
           facebook_id: photo_hash["facebook_photo_id"],
           facebook_url: photo_hash["source"],
