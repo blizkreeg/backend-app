@@ -117,7 +117,7 @@ module ConversationStateMachine
         PushNotifier.delay.record_event(conv.responder.uuid, 'conv_close_notice', name: conv.initiator.firstname)
       end
     rescue ActiveRecord::RecordNotFound
-      EKC.logger.error "Conversation not found, id: #{id}, state: #{conv.state}"
+      EKC.logger.error "Conversation not found, id: #{id}"
     end
   end
 
