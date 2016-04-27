@@ -189,8 +189,9 @@ class Profile < ActiveRecord::Base
       profile.location_country = geo.country
     end
   end
-  after_validation :reverse_geocode, if: ->(profile){ (profile.latitude.present? && profile.latitude_changed?) || (profile.longitude.present? && profile.longitude_changed?) }
 
+  after_commit :seed_photos_from_facebook, on: :create
+  after_validation :reverse_geocode, if: ->(profile){ (profile.latitude.present? && profile.latitude_changed?) || (profile.longitude.present? && profile.longitude_changed?) }
   before_save :set_search_latlng, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
   before_save :set_tz, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
   before_save :set_age, if: Proc.new { |profile| profile.born_on_year_changed? || profile.born_on_month_changed? || profile.born_on_day_changed? }
@@ -294,23 +295,32 @@ class Profile < ActiveRecord::Base
     rescue ActiveRecord::RecordNotFound
       EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{uuid} appears to have been deleted!"
     end
+
+    def seed_photos_from_facebook(uuid)
+      profile = Profile.find(uuid)
+
+      # facebook_auth = social_authentication.becomes(FacebookAuthentication) # TBD: code smell
+      primary = true # first photo is primary
+      profile.facebook_auth.profile_pictures.each do |photo_hash|
+        profile.photos.build(
+          facebook_id: photo_hash["facebook_photo_id"],
+          facebook_url: photo_hash["source"],
+          original_url: photo_hash["source"],
+          original_width: photo_hash["width"],
+          original_height: photo_hash["height"],
+          primary: primary
+        )
+        primary = false
+      end
+
+      profile.save!
+
+      Photo.delay.upload_photos_to_cloudinary(uuid)
+    end
   end
 
-  def seed_photos_from_facebook(social_authentication)
-    # TBD: code smell
-    facebook_auth = social_authentication.becomes(FacebookAuthentication)
-    primary = true # first photo is primary
-    facebook_auth.profile_pictures.each do |photo_hash|
-      self.photos.build(
-        facebook_id: photo_hash["facebook_photo_id"],
-        facebook_url: photo_hash["source"],
-        original_url: photo_hash["source"],
-        original_width: photo_hash["width"],
-        original_height: photo_hash["height"],
-        primary: primary
-      )
-      primary = false
-    end
+  def upload_facebook_profile_photos
+    Profile.delay.seed_photos_from_facebook(self.uuid)
   end
 
   def firstname

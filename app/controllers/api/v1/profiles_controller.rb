@@ -30,6 +30,7 @@ class Api::V1::ProfilesController < ApplicationController
     derived_properties = Profile.properties_derived_from_facebook(facebook_auth_hash)
     derived_properties.map { |key, value| @profile.send("#{key}=", derived_properties[key]) }
 
+    # associate facebook auth
     @profile.social_authentications.build(
       oauth_uid: facebook_auth_hash[:uid],
       oauth_provider: 'facebook',
@@ -38,15 +39,11 @@ class Api::V1::ProfilesController < ApplicationController
       oauth_hash: facebook_auth_hash
     )
 
-    # load photos from facebook
-    @profile.seed_photos_from_facebook(@profile.social_authentications[0])
-
+    # persist
     @profile.save!
 
-    # set matchmaker loooose
+    # generate initial matches
     Profile.delay.seed_matches(@profile.uuid)
-
-    Photo.delay.upload_photos_to_cloudinary(@profile.uuid)
 
     # set authenticated user
     set_current_profile(@profile)
