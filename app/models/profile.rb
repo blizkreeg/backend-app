@@ -190,7 +190,7 @@ class Profile < ActiveRecord::Base
     end
   end
 
-  after_commit :seed_photos_from_facebook, on: :create
+  after_commit :upload_facebook_profile_photos, on: :create
   after_validation :reverse_geocode, if: ->(profile){ (profile.latitude.present? && profile.latitude_changed?) || (profile.longitude.present? && profile.longitude_changed?) }
   before_save :set_search_latlng, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
   before_save :set_tz, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
