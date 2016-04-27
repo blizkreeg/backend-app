@@ -120,9 +120,12 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def destroy
-    # TBD: figure this out before going to PROD
-    # @profile = Profile.find(params[:uuid])
-    # @profile.destroy
+    # TBD: Figure out deletion process
+    # Lots of considerations to take into. For instance:
+    # - what if this profile has been delivered as a match?
+    # - what if this profile is in the middle of a conversation?
+    # - what if this profile is delivered as a mutual match?
+    @current_profile.update!(inactive: true, marked_for_deletion: true)
 
     reset_current_profile!
 

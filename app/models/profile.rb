@@ -129,6 +129,7 @@ class Profile < ActiveRecord::Base
     substate_endpoint:            :string,
     butler_conversation_uuid:     :string,
     has_new_queued_matches:       :boolean,
+    marked_for_deletion:          :boolean,
 
     # matching related
     # attractiveness_score:         :integer, # median of all scores by reviewers?
