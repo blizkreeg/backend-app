@@ -1,6 +1,7 @@
 # TBD: make sure all FB error responses are handled: https://developers.facebook.com/docs/graph-api/using-graph-api
 class FacebookAuthentication < SocialAuthentication
   MANDATORY_FACEBOOK_PERMISSIONS = %w(email public_profile user_photos user_birthday)
+  NUM_PROFILE_PICTURES_TO_GET = 6
 
   def get_photo_albums_list(fields="id,name", limit=25, cursor=nil)
     graph_url = "#{self.oauth_uid}/albums?limit=#{limit}"
@@ -22,7 +23,7 @@ class FacebookAuthentication < SocialAuthentication
     nil
   end
 
-  def profile_pictures(fields="images,id", limit=8)
+  def profile_pictures(fields="images,id", limit=NUM_PROFILE_PICTURES_TO_GET)
     album_id = get_album_id_by_name('Profile Pictures')
     if album_id
       photos_url = "#{album_id}/photos?limit=#{limit}&fields=#{fields}"
