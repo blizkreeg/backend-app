@@ -34,7 +34,7 @@ namespace :matches do
   end
 
   desc "run mutual matches"
-  puts \n"#{DateTime.now} ******** Finding mutual matches **********\n"
+  puts "\n#{DateTime.now} ******** Finding mutual matches **********\n"
 
   task :find_mutual => :environment do
     Profile.active.with_gender('male').where("profiles.state != 'mutual_match' AND profiles.state != 'in_conversation' AND profiles.state != 'waiting_for_matches_and_response'").find_each(batch_size: 10) do |profile|
