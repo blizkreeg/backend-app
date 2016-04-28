@@ -13,10 +13,11 @@ namespace :matches do
 
   desc "update state for profiles that have matches"
   task :ready_for_new => :environment do
-    puts "\n#{DateTime.now} ******** Delivering matches to users who are ready for new **********\n"
+    puts "\n#{DateTime.now} ******** Checking for who's ready to get new matches **********\n"
 
-    # TBD: this should be based on the user's timezone
     Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
+      next unless profile.past_matches_time?
+
       if profile.has_new_matches?
         case profile.state
         when 'waiting_for_matches'

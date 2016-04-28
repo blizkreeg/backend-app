@@ -8,6 +8,9 @@ module Matchmaker
 
   N_MATCHES_AT_A_TIME = 5
 
+  NEW_MATCHES_AT_HOUR = 11
+  NEW_MATCHES_AT_MIN = 45
+
   MATCHING_MODELS = {
     preferences: {},
     location: { within_radius: Constants::NEAR_DISTANCE_METERS, ordered_by_proximity: true }

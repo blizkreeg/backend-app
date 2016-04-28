@@ -422,6 +422,18 @@ class Profile < ActiveRecord::Base
     self.matches.undecided.count
   end
 
+  # deliver new matches after NEW_MATCHES_AT_HOUR, NEW_MATCHES_AT_MIN
+  def past_matches_time?
+    if ActiveSupport::TimeZone::MAPPING.values.include?(self.time_zone)
+      local_time = Time.now.in_time_zone(self.time_zone)
+    else
+      EKC.logger.error "Invalid time zone #{self.time_zone} for user uuid: #{self.uuid}"
+      local_time = Time.now.utc
+    end
+
+    local_time.hour >= Matchmaker::NEW_MATCHES_AT_HOUR && local_time.min >= Matchmaker::NEW_MATCHES_AT_MIN
+  end
+
   private
 
   def set_tz
