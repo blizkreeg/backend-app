@@ -6,11 +6,11 @@ class Match < ActiveRecord::Base
   # who is the match?
   belongs_to :matched_profile, foreign_key: "matched_profile_uuid", class_name: 'Profile'
 
-  STALE_EXPIRATION_DURATION = 2910.minutes # 48 hours, 30 minutes
+  STALE_EXPIRATION_DURATION = Rails.application.config.test_mode ? 10.minutes : 2910.minutes # 48 hours, 30 minutes
   LIKE_DECISION_STR = 'Like'
   PASS_DECISION_STR = 'Pass'
 
-  scope :undecided, -> { with_decision(nil) }
+  scope :undecided, -> { with_decision(nil).order("CAST(matches.properties->>'quality_score' AS decimal) ASC NULLS LAST") }
   scope :closed, -> { with_unmatched(true) }
   scope :queued, -> { with_unmatched(false) }
   scope :mutual, -> { queued.with_mutual(true) }
@@ -32,7 +32,8 @@ class Match < ActiveRecord::Base
     expires_at: :date_time,
     initiates_profile_uuid: :string,
     mutual: :boolean,
-    active: :boolean
+    active: :boolean,
+    quality_score: :decimal, # value between 0 and 1, 0 = as good as it gets, 1 = ...
   }
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
@@ -155,6 +156,7 @@ class Match < ActiveRecord::Base
     self.decision_at = DateTime.now if self.decision_changed?
     self.mutual = false if self.mutual.nil?
     self.active = false if self.active.nil?
+    self.quality_score ||= 0.7
 
     true
   end

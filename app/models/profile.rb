@@ -191,7 +191,7 @@ class Profile < ActiveRecord::Base
     end
   end
 
-  after_commit :upload_facebook_profile_photos, on: :create
+  after_commit :upload_facebook_profile_photos, :create_initial_matches, on: :create
   after_validation :reverse_geocode, if: ->(profile){ (profile.latitude.present? && profile.latitude_changed?) || (profile.longitude.present? && profile.longitude_changed?) }
   before_save :set_search_latlng, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
   before_save :set_tz, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
@@ -283,18 +283,20 @@ class Profile < ActiveRecord::Base
 
       Clevertap.post_json('/1/upload', payload_body.to_json)
     rescue ActiveRecord::RecordNotFound
-      EKC.logger.error "ERROR: UUID #{uuid} not found. Cannot update Clevertap profile."
+      EKC.logger.error "Clevertap profile update failed. Profile not found. uuid: #{uuid}"
     rescue StandardError => e
-      EKC.logger.error "ERROR: Failed to update Clevertap profile, exception: #{e.class.name} : #{e.message}"
+      EKC.logger.error "Clevertap profile update failed. exception: #{e.class.name} : #{e.message}"
     end
 
     def seed_matches(uuid)
       profile = Profile.find(uuid)
       Matchmaker.generate_new_matches_for(profile.uuid)
-      profile.reload
-      Matchmaker.create_matches_between(profile.uuid, profile.queued_matches) if profile.has_new_queued_matches
+      if profile.has_new_matches?
+        profile.new_matches!(:has_matches)
+        PushNotifier.delay.record_event(profile.uuid, 'new_matches')
+      end
     rescue ActiveRecord::RecordNotFound
-      EKC.logger.error "ERROR: #{self.class.name.to_s}##{__method__.to_s}: Profile #{uuid} appears to have been deleted!"
+      EKC.logger.error "Profile not found when trying to seed matches. uuid: #{uuid}"
     end
 
     def seed_photos_from_facebook(uuid)
@@ -309,8 +311,7 @@ class Profile < ActiveRecord::Base
           original_url: photo_hash["source"],
           original_width: photo_hash["width"],
           original_height: photo_hash["height"],
-          primary: primary
-        )
+          primary: primary)
         primary = false
       end
 
@@ -322,6 +323,10 @@ class Profile < ActiveRecord::Base
 
   def upload_facebook_profile_photos
     Profile.delay.seed_photos_from_facebook(self.uuid)
+  end
+
+  def create_initial_matches
+    Profile.delay.seed_matches(self.uuid)
   end
 
   def firstname
@@ -411,6 +416,10 @@ class Profile < ActiveRecord::Base
         photo.update!(primary: false)
       end
     end
+  end
+
+  def has_new_matches?
+    self.matches.undecided.count
   end
 
   private

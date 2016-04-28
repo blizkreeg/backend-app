@@ -1,18 +1,28 @@
 namespace :matches do
   desc "generate matches"
   task :generate_new => :environment do
-    # TBD: what about mutual -- both should see same match?
-    # TBD: this should be based on the user's timezone
     Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
       Matchmaker.delay.generate_new_matches_for(profile.uuid)
     end
   end
 
-  desc "create match records"
-  task :create => :environment do
-    Profile.with_has_new_queued_matches(true).find_each(batch_size: 10) do |profile|
-      match_uuids = profile.queued_matches
-      Matchmaker.delay.create_matches_between(profile.uuid, match_uuids) if match_uuids.present?
+  desc "update state for profiles that have matches"
+  task :ready_for_new => :environment do
+    # TBD: this should be based on the user's timezone
+    Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
+      if profile.has_new_matches?
+        case profile.state
+        when 'waiting_for_matches'
+          profile.new_matches!(:has_matches)
+        when 'waiting_for_matches_and_response'
+          profile.new_matches!(:has_matches_and_waiting_for_response)
+        end
+
+        PushNotifier.delay.record_event(profile.uuid, 'new_matches')
+        puts "#{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} matches"
+      else
+        puts "#{profile.uuid}: no matches"
+      end
     end
   end
 

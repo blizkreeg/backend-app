@@ -42,9 +42,6 @@ class Api::V1::ProfilesController < ApplicationController
     # persist
     @profile.save!
 
-    # generate initial matches
-    Profile.delay.seed_matches(@profile.uuid)
-
     # set authenticated user
     set_current_profile(@profile)
 

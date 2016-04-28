@@ -37,7 +37,8 @@ class AccountsController < ApplicationController
 
   def create_matches
     Matchmaker.generate_new_matches_for(@profile.uuid)
-    Matchmaker.create_matches_between(@profile.uuid, @profile.queued_matches)
+    @profile.reload
+    @profile.new_matches!(:has_matches) if @profile.has_new_matches?
 
     redirect_to :back
   end
@@ -45,7 +46,6 @@ class AccountsController < ApplicationController
   def check_mutual_match
     if @profile.waiting_for_matches?
       Matchmaker.transition_to_mutual_match(@profile.uuid, @profile.matches.mutual.detect { |match| match.matched_profile.waiting_for_matches? }.id)
-      # Matchmaker.determine_mutual_matches(@profile.uuid)
     end
   end
 
@@ -143,7 +143,7 @@ class AccountsController < ApplicationController
       matched_profile.state = 'waiting_for_matches'
       matched_profile.save!
 
-      @match, r_match = Matchmaker.create_two_way_match_between(profile, matched_profile)
+      @match, r_match = Matchmaker.create_matches_between(profile, matched_profile)
 
       Matchmaker.create_conversation([profile.uuid, matched_profile.uuid])
 

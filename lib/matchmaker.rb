@@ -13,14 +13,12 @@ module Matchmaker
     location: { within_radius: Constants::NEAR_DISTANCE_METERS, ordered_by_proximity: true }
   }
 
-  APPLY_MATCHING_MODELS = Rails.application.config.test_mode ? %w(location) : %w(preferences location)
+  USE_MATCHING_MODELS = Rails.application.config.test_mode ? %w(location) : %w(preferences location)
 
   module_function
 
   def generate_new_matches_for(profile_uuid)
     profile = Profile.find(profile_uuid)
-
-    return if profile.matches.undecided.count > 0 || profile.show_matches?
 
     matched_profile_uuids = Matchmaker.new_eligible_matches(profile).map(&:uuid)
     if matched_profile_uuids.present?
@@ -29,100 +27,39 @@ module Matchmaker
                             begin
                               Profile.find(uuid)
                             rescue ActiveRecord::RecordNotFound
-                              EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: One or more profiles appear to have been deleted! #{matched_profile_uuids.inspect}"
+                              EKC.logger.error "Profile not found when looking up eligible matches. uuid: #{uuid}"
                               nil
                             end
                           }.compact
-      # TBD: temporarily scores are distance between the matched users
-      scores = matched_profiles.map { |p| Geocoder::Calculations.distance_between([p.latitude, p.longitude], [profile.latitude, profile.longitude]) }
-      profile.add_matches_to_queue(matched_profile_uuids, scores)
-      profile.update!(has_new_queued_matches: true)
+      # TBD: scores are temporarily the distance between the matched users
+      quality_scores = matched_profiles
+                .map { |p| Geocoder::Calculations.distance_between([p.latitude, p.longitude], [profile.latitude, profile.longitude]) }
+                .map { |dist| EKC.normalize_distance_km(dist) }
+
+      matched_profiles.each_with_index do |matched_profile, idx|
+        create_matches_between(profile_uuid, matched_profile.uuid, quality_score: quality_scores[idx])
+      end
     end
   rescue ActiveRecord::RecordNotFound
-    EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile appears to have been deleted: #{profile_uuid}!"
+    EKC.logger.error "Profile not found when generating matches for it. uuid: #{profile_uuid}"
   end
 
-  def create_matches_between(profile_uuid, matched_profile_uuids)
-    profile = Profile.find(profile_uuid)
+  def create_matches_between(p1_uuid, p2_uuid, match_params = {})
+    p1 = Profile.find(p1_uuid)
+    p2 = Profile.find(p2_uuid)
 
-    if matched_profile_uuids.present?
-      # create records in the matches table
-      matched_profile_uuids.each do |matched_profile_uuid|
-        begin
-          create_one_way_match(profile.uuid, matched_profile_uuid)
-        rescue ActiveRecord::RecordNotFound
-          EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile #{matched_profile_uuid} appears to have been deleted!"
-        end
-      end
+    initiator_uuid = p1.male? ? p1.uuid : p2.uuid
 
-      # change the user state
-      case profile.state
-      when 'waiting_for_matches'
-        profile.new_matches!(:has_matches)
-      when 'waiting_for_matches_and_response'
-        profile.new_matches!(:has_matches_and_waiting_for_response)
-      end
+    with_params = { initiates_profile_uuid: initiator_uuid }.merge(match_params)
 
-      PushNotifier.delay.record_event(profile.uuid, 'new_matches')
-    end
-  rescue ActiveRecord::RecordNotFound
-    EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} appears to have been deleted!"
-  end
+    match_1 = Match.create_with(with_params)
+                      .find_or_create_by(for_profile_uuid: p1.uuid, matched_profile_uuid: p2.uuid)
 
-  def create_two_way_match_between(p1_uuid, p2_uuid)
-    profile_one = Profile.find p1_uuid
-    profile_two = Profile.find p2_uuid
-
-    initiator_uuid = profile_one.male? ? profile_one.uuid : profile_two.uuid
-
-    # TBD: check if delivered_at and expires_at are needed
-    # Match.create_with(delivered_at: DateTime.now,
-    #                                    expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
-    #                                    initiates_profile_uuid: male_uuid)
-    match_1 = Match.create_with(initiates_profile_uuid: initiator_uuid)
-                      .find_or_create_by(for_profile_uuid: profile_one.uuid, matched_profile_uuid: profile_two.uuid)
-    # TBD: THIS NEEDS FIXING. we should create this side of the match too so
-    # that both people see each other in a reasonable time.
-    # however, how do we notify the other when the time is right for them?
-    match_2 = Match.create_with(initiates_profile_uuid: initiator_uuid)
-                      .find_or_create_by(for_profile_uuid: profile_two.uuid, matched_profile_uuid: profile_one.uuid)
+    match_2 = Match.create_with(with_params)
+                      .find_or_create_by(for_profile_uuid: p2.uuid, matched_profile_uuid: p1.uuid)
 
     [match_1, match_2]
   end
-
-  def create_one_way_match(p1_uuid, p2_uuid)
-    profile_one = Profile.find p1_uuid
-    profile_two = Profile.find p2_uuid
-
-    initiator_uuid = profile_one.male? ? profile_one.uuid : profile_two.uuid
-
-    # TBD: check if delivered_at and expires_at are needed
-    # Match.create_with(delivered_at: DateTime.now,
-    #                                    expires_at: DateTime.now + Match::STALE_EXPIRATION_DURATION,
-    #                                    initiates_profile_uuid: male_uuid)
-    match_1 = Match.create_with(initiates_profile_uuid: initiator_uuid)
-                      .find_or_create_by(for_profile_uuid: profile_one.uuid, matched_profile_uuid: profile_two.uuid)
-    # TBD: THIS NEEDS FIXING. we should create this side of the match too so
-    # that both people see each other in a reasonable time.
-    # however, how do we notify the other when the time is right for them?
-    # match_2 = Match.create_with(initiates_profile_uuid: initiator_uuid)
-    #                   .find_or_create_by(for_profile_uuid: profile_two.uuid, matched_profile_uuid: profile_one.uuid)
-
-    [match_1, nil]
-  end
-
-  # def determine_mutual_matches(profile_uuid)
-  #   profile = Profile.find(profile_uuid)
-
-  #   # TBD: don't update the girl's state yet!
-  #   mutual_match = profile.matches.mutual.detect { |match| match.matched_profile.waiting_for_matches? }
-  #   profile.got_mutual_like!(:mutual_match, Rails.application.routes.url_helpers.v1_profile_match_path(profile.uuid, mutual_match.id))
-  #   mutual_match.matched_profile.got_mutual_like!(:mutual_match, Rails.application.routes.url_helpers.v1_profile_match_path(mutual_match.matched_profile.uuid, mutual_match.reverse.id))
-
-  #   # TBD: don't send the girl's notification here!
-  #   PushNotifier.delay.record_event(profile.uuid, 'new_mutual_match', name: mutual_match.matched_profile.firstname)
-  #   PushNotifier.delay.record_event(mutual_match.matched_profile.uuid, 'new_mutual_match', name: profile.firstname)
-  # end
 
   def transition_to_mutual_match(profile_uuid, match_id)
     profile = Profile.find(profile_uuid)
@@ -147,7 +84,7 @@ module Matchmaker
 
     matchmaking_query = Profile.active.of_gender(profile.seeking_gender)
 
-    if APPLY_MATCHING_MODELS.include? 'preferences'
+    if USE_MATCHING_MODELS.include? 'preferences'
       matchmaking_query =
         matchmaking_query
         .older_than(profile.seeking_minimum_age)
@@ -162,7 +99,7 @@ module Matchmaker
         .seeking_of_faith(profile.faith)
     end
 
-    if APPLY_MATCHING_MODELS.include? 'location'
+    if USE_MATCHING_MODELS.include? 'location'
       unless Rails.application.config.test_mode
         matchmaking_query = matchmaking_query.within_distance(profile.search_lat, profile.search_lng, MATCHING_MODELS[:location][:within_radius])
       end
@@ -178,6 +115,8 @@ module Matchmaker
       .where(matches: { matched_profile_uuid: nil })
       .limit(opts[:limit] || N_MATCHES_AT_A_TIME)
   end
+
+  # DEFAULT MATCH PREFERENCES
 
   def default_min_age_pref(gender, age)
     age_gap_lower = gender == Profile::GENDER_MALE ? Matchmaker::DEFAULT_AGE_GAP_MEN.first : Matchmaker::DEFAULT_AGE_GAP_WOMEN.first
