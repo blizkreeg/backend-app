@@ -55,14 +55,14 @@ class Api::V1::MatchesController < ApplicationController
     Match.update(match_ids, match_properties)
 
     # TBD: here account for user who is waiting for response!
-    if profile.matches.undecided.count == 0
-      case profile.state.to_sym
-      when :show_matches
-        profile.decided_on_matches!(:waiting_for_matches)
-      when :show_matches_and_waiting_for_response
-        waiting_for_response_match = profile.active_mutual_match
-        profile.decided_on_matches!(:waiting_for_matches_and_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
-      end
+    # TBD: we are forcefully transitioning the user to the default state here
+    # what if they have more matches that we should show?
+    case profile.state.to_sym
+    when :show_matches
+      profile.decided_on_matches!(:waiting_for_matches)
+    when :show_matches_and_waiting_for_response
+      waiting_for_response_match = profile.active_mutual_match
+      profile.decided_on_matches!(:waiting_for_matches_and_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
     end
 
     Match.delay.enable_mutual_flag_and_create_conversation!(match_ids)

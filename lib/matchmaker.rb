@@ -17,6 +17,8 @@ module Matchmaker
 
   module_function
 
+  # finds and creates new match entries
+  # returns: number of new matches created
   def generate_new_matches_for(profile_uuid)
     profile = Profile.find(profile_uuid)
 
@@ -37,14 +39,17 @@ module Matchmaker
                 .map { |dist| EKC.normalize_distance_km(dist) }
 
       matched_profiles.each_with_index do |matched_profile, idx|
-        EKC.logger.debug "creating matches between #{profile_uuid} and #{matched_profile.uuid}"
+        EKC.logger.debug "creating matches between #{profile.uuid} and #{matched_profile.uuid}"
         create_matches_between(profile_uuid, matched_profile.uuid, quality_score: quality_scores[idx])
       end
 
       EKC.logger.info "#{profile_uuid}: #{matched_profiles.count} new matches"
     end
+
+    matched_profiles.count rescue 0
   rescue ActiveRecord::RecordNotFound
     EKC.logger.error "Profile not found when generating matches for it. uuid: #{profile_uuid}"
+    0
   end
 
   def create_matches_between(p1_uuid, p2_uuid, match_params = {})
