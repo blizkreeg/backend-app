@@ -39,6 +39,8 @@ module Matchmaker
       matched_profiles.each_with_index do |matched_profile, idx|
         create_matches_between(profile_uuid, matched_profile.uuid, quality_score: quality_scores[idx])
       end
+
+      EKC.logger.info "#{profile_uuid}: #{matched_profiles.count} new matches"
     end
   rescue ActiveRecord::RecordNotFound
     EKC.logger.error "Profile not found when generating matches for it. uuid: #{profile_uuid}"
