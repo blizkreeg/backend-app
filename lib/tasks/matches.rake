@@ -1,19 +1,19 @@
 namespace :matches do
   desc "generate matches"
   task :generate_new => :environment do
-    puts "#{DateTime.now} ******** Finding new matches **********"
+    puts "\n#{DateTime.now} ******** Finding new matches **********\n"
 
-    Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
+    Profile.active.find_each(batch_size: 10) do |profile|
       # NOTE: you cannot make this asynchronous or we could run into a condition where two matches between the same people are being created
       # TODO: room for optimization
       n = Matchmaker.generate_new_matches_for(profile.uuid)
-      puts "#{profile.uuid}: #{n} new matches"
+      puts "#{profile.uuid}: #{n} new matches" if n > 0
     end
   end
 
   desc "update state for profiles that have matches"
   task :ready_for_new => :environment do
-    puts "#{DateTime.now} ******** Delivering matches to users who are ready for new **********"
+    puts "\n#{DateTime.now} ******** Delivering matches to users who are ready for new **********\n"
 
     # TBD: this should be based on the user's timezone
     Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
@@ -26,7 +26,7 @@ namespace :matches do
         end
 
         PushNotifier.delay.record_event(profile.uuid, 'new_matches')
-        puts "#{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} matches"
+        puts "#{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} available matches"
       else
         puts "#{profile.uuid}: no matches"
       end
@@ -34,7 +34,7 @@ namespace :matches do
   end
 
   desc "run mutual matches"
-  puts "#{DateTime.now} ******** Finding mutual matches **********"
+  puts \n"#{DateTime.now} ******** Finding mutual matches **********\n"
 
   task :find_mutual => :environment do
     Profile.active.with_gender('male').where("profiles.state != 'mutual_match' AND profiles.state != 'in_conversation' AND profiles.state != 'waiting_for_matches_and_response'").find_each(batch_size: 10) do |profile|
