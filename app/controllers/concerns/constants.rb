@@ -87,6 +87,7 @@ module Constants
     "Feels like spam",
     "Not getting replies",
     "Didn't start conversation", # TBD: run a timer to set unmatched=true and reason to this if time.now > expires_at
+    "Didn't respond",
     "Completed conversation", # TBD: when conversation is done/expired, set this
     "Other person unmatched"
   ]

@@ -61,6 +61,47 @@ class Match < ActiveRecord::Base
     end
   end
 
+  def self.check_match_expiration(id, for_profile_uuid)
+    begin
+      match = Match.find(id)
+    rescue ActiveRecord::RecordNotFound
+      EKC.logger.error "Match #{id} not found when checking for expiration."
+      return
+    end
+
+    match_expired = false
+    if match.initiates_profile_uuid == for_profile_uuid
+      if match.conversation.messages.count == 0
+        # close the match - it has expired
+        match_expired = true
+        reason = "Didn't start conversation" # TBD: constantize this str (list of reasons in constants.rb)
+        match.unmatch!(reason)
+        begin
+          match.reverse.unmatch!(reason)
+        rescue ActiveRecord::RecordNotFound
+          EKC.logger.error "Reverse Match for match id: #{id} not found when checking for expiration."
+        end
+      end
+    else
+      if !match.conversation.open
+        # close the match - the other person didn't respond
+        match_expired = true
+        reason = "Didn't respond" # TBD: constantize this str (list of reasons in constants.rb)
+        match.unmatch!(reason)
+        begin
+          match.reverse.unmatch!(reason)
+        rescue ActiveRecord::RecordNotFound
+          EKC.logger.error "Reverse Match for match id: #{id} not found when checking for expiration."
+        end
+      end
+    end
+
+    if match_expired
+      match.for_profile.unmatch!(:waiting_for_matches) rescue EKC.logger.error("Failed to update state for #{match.for_profile_uuid} when unmatching!")
+      match.matched_profile.unmatch!(:waiting_for_matches) rescue EKC.logger.error("Failed to update state for #{match.matched_profile_uuid} when unmatching!")
+    end
+  end
+
   def unmatch!(reason)
     # TBD: when unmatching one side, what about the other? what effects will that case if left unmatched?
     self.unmatched = true

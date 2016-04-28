@@ -31,6 +31,9 @@ class Api::V1::ConversationsController < ApplicationController
 
         # update the expiration for the responder
         my_match.reverse.update(expires_at: (DateTime.now + Match::STALE_EXPIRATION_DURATION))
+
+        # after N time, check if responder has responded
+        Match.delay_for(Match::STALE_EXPIRATION_DURATION).check_match_expiration(my_match.reverse.id, @conversation.responder.uuid)
       end
     elsif @current_profile.responding_to_conversation?(@conversation)
       # open chat -> moves both users to 'in_conversation' state

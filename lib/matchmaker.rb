@@ -133,6 +133,7 @@ module Matchmaker
     match.reverse.update(active: true)
 
     PushNotifier.delay.record_event(profile.uuid, 'new_mutual_match', name: match.matched_profile.firstname)
+    Match.delay_for(Match::STALE_EXPIRATION_DURATION).check_match_expiration(match.id, profile_uuid)
   rescue ActiveRecord::RecordNotFound
     EKC.logger.error "ERROR: #{self.name.to_s}##{__method__.to_s}: Profile #{profile_uuid} or match #{match_id} appears to have been deleted!"
   end
