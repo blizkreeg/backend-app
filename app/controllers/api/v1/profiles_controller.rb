@@ -212,7 +212,7 @@ class Api::V1::ProfilesController < ApplicationController
     srand Time.now.to_i
 
     # TBD: fix before going live!
-    @content_type = ((rand(10)%3) == 0) ? 'text' : (((rand(10)%3) == 1) ? 'link' : 'none')
+    @content_type = 'none'# ((rand(10)%3) == 0) ? 'text' : (((rand(10)%3) == 1) ? 'link' : 'none')
 
     render 'api/v1/shared/home', status: 200
   end
