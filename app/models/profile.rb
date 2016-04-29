@@ -130,6 +130,8 @@ class Profile < ActiveRecord::Base
     butler_conversation_uuid:     :string,
     has_new_queued_matches:       :boolean,
     marked_for_deletion:          :boolean,
+    # TBD: is there a better way to track this?
+    sent_matches_notification_at: :time
 
     # matching related
     # attractiveness_score:         :integer, # median of all scores by reviewers?

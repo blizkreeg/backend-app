@@ -42,7 +42,7 @@
   //   }
   // });
 
-  var conversationRef = new Firebase("<%= Rails.application.config.firebase_db_url %>conversations/<%= @profile.butler_conversation_uuid %>/messages");
+  var conversationRef = new Firebase("<%= Rails.application.config.firebase_db_url %>butler-conversations/<%= @profile.butler_conversation_uuid %>/messages");
 
   // var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(10);
   // firstQuery.once('value', function(messages) {
