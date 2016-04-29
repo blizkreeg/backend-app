@@ -25,7 +25,7 @@ namespace :matches do
         end
 
         # check state and if it's time to notify them
-        if profile.has_matches? && profile.past_matches_time?
+        if (profile.has_matches? || profile.has_matches_and_waiting_for_response?) && profile.past_matches_time?
           if profile.sent_matches_notification_at.present?
             if (Time.now - profile.sent_matches_notification_at).to_i >= 86400
               PushNotifier.delay.record_event(profile.uuid, 'new_matches')
