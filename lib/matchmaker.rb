@@ -8,8 +8,8 @@ module Matchmaker
 
   N_MATCHES_AT_A_TIME = 5
 
-  NEW_MATCHES_AT_HOUR = 11
-  NEW_MATCHES_AT_MIN = 45
+  NEW_MATCHES_AT_HOUR = 17
+  NEW_MATCHES_AT_MIN = 0
 
   MATCHING_MODELS = {
     preferences: {},

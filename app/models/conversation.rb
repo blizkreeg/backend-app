@@ -8,7 +8,7 @@ class Conversation < ActiveRecord::Base
   has_many :real_dates, autosave: true, dependent: :destroy
   has_many :date_suggestions, autosave: true, dependent: :destroy
 
-  CLOSE_TIME = Rails.application.config.test_mode ? 1.day : 7.days
+  CLOSE_TIME = 5.days
   CLOSED_BECAUSE_EXPIRED = 'Expired'
   CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
   MAX_PARTICIPANTS = 2
