@@ -421,7 +421,7 @@ class Profile < ActiveRecord::Base
   end
 
   def has_new_matches?
-    self.matches.undecided.count
+    self.matches.undecided.count > 0
   end
 
   # deliver new matches after NEW_MATCHES_AT_HOUR, NEW_MATCHES_AT_MIN

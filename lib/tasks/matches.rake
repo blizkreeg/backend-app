@@ -16,12 +16,6 @@ namespace :matches do
     puts "\n#{DateTime.now} ******** Checking for who's ready to get new matches **********\n"
 
     Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
-      next unless profile.past_matches_time?
-      if profile.sent_matches_notification_at.present?
-        puts "last matches notification for #{profile.uuid} sent less than a day ago, skipping."
-        next if (Time.now - profile.sent_matches_notification_at).to_i < 86400
-      end
-
       if profile.has_new_matches?
         case profile.state
         when 'waiting_for_matches'
@@ -30,9 +24,17 @@ namespace :matches do
           profile.new_matches!(:has_matches_and_waiting_for_response)
         end
 
-        profile.update!(sent_matches_notification_at: Time.now)
-
-        PushNotifier.delay.record_event(profile.uuid, 'new_matches')
+        # check state and if it's time to notify them
+        if profile.has_matches? && profile.past_matches_time?
+          if profile.sent_matches_notification_at.present?
+            if (Time.now - profile.sent_matches_notification_at).to_i >= 86400
+              PushNotifier.delay.record_event(profile.uuid, 'new_matches')
+              profile.update!(sent_matches_notification_at: Time.now)
+            else
+              puts "last matches notification for #{profile.uuid} sent less than a day ago, skipping."
+            end
+          end
+        end
         puts "#{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} available matches"
       else
         puts "#{profile.uuid}: no matches"
