@@ -17,24 +17,28 @@ namespace :matches do
 
     Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
       if profile.has_new_matches?
+        puts "#{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} new matches"
+
         case profile.state
         when 'waiting_for_matches'
           profile.new_matches!(:has_matches)
         when 'waiting_for_matches_and_response'
           profile.new_matches!(:has_matches_and_waiting_for_response)
         end
+
         profile.reload
+
         # check state and if it's time to notify them
-        if (profile.has_matches? || profile.has_matches_and_waiting_for_response?) && profile.past_matches_time?
-          if (profile.sent_matches_notification_at.present? && ((Time.now - profile.sent_matches_notification_at).to_i >= 86400)) ||
-              profile.sent_matches_notification_at.blank?
+        if profile.in_waiting_state? && profile.due_for_new_matches_notification?
+          if profile.ok_to_send_new_matches_notification?
               PushNotifier.delay.record_event(profile.uuid, 'new_matches')
-              profile.update!(sent_matches_notification_at: Time.now)
+              profile.update!(sent_matches_notification_at: DateTime.now)
+              puts "#{profile.uuid}: sent notification"
           else
-            puts "last matches notification for #{profile.uuid} sent less than a day ago, skipping."
+            puts "#{profile.uuid}: last notification less than a day ago, skipping."
           end
         end
-        puts "#{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} available matches"
+
       else
         puts "#{profile.uuid}: no matches"
       end

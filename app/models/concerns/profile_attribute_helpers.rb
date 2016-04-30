@@ -40,9 +40,9 @@ module ProfileAttributeHelpers
   def intent_text
     case self.intent
     when 'Dating'
-      'Date and see where it leads'
+      'To date and see where it goes'
     when 'Relationship'
-      'Find something long-term'
+      'Seeking a relationship'
     end
   end
 

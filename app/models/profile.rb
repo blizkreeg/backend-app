@@ -424,8 +424,8 @@ class Profile < ActiveRecord::Base
     self.matches.undecided.count > 0
   end
 
-  # deliver new matches after NEW_MATCHES_AT_HOUR, NEW_MATCHES_AT_MIN
-  def past_matches_time?
+  # deliver new matches after NEW_MATCHES_AT_HOUR:NEW_MATCHES_AT_MIN user's local time
+  def due_for_new_matches_notification?
     if ActiveSupport::TimeZone::MAPPING.values.include?(self.time_zone)
       local_time = Time.now.in_time_zone(self.time_zone)
     else
@@ -434,6 +434,19 @@ class Profile < ActiveRecord::Base
     end
 
     local_time.hour >= Matchmaker::NEW_MATCHES_AT_HOUR && local_time.min >= Matchmaker::NEW_MATCHES_AT_MIN
+  end
+
+  def in_waiting_state?
+    self.has_matches? || self.has_matches_and_waiting_for_response?
+  end
+
+  def seconds_since_last_matches_notification
+    self.sent_matches_notification_at.present? ? ((DateTime.now - profile.sent_matches_notification_at) * 86400).to_i : 0
+  end
+
+  def ok_to_send_new_matches_notification?
+    profile.sent_matches_notification_at.blank? ||
+    (profile.sent_matches_notification_at.present? && (profile.seconds_since_last_matches_notification >= 86400))
   end
 
   private
