@@ -30,9 +30,8 @@ namespace :matches do
               profile.sent_matches_notification_at.blank?
               PushNotifier.delay.record_event(profile.uuid, 'new_matches')
               profile.update!(sent_matches_notification_at: Time.now)
-            else
-              puts "last matches notification for #{profile.uuid} sent less than a day ago, skipping."
-            end
+          else
+            puts "last matches notification for #{profile.uuid} sent less than a day ago, skipping."
           end
         end
         puts "#{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} available matches"
