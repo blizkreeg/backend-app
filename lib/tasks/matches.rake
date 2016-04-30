@@ -23,11 +23,11 @@ namespace :matches do
         when 'waiting_for_matches_and_response'
           profile.new_matches!(:has_matches_and_waiting_for_response)
         end
-
+        profile.reload
         # check state and if it's time to notify them
         if (profile.has_matches? || profile.has_matches_and_waiting_for_response?) && profile.past_matches_time?
-          if profile.sent_matches_notification_at.present?
-            if (Time.now - profile.sent_matches_notification_at).to_i >= 86400
+          if (profile.sent_matches_notification_at.present? && ((Time.now - profile.sent_matches_notification_at).to_i >= 86400)) ||
+              profile.sent_matches_notification_at.blank?
               PushNotifier.delay.record_event(profile.uuid, 'new_matches')
               profile.update!(sent_matches_notification_at: Time.now)
             else
