@@ -1,0 +1,3 @@
+production:
+  user: <%= LIBRATO_USER %>
+  token: <%= LIBRATO_TOKEN %>
