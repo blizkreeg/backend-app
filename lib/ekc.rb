@@ -13,6 +13,10 @@ module Ekc
     EKC.logger.error "Error normalizing distance #{distance}, exception: #{e.class.name}, #{e.backtrace.join('\n')}"
     0.7
   end
+
+  def now_in_pacific_time
+    DateTime.now.in_time_zone('America/Los_Angeles')
+  end
 end
 
 EKC = Ekc
