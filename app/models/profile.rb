@@ -227,8 +227,8 @@ class Profile < ActiveRecord::Base
 
       # FB seems to always return this in the order of high school, bachelors, grad school...
       # We want to show in the reverse order
-      earned_degrees = auth_hash[:info][:education].map { |t| t[:concentration].try(:[], :name) }.compact.reverse rescue nil
-      schools_attended = auth_hash[:info][:education].map { |t| t[:school].try(:[], :name) }.compact.reverse rescue nil
+      earned_degrees = auth_hash[:info][:education].map { |t| t[:concentration].try(:[], :name) }.compact.reverse rescue []
+      schools_attended = auth_hash[:info][:education].map { |t| t[:school].try(:[], :name) }.compact.reverse rescue []
 
       {
         email: (auth_hash[:info][:email] || auth_hash[:info][:email] rescue nil),
