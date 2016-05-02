@@ -38,6 +38,8 @@ gem 'sidekiq_parameters_logging'
 gem 'librato-rails'
 # gem 'stackify-api-ruby'
 gem 'scout_apm'
+gem 'exception_notification'
+gem 'lograge'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

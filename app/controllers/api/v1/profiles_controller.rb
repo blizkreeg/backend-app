@@ -50,6 +50,7 @@ class Api::V1::ProfilesController < ApplicationController
     EKC.logger.error e.message
     EKC.logger.error e.backtrace.join('\n')
 
+    notify_of_exception(e)
     respond_with_error('Profile already exists', 400)
   end
 
@@ -145,7 +146,8 @@ class Api::V1::ProfilesController < ApplicationController
 
     begin
       reported_profile = Profile.find(params[:data][:reported_profile_uuid])
-    rescue ActiveRecord::RecordNotFound
+    rescue ActiveRecord::RecordNotFound => e
+      notify_of_exception(e)
       respond_with_error('The reported user was not found', 500)
       return
     end
@@ -153,7 +155,8 @@ class Api::V1::ProfilesController < ApplicationController
     # TBD: UNMATCH here
     begin
       match = Match.find(params[:data][:match_id].to_i)
-    rescue ActiveRecord::RecordNotFound
+    rescue ActiveRecord::RecordNotFound => e
+      notify_of_exception(e)
       respond_with_error('The reported match was not found', 500)
       return
     end
@@ -243,6 +246,7 @@ class Api::V1::ProfilesController < ApplicationController
       error_code = nil
     end
 
+    notify_of_exception(exception)
     respond_with_error(@profile.errors.full_messages.join(', '), 400, error_code)
   end
 end

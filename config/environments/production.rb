@@ -62,7 +62,20 @@ Rails.application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address => "smtp.sendgrid.net",
+    :port => 587,
+    :domain => "ekcoffee.com",
+    :user_name => ENV['SENDGRID_USER'],
+    :password => ENV['SENDGRID_PASSWORD'],
+    :authentication => :plain,
+    :enable_starttls_auto => true
+  }
+  config.action_mailer.logger = nil
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
@@ -81,4 +94,21 @@ Rails.application.configure do
   if (Date.new(2016,06,01)-Date.today+50).to_i > 0
     config.test_mode = true
   end
+
+  config.lograge.enabled = true
+  config.lograge.custom_options = lambda do |event|
+    params = event.payload[:params].reject do |k|
+      ['controller', 'action'].include? k
+    end
+
+    { "params" => params }
+  end
 end
+
+Rails.application.config.middleware.use ExceptionNotification::Rack,
+  :ignore_crawlers => %w{Googlebot bingbot},
+  :email => {
+    :email_prefix => "[Exception] ",
+    :sender_address => %{"notifier" <error.notifier@ekcoffee.com>},
+    :exception_recipients => %w{vineet@ekcoffee.com}
+  }

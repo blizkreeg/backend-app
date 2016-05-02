@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
 
   before_action :authenticate_token!
   before_action :set_current_profile
+  # before_action :prepare_exception_notifier
 
   after_action :log_response
 
@@ -14,15 +15,15 @@ class ApplicationController < ActionController::Base
   UNAUTHORIZED_EXPIRED_TOKEN = 'token_expired'
   UNAUTHORIZED_PROFILE_NOT_FOUND = 'profile_not_found'
 
-  rescue_from StandardError, with: lambda { |e| Rails.logger.error("#{e.class.name}:#{e.message}\n#{e.backtrace.join('\n')}"); respond_with_error(e.message, 500) } # :internal_server_error
-  rescue_from ActiveRecord::UnknownAttributeError, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
+  rescue_from StandardError, with: :server_error
+  rescue_from ActiveRecord::UnknownAttributeError, with: lambda { |e| notify_of_exception(e); respond_with_error(e.message, 400) } # :bad_request
   rescue_from ActiveRecord::RecordNotFound, with: lambda { |e| respond_with_error(e.message, 404) } # :not_found
-  rescue_from Errors::OperationNotPermitted, with: lambda { |e| respond_with_error(e.message, 403) } # :forbidden
-  rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| respond_with_error(e.message, 401, UNAUTHORIZED_EXPIRED_TOKEN) } # :unauthorized
-  rescue_from ActionController::ParameterMissing, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
-  rescue_from Errors::FacebookAuthenticationError, with: lambda { |e| reset_current_profile!; respond_with_error(e.message, 401, 'facebook_session_invalid') }
-  rescue_from Errors::FacebookPermissionsError, with: lambda { |e| reset_current_profile!; respond_with_error(e.message, 401, 'insufficient_facebook_permissions') }
-  rescue_from JSON::Schema::ValidationError, with: lambda { |e| respond_with_error(e.message, 400) } # :bad_request
+  rescue_from Errors::OperationNotPermitted, with: lambda { |e| notify_of_exception(e); respond_with_error(e.message, 403) } # :forbidden
+  rescue_from Errors::AuthTokenTimeoutError, with: lambda { |e| notify_of_exception(e); respond_with_error(e.message, 401, UNAUTHORIZED_EXPIRED_TOKEN) } # :unauthorized
+  rescue_from ActionController::ParameterMissing, with: lambda { |e| notify_of_exception(e); respond_with_error(e.message, 400) } # :bad_request
+  rescue_from Errors::FacebookAuthenticationError, with: lambda { |e| notify_of_exception(e); reset_current_profile!; respond_with_error(e.message, 401, 'facebook_session_invalid') }
+  rescue_from Errors::FacebookPermissionsError, with: lambda { |e| notify_of_exception(e); reset_current_profile!; respond_with_error(e.message, 401, 'insufficient_facebook_permissions') }
+  rescue_from JSON::Schema::ValidationError, with: lambda { |e| notify_of_exception(e); respond_with_error(e.message, 400) } # :bad_request
 
   protected
 
@@ -48,6 +49,10 @@ class ApplicationController < ActionController::Base
       { auth: nil }
   end
 
+  def notify_of_exception(exception)
+    ExceptionNotifier.notify_exception(exception, env: request.env)
+  end
+
   def respond_with_error(message, http_status_code, internal_error_code=nil)
     response = { error: { message: message, http_status: http_status_code, code: internal_error_code } }
     response.merge!(auth_response_hash)
@@ -55,6 +60,16 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def prepare_exception_notifier
+    request.env["exception_notifier.exception_data"] = {
+      :request_path => request.fullpath
+    }
+
+    request.env["exception_notifier.exception_data"].merge!({
+      :profile_uuid => @current_profile.uuid,
+    }) if @current_profile.present?
+  end
 
   def log_response
     if response.content_type == 'application/json'
@@ -107,5 +122,11 @@ class ApplicationController < ActionController::Base
         nil
       end
     end
+  end
+
+  def server_error(e)
+    notify_of_exception(e)
+    Rails.logger.error("#{e.class.name}:#{e.message}\n#{e.backtrace.join('\n')}")
+    respond_with_error(e.message, 500)
   end
 end
