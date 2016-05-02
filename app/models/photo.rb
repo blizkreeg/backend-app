@@ -6,9 +6,9 @@ class Photo < ActiveRecord::Base
   PUBLIC_ID_LENGTH = 10
   MAX_WIDTH = 1000
   MAX_HEIGHT = 1000
-  THUMBNAIL_TRANSFORMATIONS = 'c_fill,g_face:center,r_max'
-  PROFILE_TRANSFORMATIONS = 'c_fill,g_face:center'
-  FULLSCREEN_TRANSFORMATIONS = 'c_fill,g_face:center'
+  THUMBNAIL_TRANSFORMATIONS = 'c_fill,g_face:center,r_max,q_50'
+  PROFILE_TRANSFORMATIONS = 'c_fill,g_face:center,q_50'
+  FULLSCREEN_TRANSFORMATIONS = 'c_fill,g_face:center,q_50'
 
   # scope :valid, -> { where("(properties->>'marked_for_deletion')::boolean = false").order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc") }
   scope :ordered, -> { order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc").order("updated_at DESC") }
