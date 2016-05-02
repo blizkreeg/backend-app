@@ -445,8 +445,8 @@ class Profile < ActiveRecord::Base
   end
 
   def ok_to_send_new_matches_notification?
-    profile.sent_matches_notification_at.blank? ||
-    (profile.sent_matches_notification_at.present? && (profile.seconds_since_last_matches_notification >= 86400))
+    self.sent_matches_notification_at.blank? ||
+    (self.sent_matches_notification_at.present? && (self.seconds_since_last_matches_notification >= 86400))
   end
 
   private
