@@ -222,7 +222,7 @@ class Profile < ActiveRecord::Base
         elsif degree_types.include? "College"
           'Bachelors'
         elsif degree_types.include? "High School"
-          'High School'
+          nil
         else
           nil
         end
