@@ -441,7 +441,7 @@ class Profile < ActiveRecord::Base
   end
 
   def seconds_since_last_matches_notification
-    self.sent_matches_notification_at.present? ? ((DateTime.now - profile.sent_matches_notification_at) * 86400).to_i : 0
+    self.sent_matches_notification_at.present? ? ((DateTime.now - self.sent_matches_notification_at) * 86400).to_i : 0
   end
 
   def ok_to_send_new_matches_notification?
