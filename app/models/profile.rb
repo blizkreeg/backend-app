@@ -70,7 +70,6 @@ class Profile < ActiveRecord::Base
     seeking_maximum_height
     seeking_faith
     disable_notifications_setting
-    has_new_queued_matches
   )
 
   ATTRIBUTES = {
@@ -128,7 +127,6 @@ class Profile < ActiveRecord::Base
     substate:                     :string,
     substate_endpoint:            :string,
     butler_conversation_uuid:     :string,
-    has_new_queued_matches:       :boolean,
     marked_for_deletion:          :boolean,
     # TBD: is there a better way to track this?
     sent_matches_notification_at: :date_time
@@ -194,10 +192,10 @@ class Profile < ActiveRecord::Base
   end
 
   after_commit :upload_facebook_profile_photos, :create_initial_matches, on: :create
-  after_validation :reverse_geocode, if: ->(profile){ (profile.latitude.present? && profile.latitude_changed?) || (profile.longitude.present? && profile.longitude_changed?) }
-  before_save :set_search_latlng, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
-  before_save :set_tz, if: Proc.new { |profile| profile.latitude_changed? || profile.longitude_changed? }
-  before_save :set_age, if: Proc.new { |profile| profile.born_on_year_changed? || profile.born_on_month_changed? || profile.born_on_day_changed? }
+  after_validation :reverse_geocode, if: ->(profile){ profile.location_changed? && profile.latitude.present? && profile.longitude.present? }
+  before_save :set_search_latlng, if: Proc.new { |profile| profile.location_changed? }
+  before_save :set_tz, if: Proc.new { |profile| profile.location_changed? }
+  before_save :set_age, if: Proc.new { |profile| profile.dob_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
   before_create :set_about_me, if: lambda { Rails.env.development? } # TBD: REMOVE BEFORE PRODUCTION
   before_create :initialize_butler_conversation
@@ -449,14 +447,27 @@ class Profile < ActiveRecord::Base
     (self.sent_matches_notification_at.present? && (self.seconds_since_last_matches_notification >= 86400))
   end
 
+  def location_changed?
+    self.properties_changed? &&
+    (self.properties_was["latitude"] != self.properties["latitude"] ||
+     self.properties_was["longitude"] != self.properties["longitude"])
+  end
+
+  def dob_changed?
+    self.properties_changed? &&
+    (self.properties_was["born_on_year"] != self.properties["born_on_year"] ||
+     self.properties_was["born_on_month"] != self.properties["born_on_month"] ||
+     self.properties_was["born_on_day"] != self.properties["latitude"])
+  end
+
   private
 
   def set_tz
     timezone = Timezone::Zone.new :latlon => [self.latitude, self.longitude]
     self.time_zone = timezone.zone if ActiveSupport::TimeZone::MAPPING.values.include?(timezone.zone)
     true
-  rescue Timezone::Error::NilZone => e
-    EKC.logger.error "No timezone was found for user #{self.uuid}, lat,lon: #{self.latitude}, #{self.longitude}"
+  rescue Timezone::Error::Base => e
+    EKC.logger.error "Timezone lookup exception, user: #{self.uuid}, lat,lon: #{self.latitude}, #{self.longitude}\n#{e.class.name}\n#{e.backtrace.join('\n')}"
     true
   end
 

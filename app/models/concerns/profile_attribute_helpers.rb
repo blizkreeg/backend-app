@@ -42,7 +42,7 @@ module ProfileAttributeHelpers
     when 'Dating'
       'To date and see where it goes'
     when 'Relationship'
-      'Seeking a relationship'
+      'Seeking a Relationship'
     end
   end
 
