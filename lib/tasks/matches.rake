@@ -21,9 +21,10 @@ namespace :matches do
 
         case profile.state
         when 'waiting_for_matches'
-          profile.new_matches!(:has_matches)
+          profile.new_matches!(:has_matches, Rails.application.routes.url_helpers.v1_profile_matches_path(profile))
         when 'waiting_for_matches_and_response'
-          profile.new_matches!(:has_matches_and_waiting_for_response)
+          waiting_for_response_match = profile.active_mutual_match
+          profile.new_matches!(:has_matches_and_waiting_for_response, Rails.application.routes.url_helpers.v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
         end
 
         profile.reload
