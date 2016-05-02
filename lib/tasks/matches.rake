@@ -1,7 +1,7 @@
 namespace :matches do
   desc "generate matches"
   task :generate_new => :environment do
-    puts "#{EKC.now_in_pacific_time} FINDING NEW MATCHES"
+    puts "[#{EKC.now_in_pacific_time}] -- FINDING NEW MATCHES"
 
     Profile.active.find_each(batch_size: 10) do |profile|
       # NOTE: you cannot make this asynchronous or we could run into a condition where two matches between the same people are being created
@@ -13,7 +13,7 @@ namespace :matches do
 
   desc "update state for profiles that have matches"
   task :ready_for_new => :environment do
-    puts "#{EKC.now_in_pacific_time} SENDING NEW MATCHES NOTIFICATION"
+    puts "[#{EKC.now_in_pacific_time}] -- SENDING NEW MATCHES NOTIFICATION"
 
     Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
       if profile.has_new_matches?
@@ -48,7 +48,7 @@ namespace :matches do
 
   desc "run mutual matches"
   task :find_mutual => :environment do
-    puts "#{EKC.now_in_pacific_time} FINDING MUTUAL MATCHES"
+    puts "[#{EKC.now_in_pacific_time}] -- FINDING MUTUAL MATCHES"
     Profile.active.with_gender('male').where("profiles.state != 'mutual_match' AND profiles.state != 'in_conversation' AND profiles.state != 'waiting_for_matches_and_response'").find_each(batch_size: 10) do |profile|
       profile.matches.mutual.order("matches.created_at ASC").each do |match|
         matched_profile = match.matched_profile
