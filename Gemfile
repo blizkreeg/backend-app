@@ -36,6 +36,8 @@ gem 'jquery-rails'
 gem 'sidekiq_parameters_logging'
 # TBD: add https://github.com/schneems/puma_worker_killer
 gem 'librato-rails'
+# gem 'stackify-api-ruby'
+gem 'scout_apm'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
