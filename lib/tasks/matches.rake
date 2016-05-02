@@ -39,9 +39,6 @@ namespace :matches do
             puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: last notification less than a day ago, skipping."
           end
         end
-
-      else
-        # puts "#{profile.uuid}: no matches"
       end
     end
   end
