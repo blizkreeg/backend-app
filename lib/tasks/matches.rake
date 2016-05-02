@@ -31,9 +31,9 @@ namespace :matches do
         # check state and if it's time to notify them
         if profile.in_waiting_state? && profile.due_for_new_matches_notification?
           if profile.ok_to_send_new_matches_notification?
-              PushNotifier.delay.record_event(profile.uuid, 'new_matches')
-              profile.update!(sent_matches_notification_at: DateTime.now)
-              puts "#{profile.uuid}: sent notification"
+            PushNotifier.delay.record_event(profile.uuid, 'new_matches')
+            profile.update!(sent_matches_notification_at: DateTime.now)
+            puts "#{profile.uuid}: sent notification"
           else
             puts "#{profile.uuid}: last notification less than a day ago, skipping."
           end
