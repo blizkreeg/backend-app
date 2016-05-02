@@ -7,7 +7,7 @@ namespace :matches do
       # NOTE: you cannot make this asynchronous or we could run into a condition where two matches between the same people are being created
       # TODO: room for optimization
       n = Matchmaker.generate_new_matches_for(profile.uuid)
-      puts "#{profile.uuid}: #{n} new matches" if n > 0
+      puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{n} new matches" if n > 0
     end
   end
 
@@ -34,14 +34,14 @@ namespace :matches do
           if profile.ok_to_send_new_matches_notification?
             PushNotifier.delay.record_event(profile.uuid, 'new_matches')
             profile.update!(sent_matches_notification_at: DateTime.now)
-            puts "#{profile.uuid}: sent notification"
+            puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: sent notification"
           else
-            puts "#{profile.uuid}: last notification less than a day ago, skipping."
+            puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: last notification less than a day ago, skipping."
           end
         end
 
       else
-        puts "#{profile.uuid}: no matches"
+        # puts "#{profile.uuid}: no matches"
       end
     end
   end
@@ -56,7 +56,7 @@ namespace :matches do
         next if matched_profile.active_mutual_match.present?
 
         Matchmaker.transition_to_mutual_match(profile.uuid, match.id)
-        puts "found mutual match for #{profile.uuid}, changing state to 'mutual_match'"
+        puts "[#{EKC.now_in_pacific_time}] -- found mutual match for #{profile.uuid}, changing state to 'mutual_match'"
 
         break
       end
