@@ -14,7 +14,7 @@ module Ekc
     0.7
   end
 
-  def now_in_pacific_time
+  def self.now_in_pacific_time
     DateTime.now.in_time_zone('America/Los_Angeles')
   end
 end
