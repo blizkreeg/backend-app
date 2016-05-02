@@ -30,7 +30,7 @@ class Api::V1::MatchesController < ApplicationController
         waiting_for_response_match = profile.active_mutual_match
       end
 
-      # state has changed -> reload
+      # state has changed via the 'profile' object (same user) -> reload @current_profile
       @current_profile.reload
 
       @matches.map { |match| Match.delay.update_delivery_time(match.id) }
@@ -41,9 +41,6 @@ class Api::V1::MatchesController < ApplicationController
 
   def show
     @match = Match.includes(:matched_profile).find(params[:id])
-
-    # if showing a mutual match, set the expiration time
-    @match.test_and_set_expiration! if @current_profile.mutual_match? && (@current_profile.active_mutual_match.try(:id) == @match.id)
 
     render status: 200
   end
