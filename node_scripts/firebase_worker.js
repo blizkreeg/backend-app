@@ -99,7 +99,7 @@ var queue = new Queue(queueRef, function(data, progress, resolve, reject) {
                   // the disconnected user has messages since being disconnected
                   unirest.post(process.env.HOST_URL + '/v1/accounts/send-push-notification')
                   .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
-                  .send({ "data": { "single_user": true, "uuid": uuid, "notification_type": "new_conversation_message", "notification_params": { name: senderName, title: senderName, body: mostRecentMessage } } })
+                  .send({ "data": { "single_user": true, "uuid": uuid, "notification_type": "new_conversation_message", "notification_params": { name: senderName, title: senderName, body: senderName + ': ' + mostRecentMessage } } })
                   .end(function (response) {
                     if(response.status == 200) {
                       metadataRef.child('sent_push_to_' + uuid).set((new Date).getTime());
