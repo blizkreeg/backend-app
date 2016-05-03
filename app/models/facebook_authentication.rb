@@ -70,6 +70,13 @@ class FacebookAuthentication < SocialAuthentication
     response_hash.map { |permission| permission["permission"] if permission["status"] == "declined" }.compact
   end
 
+  def friends_with?(uid)
+    graph_url = "#{self.oauth_uid}/friends/#{uid}"
+    response_hash = query_fb(graph_url)
+
+    response_hash.present? && response_hash.is_a?(Array) && response_hash.detect { |user| user["id"] == uid }.present?
+  end
+
   def mutual_friends_count(uid)
     graph_url = "#{uid}/?fields=context.fields(mutual_friends)"
 
