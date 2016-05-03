@@ -331,7 +331,7 @@ class Profile < ActiveRecord::Base
 
   def firstname
     if Rails.application.config.test_mode
-      "#{self.read_attribute(:firstname).first} (test)"
+      "#{self.read_attribute(:firstname)[0..2]} (test)"
     else
       self.read_attribute(:firstname)
     end

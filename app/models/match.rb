@@ -6,7 +6,7 @@ class Match < ActiveRecord::Base
   # who is the match?
   belongs_to :matched_profile, foreign_key: "matched_profile_uuid", class_name: 'Profile'
 
-  STALE_EXPIRATION_DURATION = Rails.application.config.test_mode ? 10.minutes : 2910.minutes # 48 hours, 30 minutes
+  STALE_EXPIRATION_DURATION = 2910.minutes # 48 hours, 30 minutes
   LIKE_DECISION_STR = 'Like'
   PASS_DECISION_STR = 'Pass'
 
