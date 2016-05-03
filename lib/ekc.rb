@@ -3,7 +3,7 @@ module Ekc
     Rails.logger
   end
 
-  # converts distance (in km) to a value between 0 and 1
+  # normalizes earth distance (in km) to a value between 0 and 1
   def self.normalize_distance_km(distance)
     min_dist = 0
     max_dist = 21_000 * 1.0 # in km, roughly the max distance between two points on earth

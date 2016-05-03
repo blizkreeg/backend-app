@@ -17,7 +17,7 @@ namespace :matches do
 
     Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
       if profile.has_new_matches?
-        puts "#{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} new matches"
+        puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} new matches"
 
         case profile.state
         when 'waiting_for_matches'
