@@ -38,7 +38,7 @@ class Api::V1::MatchesController < ApplicationController
   end
 
   def show
-    @match = Match.includes(:matched_profile).find(params[:id])
+    @match = Match.includes(:matched_profile, :conversation).find(params[:id])
 
     render status: 200
   end
