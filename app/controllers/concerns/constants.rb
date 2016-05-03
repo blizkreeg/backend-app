@@ -81,17 +81,6 @@ module Constants
     Activities
   )
 
-  UNMATCH_REASONS = [
-    "Not interested anymore",
-    "Inappropriate behavior/talk",
-    "Feels like spam",
-    "Not getting replies",
-    "Didn't start conversation", # TBD: run a timer to set unmatched=true and reason to this if time.now > expires_at
-    "Didn't respond",
-    "Completed conversation", # TBD: when conversation is done/expired, set this
-    "Other person unmatched"
-  ]
-
   REPORT_REASONS = [
     "Inappropriate talk",
     "Inappropriate offline behavior",

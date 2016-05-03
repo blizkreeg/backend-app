@@ -19,15 +19,16 @@ class Api::V1::MatchesController < ApplicationController
       when :has_matches
         profile.deliver_matches!(:show_matches, v1_profile_matches_path(profile))
       when :show_matches
+        # do nothing
       when :waiting_for_matches_and_response
-        waiting_for_response_match = profile.active_mutual_match
-        profile.new_matches!(:has_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
-        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
+        waiting_on_match = profile.active_mutual_match
+        profile.new_matches!(:has_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_on_match.id))
+        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_on_match.id))
       when :has_matches_and_waiting_for_response
-        waiting_for_response_match = profile.active_mutual_match
-        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
+        waiting_on_match = profile.active_mutual_match
+        profile.deliver_matches!(:show_matches_and_waiting_for_response, v1_profile_match_path(profile.uuid, waiting_on_match.id))
       when :show_matches_and_waiting_for_response
-        waiting_for_response_match = profile.active_mutual_match
+        # do nothing
       end
 
       # state has changed via the 'profile' object (same user) -> reload @current_profile
@@ -58,37 +59,22 @@ class Api::V1::MatchesController < ApplicationController
     when :show_matches
       profile.decided_on_matches!(:waiting_for_matches)
     when :show_matches_and_waiting_for_response
-      waiting_for_response_match = profile.active_mutual_match
-      profile.decided_on_matches!(:waiting_for_matches_and_response, v1_profile_match_path(profile.uuid, waiting_for_response_match.id))
+      waiting_on_match = profile.active_mutual_match
+      profile.decided_on_matches!(:waiting_for_matches_and_response, v1_profile_match_path(profile.uuid, waiting_on_match.id))
     end
 
     Match.delay.enable_mutual_flag_and_create_conversation!(match_ids)
 
-    # TBD: IS THIS SAFE TO REMOVE?
-    # @current_profile.set_next_active!
-
     render status: 200
   end
 
+  # Situations when Unmatch can happen:
+  # 1. when in a mutual_match state
+  # 2. when in open conversation
+  # 3. user reports when in conversation
   def destroy
     match = Match.find(params[:id])
     match.unmatch!(params[:data][:reason])
-    @current_profile.unmatch!(:waiting_for_matches)
-
-    if match.conversation.open
-      match.conversation.close!(@current_profile.uuid)
-
-      case match.matched_profile.state.to_sym
-      when :waiting_for_matches_and_response
-        match.matched_profile.unmatch!(:waiting_for_matches)
-      when :has_matches_and_waiting_for_response
-        match.matched_profile.unmatch!(:has_matches)
-      when :show_matches_and_waiting_for_response
-        match.matched_profile.unmatch!(:show_matches)
-      when :in_conversation
-        Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(match.conversation.id, 'radio_silence')
-      end
-    end
 
     render status: 200
   end

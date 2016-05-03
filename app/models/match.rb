@@ -9,6 +9,16 @@ class Match < ActiveRecord::Base
   STALE_EXPIRATION_DURATION = 2910.minutes # 48 hours, 30 minutes
   LIKE_DECISION_STR = 'Like'
   PASS_DECISION_STR = 'Pass'
+  UNMATCH_REASONS = {
+    lost_interest: "Not interested anymore",
+    inappropriate: "Inappropriate behavior/talk",
+    spam: "Feels like spam",
+    noreply: "Not getting replies",
+    conversation_not_started: "Didn't start conversation", # TBD: run a timer to set unmatched=true and reason to this if time.now > expires_at
+    conversation_not_responded: "Didn't respond",
+    conversation_done: "Completed conversation", # TBD: when conversation is done/expired, set this
+    other_side_unmatched: "Other side unmatched"
+  }
 
   scope :undecided, -> { with_decision(nil).order("CAST(matches.properties->>'quality_score' AS decimal) ASC NULLS LAST") }
   scope :closed, -> { with_unmatched(true) }
@@ -40,7 +50,7 @@ class Match < ActiveRecord::Base
   # jsonb_attr_helper :properties, ATTRIBUTES
   jsonb_accessor :properties, ATTRIBUTES
 
-  validates :unmatched_reason, inclusion: { in: Constants::UNMATCH_REASONS, message: "%{value} is not a valid reason" }, allow_nil: true
+  validates :unmatched_reason, inclusion: { in: UNMATCH_REASONS.values, message: "%{value} is not a valid reason" }, allow_nil: true
 
   before_save :set_defaults
   # after_destroy :destroy_conversation
@@ -70,47 +80,49 @@ class Match < ActiveRecord::Base
       return
     end
 
-    match_expired = false
     if match.initiates_profile_uuid == for_profile_uuid
       if match.conversation.messages.count == 0
         # close the match - it has expired
-        match_expired = true
-        reason = "Didn't start conversation" # TBD: constantize this str (list of reasons in constants.rb)
-        match.unmatch!(reason)
-        begin
-          match.reverse.unmatch!(reason)
-        rescue ActiveRecord::RecordNotFound
-          EKC.logger.error "Reverse Match for match id: #{id} not found when checking for expiration."
-        end
+        match.unmatch!(UNMATCH_REASONS[:conversation_not_started])
       end
     else
       if !match.conversation.open
         # close the match - the other person didn't respond
-        match_expired = true
-        reason = "Didn't respond" # TBD: constantize this str (list of reasons in constants.rb)
-        match.unmatch!(reason)
-        begin
-          match.reverse.unmatch!(reason)
-        rescue ActiveRecord::RecordNotFound
-          EKC.logger.error "Reverse Match for match id: #{id} not found when checking for expiration."
-        end
+        match.unmatch!(UNMATCH_REASONS[:conversation_not_responded])
       end
-    end
-
-    if match_expired
-      match.for_profile.unmatch!(:waiting_for_matches) rescue EKC.logger.error("Failed to update state for #{match.for_profile_uuid} when unmatching!")
-      match.matched_profile.unmatch!(:waiting_for_matches) rescue EKC.logger.error("Failed to update state for #{match.matched_profile_uuid} when unmatching!")
     end
   end
 
   def unmatch!(reason)
     # TBD: when unmatching one side, what about the other? what effects will that case if left unmatched?
-    self.unmatched = true
-    self.unmatched_at = DateTime.now
-    self.unmatched_reason = reason
-    EKC.logger.error "Unmatching on a match that is not active! match id: #{self.id}" if !self.active
-    self.active = false
-    self.save!
+    EKC.logger.error "Unmatching on match that is not active! match id: #{self.id}" if !self.active
+
+    self.update!(unmatched: true, unmatched_at: DateTime.now, unmatched_reason: reason, active: false)
+    reverse = self.reverse
+    if !self.conversation.open
+      reverse.update!(unmatched: true, unmatched_at: DateTime.now, unmatched_reason: UNMATCH_REASONS[:other_side_unmatched], active: false)
+    end
+
+    self.conversation.close!(self.for_profile_uuid) if self.conversation.open
+
+    # first the profile that is unmatching, then the other side
+    [self.for_profile, self.matched_profile].each do |profile|
+      case profile.state.to_sym
+      when :mutual_match
+        profile.unmatch!(:waiting_for_matches)
+      when :waiting_for_matches_and_response
+        profile.unmatch!(:waiting_for_matches)
+      when :has_matches_and_waiting_for_response
+        profile.unmatch!(:has_matches)
+      when :show_matches_and_waiting_for_response
+        profile.unmatch!(:show_matches)
+      when :in_conversation
+        Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(self.conversation.id, 'radio_silence')
+      end
+    end
+
+  rescue StandardError => e
+    EKC.logger.error "Error while unmatching: #{e.message}\n#{e.backtrace.join('\n')}"
   end
 
   def reverse
