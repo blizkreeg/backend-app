@@ -25,6 +25,10 @@ class ApplicationController < ActionController::Base
   rescue_from Errors::FacebookPermissionsError, with: lambda { |e| notify_of_exception(e); reset_current_profile!; respond_with_error(e.message, 401, 'insufficient_facebook_permissions') }
   rescue_from JSON::Schema::ValidationError, with: lambda { |e| notify_of_exception(e); respond_with_error(e.message, 400) } # :bad_request
 
+  def route_not_found
+    render file: 'public/404.html', layout: false, status: :not_found
+  end
+
   protected
 
   def authenticated?
