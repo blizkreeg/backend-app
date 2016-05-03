@@ -31,9 +31,6 @@ class Api::V1::MatchesController < ApplicationController
         # do nothing
       end
 
-      # state has changed via the 'profile' object (same user) -> reload @current_profile
-      @current_profile.reload
-
       @matches.map { |match| Match.delay.update_delivery_time(match.id) }
     end
 

@@ -40,8 +40,6 @@ class Api::V1::ConversationsController < ApplicationController
       @conversation.open! unless @conversation.open
     end
 
-    @current_profile.reload
-
     render status: 200
   end
 

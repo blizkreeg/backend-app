@@ -81,7 +81,6 @@ class Api::V1::ProfilesController < ApplicationController
   def update
     @profile = Profile.find(params[:uuid])
     @profile.update!(profile_params)
-    @profile.reload
 
     render status: 200
   end

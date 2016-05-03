@@ -29,6 +29,13 @@ class ApplicationController < ActionController::Base
     render file: 'public/404.html', layout: false, status: :not_found
   end
 
+  # over-riding render only to reload session profile, since it may have been changed
+  # and the returned state in the API auth response needs to reflect that
+  def render(*args)
+    @current_profile.reload if @current_profile.present?
+    super
+  end
+
   protected
 
   def authenticated?
