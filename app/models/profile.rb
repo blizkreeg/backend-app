@@ -149,6 +149,13 @@ class Profile < ActiveRecord::Base
     longitude
   )
 
+  BASIC_FIELDS = %i(
+    height
+    faith
+    highest_degree
+    profession
+  )
+
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
   # jsonb_attr_helper :properties, ATTRIBUTES
   jsonb_accessor :properties, ATTRIBUTES
@@ -346,7 +353,7 @@ class Profile < ActiveRecord::Base
   end
 
   def incomplete_fields
-    fields ||= EDITABLE_ATTRIBUTES.select { |attr_sym| self.send(attr_sym).blank? ? attr_sym : nil }.compact
+    fields ||= BASIC_FIELDS.select { |attr_sym| self.send(attr_sym).blank? ? attr_sym : nil }.compact
   end
 
   def conversations
