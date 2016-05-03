@@ -39,6 +39,7 @@ gem 'librato-rails'
 # gem 'stackify-api-ruby'
 gem 'exception_notification'
 gem 'lograge'
+gem 'newrelic_rpm'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
