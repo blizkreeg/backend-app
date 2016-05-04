@@ -389,15 +389,8 @@ class Profile < ActiveRecord::Base
 
   # TBD: conversation substate for user depends on what they've done so far.
   def substate
-    # TBD : remove this
-    # substate_value = self.read_attribute(:substate)
-    # return substate_value if substate_value.present?
-
-    # # TBD TBD TBD TBD!!!!!
-    # self.in_conversation? ? self.active_mutual_match.conversation.state : nil
-
     substate =
-    if self.in_conversation?
+    if self.in_conversation? # if primary state is in_conversation
       current_conversation = self.active_mutual_match.conversation
       case current_conversation.state
       when 'none'
@@ -421,7 +414,7 @@ class Profile < ActiveRecord::Base
         current_conversation.state
       end
     else
-      nil
+      self.read_attribute(:substate)
     end
   end
 
