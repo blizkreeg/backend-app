@@ -94,32 +94,34 @@ class Match < ActiveRecord::Base
   end
 
   def unmatch!(reason)
-    # TBD: when unmatching one side, what about the other? what effects will that case if left unmatched?
     EKC.logger.error "Unmatching on match that is not active! match id: #{self.id}" if !self.active
 
+    # update my match state
     self.update!(unmatched: true, unmatched_at: DateTime.now, unmatched_reason: reason, active: false)
-    reverse = self.reverse
-    if !self.conversation.open
-      reverse.update!(unmatched: true, unmatched_at: DateTime.now, unmatched_reason: UNMATCH_REASONS[:other_side_unmatched], active: false)
-    end
 
-    self.conversation.close!(self.for_profile_uuid) if self.conversation.open
+    # if the user was in a conversation, close it and move the conversation state to silence
+    if self.conversation.open
+      self.conversation.close!(self.for_profile_uuid)
+      Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(self.conversation.id, 'radio_silence')
+    else
+      if self.reverse.id == self.matched_profile.active_mutual_match.id
+        # if the other person has not already unmatched and moved on to someone else,
+        # update their state
+        case self.matched_profile.state.to_sym
+        when :mutual_match
+          self.matched_profile.unmatch!(:waiting_for_matches)
+        when :waiting_for_matches_and_response
+          self.matched_profile.unmatch!(:waiting_for_matches)
+        when :has_matches_and_waiting_for_response
+          self.matched_profile.unmatch!(:has_matches)
+        when :show_matches_and_waiting_for_response
+          self.matched_profile.unmatch!(:show_matches)
+        end
+      end
+      self.reverse.update!(unmatched: true, unmatched_at: DateTime.now, unmatched_reason: UNMATCH_REASONS[:other_side_unmatched], active: false)
+    end
 
     self.for_profile.unmatch!(:waiting_for_matches)
-
-    case self.matched_profile.state.to_sym
-    when :mutual_match
-      self.matched_profile.unmatch!(:waiting_for_matches)
-    when :waiting_for_matches_and_response
-      self.matched_profile.unmatch!(:waiting_for_matches)
-    when :has_matches_and_waiting_for_response
-      self.matched_profile.unmatch!(:has_matches)
-    when :show_matches_and_waiting_for_response
-      self.matched_profile.unmatch!(:show_matches)
-    when :in_conversation
-      Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(self.conversation.id, 'radio_silence')
-    end
-
   rescue StandardError => e
     EKC.logger.error "Error while unmatching: #{e.message}\n#{e.backtrace.join('\n')}"
   end

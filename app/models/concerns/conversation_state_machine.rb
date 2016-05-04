@@ -71,7 +71,7 @@ module ConversationStateMachine
     def move_conversation_to(id, new_state)
       conv = Conversation.find(id)
 
-      return if %w(health_check ready_to_meet show_date_suggestions check_if_meeting).include?(new_state) && conv.closed?
+      return if %w(health_check ready_to_meet show_date_suggestions check_if_meeting close_notice).include?(new_state) && conv.closed?
 
       case new_state
       when 'none'

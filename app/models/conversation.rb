@@ -133,11 +133,12 @@ class Conversation < ActiveRecord::Base
 
   # close when the conversation expires
   def close!(closed_by_uuid=nil)
-    self.open = false
-    self.closed_reason = closed_by_uuid.blank? ? CLOSED_BECAUSE_EXPIRED : CLOSED_BECAUSE_UNMATCHED
-    self.closed_by_uuid = closed_by_uuid
-    self.closed_at = DateTime.now.utc
-    self.save!
+    self.update!(
+      open: false,
+      closed_reason: closed_by_uuid.blank? ? CLOSED_BECAUSE_EXPIRED : CLOSED_BECAUSE_UNMATCHED,
+      closed_by_uuid: closed_by_uuid,
+      closed_at: DateTime.now.utc
+    )
   end
 
   def add_message!(content, sender_uuid)
