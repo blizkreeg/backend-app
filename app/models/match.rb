@@ -105,20 +105,19 @@ class Match < ActiveRecord::Base
 
     self.conversation.close!(self.for_profile_uuid) if self.conversation.open
 
-    # first the profile that is unmatching, then the other side
-    [self.for_profile, self.matched_profile].each do |profile|
-      case profile.state.to_sym
-      when :mutual_match
-        profile.unmatch!(:waiting_for_matches)
-      when :waiting_for_matches_and_response
-        profile.unmatch!(:waiting_for_matches)
-      when :has_matches_and_waiting_for_response
-        profile.unmatch!(:has_matches)
-      when :show_matches_and_waiting_for_response
-        profile.unmatch!(:show_matches)
-      when :in_conversation
-        Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(self.conversation.id, 'radio_silence')
-      end
+    self.for_profile.unmatch!(:waiting_for_matches)
+
+    case self.matched_profile.state.to_sym
+    when :mutual_match
+      self.matched_profile.unmatch!(:waiting_for_matches)
+    when :waiting_for_matches_and_response
+      self.matched_profile.unmatch!(:waiting_for_matches)
+    when :has_matches_and_waiting_for_response
+      self.matched_profile.unmatch!(:has_matches)
+    when :show_matches_and_waiting_for_response
+      self.matched_profile.unmatch!(:show_matches)
+    when :in_conversation
+      Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(self.conversation.id, 'radio_silence')
     end
 
   rescue StandardError => e
