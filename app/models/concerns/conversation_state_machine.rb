@@ -56,9 +56,11 @@ module ConversationStateMachine
       event :check_if_going_to_meet do
         transitions from: :none, to: :check_if_meeting
         transitions from: :ready_to_meet, to: :check_if_meeting
+        transitions from: :show_date_suggestions, to: :check_if_meeting
       end
 
       event :notify_conversation_close do
+        transitions from: :none, to: :close_notice
         transitions from: :radio_silence, to: :close_notice
         transitions from: :check_if_meeting, to: :close_notice
       end
