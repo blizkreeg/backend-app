@@ -29,7 +29,7 @@ class RealDate < ActiveRecord::Base
   ]
 
   scope :by_profile, -> (uuid) { where(profile_uuid: uuid) }
-  scope :ready_to_meet, -> { with_ready_to_meet(YES_VALUE) }
+  scope :are_ready_to_meet, -> { with_ready_to_meet(YES_VALUE) }
 
   ATTRIBUTES = {
     ready_to_meet:          :string,
@@ -57,6 +57,18 @@ class RealDate < ActiveRecord::Base
 
   def date_profile
     conversation.the_other_who_is_not(profile.uuid)
+  end
+
+  def is_ready_to_meet?
+    self.ready_to_meet == YES_VALUE
+  end
+
+  def not_ready_to_meet?
+    self.ready_to_meet == NO_VALUE
+  end
+
+  def meet_arranged?
+    self.meeting_at.present? && (self.date_place.present? || self.other_date_place_name.present?)
   end
 
   private

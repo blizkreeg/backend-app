@@ -149,7 +149,7 @@ class Conversation < ActiveRecord::Base
   end
 
   def both_ready_to_meet?
-    self.real_dates.ready_to_meet.count == MAX_PARTICIPANTS
+    self.real_dates.are_ready_to_meet.count == MAX_PARTICIPANTS
   end
 
   def closes_at_str

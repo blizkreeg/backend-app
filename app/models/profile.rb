@@ -389,11 +389,40 @@ class Profile < ActiveRecord::Base
 
   # TBD: conversation substate for user depends on what they've done so far.
   def substate
-    substate_value = self.read_attribute(:substate)
-    return substate_value if substate_value.present?
+    # TBD : remove this
+    # substate_value = self.read_attribute(:substate)
+    # return substate_value if substate_value.present?
 
-    # TBD TBD TBD TBD!!!!!
-    self.in_conversation? ? self.active_mutual_match.conversation.state : nil
+    # # TBD TBD TBD TBD!!!!!
+    # self.in_conversation? ? self.active_mutual_match.conversation.state : nil
+
+    substate =
+    if self.in_conversation?
+      current_conversation = self.active_mutual_match.conversation
+      case current_conversation.state
+      when 'none'
+        current_conversation.state
+      when 'health_check'
+        record = current_conversation.conversation_healths.by_profile(self.uuid).take
+        record.present? ? 'none' : current_conversation.state
+      when 'ready_to_meet'
+        record = current_conversation.real_dates.by_profile(self.uuid).take
+        (record.present? && record.is_ready_to_meet?) ? 'none' : current_conversation.state
+      when 'show_date_suggestions'
+        current_conversation.state
+      when 'check_if_meeting'
+        record = current_conversation.real_dates.by_profile(self.uuid).take
+        (record.present? && record.meet_arranged?) ? 'none' : current_conversation.state
+      when 'radio_silence'
+        current_conversation.state
+      when 'close_notice'
+        current_conversation.state
+      else
+        current_conversation.state
+      end
+    else
+      nil
+    end
   end
 
   def any_seeking_preference_blank?
