@@ -1,0 +1,76 @@
+// Place all the styles related to the Admin controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+  font-family: 'Open Sans', Helvetica, sans-serif;
+  color: #333;
+  font-size: 14px;
+}
+
+.navbar-inverse {
+  background-color: #474747;
+  border: none;
+}
+
+.left-nav {
+  background-color: #dadada;
+}
+
+.navbar-inverse .navbar-nav>li>a, .navbar-inverse .navbar-text {
+  color: white;
+}
+
+.left-nav .navbar-nav>li>a, .left-nav .navbar-inverse .navbar-text {
+  color: #303030;
+}
+
+.navbar-inverse .navbar-brand {
+  color: white;
+}
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+
+.navbar-fixed-left {
+  width: 140px;
+  padding-top: 60px;
+  position: fixed;
+  border-radius: 0;
+  height: 100%;
+}
+
+.navbar-fixed-left .navbar-nav > li {
+  float: none;  /* Cancel default li float: left */
+  width: 139px;
+}
+
+.navbar-fixed-left + .container {
+  // padding-left: 160px;
+}
+
+/* On using dropdown menu (To right shift popuped) */
+.navbar-fixed-left .navbar-nav > li > .dropdown-menu {
+  margin-top: -50px;
+  margin-left: 140px;
+}
+
+.content {
+  padding-left: 20px;
+  padding-top: 80px;
+  background-color: white;
+}
+
+.upcase {
+  text-transform: uppercase;
+}
+
+.box {
+  border-left: 2px solid #999;
+  // background-color: #f6f6f6;
+}

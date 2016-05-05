@@ -1,0 +1,14 @@
+= render partial: 'header'
+.content
+  .row
+    .col-xs-4.box
+      h4.upcase Matches Received #{content_tag(:span, @profile.matches.count, class: 'h3 text-right')}
+      h4.upcase Matches Liked #{content_tag(:span, @profile.matches.liked.count, class: 'h3 text-right')}
+      h4.upcase Matches Passed #{content_tag(:span, @profile.matches.passed.count, class: 'h3')}
+    .col-xs-4.box
+    .col-xs-4.box
+      h4 Event Log
+      hr
+      - @profile.profile_event_logs.each do |el|
+        p
+          = raw render_event_log(el)

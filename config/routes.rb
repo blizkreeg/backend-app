@@ -69,5 +69,9 @@ Rails.application.routes.draw do
     post 'send-push-notification', to: 'accounts#send_push_notification'
   # end <-- TODO: UNCOMMENT BEFORE LAUNCH
 
+  resources :admin
+  get '/dashboard', to: 'admin#dashboard'
+  post '/admin/lookup-user', to: 'admin#lookup_user'
+
   get '*unmatched_route', to: 'application#route_not_found'
 end

@@ -1,0 +1,18 @@
+nav.navbar.navbar-inverse.navbar-fixed-top
+  .container-fluid
+    .navbar-header
+      a.navbar-brand href='#' ekC
+    .collapse.navbar-collapse
+      ul.nav.navbar-nav
+        li
+          a href='#' Home
+      = form_tag({ action: :lookup_user }, { class: 'navbar-form navbar-left', role: 'search' })
+        .form-group
+          = text_field_tag :uuid, '', placeholder: 'Search by UUID', class: 'form-control'
+        = submit_tag 'Search', class: 'btn btn-default'
+      ul.nav.navbar-nav.navbar-right
+        li
+          p.navbar-text
+            | #{admin_user.firstname}
+        li
+          = link_to 'Logout', '/logout'
