@@ -17,7 +17,7 @@ class Match < ActiveRecord::Base
     conversation_not_started: "Didn't start conversation", # TBD: run a timer to set unmatched=true and reason to this if time.now > expires_at
     conversation_not_responded: "Didn't respond",
     conversation_done: "Completed conversation", # TBD: when conversation is done/expired, set this
-    other_side_unmatched: "Other side unmatched"
+    other_side_unmatched: "Other person unmatched"
   }
 
   scope :undecided, -> { with_decision(nil).order("CAST(matches.properties->>'quality_score' AS decimal) ASC NULLS LAST") }

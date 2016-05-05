@@ -139,6 +139,8 @@ class Conversation < ActiveRecord::Base
       closed_by_uuid: closed_by_uuid,
       closed_at: DateTime.now.utc
     )
+
+    close_conversation_firebase
   end
 
   def add_message!(content, sender_uuid)
