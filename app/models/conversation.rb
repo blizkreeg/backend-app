@@ -4,9 +4,9 @@ class Conversation < ActiveRecord::Base
   include FirebaseConversationHelper
 
   has_many :messages, autosave: true, dependent: :destroy
-  has_many :conversation_healths, autosave: true, dependent: :destroy
-  has_many :real_dates, autosave: true, dependent: :destroy
-  has_many :date_suggestions, autosave: true, dependent: :destroy
+  has_many :conversation_healths, dependent: :destroy
+  has_many :real_dates, dependent: :destroy
+  has_many :date_suggestions, dependent: :destroy
 
   CLOSE_TIME = 5.days
   CLOSED_BECAUSE_EXPIRED = 'Expired'

@@ -104,9 +104,9 @@ class Match < ActiveRecord::Base
       self.conversation.close!(self.for_profile_uuid)
       Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(self.conversation.id, 'radio_silence')
     else
-      if self.reverse.id == self.matched_profile.active_mutual_match.id
-        # if the other person has not already unmatched and moved on to someone else,
-        # update their state
+      # if the other person has not already unmatched and moved on to someone else update their state
+      reverse_match = self.reverse
+      if reverse_match.id == reverse.for_profile.try(:active_mutual_match).try(:id)
         case self.matched_profile.state.to_sym
         when :mutual_match
           self.matched_profile.unmatch!(:waiting_for_matches)
