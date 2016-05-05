@@ -32,6 +32,9 @@ class Api::V1::MatchesController < ApplicationController
       end
 
       @matches.map { |match| Match.delay.update_delivery_time(match.id) }
+      ProfileEventLogWorker.perform_async(@current_profile.uuid, :was_delivered_matches, uuids: @matches.map(&:matched_profile).map(&:uuid))
+    else
+      ProfileEventLogWorker.perform_async(@current_profile.uuid, :checked_got_no_matches)
     end
 
     render status: 200
@@ -39,7 +42,7 @@ class Api::V1::MatchesController < ApplicationController
 
   def show
     @match = Match.includes(:matched_profile).find(params[:id])
-
+    ProfileEventLogWorker.perform_async(@current_profile.uuid, :viewed_match, uuid: @match.matched_profile.try(:uuid))
     render status: 200
   end
 

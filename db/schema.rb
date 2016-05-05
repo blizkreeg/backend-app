@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160414224141) do
+ActiveRecord::Schema.define(version: 20160505182440) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,17 @@ ActiveRecord::Schema.define(version: 20160414224141) do
 
   add_index "photos", ["profile_uuid"], name: "index_photos_on_profile_uuid", using: :btree
 
+  create_table "profile_event_logs", force: :cascade do |t|
+    t.uuid     "profile_uuid",              null: false
+    t.string   "event_name",                null: false
+    t.jsonb    "properties",   default: {}, null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "profile_event_logs", ["event_name"], name: "index_profile_event_logs_on_event_name", using: :btree
+  add_index "profile_event_logs", ["profile_uuid"], name: "index_profile_event_logs_on_profile_uuid", using: :btree
+
   create_table "profiles", primary_key: "uuid", force: :cascade do |t|
     t.jsonb    "properties",                               default: {}, null: false
     t.string   "state",                                                 null: false
@@ -145,6 +156,7 @@ ActiveRecord::Schema.define(version: 20160414224141) do
   add_foreign_key "messages", "profiles", column: "recipient_uuid", primary_key: "uuid"
   add_foreign_key "messages", "profiles", column: "sender_uuid", primary_key: "uuid"
   add_foreign_key "photos", "profiles", column: "profile_uuid", primary_key: "uuid"
+  add_foreign_key "profile_event_logs", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "real_dates", "conversations"
   add_foreign_key "real_dates", "date_places"
   add_foreign_key "real_dates", "profiles", column: "profile_uuid", primary_key: "uuid"
