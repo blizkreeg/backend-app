@@ -20,3 +20,10 @@ module Ekc
 end
 
 EKC = Ekc
+
+class ActiveSupport::Logger
+  def error(*args)
+    ExceptionNotifier.notify_exception(StandardError.new(args.first)) unless Rails.env.development?
+    super
+  end
+end
