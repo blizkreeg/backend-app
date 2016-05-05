@@ -96,7 +96,6 @@ class Match < ActiveRecord::Base
   def unmatch!(reason)
     if !self.active
       EKC.logger.error "Got request to unmatch on match that is not active! match id: #{self.id}"
-      notify_of_exception(StandardError.new("[#{DateTime.now}] -- Got request to unmatch on match that is not active! match id: #{self.id}"))
       return
     end
 
