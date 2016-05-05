@@ -34,10 +34,13 @@ class Api::V1::ConversationsController < ApplicationController
 
         # after N time, check if responder has responded
         Match.delay_for(Match::STALE_EXPIRATION_DURATION).check_match_expiration(my_match.reverse.id, @conversation.responder.uuid)
+
+        ProfileEventLogWorker.perform_async(@current_profile.uuid, :started_conversation, uuid: @conversation.responder.try(:uuid))
       end
     elsif @current_profile.responding_to_conversation?(@conversation)
       # open chat -> moves both users to 'in_conversation' state
       @conversation.open! unless @conversation.open
+      ProfileEventLogWorker.perform_async(@current_profile.uuid, :responded_to_conversation, uuid: @conversation.initiator.try(:uuid))
     end
 
     render status: 200
