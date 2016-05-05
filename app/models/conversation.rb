@@ -51,13 +51,17 @@ class Conversation < ActiveRecord::Base
   end
 
   def self.expire_conversation(id)
-    conv = Conversation.find(id) rescue nil
-    return if conv.blank?
+    conv = Conversation.find(id)
     conv.close! if conv.open
 
     conv.participants.each do |participant|
-      participant.conversation_expired!(:waiting_for_matches) if participant.in_conversation?
+      # are they still in the same conversation?
+      if (participant.active_mutual_match.try(:conversation).try(:id) == id) && participant.in_conversation?
+        participant.active_mutual_match.unmatch!(Match::UNMATCH_REASONS[:conversation_done])
+      end
     end
+  rescue ActiveRecord::RecordNotFound => e
+    EKC.logger.error("Trying to expire a conversation that was not found! id: #{id}")
   end
 
   def fresh?

@@ -122,7 +122,9 @@ class Match < ActiveRecord::Base
           self.matched_profile.unmatch!(:show_matches)
         end
       end
-      self.reverse.update!(unmatched: true, unmatched_at: DateTime.now, unmatched_reason: UNMATCH_REASONS[:other_side_unmatched], active: false)
+      unless self.reverse.unmatched
+        self.reverse.update!(unmatched: true, unmatched_at: DateTime.now, unmatched_reason: UNMATCH_REASONS[:other_side_unmatched], active: false)
+      end
     end
 
     self.for_profile.unmatch!(:waiting_for_matches)
