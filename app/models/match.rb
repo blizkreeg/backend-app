@@ -94,7 +94,11 @@ class Match < ActiveRecord::Base
   end
 
   def unmatch!(reason)
-    EKC.logger.error "Unmatching on match that is not active! match id: #{self.id}" if !self.active
+    if !self.active
+      EKC.logger.error "Got request to unmatch on match that is not active! match id: #{self.id}"
+      notify_of_exception(StandardError.new("[#{DateTime.now}] -- Got request to unmatch on match that is not active! match id: #{self.id}"))
+      return
+    end
 
     # update my match state
     self.update!(unmatched: true, unmatched_at: DateTime.now, unmatched_reason: reason, active: false)
