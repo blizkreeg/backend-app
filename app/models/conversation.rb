@@ -8,26 +8,32 @@ class Conversation < ActiveRecord::Base
   has_many :real_dates, dependent: :destroy
   has_many :date_suggestions, dependent: :destroy
 
-  CLOSE_TIME = 5.days
   CLOSED_BECAUSE_EXPIRED = 'Expired'
   CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
   MAX_PARTICIPANTS = 2
 
+  # Conversation Timeline
+  # 00h:  OPEN
+  # 24h:  how's it going?
+  # 72h:  ready to meet? -> show dates (1h if both Y/Y)
+  # 120h: check if meeting
+  # 144h: close notice
+  # 168h: CLOSE
+
   if Rails.application.config.test_mode
     RADIO_SILENCE_DELAY = 5.minutes
-    HEALTH_CHECK_DELAY = 15.minutes
-    READY_TO_MEET_DELAY = 3.hours
-    SHOW_DATE_SUGGESTIONS_DELAY = 10.minutes
-    CHECK_IF_MEETING_DELAY = 16.hours
-    CLOSE_NOTICE_DELAY = 2.hours
+    HEALTH_CHECK_FROM_OPEN = 15.minutes
+    READY_TO_MEET_FROM_OPEN = 3.hours
   else
     RADIO_SILENCE_DELAY = 16.hours
-    HEALTH_CHECK_DELAY = 24.hours
-    READY_TO_MEET_DELAY = 48.hours
-    SHOW_DATE_SUGGESTIONS_DELAY = 1.hour
-    CHECK_IF_MEETING_DELAY = 48.hours
-    CLOSE_NOTICE_DELAY = 24.hours
+    HEALTH_CHECK_FROM_OPEN = 24.hours
+    READY_TO_MEET_FROM_OPEN = 72.hours
   end
+
+  SHOW_DATE_SUGGESTIONS_DELAY = 1.hour
+  CHECK_IF_MEETING_FROM_OPEN = 120.hours
+  CLOSE_NOTICE_FROM_OPEN = 144.hours
+  CLOSE_TIME = 168.hours # 7.days
 
   ATTRIBUTES = {
     participant_uuids: :string_array,
@@ -126,9 +132,12 @@ class Conversation < ActiveRecord::Base
 
     initialize_firebase
 
-    # TBD - check on this
-    Conversation.delay_for(HEALTH_CHECK_DELAY).move_conversation_to(self.id, 'health_check')
-    Conversation.delay_until(self.closes_at).expire_conversation(self.id)
+    # Queue up conversation state changes
+    Conversation.delay_for(HEALTH_CHECK_FROM_OPEN).move_conversation_to(self.id, 'health_check')
+    Conversation.delay_for(READY_TO_MEET_FROM_OPEN).move_conversation_to(self.id, 'ready_to_meet')
+    Conversation.delay_for(CHECK_IF_MEETING_FROM_OPEN).move_conversation_to(self.id, 'ready_to_meet')
+    Conversation.delay_for(CLOSE_NOTICE_FROM_OPEN).move_conversation_to(self.id, 'close_notice')
+    Conversation.delay_for(CLOSE_TIME).expire_conversation(self.id)
 
     self.participants.each do |participant|
       PushNotifier.delay.record_event(participant.uuid, 'conv_open')
