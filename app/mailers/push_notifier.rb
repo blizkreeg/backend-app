@@ -26,7 +26,7 @@ class PushNotifier
     },
     'new_mutual_match' => {
       title: "ekCoffee",
-      body: "@name is curious about you too!",
+      body: "@name is interested to get to know you! Exciting!",
       required_parameters: ['name'],
       event_name: 'Got Mutual Match',
       has_push_notification: true
@@ -47,7 +47,7 @@ class PushNotifier
     },
     'conv_health_check' => {
       title: "ekCoffee",
-      body: "How is your conversation with @name going?",
+      body: ["Is your conversation with @name going well?", "How's your conversation with @name going?", "Good conversation with @name?", "Hope you're talking about something fun with @name!"].sample,
       required_parameters: ['name'],
       event_name: 'Conversation State Change',
       event_details: { state: 'Health Check' },
@@ -55,7 +55,7 @@ class PushNotifier
     },
     'conv_ready_to_meet' => {
       title: "ekCoffee",
-      body: "Are you ready to meet @name yet?",
+      body: "Are you ready to meet @name yet? :)",
       required_parameters: ['name'],
       event_name: 'Conversation State Change',
       event_details: { state: 'Check If Ready To Meet' },
