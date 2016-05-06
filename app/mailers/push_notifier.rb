@@ -63,7 +63,7 @@ class PushNotifier
     },
     'conv_date_suggestions' => {
       title: "ekCoffee",
-      body: "You and @name are ready to meet! Here are a few suggestions for a first date.",
+      body: "Great news! You and @name are ready to meet. Here are a few first date suggestions.",
       required_parameters: ['name'],
       event_name: 'Conversation State Change',
       event_details: { state: 'Show Date Suggestions' },
@@ -71,7 +71,7 @@ class PushNotifier
     },
     'conv_are_you_meeting' => {
       title: "ekCoffee",
-      body: "Are you and @name meeting?",
+      body: "Did you and @name decide to meet?",
       required_parameters: ['name'],
       event_name: 'Conversation State Change',
       event_details: { state: 'Check If Meeting' },
