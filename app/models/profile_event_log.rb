@@ -8,6 +8,7 @@ class ProfileEventLog < ActiveRecord::Base
     got_mutual_match: 'Got a mutual match',
     unmatched_on: 'Unmatched on',
     got_unmatched: 'Got unmatched by',
+    reported_match: 'Reported match',
     started_conversation: 'Started a conversation',
     responded_to_conversation: 'Responded to conversation'
   }

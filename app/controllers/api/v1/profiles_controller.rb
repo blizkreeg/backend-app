@@ -169,6 +169,8 @@ class Api::V1::ProfilesController < ApplicationController
     reported_profile.report!(:waiting_for_matches) if reported_profile.in_conversation?
     @current_profile.report!(:waiting_for_matches) if @current_profile.in_conversation?
 
+    ProfileEventLogWorker.perform_async(@current_profile.uuid, :reported_match, uuid: params[:data][:reported_profile_uuid])
+
     render 'api/v1/shared/nodata', status: 200
   rescue ActiveRecord::RecordNotFound
 
