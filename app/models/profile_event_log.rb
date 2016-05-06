@@ -3,7 +3,7 @@ class ProfileEventLog < ActiveRecord::Base
 
   EVENTS_LOG_STRINGS_MAP = {
     checked_got_no_matches: 'Checked for matches - got none',
-    was_delivered_matches: 'Was delivered matches',
+    was_delivered_matches: 'Checked out matches',
     viewed_match: 'Viewed match',
     got_mutual_match: 'Got a mutual match',
     unmatched_on: 'Unmatched on',

@@ -1,5 +1,8 @@
 = render partial: 'header'
 .content
+  h3
+    | #{@profile.firstname} #{@profile.lastname}
+  p #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"}
   .row
     .col-xs-4.box
       h4.upcase Matches Received #{content_tag(:span, @profile.matches.count, class: 'h3 text-right')}
