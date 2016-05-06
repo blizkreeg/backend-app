@@ -146,7 +146,7 @@ class Api::V1::ProfilesController < ApplicationController
     begin
       reported_profile = Profile.find(params[:data][:reported_profile_uuid])
     rescue ActiveRecord::RecordNotFound => e
-      notify_of_exception(e)
+      EKC.logger.error("The reported user #{params[:data][:reported_profile_uuid]} was not found!")
       respond_with_error('The reported user was not found', 500)
       return
     end
@@ -155,7 +155,7 @@ class Api::V1::ProfilesController < ApplicationController
     begin
       match = Match.find(params[:data][:match_id].to_i)
     rescue ActiveRecord::RecordNotFound => e
-      notify_of_exception(e)
+      EKC.logger.error("The reported match #{params[:data][:match_id].to_i} was not found!")
       respond_with_error('The reported match was not found', 500)
       return
     end
