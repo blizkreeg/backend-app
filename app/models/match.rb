@@ -10,6 +10,7 @@ class Match < ActiveRecord::Base
   LIKE_DECISION_STR = 'Like'
   PASS_DECISION_STR = 'Pass'
   UNMATCH_REASONS = {
+    exchanged_numbers: "We already exchanged numbers",
     lost_interest: "Not interested anymore",
     inappropriate: "Inappropriate behavior/talk",
     spam: "Feels like spam",
@@ -105,7 +106,11 @@ class Match < ActiveRecord::Base
     # if the user was in a conversation, close it and move the conversation state to silence
     if self.conversation.open
       self.conversation.close!(self.for_profile_uuid)
-      Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(self.conversation.id, 'radio_silence')
+      if reason == UNMATCH_REASONS[:exchanged_numbers]
+        Conversation.delay_for(Conversation::NUMBER_EXCHANGE_UNMATCH_DELAY).move_conversation_to(self.conversation.id, 'radio_silence')
+      else
+        Conversation.delay_for(Conversation::RADIO_SILENCE_DELAY).move_conversation_to(self.conversation.id, 'radio_silence')
+      end
     else
       # if the other person has not already unmatched and moved on to someone else update their state
       reverse_match = self.reverse
