@@ -166,8 +166,8 @@ class Api::V1::ProfilesController < ApplicationController
     end
 
     # TBD: file the report somewhere!
-    reported_profile.report!(:waiting_for_matches)
-    @current_profile.report!(:waiting_for_matches)
+    reported_profile.report!(:waiting_for_matches) if reported_profile.in_conversation?
+    @current_profile.report!(:waiting_for_matches) if @current_profile.in_conversation?
 
     render 'api/v1/shared/nodata', status: 200
   rescue ActiveRecord::RecordNotFound
