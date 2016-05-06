@@ -108,6 +108,7 @@ class Profile < ActiveRecord::Base
     inactive:                     :boolean,
     inactive_reason:              :string,
     disable_notifications_setting: :boolean,
+    force_device_update:          :boolean,
 
     # match preferences
     seeking_minimum_age:          :integer,

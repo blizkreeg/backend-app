@@ -19,14 +19,14 @@ class PushNotifier
   DETAILS = {
     'new_matches' => {
       title: "ekCoffee",
-      body: "Meet your new matches",
+      body: ["Meet your new matches.", "Who among these matches will you meet?", "We have new matches for you."].sample,
       required_parameters: [],
       event_name: 'Has New Matches',
       has_push_notification: true
     },
     'new_mutual_match' => {
       title: "ekCoffee",
-      body: "@name is interested to get to know you! Exciting!",
+      body: "@name is interested in you!",
       required_parameters: ['name'],
       event_name: 'Got Mutual Match',
       has_push_notification: true
