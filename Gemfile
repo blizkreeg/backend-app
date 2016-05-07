@@ -9,9 +9,7 @@ gem 'jwt'
 gem 'timezone'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
-gem 'default_value_for', '~> 3.0.0' # TBD: check if we can use this
 gem 'coffee-rails', '~> 4.1.0'
-gem 'email_validator'
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'koala', '~> 2.2'
@@ -40,6 +38,7 @@ gem 'librato-rails'
 gem 'exception_notification'
 gem 'lograge'
 gem 'newrelic_rpm'
+gem 'redcarpet'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

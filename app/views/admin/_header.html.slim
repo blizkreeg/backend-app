@@ -7,9 +7,9 @@ nav.navbar.navbar-inverse.navbar-fixed-top
         li
           a href='#' Home
       = form_tag({ action: :lookup_user }, { class: 'navbar-form navbar-left', role: 'search' })
-        .form-group
-          = text_field_tag :uuid, '', placeholder: 'Search by UUID', class: 'form-control'
-        = submit_tag 'Search', class: 'btn btn-default'
+        .form-group.has-feedback
+          = text_field_tag :uuid, '', placeholder: 'Find by UUID', class: 'form-control', style: 'width:300px; font-size:12px;'
+          i.glyphicon.glyphicon-search.form-control-feedback
       ul.nav.navbar-nav.navbar-right
         li
           p.navbar-text
