@@ -15,7 +15,7 @@ module JsonSchemaValidator
     object_schema = schema_definition["paths"][endpoint_str][http_method] rescue nil
 
     if object_schema.blank?
-      Rails.logger.error "Unable to look up schema definition for path #{request.path}"
+      Rails.logger.debug "Unable to look up schema definition for path #{request.path}"
       return
     end
 
