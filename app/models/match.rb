@@ -21,7 +21,9 @@ class Match < ActiveRecord::Base
     other_side_unmatched: "Other person unmatched"
   }
 
-  scope :undecided, -> { with_decision(nil).order("CAST(matches.properties->>'quality_score' AS decimal) ASC NULLS LAST") }
+  scope :undecided, -> { with_decision(nil)
+                         .not_friends_with
+                         .order("CAST(matches.properties->>'normalized_distance' AS decimal) ASC NULLS LAST, CAST(matches.properties->>'num_common_friends' AS decimal) DESC") }
   scope :closed, -> { with_unmatched(true) }
   scope :queued, -> { with_unmatched(false) }
   scope :mutual, -> { queued.with_mutual(true) }
@@ -44,7 +46,10 @@ class Match < ActiveRecord::Base
     initiates_profile_uuid: :string,
     mutual: :boolean,
     active: :boolean,
-    quality_score: :decimal, # value between 0 and 1, 0 = as good as it gets, 1 = ...
+    friends_with: :boolean,
+    num_common_friends: :integer,
+    normalized_distance: :decimal, # value between 0 and 1, 0 = next to me, 1 = opposite side of earth
+    quality_score: :decimal
   }
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
@@ -182,7 +187,7 @@ class Match < ActiveRecord::Base
     self.decision_at = DateTime.now if self.decision_changed?
     self.mutual = false if self.mutual.nil?
     self.active = false if self.active.nil?
-    self.quality_score ||= 0.7
+    self.normalized_distance ||= 0.7
 
     true
   end

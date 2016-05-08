@@ -36,14 +36,16 @@ module Matchmaker
                               nil
                             end
                           }.compact
-      # TBD: scores are temporarily the distance between the matched users
-      quality_scores = matched_profiles
+      normalized_distances = matched_profiles
                 .map { |p| Geocoder::Calculations.distance_between([p.latitude, p.longitude], [profile.latitude, profile.longitude]) }
                 .map { |dist| EKC.normalize_distance_km(dist) }
 
       matched_profiles.each_with_index do |matched_profile, idx|
         EKC.logger.debug "creating matches between #{profile.uuid} and #{matched_profile.uuid}"
-        create_matches_between(profile_uuid, matched_profile.uuid, quality_score: quality_scores[idx])
+        create_matches_between(profile_uuid, matched_profile.uuid,
+                                normalized_distance: normalized_distances[idx],
+                                friends_with: profile.facebook_authentication.friends_with?(matched_profile.facebook_authentication.oauth_uid),
+                                num_common_friends: profile.facebook_authentication.mutual_friends_count(matched_profile.facebook_authentication.oauth_uid))
       end
 
       EKC.logger.info "#{profile_uuid}: #{matched_profiles.count} new matches"
