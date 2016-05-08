@@ -142,9 +142,9 @@ GEM
     json (1.8.3)
     json-schema (2.5.0)
       addressable (~> 2.3)
-    jsonb_accessor (0.3.1)
+    jsonb_accessor (0.3.3)
       activerecord (>= 4.2.1)
-      pg
+      pg (>= 0.18.1)
     jwt (1.5.2)
     koala (2.2.0)
       addressable
@@ -233,6 +233,22 @@ GEM
     rake (10.4.2)
     redcarpet (3.3.4)
     redis (3.2.2)
+    redis-actionpack (4.0.1)
+      actionpack (~> 4)
+      redis-rack (~> 1.5.0)
+      redis-store (~> 1.1.0)
+    redis-activesupport (4.1.5)
+      activesupport (>= 3, < 5)
+      redis-store (~> 1.1.0)
+    redis-rack (1.5.0)
+      rack (~> 1.5)
+      redis-store (~> 1.1.0)
+    redis-rails (4.0.0)
+      redis-actionpack (~> 4)
+      redis-activesupport (~> 4)
+      redis-store (~> 1.1.0)
+    redis-store (1.1.7)
+      redis (>= 2.2)
     responders (2.1.1)
       railties (>= 4.2.0, < 5.1)
     rest-client (1.8.0)
@@ -343,7 +359,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   json-schema
-  jsonb_accessor
+  jsonb_accessor (~> 0.3.3)
   jwt
   koala (~> 2.2)
   librato-rails
@@ -358,6 +374,7 @@ DEPENDENCIES
   rails (~> 4.2.5)
   redcarpet
   redis
+  redis-rails
   responders
   rspec-rails
   ruby-prof
