@@ -13,6 +13,8 @@ module Constants
 
   NEAR_DISTANCE_METERS = 25_000
 
+  MATCHES_DELIVERED_AT_HOURS = [0, 12, 15, 18, 21]
+
   MIN_AGE = 21
   FAITHS = %w(
     Agnostic

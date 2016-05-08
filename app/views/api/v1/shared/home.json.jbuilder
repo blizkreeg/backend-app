@@ -1,4 +1,6 @@
 json.data do
+  json.headline homescreen_headline
+  json.subheadline homescreen_subheadline
   json.content_type @content_type
   if @content_type == 'text'
     json.title "Section title"
