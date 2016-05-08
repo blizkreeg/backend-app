@@ -44,8 +44,8 @@ module Matchmaker
         EKC.logger.debug "creating matches between #{profile.uuid} and #{matched_profile.uuid}"
         create_matches_between(profile_uuid, matched_profile.uuid,
                                 normalized_distance: normalized_distances[idx],
-                                friends_with: profile.facebook_authentication.friends_with?(matched_profile.facebook_authentication.oauth_uid),
-                                num_common_friends: profile.facebook_authentication.mutual_friends_count(matched_profile.facebook_authentication.oauth_uid))
+                                friends_with: profile.facebook_authentication.friends_with?(matched_profile.facebook_authentication.try(:oauth_uid)),
+                                num_common_friends: profile.facebook_authentication.mutual_friends_count(matched_profile.facebook_authentication.try(:oauth_uid)))
       end
 
       EKC.logger.info "#{profile_uuid}: #{matched_profiles.count} new matches"
