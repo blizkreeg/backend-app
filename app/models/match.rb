@@ -21,7 +21,7 @@ class Match < ActiveRecord::Base
     other_side_unmatched: "Other person unmatched"
   }
 
-  scope :undecided, -> { with_decision(nil)
+  scope :undecided, -> { where("properties->>'decision' is NULL")
                          .not_friends_with
                          .order("CAST(matches.properties->>'normalized_distance' AS decimal) ASC NULLS LAST, CAST(matches.properties->>'num_common_friends' AS decimal) DESC") }
   scope :closed, -> { with_unmatched(true) }
