@@ -211,6 +211,7 @@ class Profile < ActiveRecord::Base
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
   # after_save :add_to_preferences_changed_list, if: Proc.new { |profile| profile.any_seeking_preference_changed? }
   after_update :update_clevertap
+  before_save :ensure_attribute_types
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
@@ -492,6 +493,15 @@ class Profile < ActiveRecord::Base
   end
 
   private
+
+  def ensure_attribute_types
+    self.schools_attended ||= []
+    self.earned_degrees ||= []
+    self.date_preferences ||= []
+    self.seeking_faith ||= []
+
+    true
+  end
 
   def set_tz
     timezone = Timezone::Zone.new :latlon => [self.latitude, self.longitude]
