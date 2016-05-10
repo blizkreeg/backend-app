@@ -137,9 +137,6 @@ class Match < ActiveRecord::Base
     end
 
     self.for_profile.unmatch!(:waiting_for_matches)
-
-    ProfileEventLogWorker.perform_async(self.for_profile_uuid, :unmatched_on, uuid: self.matched_profile_uuid)
-    ProfileEventLogWorker.perform_async(self.matched_profile_uuid, :got_unmatched, uuid: self.for_profile_uuid)
   rescue StandardError => e
     EKC.logger.error "Error while unmatching: #{e.message}\n#{e.backtrace.join('\n')}"
   end

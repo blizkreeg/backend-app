@@ -1,4 +1,5 @@
 class Api::V1::MatchesController < ApplicationController
+  skip_before_action :verify_authenticity_token
   before_action :authenticated?
   before_action :validate_json_schema, except: []
   before_action except: [] do
@@ -75,6 +76,9 @@ class Api::V1::MatchesController < ApplicationController
   def destroy
     match = Match.find(params[:id])
     match.unmatch!(params[:data][:reason])
+
+    ProfileEventLogWorker.perform_async(@current_profile.uuid, :unmatched_on, uuid: match.matched_profile_uuid, reason: params[:data][:reason])
+    ProfileEventLogWorker.perform_async(match.matched_profile_uuid, :got_unmatched, uuid: @current_profile.uuid, reason: params[:data][:reason])
 
     render status: 200
   end

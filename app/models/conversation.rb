@@ -64,7 +64,11 @@ class Conversation < ActiveRecord::Base
     conv.participants.each do |participant|
       # are they still in the same conversation?
       if (participant.active_mutual_match.try(:conversation).try(:id) == id) && participant.in_conversation?
-        participant.active_mutual_match.unmatch!(Match::UNMATCH_REASONS[:conversation_done])
+        participant.active_mutual_match.update!(unmatched: true,
+                                                unmatched_at: DateTime.now,
+                                                unmatched_reason: Match::UNMATCH_REASONS[:conversation_done],
+                                                active: false)
+        participant.unmatch!(:waiting_for_matches)
       end
     end
   rescue ActiveRecord::RecordNotFound => e
