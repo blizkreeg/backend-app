@@ -121,7 +121,7 @@ class FacebookAuthentication < SocialAuthentication
   end
 
   def log_fb_error(e)
-    EKC.logger.error "ERROR: Facebook exception! type: #{e.fb_error_type}, code: #{e.fb_error_code}, error_subcode: #{e.fb_error_subcode}, message: #{e.fb_error_message}, profile-uuid: #{self.profile.uuid}"
+    EKC.logger.error "ERROR: Facebook exception! profile-uuid: #{self.profile.uuid}, type: #{e.fb_error_type}, code: #{e.fb_error_code}, error_subcode: #{e.fb_error_subcode}, message: #{e.fb_error_message}"
   end
 
   def check_facebook_permissions!
