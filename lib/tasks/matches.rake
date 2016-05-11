@@ -6,8 +6,12 @@ namespace :matches do
     Profile.active.find_each(batch_size: 10) do |profile|
       # NOTE: you cannot make this asynchronous or we could run into a condition where two matches between the same people are being created
       # TODO: room for optimization
-      n = Matchmaker.generate_new_matches_for(profile.uuid)
-      puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{n} new matches" if n > 0
+      begin
+        n = Matchmaker.generate_new_matches_for(profile.uuid)
+        puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{n} new matches" if n > 0
+      rescue StandardError => e
+        puts "[#{EKC.now_in_pacific_time}] -- error generating matches for #{profile.uuid}, error: #{e.class.name}, message: #{e.message}"
+      end
     end
   end
 
@@ -16,29 +20,33 @@ namespace :matches do
     puts "[#{EKC.now_in_pacific_time}] -- SENDING NEW MATCHES NOTIFICATION"
 
     Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
-      if profile.has_new_matches?
-        puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} new matches"
+      begin
+        if profile.has_new_matches?
+          puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} new matches"
 
-        case profile.state
-        when 'waiting_for_matches'
-          profile.new_matches!(:has_matches, Rails.application.routes.url_helpers.v1_profile_matches_path(profile))
-        when 'waiting_for_matches_and_response'
-          waiting_on_match = profile.active_mutual_match
-          profile.new_matches!(:has_matches_and_waiting_for_response, Rails.application.routes.url_helpers.v1_profile_match_path(profile.uuid, waiting_on_match.id))
-        end
+          case profile.state
+          when 'waiting_for_matches'
+            profile.new_matches!(:has_matches, Rails.application.routes.url_helpers.v1_profile_matches_path(profile))
+          when 'waiting_for_matches_and_response'
+            waiting_on_match = profile.active_mutual_match
+            profile.new_matches!(:has_matches_and_waiting_for_response, Rails.application.routes.url_helpers.v1_profile_match_path(profile.uuid, waiting_on_match.id))
+          end
 
-        profile.reload
+          profile.reload
 
-        # check state and if it's time to notify them
-        if profile.in_waiting_state? && profile.due_for_new_matches_notification?
-          if profile.ok_to_send_new_matches_notification?
-            PushNotifier.delay.record_event(profile.uuid, 'new_matches')
-            profile.update!(sent_matches_notification_at: DateTime.now)
-            puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: sent notification"
-          else
-            puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: last notification less than a day ago, skipping."
+          # check state and if it's time to notify them
+          if profile.in_waiting_state? && profile.due_for_new_matches_notification?
+            if profile.ok_to_send_new_matches_notification?
+              PushNotifier.delay.record_event(profile.uuid, 'new_matches')
+              profile.update!(sent_matches_notification_at: DateTime.now)
+              puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: sent notification"
+            else
+              puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: last notification less than a day ago, skipping."
+            end
           end
         end
+      rescue StandardError => e
+        puts "[#{EKC.now_in_pacific_time}] -- error generating matches for #{profile.uuid}, error: #{e.class.name}, message: #{e.message}"
       end
     end
   end
