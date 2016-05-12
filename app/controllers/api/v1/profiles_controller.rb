@@ -42,6 +42,8 @@ class Api::V1::ProfilesController < ApplicationController
     # persist
     @profile.save!
 
+    @profile.create_initial_matches
+
     # set authenticated user
     set_current_profile(@profile)
 
