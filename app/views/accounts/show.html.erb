@@ -69,6 +69,7 @@
         <strong>Update Conversation State To:</strong>
         <%= hidden_field_tag 'conv_id', conversation.id %>
         <%= select_tag 'conv_state', options_for_select([['Initial State', 'none'],
+                                                          ['Info state', 'info'],
                                                           ['Screen 5a. Conversation Check', 'health_check'],
                                                           ['Screen 4e. Ready To Meet Yet?', 'ready_to_meet'],
                                                           ["Screen 7a. Haven't heard back", 'radio_silence'],

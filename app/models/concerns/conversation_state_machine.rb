@@ -16,6 +16,7 @@ module ConversationStateMachine
 
     aasm column: 'state' do
       state :none, initial: true
+      state :info
       state :health_check
       state :ready_to_meet
       state :show_date_suggestions
