@@ -59,7 +59,7 @@ class Match < ActiveRecord::Base
   validates :unmatched_reason, inclusion: { in: UNMATCH_REASONS.values, message: "%{value} is not a valid reason" }, allow_nil: true
 
   before_save :set_defaults
-  # after_destroy :destroy_conversation
+  after_destroy :destroy_conversation
 
   def self.update_delivery_time(id)
     Match.update(id, delivered_at: DateTime.now)
@@ -207,7 +207,7 @@ class Match < ActiveRecord::Base
     true
   end
 
-  # def destroy_conversation
-  #   self.conversation.destroy
-  # end
+  def destroy_conversation
+    self.conversation.try(:destroy)
+  end
 end
