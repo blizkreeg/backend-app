@@ -29,14 +29,20 @@ module ConversationStateMachine
 
       event :reset do
         transitions from: :none, to: :none
+        transitions from: :info, to: :none
         transitions from: :health_check, to: :none
         transitions from: :ready_to_meet, to: :none
         transitions from: :check_if_meeting, to: :none
         transitions from: :radio_silence, to: :none
       end
 
+      event :info do
+        transitions from: :none, to: :info
+      end
+
       event :check_for_health do
         transitions from: :none, to: :health_check
+        transitions from: :info, to: :health_check
       end
 
       event :check_if_ready_to_meet do
@@ -49,6 +55,7 @@ module ConversationStateMachine
 
       event :check_if_ready_to_move_on do
         transitions from: :none, to: :radio_silence
+        transitions from: :info, to: :radio_silence
         transitions from: :health_check, to: :radio_silence
         transitions from: :ready_to_meet, to: :radio_silence
         transitions from: :check_if_meeting, to: :radio_silence
@@ -56,12 +63,14 @@ module ConversationStateMachine
 
       event :check_if_going_to_meet do
         transitions from: :none, to: :check_if_meeting
+        transitions from: :info, to: :check_if_meeting
         transitions from: :ready_to_meet, to: :check_if_meeting
         transitions from: :show_date_suggestions, to: :check_if_meeting
       end
 
       event :notify_conversation_close do
         transitions from: :none, to: :close_notice
+        transitions from: :info, to: :close_notice
         transitions from: :radio_silence, to: :close_notice
         transitions from: :check_if_meeting, to: :close_notice
       end
@@ -77,6 +86,8 @@ module ConversationStateMachine
       case new_state
       when 'none'
         conv.reset!(:none)
+      when 'info'
+        conv.info!
       when 'health_check'
         return if conv.health_check?
 

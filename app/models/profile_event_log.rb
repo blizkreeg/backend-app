@@ -10,6 +10,7 @@ class ProfileEventLog < ActiveRecord::Base
     got_unmatched: 'Got unmatched by',
     reported_match: 'Reported match',
     started_conversation: 'Started a conversation',
-    responded_to_conversation: 'Responded to conversation'
+    responded_to_conversation: 'Responded to conversation',
+    entered_into_conversation: 'Entered into conversation'
   }
 end

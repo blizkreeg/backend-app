@@ -121,6 +121,7 @@ class Conversation < ActiveRecord::Base
     self.open = true
     self.opened_at = DateTime.now.utc
     self.closes_at = self.opened_at + CLOSE_TIME
+    self.state = 'info'
     self.save!
 
     initiator_match = Match.where("properties->>'initiates_profile_uuid' = '#{self.initiator.uuid}' AND matched_profile_uuid = '#{self.responder.uuid}'").take
@@ -146,6 +147,7 @@ class Conversation < ActiveRecord::Base
 
     self.participants.each do |participant|
       PushNotifier.delay.record_event(participant.uuid, 'conv_open')
+      ProfileEventLogWorker.perform_async(participant.uuid, :entered_into_conversation, uuid: self.the_other_who_is_not(participant.uuid))
     end
   end
 

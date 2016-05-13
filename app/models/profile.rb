@@ -388,7 +388,6 @@ class Profile < ActiveRecord::Base
     self.matches.active.take
   end
 
-  # TBD: conversation substate for user depends on what they've done so far.
   def substate
     substate =
     if self.in_conversation? # if primary state is in_conversation
@@ -396,6 +395,9 @@ class Profile < ActiveRecord::Base
       case current_conversation.state
       when 'none'
         current_conversation.state
+      when 'info'
+        # has this user been in a conversation that went far enough before? if so, default to 'none' state
+        (self.conversation_healths.count > 0) ? 'none' : current_conversation.state
       when 'health_check'
         record = current_conversation.conversation_healths.by_profile(self.uuid).take
         record.present? ? 'none' : current_conversation.state

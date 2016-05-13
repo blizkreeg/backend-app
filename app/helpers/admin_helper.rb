@@ -15,7 +15,7 @@ module AdminHelper
              end.join(', ').html_safe
     elsif el.properties["uuid"]
       p = Profile.find(el.properties["uuid"]) rescue nil
-      str += content_tag(:li, content_tag(:a, p.firstname, href: '/url')) if p.present?
+      str += content_tag(:p, content_tag(:a, p.firstname, href: '/url')) if p.present?
     end
 
     str
