@@ -39,10 +39,9 @@ class Api::V1::ProfilesController < ApplicationController
       oauth_hash: facebook_auth_hash
     )
 
-    # persist
     @profile.save!
 
-    @profile.create_initial_matches
+    @profile.create_initial_matches if !@profile.incomplete
 
     # set authenticated user
     set_current_profile(@profile)
@@ -68,6 +67,8 @@ class Api::V1::ProfilesController < ApplicationController
 
     # set authenticated user
     set_current_profile(@profile)
+
+    @profile.update(signed_in_at: DateTime.now)
 
     render status: 200
   rescue ActiveRecord::RecordNotFound

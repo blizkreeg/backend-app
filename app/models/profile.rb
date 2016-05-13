@@ -124,6 +124,7 @@ class Profile < ActiveRecord::Base
     incomplete:                   :boolean,
     incomplete_fields:            :string_array,
     possible_relationship_status: :string,
+    last_seen_at:                 :date_time,
     signed_in_at:                 :date_time,
     signed_out_at:                :date_time,
     substate:                     :string,
@@ -156,6 +157,10 @@ class Profile < ActiveRecord::Base
     faith
     highest_degree
     profession
+    gender
+    born_on_year
+    born_on_month
+    born_on_day
   )
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
@@ -170,12 +175,12 @@ class Profile < ActiveRecord::Base
   # attribute :age, Type::Integer.new
 
   # required properties
-  validates :email, :born_on_year, :born_on_month, :born_on_day, :gender, :latitude, :longitude, :intent, presence: true
+  validates :email, :latitude, :longitude, :intent, presence: true
   validates :email, jsonb_uniqueness: true
-  validates :born_on_year, numericality: { only_integer: true, less_than_or_equal_to: Date.today.year-Constants::MIN_AGE }
-  validates :born_on_month, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 12 }
-  validates :born_on_day, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 31 }
-  validates :gender, inclusion: { in: %w(male female) }
+  validates :born_on_year, numericality: { only_integer: true, less_than_or_equal_to: Date.today.year-Constants::MIN_AGE }, allow_nil: true
+  validates :born_on_month, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 12 }, allow_nil: true
+  validates :born_on_day, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 31 }, allow_nil: true
+  validates :gender, inclusion: { in: %w(male female) }, allow_nil: true
   validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
   validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
   validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }
@@ -506,6 +511,8 @@ class Profile < ActiveRecord::Base
   end
 
   def set_age
+    return if self.born_on_year.blank? || self.born_on_month.blank? || self.born_on_day.blank?
+
     self.age = ((Date.today - Date.new(self.born_on_year, self.born_on_month, self.born_on_day))/365).to_i
     true
   end

@@ -99,6 +99,24 @@ class Match < ActiveRecord::Base
     end
   end
 
+  def self.find_between(uuid1, uuid2)
+    begin
+      p1 = Profile.find(uuid1)
+      p2 = Profile.find(uuid2)
+    rescue ActiveRecord::RecordNotFound => e
+      EKC.logger.error("Cannot find match. Profile for uuid: #{p1.nil? ? uuid1 : uuid2} not found.")
+      return
+    end
+
+    match = Match.where(for_profile_uuid: uuid1, matched_profile_uuid: uuid2).take
+    if match.blank?
+      EKC.logger.error("Cannot find match between profiles #{uuid1} -> #{uuid2}")
+      return
+    end
+
+    match
+  end
+
   def unmatch!(reason)
     if !self.active
       EKC.logger.error "Got request to unmatch on match that is not active! match id: #{self.id}"

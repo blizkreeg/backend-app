@@ -4,6 +4,7 @@ module ApplicationHelper
   end
 
   def homescreen_headline
+    return 'Complete Basic Details' if @current_profile.incomplete
     return 'Check back soon' unless @current_profile.in_waiting_state?
 
     if @current_profile.matches.undecided.count > 0
@@ -18,7 +19,7 @@ module ApplicationHelper
         in_hours = (matches_time - now).to_i / 1.hour
         in_mins = ((matches_time - now).to_i/60) % 60
 
-        "#{in_hours}:#{in_mins}"
+        "#{in_hours}h : #{in_mins}m"
       end
     else
       'Check back soon'
@@ -26,6 +27,7 @@ module ApplicationHelper
   end
 
   def homescreen_subheadline
+    return 'We need to know a bit about you' if @current_profile.incomplete
     return "We're finding you new matches" unless @current_profile.in_waiting_state?
 
     if @current_profile.matches.undecided.count > 0
