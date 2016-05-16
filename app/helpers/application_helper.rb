@@ -27,7 +27,7 @@ module ApplicationHelper
   end
 
   def homescreen_subheadline
-    return 'We need to know a bit about you' if @current_profile.incomplete
+    return 'We noticed your profile is missing a few things' if @current_profile.incomplete
     return "We're finding you new matches" unless @current_profile.in_waiting_state?
 
     if @current_profile.matches.undecided.count > 0
