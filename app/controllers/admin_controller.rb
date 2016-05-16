@@ -6,7 +6,7 @@ class AdminController < ApplicationController
   def dashboard
   end
 
-  def lookup_user
+  def show_user
     @profile = Profile.find params[:uuid]
   end
 

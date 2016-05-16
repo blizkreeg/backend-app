@@ -1,8 +1,8 @@
 = render partial: 'header'
 .content
   h3
-    | #{@profile.firstname} #{@profile.lastname}
-  p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}`
+    | #{@profile.firstname} #{@profile.lastname} / #{@profile.uuid}
+  p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)}
   .row
     .col-xs-4.box
       h4.upcase Matches Received #{content_tag(:span, @profile.matches.count, class: 'h3 text-right')}

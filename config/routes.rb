@@ -71,7 +71,8 @@ Rails.application.routes.draw do
 
   resources :admin
   get '/dashboard', to: 'admin#dashboard'
-  post '/admin/lookup-user', to: 'admin#lookup_user'
+  post '/admin/show-user', to: 'admin#show_user'
+  get '/admin/show-user/:uuid', to: 'admin#show_user'
 
   get '*unmatched_route', to: 'application#route_not_found'
 end

@@ -6,10 +6,10 @@ nav.navbar.navbar-inverse.navbar-fixed-top
       ul.nav.navbar-nav
         li
           a href='#' Home
-      = form_tag({ action: :lookup_user }, { class: 'navbar-form navbar-left', role: 'search' })
+      = form_tag({ action: :show_user }, { class: 'navbar-form navbar-left', role: 'search' })
         .form-group.has-feedback
-          = text_field_tag :uuid, '', placeholder: 'Find by UUID', class: 'form-control', style: 'width:300px; font-size:12px;'
-          i.glyphicon.glyphicon-search.form-control-feedback
+          = text_field_tag :uuid, '', placeholder: 'Find by UUID', class: 'form-control', style: 'width:325px; font-size:13px;'
+          i.glyphicon.glyphicon-circle-arrow-right.form-control-feedback
       ul.nav.navbar-nav.navbar-right
         li
           p.navbar-text

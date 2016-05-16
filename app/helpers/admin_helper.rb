@@ -5,8 +5,7 @@ module AdminHelper
 
   def render_event_log(el)
     str = content_tag(:h5, ProfileEventLog::EVENTS_LOG_STRINGS_MAP[el.event_name.to_sym], style: 'font-weight: 600')
-    time = "#{distance_of_time_in_words_to_now(el.created_at)} ago; " +
-            "local time: " + el.created_at.in_time_zone(@profile.time_zone).strftime("%c")
+    time = render_time(el.created_at, tz: @profile.time_zone)
     str += content_tag(:h6, time.html_safe)
     if el.properties["uuids"].present?
       str += el.properties["uuids"].map do |uuid|
@@ -19,5 +18,22 @@ module AdminHelper
     end
 
     str
+  end
+
+  def render_time(dtime, opts = {})
+    opts[:relative] = true if opts[:relative].nil?
+    opts[:local] = true if opts[:local].nil?
+    opts[:tz] = 'America/Los_Angeles' if opts[:tz].nil?
+
+    time = ''
+    if opts[:relative]
+      time += "#{distance_of_time_in_words_to_now(dtime)} ago. "
+    end
+
+    if opts[:local]
+      time += "local: " + dtime.in_time_zone(opts[:tz]).strftime("%c")
+    end
+
+    time
   end
 end
