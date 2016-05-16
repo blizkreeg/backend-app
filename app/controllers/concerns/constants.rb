@@ -84,11 +84,11 @@ module Constants
   )
 
   REPORT_REASONS = [
-    "Inappropriate talk",
-    "Inappropriate offline behavior",
+    "Inappropriate behaviour",
     "Person is married",
     "False information on profile",
-    "Something else"
+    "Feels like spam",
+    "Other"
   ]
 
   DEACTIVATION_REASONS = [

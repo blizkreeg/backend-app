@@ -12,7 +12,7 @@ class Match < ActiveRecord::Base
   UNMATCH_REASONS = {
     exchanged_numbers: "We already exchanged numbers",
     lost_interest: "Not interested anymore",
-    inappropriate: "Inappropriate behavior/talk",
+    inappropriate_behaviour: "Inappropriate behaviour",
     spam: "Feels like spam",
     noreply: "Not getting replies",
     conversation_not_started: "Didn't start conversation", # TBD: run a timer to set unmatched=true and reason to this if time.now > expires_at
