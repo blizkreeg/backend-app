@@ -21,17 +21,19 @@ module AdminHelper
   end
 
   def render_time(dtime, opts = {})
+    return '' if dtime.blank?
+
     opts[:relative] = true if opts[:relative].nil?
     opts[:local] = true if opts[:local].nil?
     opts[:tz] = 'America/Los_Angeles' if opts[:tz].nil?
 
     time = ''
     if opts[:relative]
-      time += "#{distance_of_time_in_words_to_now(dtime)} ago. "
+      time += "#{distance_of_time_in_words_to_now(dtime)} ago "
     end
 
     if opts[:local]
-      time += "local: " + dtime.in_time_zone(opts[:tz]).strftime("%c")
+      time += '<' + dtime.in_time_zone(opts[:tz]).strftime("%c %Z") + '>'
     end
 
     time
