@@ -36,6 +36,7 @@ gem 'sidekiq_parameters_logging'
 # TBD: add https://github.com/schneems/puma_worker_killer
 gem 'librato-rails'
 # gem 'stackify-api-ruby'
+gem 'scout_apm'
 gem 'exception_notification'
 gem 'lograge'
 gem 'newrelic_rpm'
