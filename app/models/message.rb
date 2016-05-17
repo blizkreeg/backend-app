@@ -3,7 +3,7 @@ class Message < ActiveRecord::Base
 
   belongs_to :sender, foreign_key: "sender_uuid"
   belongs_to :recipient, foreign_key: "recipient_uuid"
-  belongs_to :conversation
+  belongs_to :conversation, touch: true
 
   LIMIT_N_MESSAGES = 10
 

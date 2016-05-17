@@ -1,7 +1,7 @@
 class Photo < ActiveRecord::Base
   # include JsonbAttributeHelpers
 
-  belongs_to :profile, foreign_key: "profile_uuid"
+  belongs_to :profile, foreign_key: "profile_uuid", touch: true
 
   PUBLIC_ID_LENGTH = 10
   MAX_WIDTH = 1000

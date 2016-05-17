@@ -1,9 +1,9 @@
 class RealDate < ActiveRecord::Base
   # include JsonbAttributeHelpers
 
-  belongs_to :conversation
+  belongs_to :conversation, touch: true
   belongs_to :profile, foreign_key: "profile_uuid"
-  belongs_to :date_place
+  belongs_to :date_place, touch: true
 
   MASS_UPDATE_ATTRIBUTES = %i(
     ready_to_meet
