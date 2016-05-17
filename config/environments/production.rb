@@ -1,6 +1,11 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  config.redis_db_data      = 1
+  config.redis_db_cache     = 2
+  config.redis_db_sidekiq   = 3
+  config.redis_db_geocoder  = 4
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 
@@ -13,6 +18,7 @@ Rails.application.configure do
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
+  config.cache_store = :redis_store, "redis://#{ENV['REDIS_HOST']}:6379/#{config.redis_db_cache}/cache", { expires_in: 24.hours }
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.

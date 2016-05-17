@@ -17,7 +17,7 @@ Geocoder.configure(
   :units => :km,
 
   # caching (see below for details):
-  :cache => Redis.new(:host => ENV['REDIS_HOST'], :db => 2),
+  :cache => Redis.new(:host => ENV['REDIS_HOST'], :db => Rails.application.config.redis_db_geocoder),
   :cache_prefix => "geocoder",
 
   # TBD: before going live, need to set up SSL cert and turn this on to use key

@@ -1,2 +1,1 @@
-# TBD : constantize the db numbers
-$redis = Redis.new(:host => ENV['REDIS_HOST'], :db => 3)
+$redis = Redis.new(:host => ENV['REDIS_HOST'], :db => Rails.application.config.redis_db_data)
