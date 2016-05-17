@@ -15,7 +15,7 @@ module Constants
 
   MATCHES_DELIVERED_AT_HOURS = [0, 12, 15, 18, 21]
 
-  MIN_AGE = 21
+  MIN_AGE = 18
   FAITHS = %w(
     Agnostic
     Atheist
