@@ -68,6 +68,18 @@ class Api::V1::PhotosController < ApplicationController
 
     photo.destroy
 
+    # default to a 'photo not available' image
+    if @current_profile.photos.count == 0
+      uploaded_hash = Cloudinary::Uploader.upload(File.join(Rails.root, 'app', 'assets', 'images', 'photo-not-found.jpg'),
+                                                  public_id: SecureRandom.hex(Photo::PUBLIC_ID_LENGTH))
+      @current_profile.photos << Photo.new(public_id: uploaded_hash['public_id'],
+                                            public_version: uploaded_hash['public_version'],
+                                            original_width: uploaded_hash['width'],
+                                            original_height: uploaded_hash['height'],
+                                            original_url: uploaded_hash['url'])
+      @current_profile.save!
+    end
+
     @current_profile.test_and_set_primary_photo!
 
     @photos = @current_profile.photos
