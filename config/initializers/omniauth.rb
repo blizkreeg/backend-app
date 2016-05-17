@@ -27,7 +27,7 @@ when "development"
 when "production"
   OmniAuth.config.full_host = "https://app-api.ekcoffee.com"
 when "test"
-  OmniAuth.config.full_host = "http://ekcoffee2-3000.terminal.com"
+  OmniAuth.config.full_host = "http://ekcoffee12-3000.terminal.com"
 end
 
 Rails.application.config.middleware.use OmniAuth::Builder do
