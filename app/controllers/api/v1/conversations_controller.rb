@@ -80,12 +80,23 @@ class Api::V1::ConversationsController < ApplicationController
     render 'api/v1/shared/nodata', status: 200
   end
 
+  # TBD: for second-city launch.
+  # DatePlace suggestions query below doesn't incorporate requesting user's lat/lon or city to make suggestions
+  # This should be fixed before we launch in another city. We'll need to implement PG earthdistance calculations
+  # and separate date_place lat/lng into its own column. See profile.rb and geo_search migration on profiles
   def show_date_suggestions
     if @conversation.date_suggestions.blank?
       common = @conversation.initiator.date_preferences & @conversation.responder.date_preferences
       union = (@conversation.initiator.date_preferences + @conversation.responder.date_preferences).uniq
       preferred = common.present? ? common : union
-      suggested = DatePlace.with_date_types(preferred).order("RANDOM()").limit(DateSuggestion::NUM_SUGGESTIONS)
+      # TBD: for post-launch
+      # this way of collecting date suggestions is not ideal. it gets a separate list of NUM_SUGGESTIONS for each type,
+      # merges them, de-dups, and randomly samples NUM_SUGGESTIONS
+      # a better way would be to just check in the db if the array elem date_types contains ANY of "preferred" and then order/limit in the db
+      suggested = preferred.map { |type| DatePlace.date_types_contains(type)
+                                                  .order("RANDOM()")
+                                                  .limit(DateSuggestion::NUM_SUGGESTIONS)
+                                }.flatten.uniq{ |place| place.id}.sample(DateSuggestion::NUM_SUGGESTIONS)
       @conversation.date_suggestions = suggested.map { |place|
         type_of_date = place.date_types[rand(place.date_types.size)]
         day_of_week = DateSuggestion.weekend_days(DateTime.now.in_time_zone(@current_profile.time_zone)).sample
