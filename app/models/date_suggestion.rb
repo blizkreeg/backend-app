@@ -4,12 +4,19 @@ class DateSuggestion < ActiveRecord::Base
   belongs_to :conversation
   belongs_to :date_place
 
-  NUM_SUGGESTIONS = 3
+  NUM_SUGGESTIONS = 4
   TIME_WINDOWS = {
     "Coffee" => "Afternoon/Evening, 4-6pm",
     "Brunch" => "Mid-morning, 11am - 2pm",
     "Dinner" => "Evening, 8-10pm",
     "Activities" => "Varies"
+  }
+
+  ASK_STRINGS = {
+    "Coffee" => ['Want to meet for coffee', 'Want to get a coffee', 'Want to go for a coffee'],
+    "Brunch" => ['Want to meet for brunch', 'Want to get brunch'],
+    "Dinner" => ['Want to meet for dinner', 'How does dinner sound'],
+    "Activities" => ['How about']
   }
 
   ATTRIBUTES = {
@@ -23,6 +30,23 @@ class DateSuggestion < ActiveRecord::Base
   jsonb_accessor :properties, ATTRIBUTES
 
   before_save :format_suggestion_string
+
+  def self.weekend_days(date=nil)
+    week_of = date
+    day = date.wday
+    if day > 0 && day < 5 # M - Th
+      suggest_idx = 2
+    elsif day == 5
+      suggest_idx = 1
+    elsif day == 6
+      suggest_idx = 0
+    else
+      week_of = date + 1.day
+      suggest_idx = 2
+    end
+
+    (0..suggest_idx).to_a.map { |idx| week_of.end_of_week - idx.days }.reverse
+  end
 
   def time_window
     TIME_WINDOWS[self.type_of_date]
@@ -47,15 +71,10 @@ class DateSuggestion < ActiveRecord::Base
 
   def format_suggestion_string
     self.formatted_suggestion =
-    case self.type_of_date
-    when "Coffee"
-      "Want to meet for Coffee at #{date_place.name} #{self.format_day_of_week}?"
-    when "Brunch"
-      "Want to meet for Brunch at #{date_place.name} #{self.format_day_of_week}?"
-    when "Dinner"
-      "Want to meet for Dinner at #{date_place.name} #{self.format_day_of_week}?"
-    when "Activities"
-      "How does #{date_place.name} sound on #{self.format_day_of_week}?"
+    if %w(Coffee Brunch Dinner).include?(self.type_of_date)
+      ASK_STRINGS[self.type_of_date].sample + " at #{date_place.name} #{self.format_day_of_week}?"
+    elsif self.type_of_date == "Activities"
+      ASK_STRINGS[self.type_of_date].sample + " #{date_place.name} #{self.format_day_of_week}?"
     end
   end
 end

@@ -66,6 +66,9 @@ class Api::V1::ConversationsController < ApplicationController
     render 'api/v1/shared/nodata', status: 200
   end
 
+  # TBD : TEST AND DEBUG THIS + schedule job to switch user to post-date feedback
+  # if scheduled job fires before conv close, reschedule it for 24.hours after conv. close, leave user substate unchanged
+  # else update substate to post-date feedback
   def record_meeting_details
     real_date = RealDate.find_or_create_by(profile_uuid: @current_profile.uuid, conversation_id: @conversation.id)
 
@@ -77,23 +80,17 @@ class Api::V1::ConversationsController < ApplicationController
     render 'api/v1/shared/nodata', status: 200
   end
 
-  # TBD: needs a proper algorithm!
   def show_date_suggestions
     if @conversation.date_suggestions.blank?
-
-      # TBD: prioritize common first, then others
-      preferred_dates = @conversation.participants.map(&:date_preferences).flatten.compact.first(DateSuggestion::NUM_SUGGESTIONS)
-      # TBD: restrict by preferred types
-      places = DatePlace.limit(DateSuggestion::NUM_SUGGESTIONS).order("RANDOM()")
-
-      @conversation.date_suggestions = places.map { |place|
+      common = @conversation.initiator.date_preferences & @conversation.responder.date_preferences
+      union = (@conversation.initiator.date_preferences + @conversation.responder.date_preferences).uniq
+      preferred = common.present? ? common : union
+      suggested = DatePlace.with_date_types(preferred).order("RANDOM()").limit(DateSuggestion::NUM_SUGGESTIONS)
+      @conversation.date_suggestions = suggested.map { |place|
         type_of_date = place.date_types[rand(place.date_types.size)]
-        # TBD: day of week here can be wrong if it's Friday. We could end up getting a date in the past.
-        # This should be smarter!
-        DateSuggestion.new(day_of_week: (Date.today.end_of_week - rand(3)), type_of_date: type_of_date, date_place_id: place.id)
+        day_of_week = DateSuggestion.weekend_days(DateTime.now.in_time_zone(@current_profile.time_zone)).sample
+        DateSuggestion.new(day_of_week: day_of_week, type_of_date: type_of_date, date_place_id: place.id)
       }
-
-      @conversation.save!
     end
 
     render status: 200
