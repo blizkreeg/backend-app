@@ -58,6 +58,7 @@ class Api::V1::ProfilesController < ApplicationController
   def sign_in
     # TBD: there's a security hole here!!! Someone could fake this payload.
     # TBD: if a required permission was removed, make sure this raises the FB exception
+    # One way to solve the security issue -- using the token provided, try making a authed request for the fb uid provided - it should succeed, else it's an imposter
     facebook_auth_hash = params[:data][:facebook_auth_hash]
     social_auth = SocialAuthentication.where(oauth_uid: facebook_auth_hash[:uid], oauth_provider: 'facebook').take!
     social_auth.update!(oauth_token: facebook_auth_hash[:credentials][:token],
