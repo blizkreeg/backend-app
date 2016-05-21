@@ -158,9 +158,30 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def add_to_waiting_list
-    # TBD: where to maintain the list?
+    location = Geocoder.search("#{params[:data][:latitude]}, #{params[:data][:longitude]}").first
 
-    EKC.logger.info "ADDED TO WAITING LIST lat: #{params[:data][:latitude]}, lon: #{params[:data][:longitude]}, mobile: #{params[:data][:phone]}"
+    if location.present?
+      # list maintained at:
+      # https://docs.google.com/spreadsheets/d/1VTFL3MaErhYVq2C49yBKp5P-HMte2r6f4Pz0ujOgsWE/
+      session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
+      ws = session.spreadsheet_by_key("1VTFL3MaErhYVq2C49yBKp5P-HMte2r6f4Pz0ujOgsWE").worksheets[0]
+
+      row = ws.num_rows + 1
+      col = 0
+      ws[row, col+=1] = location.city
+      ws[row, col+=1] = location.country
+      ws[row, col+=1] = params[:data][:phone]
+      ws[row, col+=1] = params[:data][:latitude]
+      ws[row, col+=1] = params[:data][:longitude]
+      ws[row, col+=1] = Date.today
+      ws.save
+
+      EKC.logger.info "Added to waiting list; lat: #{params[:data][:latitude]}, lon: #{params[:data][:longitude]}, mobile: #{params[:data][:phone]}"
+    else
+      error_str = "Could not geolocate lat/lng (#{params[:data][:latitude]}, #{params[:data][:longitude]})! Failed to add phone: '#{params[:data][:phone]}' to waiting list."
+      notify_of_exception(StandardError.new(error_str))
+      EKC.logger.error error_str
+    end
 
     render status: 200, json: {}
   end
