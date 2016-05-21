@@ -41,6 +41,7 @@ gem 'exception_notification'
 gem 'lograge'
 gem 'newrelic_rpm'
 gem 'redcarpet'
+gem 'google_drive'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

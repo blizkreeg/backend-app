@@ -1,3 +1,7 @@
+require "google/api_client"
+require "google_drive"
+require 'openssl'
+
 class ApplicationController < ActionController::Base
   include JsonSchemaValidator
 

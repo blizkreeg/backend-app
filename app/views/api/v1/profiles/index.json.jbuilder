@@ -3,27 +3,22 @@ json.data do
     json.city @city
   end
   json.items do
-    json.array! @profiles do |profile|
-      json.firstname profile.firstname
-      json.age profile.age
-      json.profession profile.profession
-      json.location_city profile.location_city
+    json.array! @people do |person|
+      json.firstname person.firstname
+      json.age person.age
+      json.profession person.profession
+      json.location_city person.location_city
       json.questions_and_answers do
-        # TBD: substitute qna collection object
-        json.array!([1,2]) do |obj|
-          json.question "What are some things you enjoy doing lorem ipsum lorem ipsum?"
-          json.answer "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam blandit ac purus nec tincidunt."
+        json.array! person.qna do |hash|
+          json.question hash[:question]
+          json.answer hash[:answer]
         end
       end
       json.photo do
         json._meta do
           json.partial! 'api/v1/photos/meta'
         end
-        if profile.photos.ordered.first.blank?
-          json.null!
-        else
-          json.partial! 'api/v1/photos/photo', photo: profile.photos.ordered.first
-        end
+        json.partial! 'api/v1/photos/photo', photo: person.photo
       end
     end
   end

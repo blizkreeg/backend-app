@@ -1,3 +1,5 @@
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
 class Api::V1::ProfilesController < ApplicationController
   respond_to :json
 
@@ -104,17 +106,41 @@ class Api::V1::ProfilesController < ApplicationController
       end
     end
 
-    # TBD: remove
-    if Rails.application.config.test_mode
-      found_city = @city
-    end
-
     if found_city.blank?
-      @profiles = []
+      @people = []
     else
-      render json: JSON.parse(File.open("#{Rails.root}/db/temp_featured.json", 'r')).to_json.gsub('@city', @city), status: 200
-      return
-      # @profiles = Profile.within_distance(found_city[:lat], found_city[:lng]).ordered_by_distance(params[:latitude].to_f, params[:longitude].to_f).limit(Constants::N_FEATURED_PROFILES)
+      # https://docs.google.com/spreadsheets/d/1ldIZou60XG-zAPZ1HRT0oQNUb1VrhRZFzl-CkKjCbJo/
+      session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
+      ws = session.spreadsheet_by_key("1ldIZou60XG-zAPZ1HRT0oQNUb1VrhRZFzl-CkKjCbJo").worksheets[0]
+
+      @people = []
+      (1..ws.num_rows).each do |row|
+        next unless row >= 4
+        next unless ws[row, 1] == found_city[:name]
+        person = OpenStruct.new
+        person.firstname = ws[row, 2]
+        person.location_city = ws[row, 4]
+        person.age = ws[row, 5]
+        person.profession = ws[row, 6]
+        qna = []
+        qna[0] = { question: ws[row, 11], answer: ws[row, 12] }
+        qna[1] = { question: ws[row, 13], answer: ws[row, 14] }
+        photo = OpenStruct.new
+        photo.id = nil
+        photo.original_url = ws[row, 7]
+        photo.public_id = ws[row, 8]
+        photo.original_width = ws[row, 9]
+        photo.original_height = ws[row, 10]
+        photo.primary = true
+        person.qna = qna
+        person.photo = photo
+
+        @people << person
+      end
+
+      # render json: JSON.parse(File.open("#{Rails.root}/db/temp_featured.json", 'r')).to_json.gsub('@city', @city), status: 200
+      # return
+      # @people = Profile.within_distance(found_city[:lat], found_city[:lng]).ordered_by_distance(params[:latitude].to_f, params[:longitude].to_f).limit(Constants::N_FEATURED_PROFILES)
     end
 
     render status: 200
