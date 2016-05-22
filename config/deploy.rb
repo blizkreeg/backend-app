@@ -42,7 +42,7 @@ set :puma_access_log, "#{shared_path}/log/puma_access.log"
 set :puma_error_log, "#{shared_path}/log/puma_error.log"
 set :puma_role, :app
 set :puma_env, fetch(:rack_env, fetch(:rails_env, 'production'))
-set :puma_threads, [2, 8]
+set :puma_threads, [2, 8] # the max value here should match what's in production's .rbenv-vars for RAILS_MAX_THREADS
 set :puma_workers, 2
 # set :puma_worker_timeout, nil
 set :ssh_options,     { forward_agent: true, user: fetch(:user), keys: %w(~/.ssh/id_rsa.pub) }
