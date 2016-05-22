@@ -1,4 +1,4 @@
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE unless Rails.env.production?
 
 class Api::V1::ProfilesController < ApplicationController
   respond_to :json
@@ -174,6 +174,7 @@ class Api::V1::ProfilesController < ApplicationController
       ws[row, col+=1] = params[:data][:latitude]
       ws[row, col+=1] = params[:data][:longitude]
       ws[row, col+=1] = Date.today
+      ws[row, col+=1] = Rails.env
       ws.save
 
       EKC.logger.info "Added to waiting list; lat: #{params[:data][:latitude]}, lon: #{params[:data][:longitude]}, mobile: #{params[:data][:phone]}"

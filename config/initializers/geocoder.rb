@@ -1,8 +1,9 @@
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE unless Rails.env.production?
+
 Geocoder.configure(
 
   # geocoding service (see below for supported options):
-  # TBD: uncomment before going live
-  # :lookup => :google,
+  :lookup => :google,
 
   # IP address geocoding service (see below for supported options):
   :ip_lookup => :maxmind,
@@ -21,8 +22,8 @@ Geocoder.configure(
   :cache_prefix => "geocoder",
 
   # TBD: before going live, need to set up SSL cert and turn this on to use key
-  # google: {
-    # api_key: ENV['GOOGLE_GEOCODING_API_KEY'],
-    # use_https: true,
-  # }
+  google: {
+    api_key: ENV['GOOGLE_GEOCODING_API_KEY'],
+    use_https: true,
+  }
 )
