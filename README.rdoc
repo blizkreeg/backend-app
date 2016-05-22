@@ -11,6 +11,13 @@ Things you may want to cover:
 
 * Configuration
 
+SSL Cert Verification is turned OFF for all environments except Production. Few threads to fix this elsewhere:
+
+* [https://gist.github.com/mislav/5026283](https://gist.github.com/mislav/5026283)
+* [http://mislav.net/2013/07/ruby-openssl/](http://mislav.net/2013/07/ruby-openssl/)
+* [https://toadle.me/2015/04/16/fixing-failing-ssl-verification-with-rvm.html](https://toadle.me/2015/04/16/fixing-failing-ssl-verification-with-rvm.html)
+* [http://railsapps.github.io/openssl-certificate-verify-failed.html](http://railsapps.github.io/openssl-certificate-verify-failed.html)
+
 * Database creation
 
 * Database initialization
