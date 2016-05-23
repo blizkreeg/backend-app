@@ -1,0 +1,15 @@
+.content
+  h3 Review New Photos
+  .row
+    .col-xs-12
+      = button_to 'Approve All', admin_moderate_photos_path(ids: @unmoderated_photos.map(&:id), approved: true), class: 'submit btn btn-success'
+  .row
+    .col-xs-12
+      - if @unmoderated_photos_cnt == 0
+        h5 No new photos to review
+      - else
+        h5 Showing #{@unmoderated_photos.count} of #{@unmoderated_photos_cnt}
+        - @unmoderated_photos.each do |photo|
+          div style='position:relative;width:250px;height:250px;float:left;margin:2px;'
+            = cl_image_tag "#{photo.public_id}.jpg", style: 'width:250px;height:250px;'
+            = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'submit btn btn-danger', style: 'position:absolute;top:0;right:0'

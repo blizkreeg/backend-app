@@ -16,10 +16,13 @@ class Photo < ActiveRecord::Base
 
   MASS_UPDATE_ATTRIBUTES = %i(
     primary
+    reviewed
+    approved
   )
 
   ATTRIBUTES = {
     primary:            :boolean,
+    reviewed:           :boolean,
     approved:           :boolean,
     public_id:          :string,
     public_version:     :string,
@@ -38,7 +41,7 @@ class Photo < ActiveRecord::Base
   # required
   # validates :public_id, presence: true, unless: lambda { |record| record.properties["facebook_photo_id"].present? }
 
-  before_save :set_defaults
+  before_create :set_defaults
   after_destroy :delete_from_cloudinary
 
   def self.upload_remote_photo_to_cloudinary(url, options = {})
@@ -80,9 +83,10 @@ class Photo < ActiveRecord::Base
   private
 
   def set_defaults
-    self.primary ||= false
-    self.approved ||= true
-    self.marked_for_deletion ||= false
+    self.primary = false if self.primary.nil?
+    self.approved = true
+    self.reviewed = false
+    self.marked_for_deletion = false
 
     true
   end

@@ -46,9 +46,6 @@ Rails.application.routes.draw do
 
     # TBD: COMMENT BEFORE GOING TO PROD!!
 
-    # get '/admin/profile-review', to: 'admin#review_profiles'
-    # post '/admin/update-review', to: 'admin#update_review'
-
     get '/admin', to: 'accounts#admin'
     post '/admin/create-matches', to: 'accounts#create_matches'
     post '/admin/check-mutual-matches', to: 'accounts#check_mutual_match'
@@ -69,10 +66,17 @@ Rails.application.routes.draw do
     post 'send-push-notification', to: 'accounts#send_push_notification'
   # end <-- TODO: UNCOMMENT BEFORE LAUNCH
 
-  resources :admin
+  #
+  # ADMIN DASHBOARD
+  #
   get '/dashboard', to: 'admin#dashboard'
   post '/admin/lookup-user', to: 'admin#lookup_user'
   get '/admin/show-user/:uuid', to: 'admin#show_user', as: 'admin_show_user'
+  get '/admin/unmoderated', to: 'admin#unmoderated'
+  get '/admin/suspicious', to: 'admin#suspicious'
+  post '/admin/moderate_user', to: 'admin#moderate_user', as: 'admin_moderate_user'
+  get '/admin/review-photos', to: 'admin#review_photos'
+  post '/admin/moderate-photos', to: 'admin#moderate_photos', as: 'admin_moderate_photos'
 
   get '*unmatched_route', to: 'application#route_not_found'
 end

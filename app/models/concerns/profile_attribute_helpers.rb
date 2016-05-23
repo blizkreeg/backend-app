@@ -64,4 +64,20 @@ module ProfileAttributeHelpers
   def about_me_order
     %w(about_me_i_love about_me_ideal_weekend about_me_bucket_list about_me_quirk)
   end
+
+  def unmoderated?
+    self.moderation_status == 'unmoderated'
+  end
+
+  def in_review?
+    self.moderation_status == 'in_review'
+  end
+
+  def blacklisted?
+    self.moderation_status == 'blacklisted'
+  end
+
+  def approved?
+    self.moderation_status == 'approved'
+  end
 end

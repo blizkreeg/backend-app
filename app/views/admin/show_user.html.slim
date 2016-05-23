@@ -6,6 +6,17 @@
     | #{@profile.firstname} #{@profile.lastname} / #{@profile.uuid}
   p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
   .row
+    .col-xs-1
+      - if @profile.approved?
+        = button_to 'Flag', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'submit btn btn-success' }
+      - else
+        = button_to 'Approve', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'submit btn btn-success' }
+    .col-xs-1
+      - if @profile.blacklisted?
+        = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'submit btn btn-default' }
+      - else
+        = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'submit btn', style: 'background-color: black; color: white;' }
+  .row
     .col-xs-4.box
       h4.upcase Matches Received #{content_tag(:span, @profile.matches.count, class: 'h3 text-right')}
       h4.upcase Matches Liked #{content_tag(:span, @profile.matches.liked.count, class: 'h3 text-right')}
