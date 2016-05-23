@@ -4,10 +4,10 @@ require 'nokogiri'
 
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE unless Rails.env.production?
 
-module Scrape
+module Places
   module_function
 
-  def run(city_name, type)
+  def seed(city_name, type)
     type_of_place =
     case type
     when 'cafes'
