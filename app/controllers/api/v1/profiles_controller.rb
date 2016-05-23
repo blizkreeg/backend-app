@@ -161,23 +161,7 @@ class Api::V1::ProfilesController < ApplicationController
     location = Geocoder.search("#{params[:data][:latitude]}, #{params[:data][:longitude]}").first
 
     if location.present?
-      # list maintained at:
-      # https://docs.google.com/spreadsheets/d/1VTFL3MaErhYVq2C49yBKp5P-HMte2r6f4Pz0ujOgsWE/
-      session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
-      ws = session.spreadsheet_by_key("1VTFL3MaErhYVq2C49yBKp5P-HMte2r6f4Pz0ujOgsWE").worksheets[0]
-
-      row = ws.num_rows + 1
-      col = 0
-      ws[row, col+=1] = location.city
-      ws[row, col+=1] = location.country
-      ws[row, col+=1] = "'#{params[:data][:phone]}"
-      ws[row, col+=1] = params[:data][:latitude]
-      ws[row, col+=1] = params[:data][:longitude]
-      ws[row, col+=1] = Date.today
-      ws[row, col+=1] = Rails.env
-      ws.save
-
-      EKC.logger.info "Added to waiting list; lat: #{params[:data][:latitude]}, lon: #{params[:data][:longitude]}, mobile: #{params[:data][:phone]}"
+      WaitListWorker.perform_async("'#{params[:data][:phone]}", params[:data][:latitude], params[:data][:longitude], location.city, location.country)
     else
       error_str = "Could not geolocate lat/lng (#{params[:data][:latitude]}, #{params[:data][:longitude]})! Failed to add phone: '#{params[:data][:phone]}' to waiting list."
       notify_of_exception(StandardError.new(error_str))
