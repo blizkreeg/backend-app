@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # TBD: move to standalone or protected on production
   mount Sidekiq::Web => '/sidekiq'
 
-  constraints { subdomain 'app-api' } do
+  constraints subdomain: 'app-api' do
     scope module: 'api' do
       namespace 'v1' do
         get '/home', to: 'profiles#home'
