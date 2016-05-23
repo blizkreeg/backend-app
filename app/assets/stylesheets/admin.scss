@@ -59,7 +59,7 @@ a:hover {
 }
 
 .navbar-fixed-left + .container {
-  // padding-left: 160px;
+  margin-left: 140px;
 }
 
 /* On using dropdown menu (To right shift popuped) */
@@ -91,7 +91,9 @@ a:hover {
 }
 
 .prop {
-  padding-right: 5px;
+  width: 150px;
+  padding: 5px 5px;
+  display: inline-block;
 }
 
 dl {

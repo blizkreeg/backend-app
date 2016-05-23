@@ -95,7 +95,7 @@ module Matchmaker
   def new_eligible_matches(profile, opts = {})
     existing_matches_sql = profile.matches.to_sql
 
-    matchmaking_query = Profile.active.of_gender(profile.seeking_gender)
+    matchmaking_query = Profile.visible.active.of_gender(profile.seeking_gender)
 
     if USE_MATCHING_MODELS.include? 'preferences'
       matchmaking_query =
@@ -113,7 +113,7 @@ module Matchmaker
     end
 
     if USE_MATCHING_MODELS.include? 'location'
-      unless Rails.application.config.test_mode
+      if !Rails.application.config.test_mode
         matchmaking_query = matchmaking_query.within_distance(profile.search_lat, profile.search_lng, MATCHING_MODELS[:location][:within_radius])
       end
       if MATCHING_MODELS[:location][:ordered_by_proximity]

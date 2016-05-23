@@ -10,6 +10,7 @@ class Profile < ActiveRecord::Base
   scope :create_order, -> { order('profiles.created_at ASC') }
   scope :inactive, -> { is_inactive }
   scope :active, -> { where("(profiles.properties->>'inactive')::boolean IS NOT TRUE") }
+  scope :visible, -> { is_visible }
   scope :older_than, -> (age) { age_gte(age) }
   scope :younger_than, -> (age) { age_lte(age) }
   scope :taller_than, -> (height_in) { height_in_gte(height_in) }
@@ -39,7 +40,7 @@ class Profile < ActiveRecord::Base
   has_many :received_messages, class_name: 'Message', primary_key: "uuid", foreign_key: "recipient_uuid", autosave: true, dependent: :destroy
   has_many :conversation_healths, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
   has_many :real_dates, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
-  has_many :profile_event_logs, primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
+  has_many :event_logs, class_name: 'ProfileEventLog', primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
 
   # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
   # set property tracking flags to 'flags'
@@ -118,6 +119,7 @@ class Profile < ActiveRecord::Base
     seeking_minimum_height_in:    :integer,
     seeking_maximum_height_in:    :integer,
     seeking_faith:                :string_array,
+    # uncomment and set default prefs in matchmaker when opening to gay/lesbian community
     # seeking_gender:               :string,
 
     # internal admin stuff
@@ -132,7 +134,11 @@ class Profile < ActiveRecord::Base
     butler_conversation_uuid:     :string,
     marked_for_deletion:          :boolean,
     # TBD: is there a better way to track this?
-    sent_matches_notification_at: :date_time
+    sent_matches_notification_at: :date_time,
+    has_new_butler_message:       :boolean,
+    moderation_status:            :string,
+    moderation_status_reason:     :string,
+    visible:                      :boolean
 
     # matching related
     # attractiveness_score:         :integer, # median of all scores by reviewers?
@@ -162,6 +168,14 @@ class Profile < ActiveRecord::Base
     born_on_month
     born_on_day
   )
+
+  MODERATION_STATUSES = %w(unmoderated in_review approved flagged blacklisted)
+  MODERATION_STATUS_REASONS = [
+    'Appears Married',
+    'Bad photo',
+    'Inappropriate photo',
+    'Spam profile'
+  ]
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
   # jsonb_attr_helper :properties, ATTRIBUTES
@@ -211,7 +225,7 @@ class Profile < ActiveRecord::Base
   before_save :set_tz, if: Proc.new { |profile| profile.location_changed? }
   before_save :set_age, if: Proc.new { |profile| profile.dob_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
-  before_create :set_about_me, if: lambda { Rails.env.development? } # TBD: REMOVE BEFORE PRODUCTION
+  before_create :set_default_moderation
   before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
   # after_save :add_to_preferences_changed_list, if: Proc.new { |profile| profile.any_seeking_preference_changed? }
@@ -389,6 +403,10 @@ class Profile < ActiveRecord::Base
   end
 
   def substate
+    existing_substate = self.read_attribute(:substate)
+
+    return existing_substate if existing_substate == 'post_date_feedback'
+
     substate =
     if self.in_conversation? # if primary state is in_conversation
       current_conversation = self.active_mutual_match.conversation
@@ -417,7 +435,7 @@ class Profile < ActiveRecord::Base
         current_conversation.state
       end
     else
-      self.read_attribute(:substate)
+      existing_substate
     end
   end
 
@@ -529,13 +547,6 @@ class Profile < ActiveRecord::Base
     end
   end
 
-  def set_about_me
-    self.about_me_i_love = (rand > 0.3 ? Faker::Lorem.sentence(10) : nil )
-    self.about_me_ideal_weekend = (rand > 0.3 ? Faker::Lorem.sentence(10) : nil )
-    self.about_me_bucket_list = (rand > 0.3 ? Faker::Lorem.sentence(8) : nil )
-    self.about_me_quirk = (rand > 0.3 ? Faker::Lorem.sentence(6) : nil )
-  end
-
   def initialize_butler_conversation
     self.butler_conversation_uuid = SecureRandom.uuid
   end
@@ -574,5 +585,11 @@ class Profile < ActiveRecord::Base
   def set_search_latlng
     self.search_lat = self.latitude
     self.search_lng = self.longitude
+  end
+
+  def set_default_moderation
+    # profiles are reviewed first time before serving them up as matches
+    self.moderation_status = 'unmoderated'
+    self.visible = false
   end
 end

@@ -3,9 +3,9 @@ nav.navbar.navbar-inverse.navbar-fixed-top
     .navbar-header
       a.navbar-brand href='#' ekC
     .collapse.navbar-collapse
-      ul.nav.navbar-nav
-        li
-          a href='#' Home
+      / ul.nav.navbar-nav
+      /   li
+      /     a href='#' Home
       = form_tag({ action: :lookup_user }, { class: 'navbar-form navbar-left', role: 'search' })
         .form-group.has-feedback
           = text_field_tag :uuid, '', placeholder: 'Find by UUID', class: 'form-control', style: 'width:325px; font-size:13px;'

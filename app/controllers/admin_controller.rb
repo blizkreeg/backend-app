@@ -4,6 +4,11 @@ class AdminController < ApplicationController
   before_action :load_admin_user
 
   def dashboard
+    @new_butler_chats_cnt = Profile.with_has_new_butler_message(true).count
+  end
+
+  def suspicious
+
   end
 
   def lookup_user

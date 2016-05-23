@@ -1,6 +1,8 @@
 = render partial: 'header'
 .content
-  h3
+  h4 USER INFO
+  hr
+  h4
     | #{@profile.firstname} #{@profile.lastname} / #{@profile.uuid}
   p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
   .row
@@ -13,29 +15,32 @@
       hr
       / ul.unstyled-list
       span.clearfix
+        strong.prop FB Url:
+        = link_to "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", target: '_blank'
+      span.clearfix
         strong.prop Intent:
-        = @profile.intent
+        = @profile.intent || 'n/a'
       span.clearfix
         strong.prop FB Relationship Status:
-        = @profile.possible_relationship_status
+        = @profile.possible_relationship_status || 'n/a'
       span.clearfix
         strong.prop Height:
-        = @profile.height
+        = @profile.height || 'n/a'
       span.clearfix
         strong.prop Profession:
-        = @profile.profession
+        = @profile.profession || 'n/a'
       span.clearfix
         strong.prop Schools attended:
-        = @profile.schools_attended.join(', ')
+        = @profile.schools_attended.join(', ') || 'n/a'
       span.clearfix
         strong.prop Faith:
-        = @profile.faith
+        = @profile.faith || 'n/a'
       span.clearfix
         strong.prop Degrees:
-        = @profile.earned_degrees.join(', ')
+        = @profile.earned_degrees.join(', ') || 'n/a'
       span.clearfix
         strong.prop Highest Degree:
-        = @profile.highest_degree
+        = @profile.highest_degree || 'n/a'
     .col-xs-4.box
       - if @profile.waiting_for_matches? || @profile.waiting_for_matches_and_response?
         h4 Waiting For Matches
@@ -69,6 +74,6 @@
       hr
       h4 Event Log
       hr
-      - @profile.profile_event_logs.each do |el|
+      - @profile.event_logs.each do |el|
         p
           = raw render_event_log(el)
