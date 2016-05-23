@@ -161,7 +161,7 @@ class Api::V1::ProfilesController < ApplicationController
     location = Geocoder.search("#{params[:data][:latitude]}, #{params[:data][:longitude]}").first
 
     if location.present?
-      WaitListWorker.perform_async("'#{params[:data][:phone]}", params[:data][:latitude], params[:data][:longitude], location.city, location.country)
+      WaitListWorker.perform_async(params[:data][:phone], params[:data][:latitude], params[:data][:longitude], location.city, location.country)
     else
       error_str = "Could not geolocate lat/lng (#{params[:data][:latitude]}, #{params[:data][:longitude]})! Failed to add phone: '#{params[:data][:phone]}' to waiting list."
       notify_of_exception(StandardError.new(error_str))

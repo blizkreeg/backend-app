@@ -11,7 +11,7 @@ class WaitListWorker
     col = 0
     ws[row, col+=1] = city
     ws[row, col+=1] = country
-    ws[row, col+=1] = phone
+    ws[row, col+=1] = "'#{phone}"
     ws[row, col+=1] = lat
     ws[row, col+=1] = lng
     ws[row, col+=1] = Date.today
