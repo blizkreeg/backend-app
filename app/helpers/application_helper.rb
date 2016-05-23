@@ -8,6 +8,10 @@ module ApplicationHelper
     return 'Check back soon' unless @current_profile.in_waiting_state?
 
     if @current_profile.matches.undecided.count > 0
+      if config.beta_mode
+        return 'Noon tomorrow'
+      end
+
       now = Time.now.in_time_zone(@current_profile.time_zone)
 
       if (now.hour > Constants::MATCHES_DELIVERED_AT_HOURS.max) && (now.hour <= 23)
@@ -27,13 +31,13 @@ module ApplicationHelper
   end
 
   def homescreen_subheadline
-    return 'We noticed your profile is missing a few things' if @current_profile.incomplete
+    return 'Your profile is missing a few things' if @current_profile.incomplete
     return "We're finding you new matches" unless @current_profile.in_waiting_state?
 
     if @current_profile.matches.undecided.count > 0
-      'Your next matches coming '
+      config.beta_mode ? 'Check your next match at' : 'More matches coming up'
     else
-      'Finding you new matches'
+      "We're hard at work finding you new matches"
     end
   end
 end

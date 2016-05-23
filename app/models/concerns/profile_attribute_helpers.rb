@@ -4,7 +4,6 @@ module ProfileAttributeHelpers
   GENDER_MALE = 'male'
   GENDER_FEMALE = 'female'
 
-  # TBD: check this bug: height_in not getting set properly - happened on prod
   def height=(ft_in_str)
     write_attribute(:height, ft_in_str)
     ht_in = Profile.height_in_inches(ft_in_str)
@@ -64,15 +63,5 @@ module ProfileAttributeHelpers
 
   def about_me_order
     %w(about_me_i_love about_me_ideal_weekend about_me_bucket_list about_me_quirk)
-  end
-
-  def mutual_friends_count(logged_in_profile)
-    return 0 if self.uuid == logged_in_profile.uuid
-    return 0 if self.facebook_authentication.blank?
-    # TBD: fix this and move mutual count to match
-    return 0 if Rails.application.config.test_mode
-    logged_in_profile.facebook_authentication.mutual_friends_count(self.facebook_authentication.oauth_uid)
-  rescue StandardError => e
-    0
   end
 end

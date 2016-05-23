@@ -87,10 +87,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # TBD - REMOVE BEFORE GOING LIVE
-  if (Date.new(2016,06,01)-Date.today+50).to_i > 0
-    config.test_mode = true
-  end
+  config.beta_mode = true
 
   config.lograge.enabled = true
   config.lograge.custom_options = lambda do |event|
