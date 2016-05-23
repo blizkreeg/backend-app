@@ -88,6 +88,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.beta_mode = true
+  config.test_mode = false
 
   config.lograge.enabled = true
   config.lograge.custom_options = lambda do |event|
