@@ -170,7 +170,7 @@ class Api::V1::ProfilesController < ApplicationController
       col = 0
       ws[row, col+=1] = location.city
       ws[row, col+=1] = location.country
-      ws[row, col+=1] = params[:data][:phone]
+      ws[row, col+=1] = "'#{params[:data][:phone]}"
       ws[row, col+=1] = params[:data][:latitude]
       ws[row, col+=1] = params[:data][:longitude]
       ws[row, col+=1] = Date.today
