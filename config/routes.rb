@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # TBD: move to standalone or protected on production
   mount Sidekiq::Web => '/sidekiq'
 
-  constraints subdomain: 'app-api' do
+  constraints SubdomainConstraint.new('app-api') do
     scope module: 'api' do
       namespace 'v1' do
         get '/home', to: 'profiles#home'
@@ -69,15 +69,17 @@ Rails.application.routes.draw do
   #
   # ADMIN DASHBOARD
   #
-  get '/dashboard', to: 'admin#dashboard'
-  post '/admin/lookup-user', to: 'admin#lookup_user'
-  get '/admin/show-user/:uuid', to: 'admin#show_user', as: 'admin_show_user'
-  get '/admin/unmoderated', to: 'admin#unmoderated'
-  get '/admin/suspicious', to: 'admin#suspicious'
-  post '/admin/moderate_user', to: 'admin#moderate_user', as: 'admin_moderate_user'
-  get '/admin/review-photos', to: 'admin#review_photos'
-  post '/admin/moderate-photos', to: 'admin#moderate_photos', as: 'admin_moderate_photos'
-  post '/admin/logout', to: 'admin#logout', as: 'admin_logout'
+  constraints SubdomainConstraint.new('admin') do
+    get '/dashboard', to: 'admin#dashboard'
+    post '/admin/lookup-user', to: 'admin#lookup_user'
+    get '/admin/show-user/:uuid', to: 'admin#show_user', as: 'admin_show_user'
+    get '/admin/unmoderated', to: 'admin#unmoderated'
+    get '/admin/suspicious', to: 'admin#suspicious'
+    post '/admin/moderate_user', to: 'admin#moderate_user', as: 'admin_moderate_user'
+    get '/admin/review-photos', to: 'admin#review_photos'
+    post '/admin/moderate-photos', to: 'admin#moderate_photos', as: 'admin_moderate_photos'
+    post '/admin/logout', to: 'admin#logout', as: 'admin_logout'
+  end
 
   get '*unmatched_route', to: 'application#route_not_found'
 end
