@@ -10,7 +10,7 @@ class Api::V1::PhotosController < ApplicationController
   def create
     # file upload
     if params[:photo_file].present?
-      uploaded_hash = Cloudinary::Uploader.upload(params[:photo_file], public_id: SecureRandom.hex(Photo::PUBLIC_ID_LENGTH))
+      uploaded_hash = Cloudinary::Uploader.upload(params[:photo_file], public_id: SecureRandom.hex(Photo::PUBLIC_ID_LENGTH), tags: [Rails.env])
 
       @current_profile.photos << Photo.new(public_id: uploaded_hash['public_id'],
                                             public_version: uploaded_hash['public_version'],
@@ -71,7 +71,8 @@ class Api::V1::PhotosController < ApplicationController
     # default to a 'photo not available' image
     if @current_profile.photos.count == 0
       uploaded_hash = Cloudinary::Uploader.upload(File.join(Rails.root, 'app', 'assets', 'images', 'photo-not-found.jpg'),
-                                                  public_id: SecureRandom.hex(Photo::PUBLIC_ID_LENGTH))
+                                                  public_id: SecureRandom.hex(Photo::PUBLIC_ID_LENGTH),
+                                                  tags: [Rails.env, 'photonotavailable'])
       @current_profile.photos << Photo.new(public_id: uploaded_hash['public_id'],
                                             public_version: uploaded_hash['public_version'],
                                             original_width: uploaded_hash['width'],
