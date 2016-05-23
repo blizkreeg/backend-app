@@ -1,4 +1,13 @@
 - if admin_user.present?
 - else
-  .text-center.vertical-center
-    a.btn.btn-primary href='/auth/facebook/callback' Login
+  .content
+    .row style='margin-bottom:25px;'
+      .col-xs-12
+        .text-center
+          a.btn.btn-lg.btn-primary href='/auth/facebook'
+            i.fa.fa-facebook
+            | &nbsp; Login
+    .row
+      .col-xs-12
+        .text-center
+          a.btn.btn-lg.btn-success href='/auth/facebook/callback' Create User

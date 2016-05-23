@@ -1,13 +1,14 @@
-nav.navbar.navbar-fixed-left.left-nav
-  ul.nav.navbar-nav
-    li
-      a href='/dashboard' Dashboard
-    li
-      a href='/admin/unmoderated' Unmoderated Users
-    li
-      a href='/admin/suspicious' Suspicious Users
-    li
-      a href='/admin/pending-butler-chats' Butler Chats (#{@new_butler_chats_cnt || 0} new)
-    li
-      a href='/admin/review-photos' New Photos
+- if admin_user.present?
+  nav.navbar.navbar-fixed-left.left-nav
+    ul.nav.navbar-nav
+      li
+        a href='/dashboard' Dashboard
+      li
+        a href='/admin/unmoderated' Unmoderated Users
+      li
+        a href='/admin/suspicious' Suspicious Users
+      li
+        a href='/admin/pending-butler-chats' Butler Chats (#{@new_butler_chats_cnt || 0} new)
+      li
+        a href='/admin/review-photos' New Photos
 

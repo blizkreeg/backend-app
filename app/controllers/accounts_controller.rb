@@ -10,6 +10,7 @@ class AccountsController < ApplicationController
   before_action :set_account_profile, except: [:login, :callback]
 
   def login
+    session[:redirect_to] = '/show'
   end
 
   def callback
@@ -24,7 +25,7 @@ class AccountsController < ApplicationController
 
     session[:profile_uuid] = profile.uuid
 
-    redirect_to :show
+    redirect_to session[:redirect_to]
   rescue ActiveRecord::RecordNotFound
     render text: 'Profile not found!'
   end

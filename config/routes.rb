@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # TBD: move to standalone or protected on production
   mount Sidekiq::Web => '/sidekiq'
 
-  # constraints subdomain :api do <-- TODO: UNCOMMENT BEFORE LAUNCH
+  constraints { subdomain 'app-api' } do
     scope module: 'api' do
       namespace 'v1' do
         get '/home', to: 'profiles#home'
@@ -64,7 +64,7 @@ Rails.application.routes.draw do
     post 'update-conversation-state', to: 'accounts#update_conversation_state'
     post 'post-date-feedback', to: 'accounts#switch_to_post_date_feedback'
     post 'send-push-notification', to: 'accounts#send_push_notification'
-  # end <-- TODO: UNCOMMENT BEFORE LAUNCH
+  end
 
   #
   # ADMIN DASHBOARD
@@ -77,6 +77,7 @@ Rails.application.routes.draw do
   post '/admin/moderate_user', to: 'admin#moderate_user', as: 'admin_moderate_user'
   get '/admin/review-photos', to: 'admin#review_photos'
   post '/admin/moderate-photos', to: 'admin#moderate_photos', as: 'admin_moderate_photos'
+  post '/admin/logout', to: 'admin#logout', as: 'admin_logout'
 
   get '*unmatched_route', to: 'application#route_not_found'
 end

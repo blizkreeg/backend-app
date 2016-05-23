@@ -5,6 +5,8 @@ class AdminController < ApplicationController
 
   def dashboard
     @new_butler_chats_cnt = Profile.with_has_new_butler_message(true).count
+
+    session[:redirect_to] = '/dashboard'
   end
 
   def unmoderated
@@ -49,10 +51,15 @@ class AdminController < ApplicationController
     redirect_to :back
   end
 
+  def logout
+    reset_session
+
+    redirect_to :back
+  end
+
   private
 
   def load_admin_user
-    # @admin_user = Profile.find(session[:user_uuid]) if session[:user_uuid].present?
-    @admin_user = Profile.with_email('vinthanedar@gmail.com').take
+    @admin_user = Profile.find(session[:profile_uuid]) if session[:profile_uuid].present?
   end
 end
