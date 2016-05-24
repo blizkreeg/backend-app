@@ -6,7 +6,7 @@ module Matchmaker
   DEFAULT_HEIGHT_GAP_MEN    = [-7, 0]
   DEFAULT_HEIGHT_GAP_WOMEN  = [0, +7]
 
-  N_MATCHES_AT_A_TIME = 5
+  FIND_N_ELIGIBLE_MATCHES = 5
 
   NEW_MATCHES_AT_HOUR = 12
   NEW_MATCHES_AT_MIN = 0
@@ -126,7 +126,7 @@ module Matchmaker
       .where.not(uuid: profile.uuid)
       .joins("LEFT OUTER JOIN (#{existing_matches_sql}) matches ON matches.matched_profile_uuid = profiles.uuid")
       .where(matches: { matched_profile_uuid: nil })
-      .limit(opts[:limit] || N_MATCHES_AT_A_TIME)
+      .limiN_t(opts[:limit] || FIND_N_ELIGIBLE_MATCHES)
   end
 
   # DEFAULT MATCH PREFERENCES
