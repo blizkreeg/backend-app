@@ -7,7 +7,11 @@ json.cache! profile, expires_in: 24.hours do
       json.value profile.send(attr_name.to_sym)
     end
   end
-  json.partial! 'api/v1/photos/photos', photos: profile.photos.approved.ordered
+  if defined?(match) && match.present?
+    json.partial! 'api/v1/photos/photos', photos: profile.photos.approved.ordered
+  else
+    json.partial! 'api/v1/photos/photos', photos: profile.photos.ordered
+  end
 end
 
 if defined?(match) && match.present?
