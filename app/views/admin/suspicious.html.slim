@@ -3,7 +3,7 @@ h5
   | (possibly married)
 hr
 .row
-  .col-xs-3
+  .col-xs-6
     h4 Men
     ul
     - if @suspicious_men_cnt == 0
@@ -16,7 +16,7 @@ hr
       - if @suspicious_men_cnt > 1
         h5
           = "#{@suspicious_men_cnt - 1} more"
-  .col-xs-3
+  .col-xs-6
     h4 Women
     ul
     - if @suspicious_women_cnt == 0
