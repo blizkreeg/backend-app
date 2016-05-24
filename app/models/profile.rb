@@ -587,5 +587,7 @@ class Profile < ActiveRecord::Base
     # profiles are reviewed first time before serving them up as matches
     self.moderation_status = 'unmoderated'
     self.visible = false
+
+    true
   end
 end
