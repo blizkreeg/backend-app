@@ -529,7 +529,12 @@ class Profile < ActiveRecord::Base
   def set_age
     return if self.born_on_year.blank? || self.born_on_month.blank? || self.born_on_day.blank?
 
-    self.age = ((Date.today - Date.new(self.born_on_year, self.born_on_month, self.born_on_day))/365).to_i
+    dob = Date.new(self.born_on_year, self.born_on_month, self.born_on_day)
+
+    # http://stackoverflow.com/a/2357790
+    now = Time.now.utc.to_date
+    self.age = now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+
     true
   end
 
