@@ -1,10 +1,8 @@
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE unless Rails.env.production?
-
 class AdminController < ApplicationController
   layout 'admin'
 
   before_action :load_admin_user
-  before_action :admin_authenticated?, except: [:dashboard, :logout, :create_user]
+  before_action :admin_authenticated?, except: [:dashboard, :logout]
 
   def dashboard
     if @admin_user.present?
