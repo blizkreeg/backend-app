@@ -11,6 +11,7 @@ class Photo < ActiveRecord::Base
   FULLSCREEN_TRANSFORMATIONS = 'c_fill,g_face:center,q_50'
 
   # scope :valid, -> { where("(properties->>'marked_for_deletion')::boolean = false").order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc") }
+  scope :approved, -> { with_approved(true) }
   scope :ordered, -> { order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc").order("updated_at DESC") }
   scope :primary, -> { where("(properties->>'primary')::boolean = true").order("updated_at DESC") }
 

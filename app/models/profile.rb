@@ -451,11 +451,12 @@ class Profile < ActiveRecord::Base
   end
 
   def test_and_set_primary_photo!
-    num_primary = self.photos.primary.count
+    num_primary = self.photos.approved.primary.count
     return if num_primary == 1 || self.photos.count == 0
 
     if num_primary == 0
-      self.photos.ordered.first.update!(primary: true)
+      first = self.photos.approved.ordered.first
+      first.update!(primary: true) if first.present?
     else
       self.photos.primary[1..-1].each do |photo|
         photo.update!(primary: false)

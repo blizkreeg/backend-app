@@ -89,7 +89,7 @@ p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | 
 .row
   .col-xs-12
     h4 Photos
-    - @profile.photos.each do |photo|
+    - @profile.photos.ordered.each do |photo|
         div style='position:relative;width:250px;height:250px;float:left;margin:2px;'
           = cl_image_tag "#{photo.public_id}.jpg", style: 'width:250px;height:250px;'
           - if photo.reviewed
@@ -98,6 +98,8 @@ p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | 
             - else
               = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'submit btn btn-success', style: 'position:absolute;top:0;left:0'
             span style='position:absolute;bottom:0;left:45%;color:black;background-color:white;padding: 1px 2px;' #{photo.approved ? 'APPROVED' : 'REJECTED'}
+            - if photo.primary
+              span style='position:absolute;top:0;left:50%;color:white;background-color:black;padding: 1px 4px;font-weight:600;font-size:16px;' P
           - else
             = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'submit btn btn-success', style: 'position:absolute;top:0;left:0'
             = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'submit btn btn-danger', style: 'position:absolute;top:0;right:0'

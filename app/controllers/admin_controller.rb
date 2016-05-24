@@ -45,8 +45,16 @@ class AdminController < ApplicationController
   end
 
   def moderate_photos
+    params[:approved] = (params[:approved] == 'true')
     params[:ids].each do |id|
-      Photo.update(id, reviewed: true, approved: params[:approved])
+      if !params[:approved]
+        photo = Photo.find(id)
+        rejected_photo_was_primary = photo.primary
+      end
+      props = { reviewed: true, approved: params[:approved] }
+      props.merge!({ primary: false }) if !params[:approved]
+      Photo.update(id, props)
+      photo.profile.test_and_set_primary_photo! if rejected_photo_was_primary
     end
 
     # here a butler chat should be sent to user
