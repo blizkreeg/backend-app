@@ -36,13 +36,13 @@ class Api::V1::PhotosController < ApplicationController
 
     @current_profile.test_and_set_primary_photo!
 
-    @photos = @current_profile.photos.approved.ordered
+    @photos = @current_profile.photos.ordered
 
     render 'api/v1/photos/index', status: 200
   end
 
   def index
-    @photos = @current_profile.photos.approved.ordered
+    @photos = @current_profile.photos.ordered
 
     render status: 200
   end
@@ -56,7 +56,7 @@ class Api::V1::PhotosController < ApplicationController
 
     @current_profile.test_and_set_primary_photo!
 
-    @photos = @current_profile.photos.approved.ordered
+    @photos = @current_profile.photos.ordered
 
     render 'api/v1/photos/index', status: 200
   end
@@ -83,7 +83,7 @@ class Api::V1::PhotosController < ApplicationController
 
     @current_profile.test_and_set_primary_photo!
 
-    @photos = @current_profile.photos
+    @photos = @current_profile.photos.ordered
 
     render 'api/v1/photos/index', status: 200
   end
