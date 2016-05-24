@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   # ADMIN DASHBOARD
   #
   constraints SubdomainConstraint.new('admin') do
+    get '/', to: redirect('/dashboard')
     get  '/dashboard', to: 'admin#dashboard'
     post '/lookup-user', to: 'admin#lookup_user'
     get  '/show-user/:uuid', to: 'admin#show_user', as: 'admin_show_user'
