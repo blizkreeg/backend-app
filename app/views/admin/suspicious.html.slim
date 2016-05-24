@@ -10,7 +10,9 @@ hr
       h5 None
     - else
       - @suspicious.select { |profile| profile.male? }.each do |profile|
-        li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+        li
+          = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+          small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
       - if @suspicious_men_cnt > 1
         h5
           = "#{@suspicious_men_cnt - 1} more"
@@ -21,7 +23,9 @@ hr
       h5 None
     - else
       - @suspicious.select { |profile| profile.female? }.each do |profile|
-        li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+        li
+          = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+          small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
       - if @suspicious_women_cnt > 25
         h5
           = "#{@suspicious_women_cnt - 25} more"
