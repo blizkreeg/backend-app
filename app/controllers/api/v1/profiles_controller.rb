@@ -127,7 +127,7 @@ class Api::V1::ProfilesController < ApplicationController
         person = OpenStruct.new
         person.firstname = row[1]
         person.location_city = row[3]
-        person.age = row[4]
+        person.age = row[4].to_i
         person.profession = row[5]
         qna = []
         qna[0] = { question: row[10], answer: row[11] }
@@ -136,8 +136,8 @@ class Api::V1::ProfilesController < ApplicationController
         photo.id = nil
         photo.original_url = row[6]
         photo.public_id = row[7]
-        photo.original_width = row[8]
-        photo.original_height = row[9]
+        photo.original_width = row[8].to_i
+        photo.original_height = row[9].to_i
         photo.primary = true
         person.qna = qna
         person.photo = photo
