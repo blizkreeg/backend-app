@@ -43,27 +43,6 @@ Rails.application.routes.draw do
         resources :accounts
       end
     end
-
-    # TBD: COMMENT BEFORE GOING TO PROD!!
-
-    get '/admin', to: 'accounts#admin'
-    post '/admin/create-matches', to: 'accounts#create_matches'
-    post '/admin/check-mutual-matches', to: 'accounts#check_mutual_match'
-    post '/admin/move-conversation', to: 'accounts#move_conversation'
-
-    get 'login', to: 'accounts#login'
-    get 'all', to: 'accounts#index'
-    get 'show', to: 'accounts#show'
-    get 'show/butler', to: 'accounts#show_butler_chat'
-    get '/auth/:provider/callback', to: 'accounts#callback', as: :omniauth_callback
-    delete '/accounts/destroy/:uuid', to: 'accounts#destroy'
-    post 'reset_state', to: 'accounts#reset_state'
-    post 'create-mutual-match', to: 'accounts#create_mutual_match'
-    post 'reverse-gender', to: 'accounts#reverse_gender'
-    post 'start-conversation', to: 'accounts#start_conversation'
-    post 'update-conversation-state', to: 'accounts#update_conversation_state'
-    post 'post-date-feedback', to: 'accounts#switch_to_post_date_feedback'
-    post 'send-push-notification', to: 'accounts#send_push_notification'
   end
 
   #
@@ -80,6 +59,21 @@ Rails.application.routes.draw do
     get  '/review-photos', to: 'admin#review_photos'
     post '/moderate-photos', to: 'admin#moderate_photos', as: 'admin_moderate_photos'
     post '/logout', to: 'admin#logout', as: 'admin_logout'
+
+    # old admin dashboard - TBD: remove/merge this functionality into above
+    get '/login', to: 'accounts#login'
+    get '/all', to: 'accounts#index'
+    get '/show', to: 'accounts#show'
+    get '/show/butler', to: 'accounts#show_butler_chat'
+    get '/auth/:provider/callback', to: 'accounts#callback', as: :omniauth_callback
+    delete '/accounts/destroy/:uuid', to: 'accounts#destroy'
+    post '/reset_state', to: 'accounts#reset_state'
+    post '/create-mutual-match', to: 'accounts#create_mutual_match'
+    post '/reverse-gender', to: 'accounts#reverse_gender'
+    post '/start-conversation', to: 'accounts#start_conversation'
+    post '/update-conversation-state', to: 'accounts#update_conversation_state'
+    post '/post-date-feedback', to: 'accounts#switch_to_post_date_feedback'
+    post '/send-push-notification', to: 'accounts#send_push_notification'
   end
 
   get '*unmatched_route', to: 'application#route_not_found'
