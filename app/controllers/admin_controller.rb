@@ -65,7 +65,7 @@ class AdminController < ApplicationController
   def logout
     reset_session
 
-    redirect_to :back
+    redirect_to '/dashboard'
   end
 
   private
