@@ -111,24 +111,33 @@ class Api::V1::ProfilesController < ApplicationController
       session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
       ws = session.spreadsheet_by_key("1ldIZou60XG-zAPZ1HRT0oQNUb1VrhRZFzl-CkKjCbJo").worksheets[0]
 
+      # doc version stored at [1,2]
+      rows = Rails.cache.fetch("featured_profiles_#{found_city[:name].downcase.gsub(/[^\w]/i, '')}_v#{ws[1,2]}", expires_in: 30.days) do
+        rows = []
+        (1..ws.num_rows).select do |row|
+          next unless row >= 5
+          next unless ws[row, 1] == found_city[:name]
+          rows << (1..14).to_a.map { |col| ws[row, col] }
+        end
+        rows
+      end
+
       @people = []
-      (1..ws.num_rows).each do |row|
-        next unless row >= 4
-        next unless ws[row, 1] == found_city[:name]
+      rows.each do |row|
         person = OpenStruct.new
-        person.firstname = ws[row, 2]
-        person.location_city = ws[row, 4]
-        person.age = ws[row, 5]
-        person.profession = ws[row, 6]
+        person.firstname = row[1]
+        person.location_city = row[3]
+        person.age = row[4]
+        person.profession = row[5]
         qna = []
-        qna[0] = { question: ws[row, 11], answer: ws[row, 12] }
-        qna[1] = { question: ws[row, 13], answer: ws[row, 14] }
+        qna[0] = { question: row[10], answer: row[11] }
+        qna[1] = { question: row[12], answer: row[13] }
         photo = OpenStruct.new
         photo.id = nil
-        photo.original_url = ws[row, 7]
-        photo.public_id = ws[row, 8]
-        photo.original_width = ws[row, 9]
-        photo.original_height = ws[row, 10]
+        photo.original_url = row[6]
+        photo.public_id = row[7]
+        photo.original_width = row[8]
+        photo.original_height = row[9]
         photo.primary = true
         person.qna = qna
         person.photo = photo
