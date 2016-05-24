@@ -1,10 +1,15 @@
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE unless Rails.env.production?
+
 class AdminController < ApplicationController
   layout 'admin'
 
   before_action :load_admin_user
+  before_action :admin_authenticated?, except: [:dashboard, :logout, :create_user]
 
   def dashboard
-    @new_butler_chats_cnt = Profile.with_has_new_butler_message(true).count
+    if @admin_user.present?
+      @new_butler_chats_cnt = Profile.with_has_new_butler_message(true).count
+    end
 
     session[:redirect_to] = '/dashboard'
   end
@@ -46,7 +51,7 @@ class AdminController < ApplicationController
       Photo.update(id, reviewed: true, approved: params[:approved])
     end
 
-    # here something should be sent to user
+    # here a butler chat should be sent to user
 
     redirect_to :back
   end
@@ -61,5 +66,12 @@ class AdminController < ApplicationController
 
   def load_admin_user
     @admin_user = Profile.find(session[:profile_uuid]) if session[:profile_uuid].present?
+  end
+
+  def admin_authenticated?
+    if @admin_user.blank?
+      flash[:error] = 'You need to be logged in!'
+      redirect_to action: 'dashboard'
+    end
   end
 end

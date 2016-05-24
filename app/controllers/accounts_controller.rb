@@ -16,6 +16,13 @@ class AccountsController < ApplicationController
   def callback
     uid = request.env["omniauth.auth"]["uid"]
     puts uid, request.env["omniauth.auth"]["credentials"].inspect
+
+    if !ADMIN_FB_OAUTH_UIDS.include?(uid)
+      flash[:error] = "Can't find what you're looking for..."
+      redirect_to session[:redirect_to]
+      return
+    end
+
     fb = FacebookAuthentication.where(oauth_uid: uid).take!
     new_token = request.env["omniauth.auth"]["credentials"]["token"]
     new_expires_at = request.env["omniauth.auth"]["credentials"]["expires_at"]

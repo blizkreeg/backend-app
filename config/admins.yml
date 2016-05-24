@@ -1,0 +1,15 @@
+test: &test
+  fb_oauth_uids:
+    - '605136095' # vineet
+    - '535286657' # anushri
+    - '100002161759990' #prashant
+    - '100001685107753' # siddharth
+    - '100000927870413' # neha
+    - '1193479594' # vikas
+    - '100001582043296' # divya
+development:
+  <<: *test
+production:
+  fb_oauth_uids:
+    - '605136095'
+    - '535286657'

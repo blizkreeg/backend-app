@@ -1,26 +1,27 @@
-.content
-  h3 Suspicious users
-  h5 <possibly married>
-  .row
-    .col-xs-3
-      h4 Men
-      ul
-      - if @suspicious_men_cnt == 0
-        h5 None
-      - else
-        - @suspicious.select { |profile| profile.male? }.each do |profile|
-          li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
-        - if @suspicious_men_cnt > 1
-          h5
-            = "#{@suspicious_men_cnt - 1} more"
-    .col-xs-3
-      h4 Women
-      ul
-      - if @suspicious_women_cnt == 0
-        h5 None
-      - else
-        - @suspicious.select { |profile| profile.female? }.each do |profile|
-          li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
-        - if @suspicious_women_cnt > 25
-          h5
-            = "#{@suspicious_women_cnt - 25} more"
+h3 Suspicious users
+h5
+  | (possibly married)
+hr
+.row
+  .col-xs-3
+    h4 Men
+    ul
+    - if @suspicious_men_cnt == 0
+      h5 None
+    - else
+      - @suspicious.select { |profile| profile.male? }.each do |profile|
+        li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+      - if @suspicious_men_cnt > 1
+        h5
+          = "#{@suspicious_men_cnt - 1} more"
+  .col-xs-3
+    h4 Women
+    ul
+    - if @suspicious_women_cnt == 0
+      h5 None
+    - else
+      - @suspicious.select { |profile| profile.female? }.each do |profile|
+        li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+      - if @suspicious_women_cnt > 25
+        h5
+          = "#{@suspicious_women_cnt - 25} more"

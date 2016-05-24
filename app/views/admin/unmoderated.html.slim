@@ -1,25 +1,25 @@
-.content
-  h3 Unmoderated users
-  .row
-    .col-xs-3
-      h4 Men
-      ul
-      - if @unmoderated_men_cnt == 0
-        h5 None
-      - else
-        - @unmoderated.select { |profile| profile.male? }.each do |profile|
-          li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
-        - if @unmoderated_men_cnt > 1
-          h5
-            = "#{@unmoderated_men_cnt - 1} more"
-    .col-xs-3
-      h4 Women
-      ul
-      - if @unmoderated_women_cnt == 0
-        h5 None
-      - else
-        - @unmoderated.select { |profile| profile.female? }.each do |profile|
-          li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
-        - if @unmoderated_women_cnt > 25
-          h5
-            = "#{@unmoderated_women_cnt - 25} more"
+h3 Unmoderated users
+hr
+.row
+  .col-xs-3
+    h4 Men
+    ul
+    - if @unmoderated_men_cnt == 0
+      h5 None
+    - else
+      - @unmoderated.select { |profile| profile.male? }.each do |profile|
+        li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+      - if @unmoderated_men_cnt > 1
+        h5
+          = "#{@unmoderated_men_cnt - 1} more"
+  .col-xs-3
+    h4 Women
+    ul
+    - if @unmoderated_women_cnt == 0
+      h5 None
+    - else
+      - @unmoderated.select { |profile| profile.female? }.each do |profile|
+        li = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+      - if @unmoderated_women_cnt > 25
+        h5
+          = "#{@unmoderated_women_cnt - 25} more"

@@ -7,9 +7,14 @@ head
   = javascript_include_tag 'https://use.fontawesome.com/ebabc2ab89.js'
   = csrf_meta_tags
 body
-  = render partial: 'header'
-  = render partial: 'navigation'
+  - if admin_user.present?
+    = render partial: 'header'
+    = render partial: 'navigation'
 
   .container
-    .row
+    .content
+      - if flash[:error]
+        .alert.alert-danger.text-center
+          = flash[:error]
+          - flash[:error] = nil
       = yield

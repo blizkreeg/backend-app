@@ -9,7 +9,6 @@ body {
 }
 
 a, a:visited {
-  // text-decoration: underline;
 }
 
 a:hover {
@@ -25,7 +24,7 @@ a:hover {
   background-color: #dadada;
 }
 
-.navbar-inverse .navbar-nav>li>a, .navbar-inverse .navbar-text {
+.navbar-inverse .navbar-nav>li>a, .navbar-inverse .navbar-nav a, .navbar-inverse .navbar-text {
   color: white;
 }
 

@@ -1,90 +1,88 @@
-= render partial: 'header'
-.content
-  h4 USER INFO
-  hr
-  h4
-    | #{@profile.firstname} #{@profile.lastname} / #{@profile.uuid}
-  p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
-  .row
-    .col-xs-1
-      - if @profile.approved?
-        = button_to 'Flag', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'submit btn btn-success' }
-      - else
-        = button_to 'Approve', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'submit btn btn-success' }
-    .col-xs-1
-      - if @profile.blacklisted?
-        = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'submit btn btn-default' }
-      - else
-        = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'submit btn', style: 'background-color: black; color: white;' }
-  .row
-    .col-xs-4.box
-      h4.upcase Matches Received #{content_tag(:span, @profile.matches.count, class: 'h3 text-right')}
-      h4.upcase Matches Liked #{content_tag(:span, @profile.matches.liked.count, class: 'h3 text-right')}
-      h4.upcase Matches Passed #{content_tag(:span, @profile.matches.passed.count, class: 'h3')}
-    .col-xs-4
-      h4 Profile
-      hr
-      / ul.unstyled-list
-      span.clearfix
-        strong.prop FB Url:
-        = link_to "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", target: '_blank'
-      span.clearfix
-        strong.prop Intent:
-        = @profile.intent || 'n/a'
-      span.clearfix
-        strong.prop FB Relationship Status:
-        = @profile.possible_relationship_status || 'n/a'
-      span.clearfix
-        strong.prop Height:
-        = @profile.height || 'n/a'
-      span.clearfix
-        strong.prop Profession:
-        = @profile.profession || 'n/a'
-      span.clearfix
-        strong.prop Schools attended:
-        = @profile.schools_attended.join(', ') || 'n/a'
-      span.clearfix
-        strong.prop Faith:
-        = @profile.faith || 'n/a'
-      span.clearfix
-        strong.prop Degrees:
-        = @profile.earned_degrees.join(', ') || 'n/a'
-      span.clearfix
-        strong.prop Highest Degree:
-        = @profile.highest_degree || 'n/a'
-    .col-xs-4.box
-      - if @profile.waiting_for_matches? || @profile.waiting_for_matches_and_response?
-        h4 Waiting For Matches
-        - if @profile.active_mutual_match.present?
-          p Mutually matched with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid), target: '_blank'}
-      - elsif @profile.has_matches? || @profile.has_matches_and_waiting_for_response?
-        h4 Ready For Matches
-      - elsif @profile.show_matches? || @profile.show_matches_and_waiting_for_response?
-        h4 Showing Matches
-      - elsif @profile.mutual_match?
-        h4 Mutual Match
-        p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid), target: '_blank'}
-      - elsif @profile.in_conversation?
-        h4 In Conversation
-        p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid), target: '_blank'}
-        dl
-          dt id
-          dd #{@profile.active_mutual_match.conversation.id}
+h4 USER INFO
+hr
+h4
+  | #{@profile.firstname} #{@profile.lastname} / #{@profile.uuid}
+p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
+.row
+  .col-xs-1
+    - if @profile.approved?
+      = button_to 'Flag', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'submit btn btn-success' }
+    - else
+      = button_to 'Approve', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'submit btn btn-success' }
+  .col-xs-1
+    - if @profile.blacklisted?
+      = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'submit btn btn-default' }
+    - else
+      = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'submit btn', style: 'background-color: black; color: white;' }
+.row
+  .col-xs-4.box
+    h4.upcase Matches Received #{content_tag(:span, @profile.matches.count, class: 'h3 text-right')}
+    h4.upcase Matches Liked #{content_tag(:span, @profile.matches.liked.count, class: 'h3 text-right')}
+    h4.upcase Matches Passed #{content_tag(:span, @profile.matches.passed.count, class: 'h3')}
+  .col-xs-4
+    h4 Profile
+    hr
+    / ul.unstyled-list
+    span.clearfix
+      strong.prop FB Url:
+      = link_to "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", target: '_blank'
+    span.clearfix
+      strong.prop Intent:
+      = @profile.intent || 'n/a'
+    span.clearfix
+      strong.prop FB Relationship Status:
+      = @profile.possible_relationship_status || 'n/a'
+    span.clearfix
+      strong.prop Height:
+      = @profile.height || 'n/a'
+    span.clearfix
+      strong.prop Profession:
+      = @profile.profession || 'n/a'
+    span.clearfix
+      strong.prop Schools attended:
+      = @profile.schools_attended.join(', ') || 'n/a'
+    span.clearfix
+      strong.prop Faith:
+      = @profile.faith || 'n/a'
+    span.clearfix
+      strong.prop Degrees:
+      = @profile.earned_degrees.join(', ') || 'n/a'
+    span.clearfix
+      strong.prop Highest Degree:
+      = @profile.highest_degree || 'n/a'
+  .col-xs-4.box
+    - if @profile.waiting_for_matches? || @profile.waiting_for_matches_and_response?
+      h4 Waiting For Matches
+      - if @profile.active_mutual_match.present?
+        p Mutually matched with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid), target: '_blank'}
+    - elsif @profile.has_matches? || @profile.has_matches_and_waiting_for_response?
+      h4 Ready For Matches
+    - elsif @profile.show_matches? || @profile.show_matches_and_waiting_for_response?
+      h4 Showing Matches
+    - elsif @profile.mutual_match?
+      h4 Mutual Match
+      p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid), target: '_blank'}
+    - elsif @profile.in_conversation?
+      h4 In Conversation
+      p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid), target: '_blank'}
+      dl
+        dt id
+        dd #{@profile.active_mutual_match.conversation.id}
 
-          dt uuid
-          dd #{@profile.active_mutual_match.conversation.uuid}
+        dt uuid
+        dd #{@profile.active_mutual_match.conversation.uuid}
 
-          dt start
-          dd #{render_time(@profile.active_mutual_match.conversation.opened_at)}
+        dt start
+        dd #{render_time(@profile.active_mutual_match.conversation.opened_at)}
 
-          dt end
-          dd #{render_time(@profile.active_mutual_match.conversation.closes_at)}
+        dt end
+        dd #{render_time(@profile.active_mutual_match.conversation.closes_at)}
 
-          dt open
-          dd #{@profile.active_mutual_match.conversation.open}
-      hr
-      h4 Event Log
-      hr
-      - @profile.event_logs.each do |el|
-        p
-          = raw render_event_log(el)
+        dt open
+        dd #{@profile.active_mutual_match.conversation.open}
+    hr
+    h4 Event Log
+    hr
+    - @profile.event_logs.each do |el|
+      p
+        = raw render_event_log(el)

@@ -70,15 +70,15 @@ Rails.application.routes.draw do
   # ADMIN DASHBOARD
   #
   constraints SubdomainConstraint.new('admin') do
-    get '/dashboard', to: 'admin#dashboard'
-    post '/admin/lookup-user', to: 'admin#lookup_user'
-    get '/admin/show-user/:uuid', to: 'admin#show_user', as: 'admin_show_user'
-    get '/admin/unmoderated', to: 'admin#unmoderated'
-    get '/admin/suspicious', to: 'admin#suspicious'
-    post '/admin/moderate_user', to: 'admin#moderate_user', as: 'admin_moderate_user'
-    get '/admin/review-photos', to: 'admin#review_photos'
-    post '/admin/moderate-photos', to: 'admin#moderate_photos', as: 'admin_moderate_photos'
-    post '/admin/logout', to: 'admin#logout', as: 'admin_logout'
+    get  '/dashboard', to: 'admin#dashboard'
+    post '/lookup-user', to: 'admin#lookup_user'
+    get  '/show-user/:uuid', to: 'admin#show_user', as: 'admin_show_user'
+    get  '/unmoderated', to: 'admin#unmoderated'
+    get  '/suspicious', to: 'admin#suspicious'
+    post '/moderate_user', to: 'admin#moderate_user', as: 'admin_moderate_user'
+    get  '/review-photos', to: 'admin#review_photos'
+    post '/moderate-photos', to: 'admin#moderate_photos', as: 'admin_moderate_photos'
+    post '/logout', to: 'admin#logout', as: 'admin_logout'
   end
 
   get '*unmatched_route', to: 'application#route_not_found'
