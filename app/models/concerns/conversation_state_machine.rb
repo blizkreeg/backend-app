@@ -59,6 +59,7 @@ module ConversationStateMachine
         transitions from: :health_check, to: :radio_silence
         transitions from: :ready_to_meet, to: :radio_silence
         transitions from: :check_if_meeting, to: :radio_silence
+        transitions from: :show_date_suggestions, to: :radio_silence
       end
 
       event :check_if_going_to_meet do
