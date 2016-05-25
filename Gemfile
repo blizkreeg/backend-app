@@ -18,7 +18,7 @@ gem 'responders'
 gem 'geocoder'
 gem 'redis'
 gem 'redis-rails'
-gem 'sidekiq'
+gem 'sidekiq', require: ['sidekiq', 'sidekiq/web']
 gem 'cloudinary'
 gem 'aasm'
 gem 'firebase'

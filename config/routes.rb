@@ -1,4 +1,3 @@
-require 'sidekiq/web'
 Rails.application.routes.draw do
   constraints SubdomainConstraint.new('app-api') do
     scope module: 'api' do
@@ -46,9 +45,6 @@ Rails.application.routes.draw do
   # ADMIN DASHBOARD
   #
   constraints SubdomainConstraint.new('admin') do
-    Sidekiq::Web.use Rack::Auth::Basic do |username, password|
-      username == ENV["SIDEKIQ_USERNAME"] && password == ENV["SIDEKIQ_PASSWORD"]
-    end if Rails.env.production?
     mount Sidekiq::Web, at: "/sq"
 
     get '/', to: redirect('/dashboard')
