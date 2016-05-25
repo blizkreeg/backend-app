@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         get '/profiles/:uuid/state', to: 'profiles#get_state', as: :get_state
 
         post '/accounts/send-push-notification', to: 'accounts#send_push_notification'
+        post '/accounts/update-user-new-butler-message', to: 'accounts#update_user_new_butler_message'
         resources :accounts
       end
     end
@@ -58,6 +59,9 @@ Rails.application.routes.draw do
     post '/moderate_user', to: 'admin#moderate_user', as: 'admin_moderate_user'
     get  '/review-photos', to: 'admin#review_photos'
     post '/moderate-photos', to: 'admin#moderate_photos', as: 'admin_moderate_photos'
+    get '/new-butler-chats', to: 'admin#new_butler_chats'
+    get '/show-butler-chat/:profile_uuid', to: 'admin#show_butler_chat', as: 'admin_show_butler_chat'
+    post '/update-butler-chat-flag', to: 'admin#update_butler_chat_flag', as: 'admin_update_butler_chat_flag'
     post '/logout', to: 'admin#logout', as: 'admin_logout'
 
     # old admin dashboard - TBD: remove/merge this functionality into above

@@ -1,0 +1,59 @@
+- firebase_token = Firebase::FirebaseTokenGenerator.new("#{ENV['FIREBASE_SECRET']}").create_token({ uid: @profile.uuid })
+h3 Butler Chat with #{link_to @profile.fullname, admin_show_user_path(@profile.uuid), target: '_blank'}
+hr
+.row
+  .col-xs-12.col-sm-4.text-right style='margin-bottom:25px;'
+    - if @profile.has_new_butler_message
+      = button_to 'Mark as Resolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: true }, class: 'submit btn btn-success'}
+    - else
+      = button_to 'Mark as Unresolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: false }, class: 'submit btn btn-danger'}
+.row
+  .col-xs-12.col-sm-4
+    .conversation
+      .messages
+      .loading
+        | Loading&hellip;
+    .send-message
+      = text_field_tag 'message_to_send', '', placeholder: 'Type message. Enter to send.', class: 'message-box'
+
+javascript:
+  var profile_uuid = "#{@profile.uuid}";
+
+  var ref = new Firebase("#{Rails.application.config.firebase_db_url}");
+  ref.authWithCustomToken("#{firebase_token}", function(error, authData) {
+    if (error) {
+      console.log("Login Failed!", error);
+    } else {
+      console.log("Login Succeeded!", authData);
+    }
+  });
+
+  var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}butler-conversations/#{@profile.butler_conversation_uuid}/messages");
+
+  var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(25);
+
+  firstQuery.on('child_added', function(snapshot) {
+    $('.loading').hide();
+    var data = snapshot.val();
+    if(data.sender_uuid === undefined) {
+      $('.messages').append('<div class="sent">' + data.content  + '</div>');
+    } else {
+      $('.messages').append('<div class="received">' + data.content  + '</div>');
+    }
+  });
+
+  $('#message_to_send').on('keypress', function(e) {
+    if(e.which == 13) {
+      alert($(this).val());
+      conversationRef.push({ content: $(this).val(),
+                              sender_uuid: null,
+                              recipient_uuid: profile_uuid,
+                              sent_at: Date.now(),
+                              processed: true });
+      $(this).val('');
+    }
+  });
+
+  $('#disconnect-chat').on('click', function() {
+    Firebase.goOffline();
+  })

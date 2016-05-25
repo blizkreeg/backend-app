@@ -41,13 +41,13 @@ var sys = require('util')
 var exec = require('child_process').exec;
 
 console.log('process pid: ' + process.pid);
-exec("echo '" + process.pid + "' > tmp/pids/firebase_master.pid");
+exec("echo '" + process.pid + "' > tmp/pids/firebase_butler_master.pid");
 
 var tokenGenerator = new FirebaseTokenGenerator(process.env.FIREBASE_SECRET);
 var token = tokenGenerator.createToken({ uid: '' }); // auth with no uuid
 var quitProcess = false;
 
-var conversationsRef = new Firebase(dbUrl + '/conversations');
+var conversationsRef = new Firebase(dbUrl + '/butler-conversations');
 var taskRef = new Firebase(dbUrl + "/queue/tasks");
 
 conversationsRef.on('child_changed', function(snapshot) {
@@ -64,9 +64,20 @@ conversationsRef.on('child_changed', function(snapshot) {
 
   var conversation_uuid = snapshot.key();
   console.log("new message in conversation: " + conversation_uuid + '; adding to queue.');
-  taskRef.push({
-    type: 'conversation_changed',
-    'conversation_uuid': conversation_uuid
+
+  messagesRef = new Firebase(dbUrl + '/butler-conversations/' + conversation_uuid + '/messages');
+  // getting two messages here for the forEach loop below - suboptimal
+  // check if Firebase has function to get just one message
+  messagesRef.orderByChild("processed").equalTo(null).limitToFirst(2).on('value', function(messages) {
+    newMessages = messages.numChildren();
+    if(newMessages > 0) {
+      messages.forEach(function(message) {
+        taskRef.push({
+          type: 'new_butler_message',
+          'profile_uuid': message.child("sender_uuid").val()
+        });
+      });
+    }
   });
 
   if(quitProcess) {

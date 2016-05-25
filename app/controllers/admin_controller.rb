@@ -34,7 +34,10 @@ class AdminController < ApplicationController
   end
 
   def moderate_user
-    puts params[:uuid]
+    p = Profile.find params[:uuid]
+    p.moderation_status = params[:moderation_status]
+    p.visible = params[:moderation_status] == 'approved' ? true : false
+    p.save!
 
     redirect_to :back
   end
@@ -58,6 +61,22 @@ class AdminController < ApplicationController
     end
 
     # here a butler chat should be sent to user
+
+    redirect_to :back
+  end
+
+  def new_butler_chats
+    @new_butler_message_men_cnt = Profile.with_gender('male').with_has_new_butler_message(true).count
+    @new_butler_message_women_cnt = Profile.with_gender('female').with_has_new_butler_message(true).count
+    @profiles = Profile.with_has_new_butler_message(true).limit(25)
+  end
+
+  def show_butler_chat
+    @profile = Profile.find params[:profile_uuid]
+  end
+
+  def update_butler_chat_flag
+    Profile.update(params[:profile_uuid], has_new_butler_message: (params[:resolved] == 'false'))
 
     redirect_to :back
   end

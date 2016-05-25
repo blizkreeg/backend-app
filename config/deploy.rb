@@ -66,12 +66,16 @@ namespace :firebase do
       on roles(:firebase) do
         execute "cd #{current_path} && echo '#!/bin/bash' > ~/export_vars.sh && #{fetch(:rbenv_path)}/bin/rbenv vars >> ~/export_vars.sh && chmod u+x ~/export_vars.sh && source ~/export_vars.sh && \
                 (nohup node #{current_path}/node_scripts/firebase_master.js > #{shared_path}/log/firebase_master.log 2>&1 &) && sleep 2", pty: true
+
+        execute "cd #{current_path} && echo '#!/bin/bash' > ~/export_vars.sh && #{fetch(:rbenv_path)}/bin/rbenv vars >> ~/export_vars.sh && chmod u+x ~/export_vars.sh && source ~/export_vars.sh && \
+                (nohup node #{current_path}/node_scripts/firebase_butler_master.js > #{shared_path}/log/firebase_butler_master.log 2>&1 &) && sleep 2", pty: true
       end
     end
 
     task :stop do
       on roles(:firebase) do
         execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_master.pid`"
+        execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_butler_master.pid`"
       end
     end
 

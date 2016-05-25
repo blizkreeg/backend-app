@@ -14,4 +14,16 @@ class Api::V1::AccountsController < ApplicationController
   rescue StandardError => e
     respond_with_error(e.message, 500)
   end
+
+  def update_user_new_butler_message
+    if params[:data][:uuid]
+      Profile.update(params[:data][:uuid], has_new_butler_message: true)
+    else
+      EKC.logger.error "UUID is null"
+    end
+
+    render 'api/v1/shared/nodata', status: 200
+  rescue StandardError => e
+    respond_with_error(e.message, 500)
+  end
 end

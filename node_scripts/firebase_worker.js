@@ -36,6 +36,47 @@ var queue = new Queue(queueRef, function(data, progress, resolve, reject) {
     progress(50);
   }, 500);
 
+  if(data.type == 'new_butler_message') {
+    processNewButlerChatMessage(data);
+  } else if(data.type == 'conversation_changed') {
+    processNewUserChatMessage(data);
+  }
+
+  // 5s to finish the job. Finish the job asynchronously
+  setTimeout(function() {
+    resolve();
+  }, 5000);
+});
+
+process.on('SIGTERM', function() {
+  quitProcess = true;
+  setTimeout(function() {
+    console.log('waited 2s...killing process');
+    process.exit();
+  }, 2000);
+});
+
+// send message to app to update the user
+function processNewButlerChatMessage(data) {
+  unirest.post(process.env.HOST_URL + '/v1/accounts/update-user-new-butler-message')
+  .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
+  .send({ "data": { "uuid": data.profile_uuid } })
+  .end(function (response) {
+    if(response.status == 200) {
+      // console.log('sent');
+
+      if(quitProcess) {
+        process.exit();
+      }
+    } else {
+      console.log(response.status);
+      console.log(response.body);
+    }
+  });
+}
+
+// if the recipient has disconnected, send them a push notification
+function processNewUserChatMessage(data) {
   metadataRef = new Firebase(dbUrl + "/conversations/" + data.conversation_uuid + "/metadata");
   metadataRef.once("value", function(metadata) {
     var conversationOpen = metadata.child("open").val();
@@ -121,17 +162,4 @@ var queue = new Queue(queueRef, function(data, progress, resolve, reject) {
       });
     }
   });
-
-  // Finish the job asynchronously
-  setTimeout(function() {
-    resolve();
-  }, 1000);
-});
-
-process.on('SIGTERM', function() {
-  quitProcess = true;
-  setTimeout(function() {
-    console.log('waited 2s...killing process');
-    process.exit();
-  }, 2000);
-});
+}
