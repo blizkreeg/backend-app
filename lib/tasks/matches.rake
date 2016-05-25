@@ -19,6 +19,8 @@ namespace :matches do
   task :ready_for_new => :environment do
     puts "[#{EKC.now_in_pacific_time}] -- SENDING NEW MATCHES NOTIFICATION"
 
+    uuids_to_notify = []
+
     Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
       begin
         if profile.has_new_matches?
@@ -37,9 +39,10 @@ namespace :matches do
           # check state and if it's time to notify them
           if profile.in_waiting_state? && profile.due_for_new_matches_notification?
             if profile.ok_to_send_new_matches_notification?
-              PushNotifier.delay.record_event(profile.uuid, 'new_matches')
+              PushNotifier.delay.record_event(profile.uuid, 'new_matches', do_not_send_push: true) # no push since we'll send them in batches below
               profile.update!(sent_matches_notification_at: DateTime.now)
-              puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: sent notification"
+              uuids_to_notify << profile.uuid
+              puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: sending notification"
             else
               puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: last notification less than a day ago, skipping."
             end
@@ -48,6 +51,11 @@ namespace :matches do
       rescue StandardError => e
         puts "[#{EKC.now_in_pacific_time}] -- error generating matches for #{profile.uuid}, error: #{e.class.name}, message: #{e.message}"
       end
+    end
+
+    # send notifications in batches of 100
+    uuids_to_notify.each_slice(100) do |uuids|
+      PushNotifier.send_transactional_push(uuids, 'new_matches')
     end
   end
 

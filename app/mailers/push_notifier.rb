@@ -135,10 +135,6 @@ class PushNotifier
       'category'.humanize => category
     }
 
-    if notification_default_params[:has_push_notification]
-      event_data.merge!({ 'badge_count'.humanize => 1 })
-    end
-
     if notification_default_params[:event_details].present?
       properties_with_humanized_keys = notification_default_params[:event_details].inject({}) do |hash, (key, value)|
         hash[key.to_s.humanize] = value
@@ -186,52 +182,65 @@ class PushNotifier
         retry
       end
     end
+
+    # send the push notification if this event should trigger one
+    if notification_default_params[:has_push_notification] && !params[:do_not_send_push]
+      send_transactional_push([uuid], notification_type, params.with_indifferent_access.clone)
+    end
   end
 
-  def self.send_transactional_push(uuid, notification_type, params = {})
+  def self.send_transactional_push(uuids, notification_type, params = {})
     notification_params = params.with_indifferent_access.clone
 
+    required_params = DETAILS[notification_type.to_s][:required_parameters].clone
+    if required_params.present?
+      given_params = notification_params.keys.map(&:to_s) & required_params
+      raise Errors::InvalidPushNotificationPayload, "missing params #{given_params.join(', ')}" if given_params.size != required_params.size
+    end
+
+    notification_default_params = DETAILS[notification_type.to_s].clone
+
+    title = notification_params[:title] || notification_default_params[:title]
+    body = notification_params[:body] || generated_body(notification_type, notification_params) || notification_default_params[:body]
+    category = notification_default_params[:category]
+
     payload_body = {
-      name: "Transactional",
-      estimate_only: false,
-      where: {
-        common_profile_prop: {
-          profile_fields: [
-            { name: "uuid", value: uuid }
-          ]
-        }
+      to: {
+        "Identity" => uuids,
       },
+      respect_frequency_caps: true,
       content: {
-        title: notification_params[:title] || notification_default_params[:title],
-        body: notification_params[:body] || generated_body(notification_type, notification_params) || notification_default_params[:body],
+        title: title,
+        body: body,
         platform_specific: {
           ios: {
-            category: notification_default_params[:category],
-            badge_count: 1
+            category: category,
+            badge_count: 1,
+            sound_file: 'default'
           },
           android: {
-            category: notification_default_params[:category]
+            category: category,
+            default_sound: true
           }
         }
       },
       devices: [
         "android",
         "ios"
-      ],
-      when: "now"
+      ]
     }
 
-    EKC.logger.debug "Sending push notification to #{uuid}, payload: #{payload_body.to_json}"
+    EKC.logger.debug "Sending push notification to #{uuids}, payload: #{payload_body.to_json}"
 
     attempt = 1
     begin
-      response = Clevertap.post_json('/1/targets/create.json', payload_body.to_json)
+      response = Clevertap.post_json('/1/send/push.json', payload_body.to_json)
 
       if response.status != 200
-        EKC.logger.error "ERROR: (try #{attempt}) Failed to send push notification! uuid: #{uuid}, type: #{notification_type}, params: #{notification_params}, error message: #{response.body}"
+        EKC.logger.error "ERROR: (try #{attempt}) Failed to send push notification! #{uuids}, type: #{notification_type}, params: #{notification_params}, error message: #{response.body}"
         raise Errors::ClevertapError, "got a non-200 status from the Clevertap API. Trying once more."
       else
-        EKC.logger.info "INFO: Sent push notification '#{notification_type}' to #{uuid}, response: #{response.body}"
+        EKC.logger.info "INFO: Sent push notification '#{notification_type}' to #{uuids}, response: #{response.body}"
       end
     rescue Errors::ClevertapError => e
       attempt += 1
