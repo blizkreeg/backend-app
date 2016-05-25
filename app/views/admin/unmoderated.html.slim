@@ -1,29 +1,27 @@
 h3 Unmoderated (new) users
 hr
+- male_profiles = @unmoderated.select { |profile| profile.male? }
+- female_profiles = @unmoderated.select { |profile| profile.female? }
 .row
   .col-xs-6
     h4 Men
-    ul
     - if @unmoderated_men_cnt == 0
       h5 None
     - else
-      - @unmoderated.select { |profile| profile.male? }.each do |profile|
+      h5 Showing #{male_profiles.count} of #{@unmoderated_men_cnt}
+      ul
+      - male_profiles.each do |profile|
         li
           = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
           small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
-      - if @unmoderated_men_cnt > 1
-        h5
-          = "#{@unmoderated_men_cnt - 1} more"
   .col-xs-6
     h4 Women
-    ul
     - if @unmoderated_women_cnt == 0
       h5 None
     - else
-      - @unmoderated.select { |profile| profile.female? }.each do |profile|
+      h5 Showing #{female_profiles.count} of #{@unmoderated_women_cnt}
+      ul
+      - female_profiles.each do |profile|
         li
           = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
           small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
-      - if @unmoderated_women_cnt > 25
-        h5
-          = "#{@unmoderated_women_cnt - 25} more"
