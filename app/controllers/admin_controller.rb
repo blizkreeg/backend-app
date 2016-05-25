@@ -3,12 +3,9 @@ class AdminController < ApplicationController
 
   before_action :load_admin_user
   before_action :admin_authenticated?, except: [:dashboard, :logout]
+  before_action :load_metrics, if: lambda { @admin_user.present? }
 
   def dashboard
-    if @admin_user.present?
-      @new_butler_chats_cnt = Profile.with_has_new_butler_message(true).count
-    end
-
     session[:redirect_to] = '/dashboard'
   end
 
@@ -98,5 +95,9 @@ class AdminController < ApplicationController
       flash[:error] = 'You need to be logged in!'
       redirect_to action: 'dashboard'
     end
+  end
+
+  def load_metrics
+    @new_butler_chats_cnt = Profile.with_has_new_butler_message(true).count
   end
 end
