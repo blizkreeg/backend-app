@@ -96,7 +96,7 @@ class PushNotifier
     },
     'profile_photo_rejected' => {
       title: "ekCoffee",
-      body: "@myname, there was a problem with your photo.",
+      body: "@myname, there was a problem with one of your photos.",
       required_parameters: ['myname'],
       category: 'EDIT_PHOTOS',
       event_name: 'Profile Issue',

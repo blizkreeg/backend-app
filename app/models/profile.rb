@@ -169,12 +169,11 @@ class Profile < ActiveRecord::Base
   )
 
   MODERATION_STATUSES = %w(unmoderated in_review approved flagged blacklisted)
-  MODERATION_STATUS_REASONS = [
-    'Appears Married',
-    'Bad photo',
-    'Inappropriate photo',
-    'Spam profile'
-  ]
+  MODERATION_STATUS_REASONS = {
+    married: 'Appears Married',
+    nophotos: 'No approved photos',
+    spam: 'Spam profile'
+  }
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
   # jsonb_attr_helper :properties, ATTRIBUTES

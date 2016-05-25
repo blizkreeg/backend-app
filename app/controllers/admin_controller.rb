@@ -45,6 +45,7 @@ class AdminController < ApplicationController
   end
 
   def moderate_photos
+    affected_profiles = {}
     params[:approved] = (params[:approved] == 'true')
     params[:ids].each do |id|
       if !params[:approved]
@@ -54,10 +55,16 @@ class AdminController < ApplicationController
       props = { reviewed: true, approved: params[:approved] }
       props.merge!({ primary: false }) if !params[:approved]
       Photo.update(id, props)
-      photo.profile.test_and_set_primary_photo! if rejected_photo_was_primary
+      profile = photo.profile
+      profile.test_and_set_primary_photo! if rejected_photo_was_primary
+      profile.update!(visible: false, moderation_status: 'flagged', moderation_status_reason: Profile::MODERATION_STATUS_REASONS[:nophotos]) if profile.photos.approved.count == 0
+      affected_profiles[profile.uuid] = profile
     end
 
     # here a butler chat should be sent to user
+    affected_profiles.each do |uuid, profile|
+      PushNotifier.delay.record_event(uuid, 'profile_photo_rejected', myname: profile.firstname)
+    end
 
     redirect_to :back
   end
