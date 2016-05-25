@@ -74,6 +74,7 @@ module ConversationStateMachine
         transitions from: :info, to: :close_notice
         transitions from: :radio_silence, to: :close_notice
         transitions from: :check_if_meeting, to: :close_notice
+        transitions from: :show_date_suggestions, to: :close_notice
       end
     end
   end
