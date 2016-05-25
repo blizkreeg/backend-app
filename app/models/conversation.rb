@@ -136,7 +136,7 @@ class Conversation < ActiveRecord::Base
     # Queue up conversation state changes
     Conversation.delay_for(HEALTH_CHECK_FROM_OPEN).move_conversation_to(self.id, 'health_check')
     Conversation.delay_for(READY_TO_MEET_FROM_OPEN).move_conversation_to(self.id, 'ready_to_meet')
-    Conversation.delay_for(CHECK_IF_MEETING_FROM_OPEN).move_conversation_to(self.id, 'ready_to_meet')
+    Conversation.delay_for(CHECK_IF_MEETING_FROM_OPEN).move_conversation_to(self.id, 'check_if_meeting')
     Conversation.delay_for(CLOSE_NOTICE_FROM_OPEN).move_conversation_to(self.id, 'close_notice')
     Conversation.delay_for(CLOSE_TIME).expire_conversation(self.id)
 
