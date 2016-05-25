@@ -337,6 +337,26 @@ class Profile < ActiveRecord::Base
 
       Photo.delay.upload_photos_to_cloudinary(uuid)
     end
+
+    def precache_facebook_photo(uuid, photo_id)
+      profile = Profile.find(uuid)
+      profile.facebook_authentication.get_photo(photo_id)
+    rescue ActiveRecord::RecordNotFound
+      EKC.logger.error "Profile not found when precaching FB photo, uuid: #{uuid}, photo_id: #{photo_id}"
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e)
+    end
+
+    def precache_facebook_albums(uuid)
+      profile = Profile.find(uuid)
+      profile.facebook_authentication.get_photo_albums_list.each do |album|
+        self.delay.precache_facebook_photo(uuid, album['cover_photo'])
+      end
+    rescue ActiveRecord::RecordNotFound
+      EKC.logger.error "Profile not found when precaching FB albums, uuid: #{uuid}"
+    rescue StandardError => e
+      ExceptionNotifier.notify_exception(e)
+    end
   end
 
   def upload_facebook_profile_photos

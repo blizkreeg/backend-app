@@ -45,6 +45,9 @@ class Api::V1::ProfilesController < ApplicationController
 
     @profile.create_initial_matches if !@profile.incomplete
 
+    # since loading FB albums/photo is time-consuming, precache this
+    Profile.delay.precache_facebook_albums(@profile.uuid)
+
     # set authenticated user
     set_current_profile(@profile)
 

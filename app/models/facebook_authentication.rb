@@ -4,10 +4,19 @@ class FacebookAuthentication < SocialAuthentication
   NUM_PROFILE_PICTURES_TO_GET = 6
 
   def get_photo_albums_list(fields="id,name", limit=25, cursor=nil)
-    graph_url = "#{self.oauth_uid}/albums?limit=#{limit}"
-    graph_url += "&cursor=#{cursor}" if cursor.present?
+    key = ['fb_albums', self.oauth_uid, fields.downcase.gsub(/[^\w]/i, '_'), limit.to_s].join('_')
+    Rails.cache.fetch(key, expires_in: 14.days) do
+      graph_url = "#{self.oauth_uid}/albums?limit=#{limit}"
+      graph_url += "&cursor=#{cursor}" if cursor.present?
 
-    query_fb graph_url
+      response_hash = query_fb(graph_url)
+      # removes comments and likes nodes from each album node since they bloat the payload
+      response_hash = response_hash.map { |album_hash|
+                        album_hash = album_hash.except("comments")
+                        album_hash = album_hash.except("likes")
+                        album_hash
+                      }
+    end
   end
 
   def get_album_id_by_name(name)
@@ -47,15 +56,24 @@ class FacebookAuthentication < SocialAuthentication
   end
 
   def get_photo(photo_id)
-    graph_url = "#{photo_id}"
+    key = ['fb_photo', self.oauth_uid, photo_id].join('_')
+    Rails.cache.fetch(key, expires_in: 14.days) do
+      graph_url = "#{photo_id}"
 
-    response_hash = query_fb graph_url
+      response_hash = query_fb(graph_url)
+      # removes comments and likes nodes from the response since they bloat the payload
+      response_hash = response_hash.except("comments")
+      response_hash = response_hash.except("likes")
+    end
   end
 
-  def get_photos_for_album(album_id, limit=50, fields='images,id')
-    photos_url = "#{album_id}/photos?limit=#{limit}&fields=#{fields}"
+  def get_photos_for_album(album_id, fields='images,id', limit=50)
+    key = ['fb_album_photos', self.oauth_uid, album_id, fields.downcase.gsub(/[^\w]/i, '_'), limit.to_s].join('_')
+    Rails.cache.fetch(key, expires_in: 14.days) do
+      photos_url = "#{album_id}/photos?limit=#{limit}&fields=#{fields}"
 
-    photos = query_fb(photos_url)
+      query_fb(photos_url)
+    end
   end
 
   def granted_permissions
