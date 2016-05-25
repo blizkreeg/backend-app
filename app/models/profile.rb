@@ -312,7 +312,7 @@ class Profile < ActiveRecord::Base
 
       Clevertap.post_json('/1/upload', payload_body.to_json)
     rescue ActiveRecord::RecordNotFound
-      EKC.logger.error "Clevertap profile update failed. Profile not found. uuid: #{uuid}"
+      EKC.logger.info "Profile not found. uuid: #{uuid}. Cannot update Clevertap profile."
     rescue StandardError => e
       EKC.logger.error "Clevertap profile update failed. exception: #{e.class.name} : #{e.message}"
     end
