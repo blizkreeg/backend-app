@@ -1,9 +1,5 @@
 require 'sidekiq/web'
 Rails.application.routes.draw do
-  # monitor Sidekiq
-  # TBD: move to standalone or protected on production
-  mount Sidekiq::Web => '/sidekiq'
-
   constraints SubdomainConstraint.new('app-api') do
     scope module: 'api' do
       namespace 'v1' do
@@ -50,6 +46,11 @@ Rails.application.routes.draw do
   # ADMIN DASHBOARD
   #
   constraints SubdomainConstraint.new('admin') do
+    Sidekiq::Web.use Rack::Auth::Basic do |username, password|
+      username == ENV["SIDEKIQ_USERNAME"] && password == ENV["SIDEKIQ_PASSWORD"]
+    end if Rails.env.production?
+    mount Sidekiq::Web, at: "/sq"
+
     get '/', to: redirect('/dashboard')
     get  '/dashboard', to: 'admin#dashboard'
     post '/lookup-user', to: 'admin#lookup_user'
