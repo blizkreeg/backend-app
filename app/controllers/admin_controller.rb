@@ -78,6 +78,13 @@ class AdminController < ApplicationController
     redirect_to :back
   end
 
+  def send_butler_chat_notification
+    PushNotifier.delay.record_event(params[:profile_uuid], 'new_butler_message', myname: params[:myname])
+    flash[:success] = 'Notification sent!'
+
+    redirect_to :back
+  end
+
   def logout
     reset_session
 

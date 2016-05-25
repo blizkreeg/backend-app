@@ -3,12 +3,19 @@ h3 Butler Chat with #{link_to @profile.fullname, admin_show_user_path(@profile.u
 hr
 .row
   .col-xs-12.col-sm-4.text-right style='margin-bottom:25px;'
-    - if @profile.has_new_butler_message
-      = button_to 'Mark as Resolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: true }, class: 'submit btn btn-success'}
-    - else
-      = button_to 'Mark as Unresolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: false }, class: 'submit btn btn-danger'}
+    ul.unstyled-list
+      li.inline
+        - if @profile.has_new_butler_message
+          = button_to 'Mark as Resolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: true }, class: 'submit btn btn-success', form_class: 'inline'}
+        - else
+          = button_to 'Mark as Unresolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: false }, class: 'submit btn btn-danger', form_class: 'inline'}
+      li.inline
+        = button_to 'Send Notification', admin_send_butler_chat_notification_path, { params: { profile_uuid: @profile.uuid, myname: @profile.firstname }, class: 'submit btn btn-default', form_class: 'inline'}
+        br
+        | - If user is offline <br> - Send only once
 .row
   .col-xs-12.col-sm-4
+    .connectedness.text-right
     .conversation
       .messages
       .loading
@@ -29,6 +36,7 @@ javascript:
   });
 
   var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}butler-conversations/#{@profile.butler_conversation_uuid}/messages");
+  var disconnectedRef = new Firebase("#{Rails.application.config.firebase_db_url}users/#{@profile.uuid}/disconnectedAt");
 
   var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(25);
 
@@ -40,11 +48,16 @@ javascript:
     } else {
       $('.messages').append('<div class="received">' + data.content  + '</div>');
     }
+
+    disconnectedRef.once('value', function(data) {
+      if(data.val() !== 'false') {
+        $('.connectedness').html("<i style='color:#555;'>#{@profile.firstname}" + ' is offline</i>');
+      }
+    });
   });
 
   $('#message_to_send').on('keypress', function(e) {
     if(e.which == 13) {
-      alert($(this).val());
       conversationRef.push({ content: $(this).val(),
                               sender_uuid: null,
                               recipient_uuid: profile_uuid,

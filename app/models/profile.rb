@@ -216,6 +216,8 @@ class Profile < ActiveRecord::Base
       profile.location_state = geo.state
       profile.location_country = geo.country
     end
+
+    true
   end
 
   after_commit :upload_facebook_profile_photos, on: :create
@@ -227,7 +229,6 @@ class Profile < ActiveRecord::Base
   before_create :set_default_moderation
   before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
-  # after_save :add_to_preferences_changed_list, if: Proc.new { |profile| profile.any_seeking_preference_changed? }
   after_update :update_clevertap
   before_save :ensure_attribute_types
 
@@ -550,6 +551,9 @@ class Profile < ActiveRecord::Base
 
   def initialize_butler_conversation
     self.butler_conversation_uuid = SecureRandom.uuid
+    self.has_new_butler_message = false
+
+    true
   end
 
   def set_default_seeking_preference
@@ -572,20 +576,21 @@ class Profile < ActiveRecord::Base
     if self.seeking_faith.blank?
       self.seeking_faith = Matchmaker.default_faith_pref
     end
-  end
 
-  def add_to_preferences_changed_list
-    puts "pushing #{self.uuid} to 'preferences_updated_profiles'"
-    $redis.lpush 'preferences_updated_profiles', self.uuid
+    true
   end
 
   def update_clevertap
     self.class.delay_for(2.seconds).push_to_clevertap(self.uuid)
+
+    true
   end
 
   def set_search_latlng
     self.search_lat = self.latitude
     self.search_lng = self.longitude
+
+    true
   end
 
   def set_default_moderation

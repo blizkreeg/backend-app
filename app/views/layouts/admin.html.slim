@@ -17,4 +17,8 @@ body
         .alert.alert-danger.text-center
           = flash[:error]
           - flash[:error] = nil
+      - if flash[:success]
+        .alert.alert-success.text-center
+          = flash[:success]
+          - flash[:success] = nil
       = yield

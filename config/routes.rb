@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     get '/new-butler-chats', to: 'admin#new_butler_chats'
     get '/show-butler-chat/:profile_uuid', to: 'admin#show_butler_chat', as: 'admin_show_butler_chat'
     post '/update-butler-chat-flag', to: 'admin#update_butler_chat_flag', as: 'admin_update_butler_chat_flag'
+    post '/send-butler-chat-notification', to: 'admin#send_butler_chat_notification', as: 'admin_send_butler_chat_notification'
     post '/logout', to: 'admin#logout', as: 'admin_logout'
 
     # old admin dashboard - TBD: remove/merge this functionality into above

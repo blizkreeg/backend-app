@@ -74,8 +74,8 @@ namespace :firebase do
 
     task :stop do
       on roles(:firebase) do
-        execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_master.pid`"
-        execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_butler_master.pid`"
+        execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_master.pid`", raise_on_non_zero_exit: false
+        execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_butler_master.pid`", raise_on_non_zero_exit: false
       end
     end
 
@@ -98,7 +98,7 @@ namespace :firebase do
 
     task :stop do
       on roles(:firebase) do
-        execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_worker.pid`"
+        execute "kill -s SIGTERM `cat #{shared_path}/tmp/pids/firebase_worker.pid`", raise_on_non_zero_exit: false
       end
     end
 
