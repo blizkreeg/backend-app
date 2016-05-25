@@ -34,7 +34,7 @@ gem 'jsonb_accessor', '~> 0.3.3'
 gem 'jquery-rails'
 gem 'sidekiq_parameters_logging'
 # TBD: add https://github.com/schneems/puma_worker_killer
-gem 'librato-rails'
+# gem 'librato-rails'
 # gem 'stackify-api-ruby'
 gem 'scout_apm'
 gem 'exception_notification'
