@@ -52,6 +52,8 @@ javascript:
     disconnectedRef.once('value', function(data) {
       if(data.val() !== 'false') {
         $('.connectedness').html("<i style='color:#555;'>#{@profile.firstname}" + ' is offline</i>');
+      } else {
+        $('.connectedness').html("<span style='color:#555;'>#{@profile.firstname}" + ' is online!</span>');
       }
     });
   });
