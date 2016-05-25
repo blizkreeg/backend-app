@@ -57,8 +57,12 @@ class AdminController < ApplicationController
       Photo.update(id, props)
       profile = photo.profile
       profile.test_and_set_primary_photo! if rejected_photo_was_primary
-      profile.update!(visible: false, moderation_status: 'flagged', moderation_status_reason: Profile::MODERATION_STATUS_REASONS[:nophotos]) if profile.photos.approved.count == 0
-      affected_profiles[profile.uuid] = profile
+      unless params[:approved]
+        if profile.photos.approved.count == 0
+          profile.update!(visible: false, moderation_status: 'flagged', moderation_status_reason: Profile::MODERATION_STATUS_REASONS[:nophotos])
+        end
+        affected_profiles[profile.uuid] = profile
+      end
     end
 
     # here a butler chat should be sent to user
