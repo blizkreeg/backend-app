@@ -114,6 +114,8 @@ class PushNotifier
     }
   }
 
+  # This function will record a user action/event in Clevertap
+  # It will also send a push notification if the event should trigger one (disable sending the push with do_not_send_push: true)
   def self.record_event(uuid, notification_type, params = {})
     notification_params = params.with_indifferent_access.clone
 
@@ -189,6 +191,9 @@ class PushNotifier
     end
   end
 
+  # Send push notifications to one or more users
+  # TBD: NOTE - params is a hash here. Since we can send to multiple uuids, params should be an array of hashes.
+  # This needs to be fixed where each hash elem in the params array corresponds to the respective uuid
   def self.send_transactional_push(uuids, notification_type, params = {})
     notification_params = params.with_indifferent_access.clone
 
