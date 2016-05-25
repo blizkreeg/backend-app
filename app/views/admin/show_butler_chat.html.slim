@@ -36,7 +36,6 @@ javascript:
   });
 
   var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}butler-conversations/#{@profile.butler_conversation_uuid}/messages");
-  var disconnectedRef = new Firebase("#{Rails.application.config.firebase_db_url}users/#{@profile.uuid}/disconnectedAt");
 
   var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(25);
 
@@ -48,14 +47,6 @@ javascript:
     } else {
       $('.messages').append('<div class="received">' + data.content  + '</div>');
     }
-
-    disconnectedRef.once('value', function(data) {
-      if(data.val() !== 'false') {
-        $('.connectedness').html("<i style='color:#555;'>#{@profile.firstname}" + ' is offline</i>');
-      } else {
-        $('.connectedness').html("<span style='color:#555;'>#{@profile.firstname}" + ' is online!</span>');
-      }
-    });
   });
 
   $('#message_to_send').on('keypress', function(e) {
@@ -69,6 +60,25 @@ javascript:
     }
   });
 
-  $('#disconnect-chat').on('click', function() {
-    Firebase.goOffline();
-  })
+  function checkIfDisconnected() {
+    console.log(Date.now());
+    var disconnectedRef = new Firebase("#{Rails.application.config.firebase_db_url}users/#{@profile.uuid}/disconnectedAt");
+
+    disconnectedRef.once('value', function(data) {
+      if(data.val() !== 'false') {
+        $('.connectedness').html("<i style='color:#555;'>#{@profile.firstname}" + ' is offline</i>');
+      } else {
+        $('.connectedness').html("<span style='color:#555;'>#{@profile.firstname}" + ' is online!</span>');
+      }
+    });
+  }
+
+  checkIfDisconnected();
+
+  setInterval(function() {
+    checkIfDisconnected();
+  }, 5000);
+
+  //$('#disconnect-chat').on('click', function() {
+  //  Firebase.goOffline();
+  //});
