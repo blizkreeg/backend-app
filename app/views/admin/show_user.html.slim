@@ -111,5 +111,8 @@ hr
             - if photo.primary
               span style='position:absolute;top:0;left:50%;color:white;background-color:black;padding: 1px 4px;font-weight:600;font-size:16px;' P
           - else
-            = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'submit btn btn-success', style: 'position:absolute;top:0;left:0'
-            = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'submit btn btn-danger', style: 'position:absolute;top:0;right:0'
+            - if photo.approved
+              = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'submit btn btn-danger', style: 'position:absolute;top:0;right:0'
+            - else
+              = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'submit btn btn-success', style: 'position:absolute;top:0;left:0'
+
