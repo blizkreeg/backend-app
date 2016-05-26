@@ -126,7 +126,7 @@ module Matchmaker
       .where.not(uuid: profile.uuid)
       .joins("LEFT OUTER JOIN (#{existing_matches_sql}) matches ON matches.matched_profile_uuid = profiles.uuid")
       .where(matches: { matched_profile_uuid: nil })
-      .limiN_t(opts[:limit] || FIND_N_ELIGIBLE_MATCHES)
+      .limit(opts[:limit] || FIND_N_ELIGIBLE_MATCHES)
   end
 
   # DEFAULT MATCH PREFERENCES
