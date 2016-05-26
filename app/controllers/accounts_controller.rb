@@ -46,7 +46,7 @@ class AccountsController < ApplicationController
   def create_matches
     Matchmaker.generate_new_matches_for(@profile.uuid)
     @profile.reload
-    @profile.new_matches!(:has_matches) if @profile.has_new_matches?
+    @profile.new_matches!(:has_matches) if @profile.has_queued_matches?
 
     redirect_to :back
   end

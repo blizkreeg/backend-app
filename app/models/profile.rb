@@ -26,7 +26,7 @@ class Profile < ActiveRecord::Base
   scope :seeking_of_faith, -> (faith) { where("profiles.properties->'seeking_faith' ? :faith", faith: faith) }
   # scope :seeking_of_gender, -> (gender) { with_gender(gender) } # FUTURE, when opening up to LGBT
 
-  scope :ready_for_matches, -> { where("state = 'waiting_for_matches' OR state = 'waiting_for_matches_and_response'") }
+  scope :awaiting_matches, -> { where("state = 'waiting_for_matches' OR state = 'waiting_for_matches_and_response'") }
   scope :within_distance, -> (lat, lng, meters=nil) { where("earth_box(ll_to_earth(?, ?), ?) @> ll_to_earth(profiles.search_lat, profiles.search_lng)", lat, lng, meters || Constants::NEAR_DISTANCE_METERS) }
   scope :ordered_by_distance, -> (lat, lng, dir='ASC') { select("*, earth_distance(ll_to_earth(profiles.search_lat,profiles.search_lng), ll_to_earth(#{lat}, #{lng})) as distance").order("distance #{dir}") }
 
@@ -364,7 +364,7 @@ class Profile < ActiveRecord::Base
 
   def create_initial_matches
     Matchmaker.generate_new_matches_for(self.uuid)
-    if self.has_new_matches?
+    if self.has_queued_matches?
       self.new_matches!(:has_matches)
       PushNotifier.delay.record_event(self.uuid, 'new_matches')
     end
@@ -484,12 +484,12 @@ class Profile < ActiveRecord::Base
     end
   end
 
-  def has_new_matches?
+  def has_queued_matches?
     self.matches.undecided.count > 0
   end
 
   # deliver new matches after NEW_MATCHES_AT_HOUR:NEW_MATCHES_AT_MIN user's local time
-  def due_for_new_matches_notification?
+  def due_for_new_matches?
     if ActiveSupport::TimeZone::MAPPING.values.include?(self.time_zone)
       local_time = Time.now.in_time_zone(self.time_zone)
     else
@@ -500,7 +500,11 @@ class Profile < ActiveRecord::Base
     local_time.hour >= Matchmaker::NEW_MATCHES_AT_HOUR && local_time.min >= Matchmaker::NEW_MATCHES_AT_MIN
   end
 
-  def in_waiting_state?
+  def in_match_waiting_state?
+    self.waiting_for_matches? || self.waiting_for_matches_and_response?
+  end
+
+  def in_match_queued_state?
     self.has_matches? || self.has_matches_and_waiting_for_response?
   end
 

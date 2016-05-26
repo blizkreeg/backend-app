@@ -21,23 +21,21 @@ namespace :matches do
 
     uuids_to_notify = []
 
-    Profile.active.ready_for_matches.find_each(batch_size: 10) do |profile|
+    Profile.active.awaiting_matches.find_each(batch_size: 10) do |profile|
       begin
-        if profile.has_new_matches?
-          puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} new matches"
+        if profile.has_queued_matches?
+          # check state and if it's time to deliver matches + notify user
+          if profile.due_for_new_matches?
+            puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{[profile.matches.undecided.count, Constants::N_MATCHES_AT_A_TIME].min} new matches"
 
-          case profile.state
-          when 'waiting_for_matches'
-            profile.new_matches!(:has_matches, Rails.application.routes.url_helpers.v1_profile_matches_path(profile))
-          when 'waiting_for_matches_and_response'
-            waiting_on_match = profile.active_mutual_match
-            profile.new_matches!(:has_matches_and_waiting_for_response, Rails.application.routes.url_helpers.v1_profile_match_path(profile.uuid, waiting_on_match.id))
-          end
+            case profile.state
+            when 'waiting_for_matches'
+              profile.new_matches!(:has_matches, Rails.application.routes.url_helpers.v1_profile_matches_path(profile))
+            when 'waiting_for_matches_and_response'
+              waiting_on_match = profile.active_mutual_match
+              profile.new_matches!(:has_matches_and_waiting_for_response, Rails.application.routes.url_helpers.v1_profile_match_path(profile.uuid, waiting_on_match.id))
+            end
 
-          profile.reload
-
-          # check state and if it's time to notify them
-          if profile.in_waiting_state? && profile.due_for_new_matches_notification?
             if profile.ok_to_send_new_matches_notification?
               PushNotifier.delay.record_event(profile.uuid, 'new_matches', do_not_send_push: true) # no push since we'll send them in batches below
               profile.update!(sent_matches_notification_at: DateTime.now)
