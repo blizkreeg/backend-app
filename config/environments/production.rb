@@ -87,6 +87,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # TBD: at some point post-launch, remove beta_mode from everywhere
   config.beta_mode = true
   config.test_mode = false
 
