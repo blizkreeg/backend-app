@@ -62,8 +62,10 @@ class FacebookAuthentication < SocialAuthentication
 
       response_hash = query_fb(graph_url)
       # removes comments and likes nodes from the response since they bloat the payload
-      response_hash = response_hash.except("comments")
-      response_hash = response_hash.except("likes")
+      response_hash = response_hash.except("comments") if response_hash.present?
+      response_hash = response_hash.except("likes") if response_hash.present?
+
+      response_hash
     end
   end
 
