@@ -21,9 +21,9 @@ class AdminController < ApplicationController
   end
 
   def suspicious
-    @suspicious_men_cnt = Profile.with_gender('male').with_moderation_status('unmoderated').with_possible_relationship_status('Married').count
-    @suspicious_women_cnt = Profile.with_gender('female').with_moderation_status('unmoderated').with_possible_relationship_status('Married').count
-    @suspicious = Profile.with_moderation_status('unmoderated').with_possible_relationship_status('Married').limit(25)
+    @suspicious_men_cnt = Profile.with_gender('male').with_moderation_status('unmoderated').possibly_not_single.count
+    @suspicious_women_cnt = Profile.with_gender('female').with_moderation_status('unmoderated').possibly_not_single.count
+    @suspicious = Profile.with_moderation_status('unmoderated').possibly_not_single.limit(25)
   end
 
   def lookup_user
