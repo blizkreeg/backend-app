@@ -60,15 +60,22 @@ class FacebookAuthentication < SocialAuthentication
     Rails.cache.fetch(key, expires_in: 14.days) do
       graph_url = "#{photo_id}"
 
-      response_hash = query_fb(graph_url)
-
-      EKC.logger.error("Facebook photo id #{photo_id} not found for user #{self.profile.try(:uuid)}. How was the request made?")
-
-      # removes comments and likes nodes from the response since they bloat the payload
-      response_hash = response_hash.except("comments") if response_hash.present?
-      response_hash = response_hash.except("likes") if response_hash.present?
-
-      response_hash
+      begin
+        response_hash = query_fb(graph_url)
+      rescue StandardError => e
+        EKC.logger.error("Exception: '#{e.class.name}' when looking up Facebook photo id #{photo_id} for user #{self.profile.try(:uuid)}. ")
+        nil
+      else
+        if response_hash.blank?
+          EKC.logger.error("Facebook photo id #{photo_id} not found for user #{self.profile.try(:uuid)}. How did this happen?")
+          nil
+        else
+          # removes comments and likes nodes from the response since they bloat the payload
+          response_hash = response_hash.except("comments")
+          response_hash = response_hash.except("likes")
+          response_hash
+        end
+      end
     end
   end
 
