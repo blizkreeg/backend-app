@@ -9,6 +9,10 @@ hr
   .col-xs-4.text-right
     ul.unstyled-list
       li.inline
+        = link_to admin_show_butler_chat_path(@profile.uuid), target: '_blank', class: 'btn btn-info' do
+          i.fa.fa-comments
+          | &nbsp; Chat
+      li.inline
         - if @profile.approved?
           = button_to 'Flag', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'submit btn btn-danger', form_class: 'inline' }
         - else
