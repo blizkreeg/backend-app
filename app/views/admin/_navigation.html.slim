@@ -1,8 +1,15 @@
 - if admin_user.present?
-  nav.navbar.navbar-fixed-left.left-nav
+  .navbar-fixed-left.left-nav
     ul.nav.navbar-nav
       li
-        a href='/unmoderated' Unmoderated Users
+        a href='/all-users' All Users
+    .clearfix
+    hr
+    h4 style='padding-left:10px;' Needs Review
+    hr
+    ul.nav.navbar-nav
+      li
+        a href='/unmoderated' New Users
       li
         a href='/suspicious' Suspicious Users
       li

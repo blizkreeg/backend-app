@@ -9,6 +9,11 @@ class AdminController < ApplicationController
     session[:redirect_to] = '/dashboard'
   end
 
+  def all_users
+    @page = (params[:page] || 0).to_i
+    @profiles = Profile.order("created_at DESC").offset(@page * 25).limit(25)
+  end
+
   def unmoderated
     @unmoderated_men_cnt = Profile.with_gender('male').with_moderation_status('unmoderated').count
     @unmoderated_women_cnt = Profile.with_gender('female').with_moderation_status('unmoderated').count
