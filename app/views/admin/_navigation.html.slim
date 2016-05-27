@@ -2,18 +2,18 @@
   .navbar-fixed-left.left-nav
     ul.nav.navbar-nav
       li
-        a href='/all-users' All Users
+        a href='/all-users' All Users (#{@profiles_cnt})
     .clearfix
     hr
     h4 style='padding-left:10px;' Needs Review
     hr
     ul.nav.navbar-nav
       li
-        a href='/unmoderated' New Users
+        a href='/unmoderated' New Users (#{@unmoderated_cnt})
       li
-        a href='/suspicious' Suspicious Users
+        a href='/suspicious' Suspicious Users (#{@suspicious_cnt})
       li
-        a href='/new-butler-chats' Butler Chats (#{@new_butler_chats_cnt || 0} new)
+        a href='/new-butler-chats' Butler Chats (#{@new_butler_chats_cnt})
       li
-        a href='/review-photos' New Photos
+        a href='/review-photos' New Photos (#{@unmoderated_photos_cnt})
 

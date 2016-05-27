@@ -122,5 +122,9 @@ class AdminController < ApplicationController
 
   def load_metrics
     @new_butler_chats_cnt = Profile.with_has_new_butler_message(true).count
+    @profiles_cnt = Profile.count
+    @unmoderated_cnt = Profile.with_moderation_status('unmoderated').order("created_at ASC").count
+    @suspicious_cnt = Profile.with_moderation_status('unmoderated').possibly_not_single.count
+    @unmoderated_photos_cnt = Photo.with_reviewed(false).count
   end
 end

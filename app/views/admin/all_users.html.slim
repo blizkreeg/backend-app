@@ -6,7 +6,8 @@ hr
       .col-xs-3
         = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
       .col-xs-1
-        = profile.moderation_status
+        span class="#{moderation_status_label(profile.moderation_status)}"
+          = profile.moderation_status
       .col-xs-3
         small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
 - else

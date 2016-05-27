@@ -38,4 +38,17 @@ module AdminHelper
 
     time
   end
+
+  def moderation_status_label(mod_status)
+    case mod_status
+    when 'approved'
+     'label label-success'
+    when 'blacklisted'
+     'label label-default'
+    when 'flagged'
+      'label label-danger'
+    when 'unmoderated'
+      'label label-warning'
+    end
+  end
 end
