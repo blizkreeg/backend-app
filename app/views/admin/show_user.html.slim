@@ -1,12 +1,12 @@
 h4 USER INFO
 hr
 .row
-  .col-xs-8
+  .col-xs-4
     h4
-      | #{@profile.firstname} #{@profile.lastname} / #{@profile.uuid}
+      | #{@profile.fullname}
       span style='text-transform:uppercase'
         | &nbsp; (#{@profile.moderation_status})
-  .col-xs-4.text-right
+  .col-xs-8.text-right
     ul.unstyled-list
       li.inline
         = link_to admin_show_butler_chat_path(@profile.uuid), target: '_blank', class: 'btn btn-info' do
@@ -22,9 +22,8 @@ hr
           = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'submit btn btn-default', form_class: 'inline' }
         - else
           = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'submit btn', style: 'background-color: black; color: white;', form_class: 'inline' }
-.row
-  .col-xs-12
-    p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
+p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
+p: markdown: UUID: `#{@profile.uuid}` | #{raw(@profile.visible ? '<span class="label label-success">INCLUDED IN MATCHING</span>' : '<span class="label label-danger">EXCLUDED FROM MATCHING</span>')}
 .row
   .col-xs-12
 
