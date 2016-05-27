@@ -61,6 +61,9 @@ class FacebookAuthentication < SocialAuthentication
       graph_url = "#{photo_id}"
 
       response_hash = query_fb(graph_url)
+
+      EKC.logger.error("Facebook photo id #{photo_id} not found for user #{self.profile.try(:uuid)}. How was the request made?")
+
       # removes comments and likes nodes from the response since they bloat the payload
       response_hash = response_hash.except("comments") if response_hash.present?
       response_hash = response_hash.except("likes") if response_hash.present?
