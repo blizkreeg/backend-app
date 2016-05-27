@@ -79,6 +79,10 @@ javascript:
     checkIfDisconnected();
   }, 5000);
 
+  setTimeout(function() {
+    $('.loading').hide();
+  }, 5000);
+
   //$('#disconnect-chat').on('click', function() {
   //  Firebase.goOffline();
   //});
