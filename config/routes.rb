@@ -78,6 +78,11 @@ Rails.application.routes.draw do
     post '/update-conversation-state', to: 'accounts#update_conversation_state'
     post '/post-date-feedback', to: 'accounts#switch_to_post_date_feedback'
     post '/send-push-notification', to: 'accounts#send_push_notification'
+
+    # events
+    get '/rsvp-stb', to: 'events#rsvp_stb'
+    post '/register-stb', to: 'events#register_stb'
+    delete '/cancel-stb', to: 'events#cancel_stb'
   end
 
   get '*unmatched_route', to: 'application#route_not_found'

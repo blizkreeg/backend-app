@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160505182440) do
+ActiveRecord::Schema.define(version: 20160530221659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,15 @@ ActiveRecord::Schema.define(version: 20160505182440) do
 
   add_index "date_suggestions", ["conversation_id"], name: "index_date_suggestions_on_conversation_id", using: :btree
   add_index "date_suggestions", ["date_place_id"], name: "index_date_suggestions_on_date_place_id", using: :btree
+
+  create_table "event_rsvps", force: :cascade do |t|
+    t.jsonb    "properties",   default: {}, null: false
+    t.uuid     "profile_uuid",              null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "event_rsvps", ["profile_uuid"], name: "index_event_rsvps_on_profile_uuid", using: :btree
 
   create_table "matches", id: :bigserial, force: :cascade do |t|
     t.uuid     "for_profile_uuid",                  null: false
@@ -150,6 +159,7 @@ ActiveRecord::Schema.define(version: 20160505182440) do
   add_foreign_key "conversation_healths", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "date_suggestions", "conversations"
   add_foreign_key "date_suggestions", "date_places"
+  add_foreign_key "event_rsvps", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "matches", "profiles", column: "for_profile_uuid", primary_key: "uuid"
   add_foreign_key "matches", "profiles", column: "matched_profile_uuid", primary_key: "uuid"
   add_foreign_key "messages", "conversations"
