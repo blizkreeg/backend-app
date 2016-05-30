@@ -58,8 +58,8 @@ class AdminController < ApplicationController
     affected_profiles = {}
     params[:approved] = (params[:approved] == 'true')
     params[:ids].each do |id|
+      photo = Photo.find(id)
       if !params[:approved]
-        photo = Photo.find(id)
         rejected_photo_was_primary = photo.primary
       end
       props = { reviewed: true, approved: params[:approved] }
