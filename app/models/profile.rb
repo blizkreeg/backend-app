@@ -138,7 +138,8 @@ class Profile < ActiveRecord::Base
     has_new_butler_message:       :boolean,
     moderation_status:            :string,
     moderation_status_reason:     :string,
-    visible:                      :boolean
+    visible:                      :boolean,
+    staff_or_internal:            :boolean
 
     # matching related
     # attractiveness_score:         :integer, # median of all scores by reviewers?
