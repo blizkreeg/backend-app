@@ -69,7 +69,9 @@ class AdminController < ApplicationController
       profile.test_and_set_primary_photo! if rejected_photo_was_primary
       unless params[:approved]
         if profile.photos.approved.count == 0
-          profile.update!(visible: false, moderation_status: 'flagged', moderation_status_reason: Profile::MODERATION_STATUS_REASONS[:nophotos])
+          if !profile.blacklisted? # if blacklisted, don't do anything
+            profile.update!(visible: false, moderation_status: 'flagged', moderation_status_reason: Profile::MODERATION_STATUS_REASONS[:nophotos])
+          end
         end
         affected_profiles[profile.uuid] = profile
       end
@@ -77,7 +79,9 @@ class AdminController < ApplicationController
 
     # here a butler chat should be sent to user
     affected_profiles.each do |uuid, profile|
-      PushNotifier.delay.record_event(uuid, 'profile_photo_rejected', myname: profile.firstname)
+      if !profile.blacklisted? # don't notify if profile was blacklisted
+        PushNotifier.delay.record_event(uuid, 'profile_photo_rejected', myname: profile.firstname)
+      end
     end
 
     redirect_to :back
