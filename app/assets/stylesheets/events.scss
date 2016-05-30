@@ -1,7 +1,7 @@
 body {
   font-family: 'Open Sans', Helvetica, sans-serif;
   color: #404040;
-  font-size: 14px;
+  // font-size: 3vmin;
 }
 
 a, a:visited {
@@ -12,7 +12,7 @@ a:hover {
 }
 
 .content {
-  padding-top: 30px;
+  padding: 30px 10px 0px 10px;
   background-color: white;
 }
 
@@ -20,4 +20,32 @@ ul {
   margin: 0;
   list-style-type: square;
   padding: 0 0 0 20px;
+}
+
+.place {
+  font-size: 5vmin;
+}
+
+.when {
+  font-size: 4vmin;
+}
+
+.spots {
+  font-size: 3vmin;
+}
+
+.addr {
+  font-size: 3vmin;
+}
+
+.going {
+  font-size: 2vmin;
+}
+
+.upcoming {
+  font-size: 3vmin;
+}
+
+hr {
+  border-top: 1px solid #cdcdcd;
 }

@@ -1,41 +1,39 @@
-= image_tag 'stb-logo', width: 160
-.row
-  .col-xs-12
-    h2 style='margin-bottom:25px;' Upcoming Events
-    - @events.each do |event|
-      .row style='margin-bottom:20px;'
-        .col-xs-12
-          div style='width:200px;display:inline;margin-right:15px;float:left;'
-            = image_tag event.photo, width: 200, height: 125, style: 'border-radius:3px;'
-          div style='display:inline;'
-            p style='font-size:1.8rem;font-weight:600;color:#303030;'
-              | Brunch at #{event.place}
-            p
-              i.fa.fa-calendar-check-o
-              | &nbsp; #{event.date.strftime("%A, %B %-d %Y")} at #{event.time_str}
-            - if event.spots_remaining == 0
-              p Event FULL
-            - else
-              p
-                strong style='border-bottom:1px solid #ddd' #{event.spots_remaining}
-                | &nbsp; spots remaining
-              p
-                i.fa.fa-map-marker
-                span style='font-size:1.1rem;color:#555;' &nbsp; #{event.addr}
-      .row
-        .col-xs-12
+div.text-center style='100%'
+  = image_tag 'stb-logo', width: 150
+h2.upcoming.text-center style='margin-bottom:25px;' Upcoming Events
+hr
+- @events.each do |event|
+  div style='padding: 10px 0px;'
+    .row style='margin-bottom:20px'
+      .col-xs-12
+        div style='width:30%;display:inline;float:left;'
+          = image_tag event.photo, style: 'border-radius:3px;width:100%;'
+        div style='display:inline;padding-left:20px;width:70%;float:left;'
+          p.place style='font-weight:600;color:#303030;'
+            | Brunch at #{event.place}
+          p.when
+            i.fa.fa-calendar-check-o
+            | &nbsp; #{event.date.strftime("%A, %B %-d %Y")} at #{event.time_str}
+          - if event.spots_remaining == 0
+            p.spots
+              i.fa.fa-star &nbsp;
+              | Event FULL
+          - else
+            p.spots
+              i.fa.fa-star &nbsp;
+              strong style='border-bottom:1px solid #ddd' #{event.spots_remaining}
+              | &nbsp; spots remaining
+            p.addr
+              i.fa.fa-map-marker
+              span style='color:#555;' &nbsp; #{event.addr}
           - if event.attending.present?
-            p
-              small GOING: &nbsp;
+            p.going
+              small Going: &nbsp;
               - event.attending.each do |profile|
                 = cl_image_tag profile.photos.primary.take.public_id, width: 32, height: 32, crop: 'thumb', gravity: 'face', radius: 'max'
-      .row
-        .col-xs-12
           - if event.going
             h4 You're going to this!
             = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { id: event.rsvp.id, uuid: @profile.uuid }, class: 'submit btn btn-danger', form_class: 'inline'}
           - else
             - if event.spots_remaining > 0 && @profile.event_rsvps.count == 0
               = button_to "+ Going", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success', form_class: 'inline'}
-      hr
-
