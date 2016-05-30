@@ -1,0 +1,16 @@
+h3 Profiles for Deletion
+.row
+  .col-xs-6
+    h4 Men
+    ul
+    - @profiles_marked_for_deletion_m.each do |profile|
+      li
+        = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+        small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
+  .col-xs-6
+    h4 Women
+    ul
+    - @profiles_marked_for_deletion_w.each do |profile|
+      li
+        = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+        small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago

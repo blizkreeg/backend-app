@@ -26,6 +26,11 @@ class AdminController < ApplicationController
     @suspicious = Profile.with_moderation_status('unmoderated').possibly_not_single.limit(25)
   end
 
+  def profiles_marked_for_deletion
+    @profiles_marked_for_deletion_m = Profile.is_marked_for_deletion.with_gender('male')
+    @profiles_marked_for_deletion_w = Profile.is_marked_for_deletion.with_gender('female')
+  end
+
   def lookup_user
     @profile = Profile.find(params[:uuid])
     redirect_to admin_show_user_path(@profile.uuid)
@@ -126,5 +131,6 @@ class AdminController < ApplicationController
     @unmoderated_cnt = Profile.with_moderation_status('unmoderated').order("created_at ASC").count
     @suspicious_cnt = Profile.with_moderation_status('unmoderated').possibly_not_single.count
     @unmoderated_photos_cnt = Photo.with_reviewed(false).count
+    @profiles_marked_for_deletion_cnt = Profile.is_marked_for_deletion.count
   end
 end
