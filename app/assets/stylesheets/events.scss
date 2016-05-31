@@ -14,6 +14,10 @@ a:hover {
 .content {
   padding: 30px 10px 0px 10px;
   background-color: white;
+  overflow-x:hidden;
+  width:100%;
+  position:relative;
+
 }
 
 ul {
@@ -31,11 +35,11 @@ ul {
 }
 
 .spots {
-  font-size: 3vmin;
+  font-size: 4vmin;
 }
 
 .addr {
-  font-size: 3vmin;
+  font-size: 3.5vmin;
 }
 
 .going {
@@ -43,9 +47,13 @@ ul {
 }
 
 .upcoming {
-  font-size: 3vmin;
+  font-size: 4vmin;
 }
 
 hr {
   border-top: 1px solid #cdcdcd;
+}
+
+.rsvp-button {
+  font-size: 4vmin;
 }

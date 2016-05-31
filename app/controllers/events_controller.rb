@@ -9,57 +9,30 @@ class EventsController < ApplicationController
   layout 'events'
 
   def rsvp_stb
-    session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
-    ws = session.spreadsheet_by_key("1JYr0UwPFgck9QbXV5LQr5I_JD2qHodnxGR1AWLL32aA").worksheets[0]
-
-    # doc version stored at [1,2]
-    rows = Rails.cache.fetch("stb_events_v#{ws[1,2]}", expires_in: 30.days) do
-      rows = []
-      (1..ws.num_rows).select do |row|
-        next unless row >= 3
-        rows << (1..11).to_a.map { |col| ws[row, col] }
-      end
-      rows
-    end
-
-    @events = []
-    rows.each do |row|
-      spots_remaining = @profile.male? ? (row[5].to_i - row[7].to_i) : (row[6].to_i - row[8].to_i)
-      event_date = Date.parse(row[0])
-      next if Date.today > event_date
-
-      event = OpenStruct.new
-      event.date = event_date
-      event.time_str = row[1]
-      event.place = row[2]
-      event.addr = row[3]
-      event.spots_remaining = spots_remaining
-      event.id = row[9]
-      event.photo = row[10]
-      event.rsvp = EventRsvp.with_ident(event.id).where(profile_uuid: @profile.uuid).take
-      event.going = event.rsvp.present? ? true : false
-      event.attending = EventRsvp.with_ident(event.id).map(&:profile).flatten
-
-      @events << event
+    @events = Event.current_or_future_events
+    rsvped_for_event = @events.select { |event| event.rsvp_for(@profile).present? }.first
+    if rsvped_for_event.present?
+      redirect_to action: :registered, params: { event_id: rsvped_for_event.id, uuid: @profile.uuid }
+      return
     end
   end
 
   def register_stb
-    if @event_rsvp = EventRsvp.with_ident(params[:event_id]).take
-      @event_rsvp.update!(attending_status: params[:attending_status])
-    else
-      @event_rsvp = EventRsvp.create!(attending_status: params[:attending_status], ident: params[:event_id], profile_uuid: @profile.uuid)
-    end
-
+    @event_rsvp = EventRsvp.create!(attending_status: params[:attending_status], event_id: params[:event_id], profile_uuid: params[:uuid])
     @profile.reload
 
-    redirect_to :back
+    redirect_to action: :registered, params: { event_id: params[:event_id], uuid: params[:uuid] }
+  end
+
+  def registered
+    @event = Event.find(params[:event_id])
+    @profile = Profile.find(params[:uuid])
   end
 
   def cancel_stb
-    EventRsvp.find(params[:id]).destroy
+    EventRsvp.where(event_id: params[:event_id], profile_uuid: params[:uuid]).take.try(:destroy)
 
-    redirect_to :back
+    redirect_to action: :rsvp_stb, params: { uuid: params[:uuid] }
   end
 
   private

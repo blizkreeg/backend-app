@@ -1,10 +1,10 @@
 class EventRsvp < ActiveRecord::Base
   belongs_to :profile, foreign_key: "profile_uuid"
+  belongs_to :event
 
   ATTENDING_STATUSES = %w(waitlisted going)
 
   ATTRIBUTES = {
-    ident:              :string,
     attending_status:   :string
   }
 

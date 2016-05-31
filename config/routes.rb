@@ -83,6 +83,7 @@ Rails.application.routes.draw do
     get '/rsvp-stb', to: 'events#rsvp_stb'
     post '/register-stb', to: 'events#register_stb'
     delete '/cancel-stb', to: 'events#cancel_stb'
+    get '/registered', to: 'events#registered'
   end
 
   get '*unmatched_route', to: 'application#route_not_found'

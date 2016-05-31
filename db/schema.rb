@@ -64,11 +64,19 @@ ActiveRecord::Schema.define(version: 20160530221659) do
   create_table "event_rsvps", force: :cascade do |t|
     t.jsonb    "properties",   default: {}, null: false
     t.uuid     "profile_uuid",              null: false
+    t.integer  "event_id",                  null: false
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
 
+  add_index "event_rsvps", ["event_id"], name: "index_event_rsvps_on_event_id", using: :btree
   add_index "event_rsvps", ["profile_uuid"], name: "index_event_rsvps_on_profile_uuid", using: :btree
+
+  create_table "events", force: :cascade do |t|
+    t.jsonb    "properties", default: {}, null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
 
   create_table "matches", id: :bigserial, force: :cascade do |t|
     t.uuid     "for_profile_uuid",                  null: false
@@ -159,6 +167,7 @@ ActiveRecord::Schema.define(version: 20160530221659) do
   add_foreign_key "conversation_healths", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "date_suggestions", "conversations"
   add_foreign_key "date_suggestions", "date_places"
+  add_foreign_key "event_rsvps", "events"
   add_foreign_key "event_rsvps", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "matches", "profiles", column: "for_profile_uuid", primary_key: "uuid"
   add_foreign_key "matches", "profiles", column: "matched_profile_uuid", primary_key: "uuid"

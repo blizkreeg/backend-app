@@ -1,10 +1,10 @@
 div.text-center style='100%'
-  = image_tag 'stb-logo', width: 150
+  = image_tag 'stb-logo', width: 120
 h2.upcoming.text-center style='margin-bottom:25px;' Upcoming Events
 hr
 - @events.each do |event|
-  div style='padding: 10px 0px;'
-    .row style='margin-bottom:20px'
+  div style='padding: 20px 0px;border-bottom:1px solid #ddd;'
+    .row
       .col-xs-12
         div style='width:30%;display:inline;float:left;'
           = image_tag event.photo, style: 'border-radius:3px;width:100%;'
@@ -13,27 +13,27 @@ hr
             | Brunch at #{event.place}
           p.when
             i.fa.fa-calendar-check-o
-            | &nbsp; #{event.date.strftime("%A, %B %-d %Y")} at #{event.time_str}
-          - if event.spots_remaining == 0
+            | &nbsp; #{event.happening_on.strftime("%A, %B %-d %Y")} at #{event.happening_at}
+          - if event.spots_remaining(@profile) == 0
             p.spots
               i.fa.fa-star &nbsp;
               | Event FULL
           - else
             p.spots
               i.fa.fa-star &nbsp;
-              strong style='border-bottom:1px solid #ddd' #{event.spots_remaining}
+              strong #{event.spots_remaining(@profile)}
               | &nbsp; spots remaining
             p.addr
               i.fa.fa-map-marker
-              span style='color:#555;' &nbsp; #{event.addr}
-          - if event.attending.present?
+              span style='color:#555;' &nbsp; #{event.address}
+          - if event.rsvp_for(@profile).present?
             p.going
-              small Going: &nbsp;
+              span style='font-size:3vmin;' Going: &nbsp;
               - event.attending.each do |profile|
-                = cl_image_tag profile.photos.primary.take.public_id, width: 32, height: 32, crop: 'thumb', gravity: 'face', radius: 'max'
-          - if event.going
-            h4 You're going to this!
-            = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { id: event.rsvp.id, uuid: @profile.uuid }, class: 'submit btn btn-danger', form_class: 'inline'}
+                = cl_image_tag profile.photos.primary.take.public_id, width: 48, height: 48, crop: 'thumb', gravity: 'face', radius: 'max'
+          - if event.rsvp_for(@profile).present?
+            h4 You're on the list!
+            = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
           - else
-            - if event.spots_remaining > 0 && @profile.event_rsvps.count == 0
-              = button_to "+ Going", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success', form_class: 'inline'}
+            - if event.spots_remaining(@profile) > 0 && @profile.event_rsvps.count == 0
+              = button_to "Add me to the list", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}
