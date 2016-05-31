@@ -14,7 +14,7 @@ module ApplicationHelper
 
         now = Time.now.in_time_zone(@current_profile.time_zone)
 
-        if (now.hour > Constants::MATCHES_DELIVERED_AT_HOURS.max) && (now.hour <= 23)
+        if (now.hour >= Constants::MATCHES_DELIVERED_AT_HOURS.max) && (now.hour <= 23)
           return 'Noon tomorrow'
         else
           matches_hour = Constants::MATCHES_DELIVERED_AT_HOURS.detect { |hour| hour > now.hour }
@@ -26,7 +26,7 @@ module ApplicationHelper
           return "#{in_hours}h : #{in_mins}m"
         end
       else
-        return 'Check back soon'
+        return 'While you wait...'
       end
     elsif @current_profile.in_match_queued_state?
       return 'Loading your matches...'

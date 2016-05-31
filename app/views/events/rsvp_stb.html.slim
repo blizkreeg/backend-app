@@ -1,5 +1,7 @@
-div.text-center style='100%'
+div.text-center style='100%;margin-bottom:10px;'
   = image_tag 'stb-logo', width: 120
+h5.text-center
+  = link_to 'Learn More', 'https://ekcoffee.com/singlesthatbrunch?show_dload=0', style: 'color: #303030;text-decoration:underline;'
 h2.upcoming.text-center style='margin-bottom:25px;' Upcoming Events
 hr
 - @events.each do |event|
