@@ -1,7 +1,18 @@
 namespace :events do
   task :import => :environment do
     session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
-    ws = session.spreadsheet_by_key("1JYr0UwPFgck9QbXV5LQr5I_JD2qHodnxGR1AWLL32aA").worksheets[0]
+    worksheet_num =
+    case Rails.env
+    when 'production'
+      0
+    when 'test'
+      1
+    when 'development'
+      2
+    else
+      2
+    end
+    ws = session.spreadsheet_by_key("1JYr0UwPFgck9QbXV5LQr5I_JD2qHodnxGR1AWLL32aA").worksheets[worksheet_num]
 
     # doc version stored at [1,2]
     version = ws[1,2]

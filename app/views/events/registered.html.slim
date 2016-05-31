@@ -32,15 +32,16 @@ h3.text-center style='font-size:4.5vmin;margin-bottom:20px;color:white;backgroun
       - if @event.rsvp_for(@profile).present?
         = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: @event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
 hr
-h4.text-center At The Event
-ul style='margin-bottom: 20px;'
-  li If you think you can't make it, please cancel at least two days before the brunch. Spots are limited and someone else could attend.
-  li A host from ekCoffee will be there at the brunch to meet you
-  li You pay for what your eat or drink. Please bring cash or a credit card.
+.row
+  .col-xs-12
+    h4.text-center At The Event
+    ul style='margin-bottom: 20px;'
+      li A host from ekCoffee will be there at the brunch to meet you
+      li You pay for what your eat or drink. Please bring cash or a credit card.
 
-h4.text-center Cancellation
-ul style='margin-bottom: 20px;'
-  li If you think you can't make it, please cancel at least two days before the brunch. Spots are limited and someone else could attend.
-  li You may cancel for this event and attend another one if this date doesn't work.
+    h4.text-center Cancellation
+    ul style='margin-bottom: 20px;'
+      li If you think you can't make it, please cancel at least two days before the brunch. Spots are limited and someone else could attend.
+      li You may cancel for this event and attend another one if this date doesn't work.
 
-p.text-center Talk to your ekCoffee butler in the app or email us at hello@ekcoffee.com if you have any questions.
+    p.text-center Talk to your ekCoffee butler in the app or email us at hello@ekcoffee.com if you have any questions.
