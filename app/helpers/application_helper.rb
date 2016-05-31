@@ -26,7 +26,7 @@ module ApplicationHelper
           return "#{in_hours}h : #{in_mins}m"
         end
       else
-        return 'While you wait...'
+        return 'Check back soon!'
       end
     elsif @current_profile.in_match_queued_state?
       return 'Loading your matches...'
