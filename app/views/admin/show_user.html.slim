@@ -32,7 +32,7 @@ p: markdown: UUID: `#{@profile.uuid}` | #{raw(@profile.visible ? '<span class="l
     h4.upcase Matches Received #{content_tag(:span, @profile.matches.count, class: 'h3 text-right')}
     h4.upcase Matches Liked #{content_tag(:span, @profile.matches.liked.count, class: 'h3 text-right')}
     h4.upcase Matches Passed #{content_tag(:span, @profile.matches.passed.count, class: 'h3')}
-  .col-xs-4
+  .col-xs-4.box
     h4 Profile
     hr
     / ul.unstyled-list
@@ -63,6 +63,22 @@ p: markdown: UUID: `#{@profile.uuid}` | #{raw(@profile.visible ? '<span class="l
     span.clearfix
       strong.prop Highest Degree:
       = @profile.highest_degree || 'n/a'
+    hr
+    h4 Seeking Matches
+    hr
+    span.clearfix
+      strong.prop Age:
+      = @profile.seeking_minimum_age
+      | &nbsp; to &nbsp;
+      = @profile.seeking_maximum_age
+    span.clearfix
+      strong.prop Height:
+      | #{@profile.seeking_minimum_height} (#{@profile.seeking_minimum_height_in} in)
+      | &nbsp; to &nbsp;
+      | #{@profile.seeking_maximum_height} (#{@profile.seeking_maximum_height_in} in)
+    span.clearfix
+      strong.prop Faith
+      = @profile.seeking_faith.join(', ')
   .col-xs-4.box
     - if @profile.waiting_for_matches? || @profile.waiting_for_matches_and_response?
       h4 Waiting For Matches

@@ -1,7 +1,7 @@
 class AdminController < ApplicationController
   layout 'admin'
 
-  before_action :load_admin_user
+  before_action :load_admin_user, except: [:logout]
   before_action :admin_authenticated?, except: [:dashboard, :logout]
   before_action :load_metrics, if: lambda { @admin_user.present? }
 
