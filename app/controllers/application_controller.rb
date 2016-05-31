@@ -105,7 +105,7 @@ class ApplicationController < ActionController::Base
       @current_profile = Profile.find(auth_token_data['profile_uuid'])
       EKC.logger.debug "Request from #{@current_profile.uuid}, path: #{request.path}"
     end
-    @current_profile.update(last_seen_at: DateTime.now)
+    @current_profile.update(last_seen_at: DateTime.now) if @current_profile.present?
   rescue ActiveRecord::RecordNotFound
     @current_profile = nil
     @profile_not_found = true
