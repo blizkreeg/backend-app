@@ -1,7 +1,7 @@
 module Matchmaker
 
-  DEFAULT_AGE_GAP_MEN   = [-6, 0]
-  DEFAULT_AGE_GAP_WOMEN = [0, +6]
+  DEFAULT_AGE_GAP_MEN   = [-6, +1]
+  DEFAULT_AGE_GAP_WOMEN = [-1, +6]
 
   DEFAULT_HEIGHT_GAP_MEN    = [-9, 0]
   DEFAULT_HEIGHT_GAP_WOMEN  = [0, +9]

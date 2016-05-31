@@ -4,30 +4,6 @@ module ProfileAttributeHelpers
   GENDER_MALE = 'male'
   GENDER_FEMALE = 'female'
 
-  def height=(ft_in_str)
-    write_attribute(:height, ft_in_str)
-    ht_in = Profile.height_in_inches(ft_in_str)
-    write_attribute(:height_in, ht_in)
-  end
-
-  def height_in=(value); end
-
-  def seeking_minimum_height=(ft_in_str)
-    write_attribute(:seeking_minimum_height, ft_in_str)
-    ht_in = Profile.height_in_inches(ft_in_str)
-    write_attribute(:seeking_minimum_height_in, ht_in)
-  end
-
-  def seeking_minimum_height_in=(value); end
-
-  def seeking_maximum_height=(ft_in_str)
-    write_attribute(:seeking_maximum_height, ft_in_str)
-    ht_in = Profile.height_in_inches(ft_in_str)
-    write_attribute(:seeking_maximum_height_in, ht_in)
-  end
-
-  def seeking_maximum_height_in=(value); end
-
   def male?
     self.gender == GENDER_MALE
   end

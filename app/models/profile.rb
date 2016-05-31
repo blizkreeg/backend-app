@@ -231,6 +231,7 @@ class Profile < ActiveRecord::Base
   before_create :set_default_moderation
   before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
+  before_save :update_height_in_values, if: Proc.new { |profile| profile.height_changed? || profile.seeking_minimum_height_changed? || profile.seeking_maximum_height_changed? }
   after_update :update_clevertap
   before_save :ensure_attribute_types
 
@@ -462,6 +463,8 @@ class Profile < ActiveRecord::Base
     self.seeking_maximum_age.blank? ||
     self.seeking_minimum_height.blank? ||
     self.seeking_maximum_height.blank? ||
+    self.seeking_minimum_height_in.blank? ||
+    self.seeking_maximum_height_in.blank? ||
     self.seeking_faith.blank?
   end
 
@@ -591,11 +594,11 @@ class Profile < ActiveRecord::Base
       self.seeking_maximum_age = Matchmaker.default_max_age_pref(self.gender, self.age)
     end
 
-    if self.seeking_minimum_height.blank? && self.height.present?
+    if (self.seeking_minimum_height.blank? || self.seeking_minimum_height_in.blank?) && self.height.present?
       self.seeking_minimum_height = Matchmaker.default_min_ht_pref(self.gender, self.height)
     end
 
-    if self.seeking_maximum_height.blank? && self.height.present?
+    if (self.seeking_maximum_height.blank? || self.seeking_maximum_height_in.blank?) && self.height.present?
       self.seeking_maximum_height = Matchmaker.default_max_ht_pref(self.gender, self.height)
     end
 
@@ -604,6 +607,12 @@ class Profile < ActiveRecord::Base
     end
 
     true
+  end
+
+  def update_height_in_values
+    self.height_in = Profile.height_in_inches(self.height)
+    self.seeking_minimum_height_in = Profile.height_in_inches(self.seeking_minimum_height)
+    self.seeking_maximum_height_in = Profile.height_in_inches(self.seeking_maximum_height)
   end
 
   def update_clevertap
