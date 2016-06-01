@@ -66,11 +66,9 @@ class AdminController < ApplicationController
       if !params[:approved]
         rejected_photo_was_primary = photo.primary
       end
-      # TBD: later when we move to rejecting photo and then giving user option to delete
-      # uncomment this
-      # props = { reviewed: true, approved: params[:approved] }
-      # props.merge!({ primary: false }) if !params[:approved]
-      # Photo.update(id, props)
+      props = { reviewed: true, approved: params[:approved] }
+      props.merge!({ primary: false }) if !params[:approved]
+      Photo.update(id, props)
       profile = photo.profile
       photo.destroy if !params[:approved]
       profile.test_and_set_primary_photo! if rejected_photo_was_primary
