@@ -53,6 +53,14 @@ class AdminController < ApplicationController
     redirect_to :back
   end
 
+  def moderate_user_stb
+    p = Profile.find(params[:uuid])
+    p.approved_for_stb = (params[:approved_for_stb] == 'true')
+    p.save!
+
+    redirect_to :back
+  end
+
   def review_photos
     @unmoderated_photos_cnt = Photo.with_reviewed(false).count
     @unmoderated_photos = Photo.with_reviewed(false).order("created_at DESC").limit(25)

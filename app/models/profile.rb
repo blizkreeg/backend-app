@@ -140,7 +140,8 @@ class Profile < ActiveRecord::Base
     moderation_status:            :string,
     moderation_status_reason:     :string,
     visible:                      :boolean,
-    staff_or_internal:            :boolean
+    staff_or_internal:            :boolean,
+    approved_for_stb:             :boolean
 
     # matching related
     # attractiveness_score:         :integer, # median of all scores by reviewers?
