@@ -8,6 +8,11 @@ hr
       .col-xs-1
         span class="#{moderation_status_label(profile.moderation_status)}"
           = profile.moderation_status
+      .col-xs-2
+        = profile.state
+      .col-xs-3
+        i.fa.fa-eye
+        | &nbsp; #{distance_of_time_in_words_to_now(profile.last_seen_at) if profile.last_seen_at.present?} ago
       .col-xs-3
         small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
 - else
