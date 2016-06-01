@@ -72,7 +72,7 @@ class AdminController < ApplicationController
       # props.merge!({ primary: false }) if !params[:approved]
       # Photo.update(id, props)
       profile = photo.profile
-      photo.destroy
+      photo.destroy if !params[:approved]
       profile.test_and_set_primary_photo! if rejected_photo_was_primary
       unless params[:approved]
         if profile.photos.approved.count == 0
