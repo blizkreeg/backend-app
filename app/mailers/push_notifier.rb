@@ -14,7 +14,8 @@ class PushNotifier
               conv_close_notice
               new_butler_message
               profile_photo_rejected
-              profile_edit_rejected)
+              profile_edit_rejected
+              approved_for_matching)
 
   DETAILS = {
     'new_matches' => {
@@ -110,6 +111,13 @@ class PushNotifier
       category: 'EDIT_PROFILE',
       event_name: 'Profile Issue',
       event_details: { issue_type: 'Bad Update' },
+      has_push_notification: true
+    },
+    'approved_for_matching' => {
+      title: "ekCoffee",
+      body: "Good news, @myname! Your profile was reviewed by one of our dating butlers and is now enabled for matching!",
+      required_parameters: ['myname'],
+      event_name: 'Profile Approved For Matching',
       has_push_notification: true
     }
   }
