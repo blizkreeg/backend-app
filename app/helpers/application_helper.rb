@@ -18,7 +18,7 @@ module ApplicationHelper
           return 'Noon tomorrow'
         else
           matches_hour = Constants::MATCHES_DELIVERED_AT_HOURS.detect { |hour| hour > now.hour }
-          matches_time = Time.new(now.year, now.month, now.day, matches_hour)
+          matches_time = Time.new(now.year, now.month, now.day, matches_hour, 0, 0, now.utc_offset)
 
           in_hours = (matches_time - now).to_i / 1.hour
           in_mins = ((matches_time - now).to_i/60) % 60
