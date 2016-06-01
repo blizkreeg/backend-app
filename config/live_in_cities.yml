@@ -37,7 +37,7 @@ production:
   - name: 'Mumbai'
     lat: 18.98
     lng: 72.83
-    radius: 25_000
+    radius: 60_000
   - name: 'San Francisco'
     lat: 37.7749
     lng: -122.4194
