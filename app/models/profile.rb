@@ -342,6 +342,8 @@ class Profile < ActiveRecord::Base
     end
 
     def precache_facebook_photo(uuid, photo_id)
+      return if photo_id.blank?
+
       profile = Profile.find(uuid)
       profile.facebook_authentication.get_photo(photo_id)
     rescue ActiveRecord::RecordNotFound
@@ -353,7 +355,7 @@ class Profile < ActiveRecord::Base
     def precache_facebook_albums(uuid)
       profile = Profile.find(uuid)
       profile.facebook_authentication.get_photo_albums_list.each do |album|
-        self.delay.precache_facebook_photo(uuid, album['cover_photo'])
+        self.delay.precache_facebook_photo(uuid, album['cover_photo']) if album['cover_photo'].present?
       end
     rescue ActiveRecord::RecordNotFound
       EKC.logger.error "Profile not found when precaching FB albums, uuid: #{uuid}"
