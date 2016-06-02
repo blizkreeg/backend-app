@@ -31,7 +31,7 @@ class Conversation < ActiveRecord::Base
   end
 
   NUMBER_EXCHANGE_UNMATCH_DELAY = 1.hour
-  SHOW_DATE_SUGGESTIONS_DELAY = 1.hour
+  SHOW_DATE_SUGGESTIONS_DELAY = 15.minutes
   CHECK_IF_MEETING_FROM_OPEN = 120.hours
   CLOSE_NOTICE_FROM_OPEN = 144.hours
   CLOSE_TIME = 168.hours # 7.days
