@@ -54,6 +54,6 @@ module ApplicationHelper
   def percent_val(n, total)
     return nil unless total > 0
 
-    ((n.to_f / total) * 100).to_i
+    ((n.to_f / total) * 100).round(1)
   end
 end
