@@ -7,6 +7,28 @@ class AdminController < ApplicationController
 
   def dashboard
     session[:redirect_to] = '/dashboard'
+
+    # metrics to track
+    # m/f
+    # dating/rel
+    # age buckets
+    # unmatch reasons
+    # # of convos
+    #
+    #
+    #
+
+    @men = Profile.with_gender('male').count
+    @women = Profile.with_gender('female').count
+    @intent_dating = Profile.with_intent('Dating').count
+    @intent_relationship = Profile.with_intent('Relationship').count
+    @age_18_25 = Profile.age_gte(18).age_lte(25).count
+    @age_26_30 = Profile.age_gte(26).age_lte(30).count
+    @age_31_35 = Profile.age_gte(31).age_lte(35).count
+    @age_35_40 = Profile.age_gte(35).age_lte(40).count
+    @age_40_plus = Profile.age_gte(40).count
+    @total = Profile.count
+    @unmatched_reasons = Match::UNMATCH_REASONS.map { |k, v|  [v, Match.is_unmatched.with_unmatched_reason(v).count] }
   end
 
   def all_users

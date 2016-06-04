@@ -50,4 +50,10 @@ module ApplicationHelper
       return 'Loading...'
     end
   end
+
+  def percent_val(n, total)
+    return nil unless total > 0
+
+    ((n.to_f / total) * 100).to_i
+  end
 end
