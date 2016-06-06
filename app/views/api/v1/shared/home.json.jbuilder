@@ -9,7 +9,7 @@ json.data do
     json.title "Singles That Brunch"
     json.body "Singles That Brunch is a weekly brunch event where you'll meet interesting singles from your city.\r\n\r\nJoin us over brunch and meet new people in real life! Just show up, we'll make the rest happen :-)"
     json.cta_button_title "See Upcoming Brunches"
-    json.cta_url ENV['HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
+    json.cta_url @link_url
   end
 end
 json.partial! 'api/v1/shared/auth'

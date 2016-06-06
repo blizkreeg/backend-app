@@ -264,6 +264,11 @@ class Api::V1::ProfilesController < ApplicationController
     # TBD: fix before going live!
     @content_type = Rails.env.production? ? 'none' : 'link'# ((rand(10)%3) == 0) ? 'text' : (((rand(10)%3) == 1) ? 'link' : 'none')
 
+    case @content_type
+    when 'link'
+      @link_url = ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
+    end
+
     render 'api/v1/shared/home', status: 200
   end
 
