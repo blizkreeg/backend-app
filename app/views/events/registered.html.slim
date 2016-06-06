@@ -12,18 +12,19 @@ h3.text-center style='font-size:4.5vmin;margin-bottom:20px;color:white;backgroun
       p.when
         i.fa.fa-calendar-check-o
         | &nbsp; #{@event.happening_on.strftime("%A, %B %-d %Y")} at #{@event.happening_at}
-      - if @event.spots_remaining(@profile) == 0
-        p.spots
-          i.fa.fa-star &nbsp;
-          | Event FULL
-      - else
-        p.spots
-          i.fa.fa-star &nbsp;
-          strong #{@event.spots_remaining(@profile)}
-          | &nbsp; spots remaining
-        p.addr
-          i.fa.fa-map-marker
-          span style='color:#555;' &nbsp; #{@event.address}
+      - if @event.rsvp_for(@profile).blank?
+        - if @event.spots_remaining(@profile) == 0
+          p.spots
+            i.fa.fa-star &nbsp;
+            | Event FULL
+        - else
+          p.spots
+            i.fa.fa-star &nbsp;
+            strong #{@event.spots_remaining(@profile)}
+            | &nbsp; spots remaining
+      p.addr
+        i.fa.fa-map-marker
+        span style='color:#555;' &nbsp; #{@event.address}
       - if @event.rsvp_for(@profile).present?
         p.going
           span style='font-size:3vmin;' Going: &nbsp;
