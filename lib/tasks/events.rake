@@ -16,7 +16,7 @@ namespace :events do
 
     # doc version stored at [1,2]
     version = ws[1,2]
-    if !Rails.env.production? || (version.to_i != Rails.cache.read("stb_events_version").to_i)
+    if !Rails.env.production? || (version != Rails.cache.read("stb_events_version"))
       Rails.cache.write("stb_events_version", version, expires_in: 30.days)
       (1..ws.num_rows).to_a.each do |row|
         next unless row >= 3
