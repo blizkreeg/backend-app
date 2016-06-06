@@ -261,8 +261,19 @@ class Api::V1::ProfilesController < ApplicationController
   def home
     srand Time.now.to_i
 
-    # TBD: fix before going live!
-    @content_type = Rails.env.production? ? 'none' : 'link'# ((rand(10)%3) == 0) ? 'text' : (((rand(10)%3) == 1) ? 'link' : 'none')
+    @content_type =
+      case Rails.env
+      when 'development'
+        'link'
+      when 'test'
+        'link'
+      when 'production'
+        if @current_profile.approved_for_stb
+          'link'
+        else
+          'none'
+        end
+      end
 
     case @content_type
     when 'link'
