@@ -1,0 +1,21 @@
+h2 Singles That Brunch
+hr
+.row
+  .col-xs-12.col-sm-6
+    .row style='margin-bottom:8px;border-bottom:1px solid #eee;padding:4px 0px;font-weight:600'
+      .col-xs-4
+        | Place
+      .col-xs-2
+        | When
+      .col-xs-4
+        | RSVPs
+    - @current_or_future_events.each do |event|
+      .row style='margin-bottom:8px;border-bottom:1px solid #eee;padding:4px 0px;'
+        .col-xs-4
+          = event.place
+        .col-xs-2
+          p in #{distance_of_time_in_words_to_now(event.happening_on)}
+          small #{event.happening_on.strftime("%a, %b %d")}
+        .col-xs-4
+          p #{event.event_rsvps.map(&:profile).flatten.select { |p| p.male? }.count} men
+          p #{event.event_rsvps.map(&:profile).flatten.select { |p| p.female? }.count} women

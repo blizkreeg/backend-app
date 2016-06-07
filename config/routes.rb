@@ -79,6 +79,9 @@ Rails.application.routes.draw do
     post '/update-conversation-state', to: 'accounts#update_conversation_state'
     post '/post-date-feedback', to: 'accounts#switch_to_post_date_feedback'
     post '/send-push-notification', to: 'accounts#send_push_notification'
+
+    # stb dashboard
+    get '/stb-dashboard', to: 'admin#stb_dashboard'
   end
 
   constraints SubdomainConstraint.new('events') do
