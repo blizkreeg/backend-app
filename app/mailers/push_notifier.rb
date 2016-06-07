@@ -119,6 +119,13 @@ class PushNotifier
       required_parameters: ['myname'],
       event_name: 'Profile Approved For Matching',
       has_push_notification: true
+    },
+    'general_announcement' => {
+      title: 'ekCoffee',
+      body: '',
+      required_parameters: ['body'],
+      event_name: 'Announcement',
+      has_push_notification: true
     }
   }
 
