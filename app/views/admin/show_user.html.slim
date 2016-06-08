@@ -68,6 +68,10 @@ p: markdown: UUID: `#{@profile.uuid}` | #{raw(@profile.visible ? '<span class="l
     span.clearfix
       strong.prop Highest Degree:
       = @profile.highest_degree || 'n/a'
+    span.clearfix
+      strong.prop Blurbs
+      - @profile.about_me_order.each do |blurb_property|
+        br #{@profile.send("#{blurb_property}_label".to_sym)} &mdash; #{@profile.send(blurb_property.to_sym)}
     hr
     h4 Seeking Matches
     hr
