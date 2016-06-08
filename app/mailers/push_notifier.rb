@@ -88,7 +88,7 @@ class PushNotifier
     },
     'new_butler_message' => {
       title: "ekCoffee",
-      body: "@myname, you have a message from the ekCoffee Butler!",
+      body: "@myname, you have a message from the ekCoffee Butler.",
       required_parameters: ['myname'],
       category: 'BUTLER_CHAT',
       event_name: 'Has New Message',
