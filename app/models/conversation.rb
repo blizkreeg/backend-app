@@ -27,11 +27,11 @@ class Conversation < ActiveRecord::Base
   else
     RADIO_SILENCE_DELAY = 16.hours
     HEALTH_CHECK_FROM_OPEN = 24.hours
-    READY_TO_MEET_FROM_OPEN = 72.hours
+    READY_TO_MEET_FROM_OPEN = 48.hours
   end
 
   NUMBER_EXCHANGE_UNMATCH_DELAY = 1.hour
-  SHOW_DATE_SUGGESTIONS_DELAY = 15.minutes
+  SHOW_DATE_SUGGESTIONS_DELAY = 10.minutes
   CHECK_IF_MEETING_FROM_OPEN = 120.hours
   CLOSE_NOTICE_FROM_OPEN = 144.hours
   CLOSE_TIME = 168.hours # 7.days
