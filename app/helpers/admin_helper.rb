@@ -10,7 +10,7 @@ module AdminHelper
     if el.properties["uuids"].present?
       str += el.properties["uuids"].map do |uuid|
                p = Profile.find(uuid) rescue nil
-               content_tag(:a, p.firstname, href: '/url') if p.present?
+               content_tag(:a, content_tag(:a, p.firstname, href: Rails.application.routes.url_helpers.admin_show_user_path(p.uuid))) if p.present?
              end.join(', ').html_safe
     elsif el.properties["uuid"]
       p = Profile.find(el.properties["uuid"]) rescue nil
