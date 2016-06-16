@@ -32,4 +32,5 @@ hr
               br
               - women_attending.each do |profile|
                 = link_to profile.firstname, admin_show_user_path(profile.uuid)
+                |&nbsp; (#{profile.email})
                 br
