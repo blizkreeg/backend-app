@@ -1,7 +1,7 @@
 h2 Singles That Brunch
 hr
 .row
-  .col-xs-12.col-sm-6
+  .col-xs-12.col-sm-12
     .row style='margin-bottom:8px;border-bottom:1px solid #eee;padding:4px 0px;font-weight:600'
       .col-xs-4
         | Place
@@ -24,6 +24,7 @@ hr
               br
               - men_attending.each do |profile|
                 = link_to profile.firstname, admin_show_user_path(profile.uuid)
+                |&nbsp; (#{profile.email})
                 br
           p
             | #{event.event_rsvps.map(&:profile).flatten.select { |p| p.female? }.count} women
