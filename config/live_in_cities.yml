@@ -38,6 +38,10 @@ production:
     lat: 18.98
     lng: 72.83
     radius: 60_000
+  - name: 'Bengaluru'
+    lat: 12.9716
+    lng: 77.5946
+    radius: 60_000
   - name: 'San Francisco'
     lat: 37.7749
     lng: -122.4194
