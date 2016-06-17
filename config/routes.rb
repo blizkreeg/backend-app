@@ -64,6 +64,7 @@ Rails.application.routes.draw do
     post '/logout', to: 'admin#logout', as: 'admin_logout'
     get '/profiles-marked-for-deletion', to: 'admin#profiles_marked_for_deletion', as: 'admin_profiles_marked_for_deletion'
     post '/moderate-user-stb', to: 'admin#moderate_user_stb', as: 'admin_moderate_user_stb'
+    post '/assign-desirability-score', to: 'admin#assign_desirability_score_user', as: 'admin_assign_desirability_score_user'
 
     # old admin dashboard - TBD: remove/merge this functionality into above
     get '/login', to: 'accounts#login'

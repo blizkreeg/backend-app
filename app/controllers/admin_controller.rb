@@ -79,6 +79,14 @@ class AdminController < ApplicationController
     redirect_to :back
   end
 
+  def assign_desirability_score_user
+    p = Profile.find params[:uuid]
+    p.desirability_score = params[:score].to_f
+    p.save!
+
+    redirect_to :back
+  end
+
   def moderate_user_stb
     p = Profile.find(params[:uuid])
     p.approved_for_stb = (params[:approved_for_stb] == 'true')

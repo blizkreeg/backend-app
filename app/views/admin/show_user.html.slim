@@ -9,7 +9,7 @@ hr
   .col-xs-8.text-right
     ul.unstyled-list
       li.inline
-        = link_to admin_show_butler_chat_path(@profile.uuid), target: '_blank', class: 'btn btn-info' do
+        = link_to admin_show_butler_chat_path(@profile.uuid), class: 'btn btn-info' do
           i.fa.fa-comments
           | &nbsp; Chat
       li.inline
@@ -27,6 +27,25 @@ hr
           = button_to 'Remove from STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: false }, class: 'submit btn btn-default', form_class: 'inline' }
         - else
           = button_to 'Approve for STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: true }, class: 'submit btn btn-info', form_class: 'inline' }
+.row style='margin-bottom: 6px;'
+  .col-xs-12 style='float:right;'
+    div.score.text-center style='width:200px;'
+      | desirability score:
+      | &nbsp;
+      - if @profile.desirability_score.nil?
+        | &mdash;
+      - else
+        = @profile.desirability_score.to_f
+    = button_to '1', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 1 }, class: 'round-btn' }
+    = button_to '2', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 2 }, class: 'round-btn' }
+    = button_to '3', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 3 }, class: 'round-btn' }
+    = button_to '4', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 4 }, class: 'round-btn' }
+    = button_to '5', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 5 }, class: 'round-btn' }
+    = button_to '6', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 6 }, class: 'round-btn' }
+    = button_to '7', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 7 }, class: 'round-btn' }
+    = button_to '8', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 8 }, class: 'round-btn' }
+    = button_to '9', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 9 }, class: 'round-btn' }
+    = button_to '10', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 10 }, class: 'round-btn' }
 p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
 p: markdown: UUID: `#{@profile.uuid}` | #{raw(@profile.visible ? '<span class="label label-success">INCLUDED IN MATCHING</span>' : '<span class="label label-danger">EXCLUDED FROM MATCHING</span>')}
 .row
@@ -43,7 +62,7 @@ p: markdown: UUID: `#{@profile.uuid}` | #{raw(@profile.visible ? '<span class="l
     / ul.unstyled-list
     span.clearfix
       strong.prop FB Url:
-      = link_to "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", target: '_blank'
+      = link_to "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}"
     span.clearfix
       strong.prop Intent:
       = @profile.intent || 'n/a'
@@ -58,7 +77,12 @@ p: markdown: UUID: `#{@profile.uuid}` | #{raw(@profile.visible ? '<span class="l
       = @profile.profession || 'n/a'
     span.clearfix
       strong.prop Schools attended:
-      = @profile.schools_attended.join(', ') || 'n/a'
+      - if @profile.schools_attended.blank?
+        = 'n/a'
+      - else
+        ul
+        - @profile.schools_attended.each do |school|
+          li #{school}
     span.clearfix
       strong.prop Faith:
       = @profile.faith || 'n/a'
@@ -92,17 +116,17 @@ p: markdown: UUID: `#{@profile.uuid}` | #{raw(@profile.visible ? '<span class="l
     - if @profile.waiting_for_matches? || @profile.waiting_for_matches_and_response?
       h4 Waiting For Matches
       - if @profile.active_mutual_match.present?
-        p Mutually matched with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid), target: '_blank'}
+        p Mutually matched with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid)}
     - elsif @profile.has_matches? || @profile.has_matches_and_waiting_for_response?
       h4 Ready For Matches
     - elsif @profile.show_matches? || @profile.show_matches_and_waiting_for_response?
       h4 Showing Matches
     - elsif @profile.mutual_match?
       h4 Mutual Match
-      p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid), target: '_blank'}
+      p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid)}
     - elsif @profile.in_conversation?
       h4 In Conversation
-      p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid), target: '_blank'}
+      p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid)}
       dl
         dt id
         dd #{@profile.active_mutual_match.conversation.id}

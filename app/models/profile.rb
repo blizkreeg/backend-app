@@ -141,12 +141,10 @@ class Profile < ActiveRecord::Base
     moderation_status_reason:     :string,
     visible:                      :boolean,
     staff_or_internal:            :boolean,
-    approved_for_stb:             :boolean
+    approved_for_stb:             :boolean,
 
     # matching related
-    # attractiveness_score:         :integer, # median of all scores by reviewers?
-    # use_of_language_score:        :integer, # objective measure?
-    # human_review_score:           :integer, # median of subjective review scores by reviewers?
+    desirability_score:           :decimal # overall desirability - appearance + accomplishments + ...
   }
 
   EDITABLE_ATTRIBUTES = %i(
