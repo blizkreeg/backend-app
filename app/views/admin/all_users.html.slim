@@ -4,7 +4,7 @@ hr
   - @profiles.each do |profile|
     .row style='margin-bottom:8px;border-bottom:1px solid #eee;padding:4px 0px;'
       .col-xs-3
-        = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+        = link_to profile.fullname, admin_show_user_path(profile.uuid)
       .col-xs-3
         span style='padding: 0px 4px;' class="#{moderation_status_label(profile.moderation_status)}"
           = profile.moderation_status.first

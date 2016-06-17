@@ -12,7 +12,7 @@ hr
       ul
       - male_profiles.each do |profile|
         li
-          = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+          = link_to profile.fullname, admin_show_user_path(profile.uuid)
           small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
   .col-xs-6
     h4 Women
@@ -23,5 +23,5 @@ hr
       ul
       - female_profiles.each do |profile|
         li
-          = link_to profile.fullname, admin_show_user_path(profile.uuid), target: '_blank'
+          = link_to profile.fullname, admin_show_user_path(profile.uuid)
           small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago

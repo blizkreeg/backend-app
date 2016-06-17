@@ -9,7 +9,7 @@ hr
     - else
       - @profiles.select { |profile| profile.male? }.each do |profile|
         li
-          = link_to profile.fullname, admin_show_butler_chat_path(profile.uuid), target: '_blank'
+          = link_to profile.fullname, admin_show_butler_chat_path(profile.uuid)
       - if @new_butler_message_men_cnt > 25
         h5
           = "#{@new_butler_message_men_cnt - 25} more"
@@ -21,7 +21,7 @@ hr
     - else
       - @profiles.select { |profile| profile.female? }.each do |profile|
         li
-          = link_to profile.fullname, admin_show_butler_chat_path(profile.uuid), target: '_blank'
+          = link_to profile.fullname, admin_show_butler_chat_path(profile.uuid)
       - if @new_butler_message_women_cnt > 25
         h5
           = "#{@new_butler_message_women_cnt - 25} more"
