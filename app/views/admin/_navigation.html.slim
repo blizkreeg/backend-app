@@ -2,20 +2,20 @@
   .navbar-fixed-left.left-nav
     ul.nav.navbar-nav
       li
-        a href='/all-users' All Users (#{@profiles_cnt})
+        a href='/all-users' All (#{@profiles_cnt})
     .clearfix
     hr
     h4 style='padding-left:10px;' Needs Review
     hr
     ul.nav.navbar-nav
       li
-        a href='/unmoderated' New Users (#{@unmoderated_cnt})
+        a href='/unmoderated' Unmoderated (#{@unmoderated_cnt})
       li
-        a href='/suspicious' Suspicious Users (#{@suspicious_cnt})
+        a href='/suspicious' Suspicious (#{@suspicious_cnt})
       li
-        a href='/new-butler-chats' Butler Chats (#{@new_butler_chats_cnt})
+        a href='/new-butler-chats' Butler (#{@new_butler_chats_cnt})
       li
-        a href='/review-photos' New Photos (#{@unmoderated_photos_cnt})
+        a href='/review-photos' Photos (#{@unmoderated_photos_cnt})
       li
-        a href='/profiles-marked-for-deletion' Profiles For Deletion (#{@profiles_marked_for_deletion_cnt})
+        a href='/profiles-marked-for-deletion' Deletions (#{@profiles_marked_for_deletion_cnt})
 
