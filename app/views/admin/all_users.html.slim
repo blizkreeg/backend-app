@@ -6,6 +6,8 @@ hr
       | NAME
     .col-xs-2
       | ASL
+    .col-xs-1
+      | SCORE
     .col-xs-3
       | STATE INFO
     .col-xs-2
@@ -16,6 +18,8 @@ hr
         = link_to profile.fullname, admin_show_user_path(profile.uuid)
       .col-xs-2
         | #{profile.age} &nbsp; #{profile.gender.first} &nbsp; #{profile.location_city}
+      .col-xs-1
+        = profile.desirability_score
       .col-xs-3
         span style='padding: 0px 4px;' class="#{moderation_status_label(profile.moderation_status)}"
           = profile.moderation_status.first
