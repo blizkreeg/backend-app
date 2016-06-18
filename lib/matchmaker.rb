@@ -16,7 +16,7 @@ module Matchmaker
     location: { within_radius: Constants::NEAR_DISTANCE_METERS, ordered_by_proximity: true }
   }
 
-  USE_MATCHING_MODELS = Rails.application.config.test_mode ? %w(location) : %w(preferences location)
+  USE_MATCHING_MODELS = Rails.application.config.test_mode ? %w(location) : %w(preferences location desirability)
 
   module_function
 
@@ -143,12 +143,26 @@ module Matchmaker
       end
     end
 
+    if USE_MATCHING_MODELS.include? 'desirability'
+      matchmaking_query = matchmaking_query
+                          .desirability_score_gte(match_desirability_score_min(profile))
+                          .desirability_score_lte(match_desirability_score_max(profile))
+    end
+
     matchmaking_query =
       matchmaking_query
       .where.not(uuid: profile.uuid)
       .joins("LEFT OUTER JOIN (#{existing_matches_sql}) matches ON matches.matched_profile_uuid = profiles.uuid")
       .where(matches: { matched_profile_uuid: nil })
       .limit(opts[:limit] || FIND_N_ELIGIBLE_MATCHES)
+  end
+
+  def match_desirability_score_min(profile)
+    (profile.desirability_score || 7.0).floor
+  end
+
+  def match_desirability_score_max(profile)
+    10
   end
 
   # DEFAULT MATCH PREFERENCES
