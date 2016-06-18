@@ -9,7 +9,7 @@ namespace :matches do
       begin
         if profile.visible
           puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid} is visible"
-          n = Matchmaker.generate_new_matches_for(profile.uuid)
+          n = Matchmaker.generate_new_matches_for(profile.uuid, onesided: true)
         else
           puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid} is not visible"
           n = Matchmaker.generate_new_matches_for(profile.uuid, onesided: true)
