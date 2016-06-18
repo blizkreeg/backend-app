@@ -22,7 +22,7 @@ module Matchmaker
 
   # finds and creates new match entries
   # returns: number of new matches created
-  def generate_new_matches_for(profile_uuid)
+  def generate_new_matches_for(profile_uuid, opts = {})
     profile = Profile.find(profile_uuid)
 
     matched_profile_uuids = Matchmaker.new_eligible_matches(profile).map(&:uuid)
@@ -41,11 +41,19 @@ module Matchmaker
                 .map { |dist| EKC.normalize_distance_km(dist) }
 
       matched_profiles.each_with_index do |matched_profile, idx|
-        EKC.logger.debug "creating matches between #{profile.uuid} and #{matched_profile.uuid}"
-        create_matches_between(profile_uuid, matched_profile.uuid,
-                                normalized_distance: normalized_distances[idx],
-                                friends_with: profile.facebook_authentication.friends_with?(matched_profile.facebook_authentication.try(:oauth_uid)),
-                                num_common_friends: profile.facebook_authentication.mutual_friends_count(matched_profile.facebook_authentication.try(:oauth_uid)))
+        if opts[:onesided]
+          EKC.logger.debug "creating match from #{profile.uuid} to #{matched_profile.uuid}"
+          create_match_from_to(profile_uuid, matched_profile.uuid,
+                                  normalized_distance: normalized_distances[idx],
+                                  friends_with: profile.facebook_authentication.friends_with?(matched_profile.facebook_authentication.try(:oauth_uid)),
+                                  num_common_friends: profile.facebook_authentication.mutual_friends_count(matched_profile.facebook_authentication.try(:oauth_uid)))
+        else
+          EKC.logger.debug "creating matches between #{profile.uuid} and #{matched_profile.uuid}"
+          create_matches_between(profile_uuid, matched_profile.uuid,
+                                  normalized_distance: normalized_distances[idx],
+                                  friends_with: profile.facebook_authentication.friends_with?(matched_profile.facebook_authentication.try(:oauth_uid)),
+                                  num_common_friends: profile.facebook_authentication.mutual_friends_count(matched_profile.facebook_authentication.try(:oauth_uid)))
+        end
       end
 
       EKC.logger.info "#{profile_uuid}: #{matched_profiles.count} new matches"
@@ -57,6 +65,20 @@ module Matchmaker
     0
   end
 
+  def create_match_from_to(p1_uuid, p2_uuid, match_params = {})
+    p1 = Profile.find(p1_uuid)
+    p2 = Profile.find(p2_uuid)
+
+    initiator_uuid = p1.male? ? p1.uuid : p2.uuid
+
+    with_params = { initiates_profile_uuid: initiator_uuid }.merge(match_params)
+
+    match = Match.create_with(with_params)
+                 .find_or_create_by(for_profile_uuid: p1.uuid, matched_profile_uuid: p2.uuid)
+
+    match
+  end
+
   def create_matches_between(p1_uuid, p2_uuid, match_params = {})
     p1 = Profile.find(p1_uuid)
     p2 = Profile.find(p2_uuid)
@@ -66,10 +88,10 @@ module Matchmaker
     with_params = { initiates_profile_uuid: initiator_uuid }.merge(match_params)
 
     match_1 = Match.create_with(with_params)
-                      .find_or_create_by(for_profile_uuid: p1.uuid, matched_profile_uuid: p2.uuid)
+                   .find_or_create_by(for_profile_uuid: p1.uuid, matched_profile_uuid: p2.uuid)
 
     match_2 = Match.create_with(with_params)
-                      .find_or_create_by(for_profile_uuid: p2.uuid, matched_profile_uuid: p1.uuid)
+                   .find_or_create_by(for_profile_uuid: p2.uuid, matched_profile_uuid: p1.uuid)
 
     [match_1, match_2]
   end

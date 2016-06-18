@@ -7,7 +7,13 @@ namespace :matches do
       # NOTE: you cannot make this asynchronous or we could run into a condition where two matches between the same people are being created
       # TODO: room for optimization
       begin
-        n = Matchmaker.generate_new_matches_for(profile.uuid)
+        if profile.visible
+          puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid} is visible"
+          n = Matchmaker.generate_new_matches_for(profile.uuid)
+        else
+          puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid} is not visible"
+          n = Matchmaker.generate_new_matches_for(profile.uuid, onesided: true)
+        end
         puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{n} new matches" if n > 0
       rescue StandardError => e
         puts "[#{EKC.now_in_pacific_time}] -- error generating matches for #{profile.uuid}, error: #{e.class.name}, message: #{e.message}"
