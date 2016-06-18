@@ -47,7 +47,7 @@ hr
     = button_to '9', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 9 }, class: 'round-btn' }
     = button_to '10', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 10 }, class: 'round-btn' }
 p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
-p: markdown: UUID: `#{@profile.uuid}` | #{raw(@profile.visible ? '<span class="label label-success">INCLUDED IN MATCHING</span>' : '<span class="label label-danger">EXCLUDED FROM MATCHING</span>')}
+p: markdown: UUID: `#{@profile.uuid}` | Chat UUID: `#{@profile.butler_conversation_uuid}` | #{raw(@profile.visible ? '<span class="label label-success">INCLUDED IN MATCHING</span>' : '<span class="label label-danger">EXCLUDED FROM MATCHING</span>')}
 .row
   .col-xs-12
 
