@@ -69,7 +69,7 @@ class Match < ActiveRecord::Base
     matches = Match.find match_ids
     matches.each do |match|
       reverse_match = match.reverse
-      if reverse_match.present? && reverse_match.like?
+      if match.like? && reverse_match.present? && reverse_match.like?
         match.update(mutual: true)
         reverse_match.update(mutual: true)
 
