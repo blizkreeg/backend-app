@@ -7,6 +7,7 @@ test: &test
     - '100000927870413' # neha
     - '1193479594' # vikas
     - '100001582043296' # divya
+    - '1044336782295713' # divya
 development:
   <<: *test
 production:
