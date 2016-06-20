@@ -30,6 +30,7 @@ module BackendApp
     config.active_record.raise_in_transactional_callbacks = true
 
     config.autoload_paths << Rails.root.join('lib')
+    config.autoload_paths << Rails.root.join('app/workers')
 
     # TODO: before going to production, check why this isn't working (SSL error) and use Google if possible
     # TODO: set IPs of production servers for the key at https://console.developers.google.com/apis/credentials/key/0?project=nifty-catfish-119105
