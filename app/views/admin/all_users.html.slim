@@ -19,7 +19,10 @@ hr
       .col-xs-2
         | #{profile.age} &nbsp; #{profile.gender.first} &nbsp; #{profile.location_city}
       .col-xs-1
-        = profile.desirability_score
+        - if profile.blacklisted? || profile.staff_or_internal
+          | &mdash;
+        - else
+          = profile.desirability_score || 'TBD'
       .col-xs-3
         span style='padding: 0px 4px;' class="#{moderation_status_label(profile.moderation_status)}"
           = profile.moderation_status.first
