@@ -41,6 +41,10 @@ class Api::V1::ProfilesController < ApplicationController
       oauth_hash: facebook_auth_hash
     )
 
+    if SocialAuthentication.where(oauth_uid: facebook_auth_hash[:uid], oauth_provider: 'facebook').present?
+      raise ActiveRecord::RecordNotUnique, "Account with Facebook UID #{facebook_auth_hash[:uid]} already exists"
+    end
+
     @profile.save!
 
     @profile.create_initial_matches if !@profile.incomplete
@@ -53,10 +57,6 @@ class Api::V1::ProfilesController < ApplicationController
 
     render status: 201
   rescue ActiveRecord::RecordNotUnique => e
-    EKC.logger.error e.message
-    EKC.logger.error e.backtrace.join('\n')
-
-    notify_of_exception(e)
     respond_with_error('Profile already exists', 400)
   end
 
