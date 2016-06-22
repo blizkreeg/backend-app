@@ -10,7 +10,7 @@ namespace :matches do
         if profile.visible
           puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid} is visible"
           n = Matchmaker.generate_new_matches_for(profile.uuid, onesided: true)
-        else
+        elsif !profile.blacklisted?
           puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid} is not visible"
           n = Matchmaker.generate_new_matches_for(profile.uuid, onesided: true)
         end
