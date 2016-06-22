@@ -11,7 +11,7 @@ module Constants
 
   CLOUDINARY_HOST_URL = 'http://res.cloudinary.com/ekcoffee/image/upload/'
 
-  NEAR_DISTANCE_METERS = 25_000
+  NEAR_DISTANCE_METERS = 60_000
 
   MATCHES_DELIVERED_AT_HOURS = [0, 12, 15, 18, 21]
 
