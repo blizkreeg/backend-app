@@ -158,7 +158,21 @@ module Matchmaker
   end
 
   def match_desirability_score_min(profile)
-    (profile.desirability_score || 7.0).floor
+    dscore = profile.desirability_score
+    dscore.blank?
+      # if score not available, show top of stack
+      return 7
+    else
+      if dscore >= 8
+        # if score is among highest, show 1 below
+        return (dscore.floor - 1)
+      else
+        # else show my score and above
+        return dscore.floor
+      end
+    end
+
+    7
   end
 
   def match_desirability_score_max(profile)
