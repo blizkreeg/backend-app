@@ -91,7 +91,7 @@ p: markdown: UUID: `#{@profile.uuid}` | Chat UUID: `#{@profile.butler_conversati
               | Ready to Meet?
               br
               - c.real_dates.each do |d|
-                | #{d.profile.firstname}: #{h.ready_to_meet}
+                | #{d.profile.firstname}: #{d.ready_to_meet}
                 br
               | Date
               br
