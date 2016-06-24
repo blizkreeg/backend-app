@@ -159,7 +159,7 @@ module Matchmaker
 
   def match_desirability_score_min(profile)
     dscore = profile.desirability_score
-    dscore.blank?
+    if dscore.blank?
       # if score not available, show top of stack
       return 7
     else
