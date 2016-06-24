@@ -52,15 +52,60 @@ p: markdown: UUID: `#{@profile.uuid}` | Chat UUID: `#{@profile.butler_conversati
   .col-xs-12
 
 .row
-  .col-xs-4.box
-    h4 Matches
-    p In Queue #{content_tag(:span, @profile.matches.undecided.count, class: 'h4 text-right')}
-    p Liked #{content_tag(:span, @profile.matches.liked.count, class: 'h4 text-right')}
-    p Passed #{content_tag(:span, @profile.matches.passed.count, class: 'h4')}
-    h4 Matched With
-    p In Queue #{content_tag(:span, @profile.matched_with.undecided.count, class: 'h4 text-right')}
-    p Liked #{content_tag(:span, @profile.matched_with.liked.count, class: 'h4 text-right')}
-    p Passed #{content_tag(:span, @profile.matched_with.passed.count, class: 'h4')}
+  .col-xs-4
+    .row
+      .col-xs-12.box
+        h4 Matches
+        p In Queue #{content_tag(:span, @profile.matches.undecided.count, class: 'h4 text-right')}
+        p Liked #{content_tag(:span, @profile.matches.liked.count, class: 'h4 text-right')}
+        p Passed #{content_tag(:span, @profile.matches.passed.count, class: 'h4')}
+        h4 Matched With
+        p In Queue #{content_tag(:span, @profile.matched_with.undecided.count, class: 'h4 text-right')}
+        p Liked #{content_tag(:span, @profile.matched_with.liked.count, class: 'h4 text-right')}
+        p Passed #{content_tag(:span, @profile.matched_with.passed.count, class: 'h4')}
+    .row
+      .col-xs-12.box
+        h4 Conversations
+        - @profile.conversations.each do |c|
+          - other = c.the_other_who_is_not(@profile.uuid)
+          - if other.present?
+            = link_to other.try(:firstname), admin_show_user_path(other.uuid)
+            br
+            - if c.opened_at.present?
+              - c.conversation_healths.each do |h|
+                | #{h.profile.firstname}: #{h.value}
+                br
+            - else
+              | Didn't start
+          hr
+    .row
+      .col-xs-12.box
+        h4 Dates
+        - @profile.real_dates.each do |r|
+          - c = r.conversation
+          - other = r.date_profile
+          - if other.present?
+            = link_to other.try(:firstname), admin_show_user_path(other.uuid)
+            br
+            - if c.real_dates.present?
+              | Ready to Meet?
+              br
+              - c.real_dates.each do |d|
+                | #{d.profile.firstname}: #{h.ready_to_meet}
+                br
+              | Date
+              br
+              - c.real_dates.each do |d|
+                - if d.meeting_at_recorded_at.present?
+                  | at #{d.date_place.try(:name) || d.other_date_place_name} on #{d.meeting_day.to_s} #{d.meeting_at}
+              | Post-date feedback
+              - c.real_dates.each do |d|
+                - if d.post_date_rating.present?
+                  | #{d.profile.firstname}: #{d.post_date_rating} #{d.post_date_feedback}
+            - else
+              | Didn't meet
+
+
   .col-xs-4.box
     h4 Profile
     hr
