@@ -58,5 +58,7 @@ end
 
 # create conversations endpoint
 c_uri = Rails.application.config.firebase_db_url + 'conversations'
+butler_c_uri = Rails.application.config.firebase_db_url + 'butler-conversations'
 
 $firebase_conversations = Firebase::Client.new(c_uri)
+$firebase_butler_conversations = Firebase::Client.new(butler_c_uri)

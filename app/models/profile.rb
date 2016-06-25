@@ -537,6 +537,21 @@ class Profile < ActiveRecord::Base
      self.properties_was["born_on_day"] != self.properties["latitude"])
   end
 
+  def firebase_butler_messages_endpoint
+    "#{self.butler_conversation_uuid}/messages"
+  end
+
+  def add_butler_message(content)
+    data = {
+      recipient_uuid: self.uuid,
+      content: content,
+      sent_at: (Time.now.to_f * 1_000).to_i,
+      processed: true
+    }
+
+    $firebase_butler_conversations.push(self.firebase_butler_messages_endpoint, data)
+  end
+
   private
 
   def ensure_attribute_types
