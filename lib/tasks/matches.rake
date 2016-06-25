@@ -14,7 +14,7 @@ namespace :matches do
           # puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid} is not visible"
           n = Matchmaker.generate_new_matches_for(profile.uuid, onesided: true)
         end
-        # puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{n} new matches" if n.present? && (n > 0)
+        puts "[#{EKC.now_in_pacific_time}] -- #{profile.uuid}: #{n} new matches" if n.present? && (n > 0)
       rescue StandardError => e
         puts "[#{EKC.now_in_pacific_time}] -- error generating matches for #{profile.uuid}, error: #{e.class.name}, message: #{e.message}"
       end
