@@ -27,7 +27,12 @@ class Profile < ActiveRecord::Base
   scope :seeking_of_faith, -> (faith) { where("profiles.properties->'seeking_faith' ? :faith", faith: faith) }
   # scope :seeking_of_gender, -> (gender) { with_gender(gender) } # FUTURE, when opening up to LGBT
 
-  scope :awaiting_matches, -> { where("state = 'waiting_for_matches' OR state = 'waiting_for_matches_and_response'") }
+  scope :awaiting_matches, -> { where("state = 'waiting_for_matches' OR
+                                        state = 'waiting_for_matches_and_response' OR
+                                        state = 'has_matches' OR
+                                        state = 'show_matches' OR
+                                        state = 'has_matches_and_waiting_for_response' OR
+                                        state = 'show_matches_and_waiting_for_response'") }
   scope :within_distance, -> (lat, lng, meters=nil) { where("earth_box(ll_to_earth(?, ?), ?) @> ll_to_earth(profiles.search_lat, profiles.search_lng)", lat, lng, meters || Constants::NEAR_DISTANCE_METERS) }
   scope :ordered_by_distance, -> (lat, lng, dir='ASC') { select("*, earth_distance(ll_to_earth(profiles.search_lat,profiles.search_lng), ll_to_earth(#{lat}, #{lng})) as distance").order("distance #{dir}") }
 
