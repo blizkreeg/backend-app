@@ -180,7 +180,7 @@ class PushNotifier
       response = Clevertap.post_json('/1/upload', payload_body.to_json)
 
       if response.status != 200
-        EKC.logger.error "ERROR: (try #{attempt}) Failed to upload user action! uuid: #{uuid}, type: #{notification_type}, params: #{notification_params}, error message: #{response.body}"
+        EKC.logger.error "ERROR: (try #{attempt}) Failed to upload user action! \r\nuuid: #{uuid}, \r\ntype: #{notification_type}, \r\nparams: #{notification_params}, \r\nerror message: #{response.body}"
         raise Errors::ClevertapError, "got a non-200 status from the Clevertap API. Trying once more."
       else
         EKC.logger.info "INFO: Uploaded user action '#{notification_default_params[:event_name]}' for #{uuid}, response: #{response.body}"
@@ -192,7 +192,7 @@ class PushNotifier
         retry
       end
     rescue StandardError => e
-      EKC.logger.error "ERROR: (try #{attempt}) exception occured while uploading user action! exception: #{e.class.name}, message: #{e.message}"
+      EKC.logger.error "ERROR: (try #{attempt}) exception while uploading user action! \r\nexception: #{e.class.name}\r\nmessage: #{e.message}"
       attempt += MAX_ATTEMPTS
       if attempt <= MAX_ATTEMPTS
         sleep 0.25
