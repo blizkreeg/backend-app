@@ -318,11 +318,11 @@ class Profile < ActiveRecord::Base
 
     EKC.logger.debug "sending #{payload_body.inspect} to clevertap"
 
-    Clevertap.post_json('/1/upload', payload_body.to_json)
+    response = Clevertap.post_json('/1/upload', payload_body.to_json)
   rescue ActiveRecord::RecordNotFound
     EKC.logger.info "Profile not found. uuid: #{uuid}. Cannot update Clevertap profile."
   rescue StandardError => e
-    EKC.logger.error "Clevertap profile update failed. exception: #{e.class.name} : #{e.message}"
+    EKC.logger.error "Clevertap profile update failed. status: #{response.status}, body: #{response.body}, exception: #{e.class.name} : #{e.message}"
   end
 
   def self.seed_photos_from_facebook(uuid)
