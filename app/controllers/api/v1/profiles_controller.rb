@@ -91,6 +91,8 @@ class Api::V1::ProfilesController < ApplicationController
     @profile = Profile.find(params[:uuid])
     @profile.update!(profile_params)
 
+    @profile.update_clevertap
+
     render status: 200
   end
 
@@ -247,12 +249,16 @@ class Api::V1::ProfilesController < ApplicationController
     @profile = @current_profile
     @profile.update!(inactive: true, inactive_reason: params[:data][:reason])
 
+    @profile.update_clevertap
+
     render 'api/v1/profiles/show', status: 200
   end
 
   def update_settings
     @profile = @current_profile
     @profile.update!(profile_params)
+
+    @profile.update_clevertap
 
     render 'api/v1/profiles/show', status: 200
   end
@@ -269,7 +275,7 @@ class Api::V1::ProfilesController < ApplicationController
         'link'
       when 'production'
         if @current_profile.approved_for_stb
-          'link'
+          'none' # 'link'
         else
           'none'
         end

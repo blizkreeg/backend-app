@@ -181,6 +181,7 @@ class Profile < ActiveRecord::Base
     nophotos: 'No approved photos',
     spam: 'Spam profile'
   }
+  # WELCOME_MESSAGE = "Hi %name, welcome to ekCoffee! I will You can reach out to me any time here. Don't hesitate, no matter what your question may be! I'm here to help make your life easier :)"
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
   # jsonb_attr_helper :properties, ATTRIBUTES
@@ -227,6 +228,8 @@ class Profile < ActiveRecord::Base
   end
 
   after_commit :upload_facebook_profile_photos, on: :create
+  # after_commit :send_welcome_butler_message, on: :create
+  after_commit :update_clevertap, on: :create
   after_validation :reverse_geocode, if: ->(profile){ profile.location_changed? && profile.latitude.present? && profile.longitude.present? }
   before_save :set_search_latlng, if: Proc.new { |profile| profile.location_changed? }
   before_save :set_tz, if: Proc.new { |profile| profile.location_changed? }
@@ -236,140 +239,156 @@ class Profile < ActiveRecord::Base
   before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
   before_save :update_height_in_values, if: Proc.new { |profile| profile.height_changed? || profile.seeking_minimum_height_changed? || profile.seeking_maximum_height_changed? }
-  after_update :update_clevertap
   before_save :ensure_attribute_types
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
   end
 
-  class << self
-    def properties_derived_from_facebook(auth_hash)
-      auth_hash = auth_hash.with_indifferent_access
+  def self.properties_derived_from_facebook(auth_hash)
+    auth_hash = auth_hash.with_indifferent_access
 
-      dob = Date.strptime(auth_hash[:info][:birthday], '%m/%d/%Y') rescue nil
-      dob_y, dob_m, dob_d = [dob.year, dob.month, dob.day] rescue [nil, nil, nil]
-      degree_types = auth_hash[:info][:education].map { |t| t[:type] } rescue []
-      highest_degree_earned =
-        if degree_types.include? "Graduate School"
-          'Masters'
-        elsif degree_types.include? "College"
-          'Bachelors'
-        elsif degree_types.include? "High School"
-          nil
-        else
-          nil
-        end
-
-      # FB seems to always return this in the order of high school, bachelors, grad school...
-      # We want to show in the reverse order
-      earned_degrees = auth_hash[:info][:education].map { |t| t[:concentration].try(:[], :name) }.compact.reverse rescue []
-      schools_attended = auth_hash[:info][:education].map { |t| t[:school].try(:[], :name) }.compact.reverse rescue []
-
-      {
-        email: (auth_hash[:info][:email] || auth_hash[:info][:email] rescue nil),
-        firstname: (auth_hash[:info][:first_name] || auth_hash[:info][:first_name] rescue nil),
-        lastname: (auth_hash[:info][:last_name] || auth_hash[:info][:last_name] rescue nil),
-        born_on_year: dob_y,
-        born_on_month: dob_m,
-        born_on_day: dob_d,
-        gender: (auth_hash[:info][:gender] rescue nil),
-        highest_degree: highest_degree_earned,
-        profession: (auth_hash[:info][:work][0][:position][:name] rescue nil),
-        earned_degrees: earned_degrees,
-        schools_attended: schools_attended,
-        possible_relationship_status: (auth_hash[:info][:relationship_status] rescue nil)
-      }
-    end
-
-    def height_in_inches(ft_in_str)
-      if ft_in_str.present?
-        ft, inches = ft_in_str.split(/['"]/i)
-        ht_in = 12 * ft.to_i + inches.to_i
+    dob = Date.strptime(auth_hash[:info][:birthday], '%m/%d/%Y') rescue nil
+    dob_y, dob_m, dob_d = [dob.year, dob.month, dob.day] rescue [nil, nil, nil]
+    degree_types = auth_hash[:info][:education].map { |t| t[:type] } rescue []
+    highest_degree_earned =
+      if degree_types.include? "Graduate School"
+        'Masters'
+      elsif degree_types.include? "College"
+        'Bachelors'
+      elsif degree_types.include? "High School"
+        nil
+      else
+        nil
       end
 
-      ht_in
+    # FB seems to always return this in the order of high school, bachelors, grad school...
+    # We want to show in the reverse order
+    earned_degrees = auth_hash[:info][:education].map { |t| t[:concentration].try(:[], :name) }.compact.reverse rescue []
+    schools_attended = auth_hash[:info][:education].map { |t| t[:school].try(:[], :name) }.compact.reverse rescue []
+
+    {
+      email: (auth_hash[:info][:email] || auth_hash[:info][:email] rescue nil),
+      firstname: (auth_hash[:info][:first_name] || auth_hash[:info][:first_name] rescue nil),
+      lastname: (auth_hash[:info][:last_name] || auth_hash[:info][:last_name] rescue nil),
+      born_on_year: dob_y,
+      born_on_month: dob_m,
+      born_on_day: dob_d,
+      gender: (auth_hash[:info][:gender] rescue nil),
+      highest_degree: highest_degree_earned,
+      profession: (auth_hash[:info][:work][0][:position][:name] rescue nil),
+      earned_degrees: earned_degrees,
+      schools_attended: schools_attended,
+      possible_relationship_status: (auth_hash[:info][:relationship_status] rescue nil)
+    }
+  end
+
+  def self.height_in_inches(ft_in_str)
+    if ft_in_str.present?
+      ft, inches = ft_in_str.split(/['"]/i)
+      ht_in = 12 * ft.to_i + inches.to_i
     end
 
-    def push_to_clevertap(uuid)
-      profile = Profile.find(uuid)
-      payload_body = {
-        d: [
-          {
-            identity: uuid,
-            type: 'profile',
-            ts: Time.now.to_i,
-            profileData: {
-              uuid: uuid,
-              email: profile.email,
-              firstname: profile.firstname,
-              lastname: profile.lastname,
-              gender: (profile.male? ? 'M' : 'F'),
-              location_city: profile.location_city,
-              location_country: profile.location_country,
-              inactive: profile.inactive,
-              incomplete: profile.incomplete,
-              "MSG-push" => !profile.disable_notifications_setting
-            }
+    ht_in
+  end
+
+  def self.push_to_clevertap(uuid)
+    profile = Profile.find(uuid)
+    payload_body = {
+      d: [
+        {
+          identity: uuid,
+          type: 'profile',
+          ts: Time.now.to_i,
+          profileData: {
+            uuid: uuid,
+            email: profile.email,
+            firstname: profile.firstname,
+            lastname: profile.lastname,
+            gender: (profile.male? ? 'M' : 'F'),
+            location_city: profile.location_city,
+            location_country: profile.location_country,
+            inactive: profile.inactive,
+            incomplete: profile.incomplete,
+            "MSG-push" => !profile.disable_notifications_setting
           }
-        ]
-      }
+        }
+      ]
+    }
 
-      EKC.logger.debug "sending #{payload_body.inspect} to clevertap"
+    EKC.logger.debug "sending #{payload_body.inspect} to clevertap"
 
-      Clevertap.post_json('/1/upload', payload_body.to_json)
-    rescue ActiveRecord::RecordNotFound
-      EKC.logger.info "Profile not found. uuid: #{uuid}. Cannot update Clevertap profile."
-    rescue StandardError => e
-      EKC.logger.error "Clevertap profile update failed. exception: #{e.class.name} : #{e.message}"
+    Clevertap.post_json('/1/upload', payload_body.to_json)
+  rescue ActiveRecord::RecordNotFound
+    EKC.logger.info "Profile not found. uuid: #{uuid}. Cannot update Clevertap profile."
+  rescue StandardError => e
+    EKC.logger.error "Clevertap profile update failed. exception: #{e.class.name} : #{e.message}"
+  end
+
+  def self.seed_photos_from_facebook(uuid)
+    profile = Profile.find(uuid)
+
+    # facebook_authentication = social_authentication.becomes(FacebookAuthentication) # TBD: code smell
+    primary = true # first photo is primary
+    profile.facebook_authentication.profile_pictures.each do |photo_hash|
+      profile.photos.build(
+        facebook_id: photo_hash["facebook_photo_id"],
+        facebook_url: photo_hash["source"],
+        original_url: photo_hash["source"],
+        original_width: photo_hash["width"],
+        original_height: photo_hash["height"],
+        primary: primary)
+      primary = false
     end
 
-    def seed_photos_from_facebook(uuid)
-      profile = Profile.find(uuid)
+    profile.save!
 
-      # facebook_authentication = social_authentication.becomes(FacebookAuthentication) # TBD: code smell
-      primary = true # first photo is primary
-      profile.facebook_authentication.profile_pictures.each do |photo_hash|
-        profile.photos.build(
-          facebook_id: photo_hash["facebook_photo_id"],
-          facebook_url: photo_hash["source"],
-          original_url: photo_hash["source"],
-          original_width: photo_hash["width"],
-          original_height: photo_hash["height"],
-          primary: primary)
-        primary = false
-      end
+    Photo.delay.upload_photos_to_cloudinary(uuid)
+  end
 
-      profile.save!
+  def self.precache_facebook_photo(uuid, photo_id)
+    return if photo_id.blank?
 
-      Photo.delay.upload_photos_to_cloudinary(uuid)
+    profile = Profile.find(uuid)
+    profile.facebook_authentication.get_photo(photo_id)
+  rescue ActiveRecord::RecordNotFound
+    EKC.logger.error "Profile not found when precaching FB photo, uuid: #{uuid}, photo_id: #{photo_id}"
+  rescue StandardError => e
+    ExceptionNotifier.notify_exception(e)
+  end
+
+  def self.precache_facebook_albums(uuid)
+    profile = Profile.find(uuid)
+    profile.facebook_authentication.get_photo_albums_list.each do |album|
+      self.delay.precache_facebook_photo(uuid, album['cover_photo']) if album['cover_photo'].present?
     end
+  rescue ActiveRecord::RecordNotFound
+    EKC.logger.error "Profile not found when precaching FB albums, uuid: #{uuid}"
+  rescue StandardError => e
+    ExceptionNotifier.notify_exception(e)
+  end
 
-    def precache_facebook_photo(uuid, photo_id)
-      return if photo_id.blank?
+  def self.send_butler_message(uuid, content)
+    profile = Profile.find uuid
 
-      profile = Profile.find(uuid)
-      profile.facebook_authentication.get_photo(photo_id)
-    rescue ActiveRecord::RecordNotFound
-      EKC.logger.error "Profile not found when precaching FB photo, uuid: #{uuid}, photo_id: #{photo_id}"
-    rescue StandardError => e
-      ExceptionNotifier.notify_exception(e)
-    end
+    data = {
+      recipient_uuid: profile.uuid,
+      content: content,
+      sent_at: (Time.now.to_f * 1_000).to_i,
+      processed: true
+    }
 
-    def precache_facebook_albums(uuid)
-      profile = Profile.find(uuid)
-      profile.facebook_authentication.get_photo_albums_list.each do |album|
-        self.delay.precache_facebook_photo(uuid, album['cover_photo']) if album['cover_photo'].present?
-      end
-    rescue ActiveRecord::RecordNotFound
-      EKC.logger.error "Profile not found when precaching FB albums, uuid: #{uuid}"
-    rescue StandardError => e
-      ExceptionNotifier.notify_exception(e)
-    end
+    $firebase_butler_conversations.push(profile.firebase_butler_messages_endpoint, data)
+  rescue ActiveRecord::RecordNotFound
+    EKC.logger.error "Attempting to send butler message to #{uuid}. Profile not found."
   end
 
   def upload_facebook_profile_photos
     Profile.delay.seed_photos_from_facebook(self.uuid)
+  end
+
+  def send_welcome_butler_message
+    Profile.delay_for(5.minutes).send_butler_message(self.uuid, WELCOME_MESSAGE.gsub("%name", self.firstname))
   end
 
   def create_initial_matches
@@ -546,15 +565,9 @@ class Profile < ActiveRecord::Base
     "#{self.butler_conversation_uuid}/messages"
   end
 
-  def add_butler_message(content)
-    data = {
-      recipient_uuid: self.uuid,
-      content: content,
-      sent_at: (Time.now.to_f * 1_000).to_i,
-      processed: true
-    }
-
-    $firebase_butler_conversations.push(self.firebase_butler_messages_endpoint, data)
+  def update_clevertap
+    self.class.delay_for(2.seconds).push_to_clevertap(self.uuid)
+    true # for callbacks
   end
 
   private
@@ -634,12 +647,6 @@ class Profile < ActiveRecord::Base
     self.height_in = Profile.height_in_inches(self.height)
     self.seeking_minimum_height_in = Profile.height_in_inches(self.seeking_minimum_height)
     self.seeking_maximum_height_in = Profile.height_in_inches(self.seeking_maximum_height)
-  end
-
-  def update_clevertap
-    self.class.delay_for(2.seconds).push_to_clevertap(self.uuid)
-
-    true
   end
 
   def set_search_latlng
