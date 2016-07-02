@@ -26,7 +26,7 @@ module ApplicationHelper
           return "#{in_hours}h : #{in_mins}m"
         end
       else
-        return 'Check back soon!'
+        return 'Hold tight!'
       end
     elsif @current_profile.in_match_queued_state?
       return 'Loading your matches...'
@@ -40,7 +40,7 @@ module ApplicationHelper
 
     if @current_profile.in_match_waiting_state?
       if @current_profile.matches.undecided.count > 0
-        return (config.beta_mode ? 'Check your next match at' : 'More matches coming up')
+        return (config.beta_mode ? 'Check your next match at' : 'Get your next match in...')
       else
         return "We're finding you new matches"
       end
