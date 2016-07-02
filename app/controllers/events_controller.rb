@@ -4,7 +4,7 @@ class EventsController < ApplicationController
   skip_before_action :authenticate_token!
   skip_before_action :set_current_profile
 
-  before_action :load_profile
+  before_action :load_profile, except: [:payment_success]
 
   layout 'events'
 
@@ -27,6 +27,10 @@ class EventsController < ApplicationController
   def registered
     @event = Event.find(params[:event_id])
     @profile = Profile.find(params[:uuid])
+  end
+
+  def payment_success
+    @event = Event.find(params[:event_id].to_i)
   end
 
   def cancel_stb

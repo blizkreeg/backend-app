@@ -8,18 +8,24 @@ hr
   div style='padding: 20px 0px;border-bottom:1px solid #ddd;'
     .row
       .col-xs-12
-        div style='width:30%;display:inline;float:left;'
-          = image_tag event.photo, style: 'border-radius:3px;width:100%;'
-        div style='display:inline;padding-left:20px;width:70%;float:left;'
-          p.place style='font-weight:600;color:#303030;'
-            | Brunch at #{event.place}
+        div style='text-align:center;margin-bottom:15px;position:relative;'
+          = cl_image_tag '73be549b2366b473b50cc3886cce87ef_deinko', width: 360, height: 270, crop: :fill
+          .overlay
           p.when
-            i.fa.fa-calendar-check-o
-            | &nbsp; #{event.happening_on.strftime("%A, %B %-d %Y")} at #{event.happening_at}
+            / i.fa.fa-calendar-check-o
+            | &nbsp; #{event.happening_on.strftime("%a, %B %-d %Y")} at #{event.happening_at}
+          p.cost
+            i.fa.fa-ticket
+            / | &nbsp; Event Fee &nbsp;
+            | &nbsp; Rs. 250
+            / | &nbsp; includes coffee.
+        div style='display:inline;padding-left:20px;float:left;width:100%;'
+          p.place style='font-weight:400;color:#303030;'
+            | Singles Brunch at #{event.place}
           - if event.spots_remaining(@profile) == 0
             p.spots
-              i.fa.fa-star &nbsp;
-              | Event FULL
+              i.fa.fa-star
+              | &nbsp; Event FULL
           - else
             p.spots
               i.fa.fa-star &nbsp;
@@ -28,14 +34,20 @@ hr
             p.addr
               i.fa.fa-map-marker
               span style='color:#555;' &nbsp; #{event.address}
-          - if event.rsvp_for(@profile).present?
-            p.going
-              span style='font-size:3vmin;' Going: &nbsp;
-              - event.attending.each do |profile|
-                = cl_image_tag profile.photos.primary.take.public_id, width: 48, height: 48, crop: 'thumb', gravity: 'face', radius: 'max'
-          - if event.rsvp_for(@profile).present?
-            h4 You're on the list!
-            = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
-          - else
-            - if event.spots_remaining(@profile) > 0 && @profile.event_rsvps.count == 0
-              = button_to "Add me to the list", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}
+            p
+              i.fa.fa-info
+              | &nbsp; Your brunch ticket <strong>reserves a spot</strong> for you and covers our running costs. Your ticket includes a first drink (up to Rs. 125), which is on us! <strong>At the brunch, you pay for what you order.</strong>
+            - if event.rsvp_for(@profile).present?
+              p.going
+                span style='font-size:3vmin;' Going: &nbsp;
+                - event.attending.each do |profile|
+                  = cl_image_tag profile.photos.primary.take.public_id, width: 48, height: 48, crop: 'thumb', gravity: 'face', radius: 'max'
+            - if event.rsvp_for(@profile).present?
+              p.cta
+                h4 You're on the list!
+                = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
+            - else
+              p.cta
+                - if event.spots_remaining(@profile) > 0 && @profile.event_rsvps.count == 0
+                  = link_to "Buy Ticket", 'https://www.instamojo.com/vthanedar/singles-that-brunch/', class: 'submit btn btn-success rsvp-button'
+                  / = button_to "Buy Ticket", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}

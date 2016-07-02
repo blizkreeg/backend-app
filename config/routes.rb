@@ -65,6 +65,8 @@ Rails.application.routes.draw do
     get '/profiles-marked-for-deletion', to: 'admin#profiles_marked_for_deletion', as: 'admin_profiles_marked_for_deletion'
     post '/moderate-user-stb', to: 'admin#moderate_user_stb', as: 'admin_moderate_user_stb'
     post '/assign-desirability-score', to: 'admin#assign_desirability_score_user', as: 'admin_assign_desirability_score_user'
+    get '/conversations', to: 'admin#show_conversations'
+    get '/dates', to: 'admin#show_dates'
 
     # old admin dashboard - TBD: remove/merge this functionality into above
     get '/login', to: 'accounts#login'
@@ -91,6 +93,7 @@ Rails.application.routes.draw do
     post '/register-stb', to: 'events#register_stb'
     delete '/cancel-stb', to: 'events#cancel_stb'
     get '/registered', to: 'events#registered'
+    get '/payment-success', to: 'events#payment_success'
   end
 
   get '*unmatched_route', to: 'application#route_not_found'

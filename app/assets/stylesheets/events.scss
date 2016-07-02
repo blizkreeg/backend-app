@@ -27,11 +27,47 @@ ul {
 }
 
 .place {
-  font-size: 5vmin;
+  font-size: 22px;
+}
+
+.overlay {
+  background: rgba(0,0,0,.5);
+  background: -webkit-linear-gradient(to top,rgba(0,0,0,.6) 0,rgba(0,0,0,0) 100%);
+  background: -moz-linear-gradient(to top,rgba(0,0,0,.6) 0,rgba(0,0,0,0) 100%);
+  background: -o-linear-gradient(to top,rgba(0,0,0,.6) 0,rgba(0,0,0,0) 100%);
+  background: linear-gradient(to top,rgba(0,0,0,.6) 0,rgba(0,0,0,0) 100%);
+  position: absolute;
+  width: 100%;
+  height: 100px;
+  bottom: 0;
 }
 
 .when {
-  font-size: 4vmin;
+  position: absolute;
+  padding: 4px 4px;
+  border: 1px solid white;
+  border-radius: 4px;
+  bottom: 6px; left: 25px;
+  width: 170px;
+  color: white;
+  font-size: 18px;
+}
+
+.cost {
+  position: absolute;
+  padding: 4px 4px;
+  // border: 1px solid white;
+  // border-radius: 4px;
+  bottom: 6px; right: 25px;
+  width: 110px;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.cta {
+  width: 100%;
+  float: right;
 }
 
 .spots {
@@ -55,5 +91,6 @@ hr {
 }
 
 .rsvp-button {
-  font-size: 4vmin;
+  font-size: 20px;
+  float: right;
 }

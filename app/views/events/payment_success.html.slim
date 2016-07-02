@@ -1,7 +1,5 @@
-div.text-center style='100%'
+div.text-center style='100%;margin-bottom:25px;'
   = image_tag 'stb-logo.png', width: 120
-h3.text-center style='font-size:4.5vmin;margin-bottom:20px;color:white;background-color:#555;padding:4px 6px;border-radius:3px;'
-  | You're signed up for this event!
 .row
   .col-xs-12
     div style='text-align:center;margin-bottom:15px;position:relative;'
@@ -16,27 +14,13 @@ h3.text-center style='font-size:4.5vmin;margin-bottom:20px;color:white;backgroun
     div style='display:inline;padding-left:20px;float:left;width:100%;'
       p.place style='font-weight:400;color:#303030;'
         | Singles Brunch at #{@event.place}
-      - if @event.rsvp_for(@profile).blank?
-        - if @event.spots_remaining(@profile) == 0
-          p.spots
-            i.fa.fa-star &nbsp;
-            | Event FULL
-        - else
-          p.spots
-            i.fa.fa-star &nbsp;
-            strong #{@event.spots_remaining(@profile)}
-            | &nbsp; spots remaining
-      p.addr
-        i.fa.fa-map-marker
-        span style='color:#555;' &nbsp; #{@event.address}
-      - if @event.rsvp_for(@profile).present?
-        p.going
-          span style='font-size:3vmin;' Going: &nbsp;
-          - @event.attending.each do |profile|
-            = cl_image_tag profile.photos.primary.take.public_id, width: 48, height: 48, crop: 'fill', gravity: 'face:center', radius: 'max'
-      - if @event.rsvp_for(@profile).present?
-        p.cta
-          = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: @event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
+      h3.text-center style='font-size:4.5vmin;margin-bottom:20px;color:white;background-color:#555;padding:4px 6px;border-radius:3px;'
+        | Thank you! You are confirmed.
+      h4.text-center
+        | We'll email you an invite soon and details about the event. Please read it :-)
+      h4.text-center
+        | You should also get a receipt shortly. Feel free to reach out to us at +91-8291407276 or hello@ekcoffee.com if you have any questions.
+
 hr
 .row
   .col-xs-12
