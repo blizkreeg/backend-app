@@ -42,7 +42,7 @@ module ApplicationHelper
       if @current_profile.matches.undecided.count > 0
         return (config.beta_mode ? 'Check your next match at' : 'More matches coming up')
       else
-        return "We're hard at work finding you new matches"
+        return "We're finding you new matches"
       end
     elsif @current_profile.in_match_queued_state?
       return 'You have new matches'

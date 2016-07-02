@@ -270,15 +270,16 @@ class Api::V1::ProfilesController < ApplicationController
     @content_type =
       case Rails.env
       when 'development'
-        'link'
+        'text'
       when 'test'
-        'link'
+        'text'
       when 'production'
-        if @current_profile.approved_for_stb
-          'none' # 'link'
-        else
-          'none'
-        end
+        'text'
+        # if @current_profile.approved_for_stb
+        #   'none' # 'link'
+        # else
+        #   'none'
+        # end
       end
 
     case @content_type
