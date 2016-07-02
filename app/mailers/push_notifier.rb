@@ -126,6 +126,15 @@ class PushNotifier
       required_parameters: ['body'],
       event_name: 'Announcement',
       has_push_notification: true
+    },
+    'profile_incomplete' => {
+      title: "ekCoffee",
+      body: "@myname, a few interesting matches have passed on you since your profile looks incomplete. Tap on this notification to fix it.",
+      required_parameters: ['myname'],
+      category: 'EDIT_PROFILE',
+      event_name: 'Profile Issue',
+      event_details: { issue_type: 'Incomplete Fields' },
+      has_push_notification: true
     }
   }
 
