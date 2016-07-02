@@ -48,6 +48,6 @@ hr
                 = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
             - else
               p.cta
-                - if event.spots_remaining(@profile) > 0 && @profile.event_rsvps.count == 0
+                - if event.spots_remaining(@profile) > 0
                   = link_to "Buy Ticket", 'https://www.instamojo.com/vthanedar/singles-that-brunch/', class: 'submit btn btn-success rsvp-button'
                   / = button_to "Buy Ticket", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}
