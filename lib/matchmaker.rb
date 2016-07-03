@@ -163,7 +163,7 @@ module Matchmaker
       # if score not available, show top of stack
       return 7
     else
-      if dscore >= 8
+      if dscore >= 7
         # if score is among highest, show 1 below
         return (dscore.floor - 1)
       else
