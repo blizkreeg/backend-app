@@ -274,12 +274,11 @@ class Api::V1::ProfilesController < ApplicationController
       when 'test'
         'text'
       when 'production'
-        'text'
-        # if @current_profile.approved_for_stb
-        #   'none' # 'link'
-        # else
-        #   'none'
-        # end
+        if @current_profile.approved_for_stb
+          'link'
+        else
+          'text'
+        end
       end
 
     case @content_type
