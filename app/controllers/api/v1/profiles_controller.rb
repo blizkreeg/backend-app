@@ -47,7 +47,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     @profile.save!
 
-    @profile.create_initial_matches if !@profile.incomplete
+    @profile.create_initial_matches if @profile.gender.present?
 
     # since loading FB albums/photo is time-consuming, precache this
     Profile.delay.precache_facebook_albums(@profile.uuid)

@@ -20,6 +20,30 @@ module Matchmaker
 
   module_function
 
+  def create_first_matches(profile_uuid)
+    profile = Profile.find(profile_uuid)
+    existing_matches_sql = profile.matches.to_sql
+    matchmaking_query = Profile.visible.active.of_gender(profile.seeking_gender)
+    matchmaking_query = matchmaking_query.within_distance(profile.search_lat, profile.search_lng, MATCHING_MODELS[:location][:within_radius])
+    matchmaking_query = matchmaking_query.ordered_by_distance(profile.search_lat, profile.search_lng)
+    matchmaking_query = matchmaking_query.desirability_score_gte(7).desirability_score_lte(10)
+
+    matched_profiles =
+      matchmaking_query
+      .where.not(uuid: profile.uuid)
+      .joins("LEFT OUTER JOIN (#{existing_matches_sql}) matches ON matches.matched_profile_uuid = profiles.uuid")
+      .where(matches: { matched_profile_uuid: nil })
+      .limit(FIND_N_ELIGIBLE_MATCHES)
+
+    matched_profiles.each_with_index do |matched_profile, idx|
+      EKC.logger.debug "creating match from #{profile.uuid} to #{matched_profile.uuid}"
+      create_match_from_to(profile_uuid, matched_profile.uuid,
+                            normalized_distance: nil,
+                            friends_with: false,
+                            num_common_friends: 0)
+    end
+  end
+
   # finds and creates new match entries
   # returns: number of new matches created
   def generate_new_matches_for(profile_uuid, opts = {})

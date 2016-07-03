@@ -392,7 +392,8 @@ class Profile < ActiveRecord::Base
   end
 
   def create_initial_matches
-    Matchmaker.generate_new_matches_for(self.uuid, onesided: true)
+    Matchmaker.create_first_matches(self.uuid)
+    # Matchmaker.generate_new_matches_for(self.uuid, onesided: true)
     if self.has_queued_matches?
       self.new_matches!(:has_matches)
       PushNotifier.delay.record_event(self.uuid, 'new_matches')
