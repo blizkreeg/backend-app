@@ -9,7 +9,7 @@ class Api::V1::MatchesController < ApplicationController
   def index
     profile = Profile.find(params[:profile_uuid])
 
-    num_matches = (profile.matches.undecided.count == 0) ? Constants::N_FIRST_MATCHES : Constants::N_MATCHES_AT_A_TIME
+    num_matches = (profile.matches.count <= Matchmaker::FIND_N_ELIGIBLE_MATCHES) ? Constants::N_FIRST_MATCHES : Constants::N_MATCHES_AT_A_TIME
 
     @matches = profile.matches.includes(:matched_profile).undecided.take(num_matches)
 
