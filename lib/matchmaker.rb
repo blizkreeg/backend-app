@@ -26,7 +26,7 @@ module Matchmaker
     matchmaking_query = Profile.visible.active.of_gender(profile.seeking_gender)
     matchmaking_query = matchmaking_query.within_distance(profile.search_lat, profile.search_lng, MATCHING_MODELS[:location][:within_radius])
     matchmaking_query = matchmaking_query.ordered_by_distance(profile.search_lat, profile.search_lng)
-    matchmaking_query = matchmaking_query.desirability_score_gte(7).desirability_score_lte(10)
+    matchmaking_query = matchmaking_query.desirability_score_gte(8).desirability_score_lte(10)
 
     matched_profiles =
       matchmaking_query
