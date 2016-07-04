@@ -24,6 +24,9 @@ module Matchmaker
     profile = Profile.find(profile_uuid)
     existing_matches_sql = profile.matches.to_sql
     matchmaking_query = Profile.visible.active.of_gender(profile.seeking_gender)
+    matchmaking_query = matchmaking_query
+                          .older_than(profile.seeking_minimum_age)
+                          .younger_than(profile.seeking_maximum_age)
     matchmaking_query = matchmaking_query.within_distance(profile.search_lat, profile.search_lng, MATCHING_MODELS[:location][:within_radius])
     matchmaking_query = matchmaking_query.ordered_by_distance(profile.search_lat, profile.search_lng)
     matchmaking_query = matchmaking_query.desirability_score_gte(8).desirability_score_lte(10)
