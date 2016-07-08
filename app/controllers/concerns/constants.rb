@@ -71,6 +71,7 @@ module Constants
   )
   DEGREES = %w(
     Associates/Diploma
+    Associates / Diploma
     Bachelors
     Masters
     Doctorate
