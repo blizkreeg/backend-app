@@ -31,8 +31,8 @@ test:
     radius: 100_000
 production:
   - name: 'Pune'
-    lat: 18.53
-    lng: 73.87
+    lat: 18.5204
+    lng: 73.8567
     radius: 25_000
   - name: 'Mumbai'
     lat: 18.98
@@ -46,6 +46,10 @@ production:
     lat: 37.7749
     lng: -122.4194
     radius: 50_000
+  - name: 'New Delhi'
+    lat: 28.6139
+    lng: 77.2090
+    radius: 30_000
   - name: 'Boston'
     lat: 42.364506
     lng: -71.038887
