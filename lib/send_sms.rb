@@ -17,16 +17,22 @@ end
 # and then you can create a new client without parameters
 @client = Twilio::REST::Client.new
 
+city = ""
 numbers = %w(
 )
 
+puts "numbers: #{numbers.count}"
+puts "uniq numbers: #{numbers.uniq.count}"
+
+(puts "ERROR: city missing!" and exit 1) if city.empty?
+
 from = 'Vineet'
 
-numbers.each_with_index do |num, idx|
+numbers.uniq.each_with_index do |num, idx|
   puts "sending to #{num}"
   response = @client.messages.create(
     from: '+14154297272',
     to: "+91#{num}",
-    body: "Hi! This is #{from} from ekCoffee. We are live in Mumbai! Download the ekCoffee app & get started! http://ekcoffee.com"
+    body: "Hi! This is #{from} from ekCoffee. We are now live in #{city}! Download the ekCoffee app & get started -> http://goo.gl/JPLpqS"
   )
 end
