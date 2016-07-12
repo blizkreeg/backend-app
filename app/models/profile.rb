@@ -235,6 +235,7 @@ class Profile < ActiveRecord::Base
   before_save :set_tz, if: Proc.new { |profile| profile.location_changed? }
   before_save :set_age, if: Proc.new { |profile| profile.dob_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
+  after_create :flag_if_not_single
   before_create :set_default_moderation
   before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
@@ -368,17 +369,19 @@ class Profile < ActiveRecord::Base
     ExceptionNotifier.notify_exception(e)
   end
 
-  def self.send_butler_message(uuid, content)
+  def self.send_butler_messages(uuid, messages)
     profile = Profile.find uuid
 
-    data = {
-      recipient_uuid: profile.uuid,
-      content: content,
-      sent_at: (Time.now.to_f * 1_000).to_i,
-      processed: true
-    }
+    messages.each do |message|
+      data = {
+        recipient_uuid: profile.uuid,
+        content: message,
+        sent_at: (Time.now.to_f * 1_000).to_i,
+        processed: true
+      }
 
-    $firebase_butler_conversations.push(profile.firebase_butler_messages_endpoint, data)
+      $firebase_butler_conversations.push(profile.firebase_butler_messages_endpoint, data)
+    end
   rescue ActiveRecord::RecordNotFound
     EKC.logger.error "Attempting to send butler message to #{uuid}. Profile not found."
   end
@@ -388,7 +391,7 @@ class Profile < ActiveRecord::Base
   end
 
   def send_welcome_butler_message
-    Profile.delay_for(5.minutes).send_butler_message(self.uuid, WELCOME_MESSAGE.gsub("%name", self.firstname))
+    Profile.delay_for(5.minutes).send_butler_messages(self.uuid, [WELCOME_MESSAGE.gsub("%name", self.firstname)])
   end
 
   def create_initial_matches
@@ -569,6 +572,24 @@ class Profile < ActiveRecord::Base
   def update_clevertap
     self.class.delay_for(2.seconds).push_to_clevertap(self.uuid)
     true # for callbacks
+  end
+
+  def flag_if_not_single
+    unless FacebookAuthentication::ALLOWED_RELATIONSHIP_STATUSES.include?(self.possible_relationship_status)
+      message = Constants::NOT_SINGLE_BUTLER_MESSAGES[0].gsub("%name", self.firstname)
+      message = message.gsub("%status", self.possible_relationship_status)
+
+      Profile.send_butler_messages(self.uuid, [message, Constants::NOT_SINGLE_BUTLER_MESSAGES[1], Constants::NOT_SINGLE_BUTLER_MESSAGES[2]])
+      PushNotifier.record_event(self.uuid, 'new_butler_message', myname: self.firstname)
+
+      self.blacklist!
+    end
+
+    true
+  end
+
+  def blacklist!
+    self.update!(moderation_status: 'blacklisted', visible: false)
   end
 
   private

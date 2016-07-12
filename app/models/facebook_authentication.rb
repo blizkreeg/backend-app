@@ -2,6 +2,7 @@
 class FacebookAuthentication < SocialAuthentication
   MANDATORY_FACEBOOK_PERMISSIONS = %w(email public_profile user_photos user_birthday)
   NUM_PROFILE_PICTURES_TO_GET = 6
+  ALLOWED_RELATIONSHIP_STATUSES = %w(Single Divorced Widowed)
 
   def get_photo_albums_list(fields="id,name", limit=25, cursor=nil)
     key = ['fb_albums', self.oauth_uid, fields.downcase.gsub(/[^\w]/i, '_'), limit.to_s].join('_')

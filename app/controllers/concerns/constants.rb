@@ -108,4 +108,9 @@ module Constants
     "I'm not meeting enough people",
     "Other"
   ]
+
+  NOT_SINGLE_BUTLER_MESSAGES = [
+                    "Hi %name, since your Facebook relationship status is '%status', we cannot approve your profile.",
+                    "ekCoffee is a singles-only network.",
+                    "In case you are single and we got this wrong, message us back and we will review it."]
 end
