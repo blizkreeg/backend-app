@@ -575,6 +575,8 @@ class Profile < ActiveRecord::Base
   end
 
   def flag_if_not_single
+    return true if self.possible_relationship_status.blank?
+
     unless FacebookAuthentication::ALLOWED_RELATIONSHIP_STATUSES.include?(self.possible_relationship_status)
       message = Constants::NOT_SINGLE_BUTLER_MESSAGES[0].gsub("%name", self.firstname)
       message = message.gsub("%status", self.possible_relationship_status)
