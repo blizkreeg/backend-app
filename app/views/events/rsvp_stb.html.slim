@@ -49,5 +49,5 @@ hr
             - else
               p.cta
                 - if event.spots_remaining(@profile) > 0
-                  = link_to "Buy Ticket", 'https://www.instamojo.com/vthanedar/singles-that-brunch/', class: 'submit btn btn-success rsvp-button'
+                  = link_to "Buy Ticket", 'https://www.instamojo.com/vthanedar/singles-that-brunch-july-17th-2016-the-bomba/', class: 'submit btn btn-success rsvp-button'
                   / = button_to "Buy Ticket", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}
