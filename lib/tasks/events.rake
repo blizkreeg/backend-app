@@ -54,6 +54,9 @@ namespace :events do
     @profiles = Profile.visible.awaiting_matches.desirability_score_gte(7).within_distance(18.98, 72.83)
     @profiles.each do |profile|
       PushNotifier.delay.record_event(profile.uuid, 'general_announcement', body: "#{profile.firstname}, we are excited to announce our fourth Singles That Brunch in Mumbai! This time, it's at The Bombay Canteen. RSVP in the app and join us :-)")
+      puts "notified #{profile.firstname}"
     end
+    puts ''
+    puts "-- notified #{@profiles.count}"
   end
 end
