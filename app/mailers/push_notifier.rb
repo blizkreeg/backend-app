@@ -141,6 +141,9 @@ class PushNotifier
   # This function will record a user action/event in Clevertap
   # It will also send a push notification if the event should trigger one (disable sending the push with do_not_send_push: true)
   def self.record_event(uuid, notification_type, params = {})
+    profile = Profile.find(uuid) rescue nil
+    return if (profile.blank? || profile.inactive || profile.disable_notifications_setting)
+
     notification_params = params.with_indifferent_access.clone
 
     required_params = DETAILS[notification_type.to_s][:required_parameters].clone

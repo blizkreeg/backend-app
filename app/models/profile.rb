@@ -386,6 +386,43 @@ class Profile < ActiveRecord::Base
     EKC.logger.error "Attempting to send butler message to #{uuid}. Profile not found."
   end
 
+  def self.log_delete_request_data(uuid, reason)
+    profile = Profile.find(uuid)
+
+    worksheet_num =
+    case Rails.env
+    when 'production'
+      0
+    when 'test'
+      1
+    when 'development'
+      2
+    else
+      2
+    end
+
+    # https://docs.google.com/spreadsheets/d/1Dkaaib4x7Sjkfv3z9j7_XvG4R5MEzdd0DOl1tgWhoXg
+    session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
+    ws = session.spreadsheet_by_key("1Dkaaib4x7Sjkfv3z9j7_XvG4R5MEzdd0DOl1tgWhoXg").worksheets[worksheet_num]
+    row = (ws.num_rows || 0) + 1
+    col = 0
+    ws[row, col+=1] = reason
+    ws[row, col+=1] = profile.firstname
+    ws[row, col+=1] = profile.lastname
+    ws[row, col+=1] = profile.location_city
+    ws[row, col+=1] = profile.age
+    ws[row, col+=1] = profile.gender
+    ws[row, col+=1] = profile.desirability_score
+    ws[row, col+=1] = profile.intent
+    ws[row, col+=1] = profile.moderation_status
+    ws[row, col+=1] = Date.today
+    ws[row, col+=1] = profile.created_at.to_date
+    ws[row, col+=1] = profile.uuid
+    ws.save
+  rescue ActiveRecord::RecordNotFound
+    EKC.logger.error("Profile #{uuid} not found while logging delete request data")
+  end
+
   def upload_facebook_profile_photos
     Profile.delay.seed_photos_from_facebook(self.uuid)
   end

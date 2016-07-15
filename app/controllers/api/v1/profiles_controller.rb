@@ -166,6 +166,8 @@ class Api::V1::ProfilesController < ApplicationController
     # - what if this profile is delivered as a mutual match?
     @current_profile.update!(inactive: true, marked_for_deletion: true)
 
+    Profile.delay.log_delete_request_data(@current_profile.uuid, params[:data][:reason])
+
     reset_current_profile!
 
     render 'api/v1/shared/nodata', status: 200
