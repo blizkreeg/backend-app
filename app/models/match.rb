@@ -192,6 +192,10 @@ class Match < ActiveRecord::Base
     end
   end
 
+  def active!
+    self.update(active: true)
+  end
+
   private
 
   def set_defaults
