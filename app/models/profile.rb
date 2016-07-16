@@ -423,6 +423,40 @@ class Profile < ActiveRecord::Base
     EKC.logger.error("Profile #{uuid} not found while logging delete request data")
   end
 
+  def self.report(reporting_profile_uuid, reported_profile_uuid, reason)
+    reported_profile = Profile.find(reported_profile_uuid)
+    reporting_profile = Profile.find(reporting_profile_uuid)
+
+    worksheet_num =
+    case Rails.env
+    when 'production'
+      0
+    when 'test'
+      1
+    when 'development'
+      2
+    else
+      2
+    end
+
+    # https://docs.google.com/spreadsheets/d/1NqJua_Tf_ah_HVSKOwOBkDg2WGS-pwpGRSWbUskYQfE
+    session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
+    ws = session.spreadsheet_by_key("1NqJua_Tf_ah_HVSKOwOBkDg2WGS-pwpGRSWbUskYQfE").worksheets[worksheet_num]
+    row = (ws.num_rows || 0) + 1
+    col = 0
+    ws[row, col+=1] = reason
+    ws[row, col+=1] = reporting_profile.firstname
+    ws[row, col+=1] = reporting_profile.lastname
+    ws[row, col+=1] = reporting_profile.uuid
+    ws[row, col+=1] = reported_profile.firstname
+    ws[row, col+=1] = reported_profile.lastname
+    ws[row, col+=1] = reported_profile.uuid
+    ws[row, col+=1] = Date.today
+    ws.save
+  rescue ActiveRecord::RecordNotFound
+    EKC.logger.error("Profile #{reporting_profile_uuid} or #{reported_profile_uuid} not found. Someone reported profile.")
+  end
+
   def upload_facebook_profile_photos
     Profile.delay.seed_photos_from_facebook(self.uuid)
   end

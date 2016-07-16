@@ -210,10 +210,12 @@ class Api::V1::ProfilesController < ApplicationController
       return
     end
 
-    unless Constants::REPORT_REASONS.include?(params[:data][:reason])
-      respond_with_error('Reason for reporting not valid', 500)
-      return
-    end
+    # unless Constants::REPORT_REASONS.include?(params[:data][:reason])
+    #   respond_with_error('Reason for reporting not valid', 500)
+    #   return
+    # end
+
+    Profile.delay.report(@current_profile.uuid, params[:data][:reported_profile_uuid], params[:data][:reason])
 
     # TBD: file the report somewhere!
     reported_profile.report!(:waiting_for_matches) if reported_profile.in_conversation?
