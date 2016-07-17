@@ -279,7 +279,7 @@ class Api::V1::ProfilesController < ApplicationController
         'text'
       when 'production'
         if @current_profile.approved_for_stb
-          'link'
+          'text'
         else
           'text'
         end
