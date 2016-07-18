@@ -8,7 +8,7 @@ json.data do
   elsif @content_type == 'link'
     json.title "How We Spent Our Sunday"
     json.body "This past Sunday we hosted our fourth popular Singles That Brunch event at The Bombay Canteen. It was a great group of singles and everyone had a fun time! Here are some photos from the event."
-    json.cta_button_title "Photos from our recent brunch"
+    json.cta_button_title "Glimpses from our recent brunch"
     json.cta_url @link_url
   end
 end
