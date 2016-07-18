@@ -278,8 +278,8 @@ class Api::V1::ProfilesController < ApplicationController
       when 'test'
         'text'
       when 'production'
-        if @current_profile.approved_for_stb
-          'text'
+        if @current_profile.desirability_score.present? && (@current_profile.desirability_score >= 7)
+          'link'
         else
           'text'
         end
@@ -287,7 +287,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     case @content_type
     when 'link'
-      @link_url = ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
+      @link_url = "https://www.facebook.com/ekCoffee/photos/?tab=album&album_id=1402136039803456"  # ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
     end
 
     render 'api/v1/shared/home', status: 200
