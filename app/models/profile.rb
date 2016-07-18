@@ -418,6 +418,7 @@ class Profile < ActiveRecord::Base
     ws[row, col+=1] = Date.today
     ws[row, col+=1] = profile.created_at.to_date
     ws[row, col+=1] = profile.uuid
+    ws[row, col+=1] = profile.email
     ws.save
   rescue ActiveRecord::RecordNotFound
     EKC.logger.error("Profile #{uuid} not found while logging delete request data")
