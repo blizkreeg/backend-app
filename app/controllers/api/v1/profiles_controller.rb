@@ -57,7 +57,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     render status: 201
   rescue ActiveRecord::RecordNotUnique => e
-    respond_with_error('Profile already exists', 400)
+    respond_with_error('Profile already exists', 400, 'none')
   end
 
   def sign_in
