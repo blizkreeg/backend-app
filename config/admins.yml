@@ -8,6 +8,7 @@ test: &test
     - '1193479594' # vikas
     - '100001582043296' # divya
     - '1044336782295713' # divya
+    - '100001064210263' # abinash
 development:
   <<: *test
 production:
