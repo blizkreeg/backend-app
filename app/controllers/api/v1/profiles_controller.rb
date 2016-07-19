@@ -316,7 +316,7 @@ class Api::V1::ProfilesController < ApplicationController
     if @profile.errors.messages.try(:[], :email).try(:first) == Errors::EMAIL_EXISTS_ERROR_STR
       error_code = 'email_already_exists'
     else
-      error_code = nil
+      error_code = 'none'
     end
 
     notify_of_exception(exception)
