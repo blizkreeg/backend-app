@@ -7,4 +7,13 @@ namespace :engagement do
     end
     puts "sent notifications to #{not_active_have_matches.count} users"
   end
+
+  task :day2_complete_profile => :environment do
+    incomplete_profiles = Profile.visible.signed_in_at_after(DateTime.now-48.hours).signed_in_at_before(DateTime.now-24.hours).select { |p| p.incomplete }
+    incomplete_profiles.each do |p|
+      msg = "#{p.firstname}, because your profile is incomplete, we are unable to find you matches 😞  Can you complete it?"
+      PushNotifier.delay.record_event(p.uuid, 'general_announcement', body: msg)
+    end
+    puts "sent notifications to #{incomplete_profiles.count} users"
+  end
 end
