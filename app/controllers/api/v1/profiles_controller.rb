@@ -278,8 +278,8 @@ class Api::V1::ProfilesController < ApplicationController
       when 'test'
         'text'
       when 'production'
-        if @current_profile.desirability_score.present? && (@current_profile.desirability_score >= 7)
-          'link'
+        if @current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4)
+          'none'
         else
           'text'
         end
