@@ -13,6 +13,9 @@
     <td style="padding:5px;">
       <%= button_to "Reset State", { action: :reset_state, state: 'waiting_for_matches', uuid: @profile.uuid }, method: :post %>
     </td>
+    <td style="padding:5px;">
+      <%= button_to "Generate Matches", { action: :create_matches }, method: :post %>
+    </td>
     <% unless @profile.mutual_match? %>
     <td style="padding:5px;">
       <%= button_to "Generate Mutual Match", { action: :create_mutual_match, for_profile_uuid: @profile.uuid }, method: :post %>

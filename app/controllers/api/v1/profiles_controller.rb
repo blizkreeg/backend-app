@@ -57,7 +57,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     render status: 201
   rescue ActiveRecord::RecordNotUnique => e
-    respond_with_error('Profile already exists', 400)
+    respond_with_error('Profile already exists', 400, 'none')
   end
 
   def sign_in
@@ -278,8 +278,8 @@ class Api::V1::ProfilesController < ApplicationController
       when 'test'
         'text'
       when 'production'
-        if @current_profile.approved_for_stb
-          'text'
+        if !@current_profile.approved? || (@current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4))
+          'none'
         else
           'text'
         end
@@ -287,7 +287,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     case @content_type
     when 'link'
-      @link_url = ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
+      @link_url = "https://www.facebook.com/ekCoffee/photos/?tab=album&album_id=1402136039803456"  # ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
     end
 
     render 'api/v1/shared/home', status: 200
@@ -316,7 +316,7 @@ class Api::V1::ProfilesController < ApplicationController
     if @profile.errors.messages.try(:[], :email).try(:first) == Errors::EMAIL_EXISTS_ERROR_STR
       error_code = 'email_already_exists'
     else
-      error_code = nil
+      error_code = 'none'
     end
 
     notify_of_exception(exception)

@@ -6,9 +6,9 @@ json.data do
     json.title "Friends Don't Let Friends Be Single"
     json.body "#{current_profile.firstname}, wouldn't it be awesome if more people like you were on ekCoffee? :)\r\n\r\nDo you know the best way for us to reach them? Through you!\r\n\r\nHave you told a friend about us?"
   elsif @content_type == 'link'
-    json.title "Fancy a brunch with other singles?"
-    json.body "This weekend we're hosting our popular singles brunch at the funky and delicious Lower Parel joint, The Bombay Canteen!\r\n\r\nPS - your first coffee is on us!"
-    json.cta_button_title "RSVP - The Bombay Canteen, Sunday July 17th"
+    json.title "How We Spent Our Sunday"
+    json.body "This past Sunday we hosted our fourth popular Singles That Brunch event at The Bombay Canteen. It was a great group of singles and everyone had a fun time! Here are some photos from the event."
+    json.cta_button_title "Glimpses from our recent brunch"
     json.cta_url @link_url
   end
 end
