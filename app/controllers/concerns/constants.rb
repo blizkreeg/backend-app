@@ -8,7 +8,7 @@ module Constants
   N_FEATURED_PROFILES = 3
 
   N_FIRST_MATCHES = 2
-  N_MATCHES_AT_A_TIME = 1
+  N_MATCHES_AT_A_TIME = 3
 
   CLOUDINARY_HOST_URL = 'http://res.cloudinary.com/ekcoffee/image/upload/'
 
