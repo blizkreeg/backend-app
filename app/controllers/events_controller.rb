@@ -39,6 +39,12 @@ class EventsController < ApplicationController
     redirect_to action: :rsvp_stb, params: { uuid: params[:uuid] }
   end
 
+  def experiences
+  end
+
+  def experiences_interested
+  end
+
   private
 
   def load_profile

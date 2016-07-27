@@ -1,0 +1,34 @@
+h2.experiences.text-center ekCoffee Experiences
+
+div.text-center style='margin-bottom:10px;position:relative'
+  = cl_image_tag 'pexels-photo-26135_sqvnew', width: 360, height: 270, crop: :fill
+
+div.text-center
+  h3 What is ekCoffee Experiences?
+  p
+    | Through Experiences, we want you to meet amazing single people in a social setting and have fun doing it &mdash; through a wide range of activities and experiences.
+
+  p
+    | This could be at singles brunches (which we already do!), Sunday poker afternoons at a cafe, discovering a new artist at an art opening, going on beautiful treks, and more.
+
+  / p
+  /   i.fa.fa-group.fa-2x style='color:#F37070'
+  /   span.h4 style='font-weight:600;' &nbsp; Meet More People
+  /   br ajkhsdf
+
+  h3 How will this work?
+  p
+    | You can either be a <strong>guest</strong> or a <strong>host</strong>.
+
+  p
+    | <strong>As a guest</strong>, can just buy a ticket and attend any of the experiences available to you.
+  p
+    | <strong>As a host</strong>, you suggest and volunteer to host an event. For example, if you love board games and want to meet other singles over a game of scrabble on a Sunday afternoon, you suggest the event to us. We will have a quick chat with you and open up the event to all our members. Your only responsibility is to be there on the day of the event and host it.
+
+  .row
+    .col-xs-4.col-xs-offset-2.text-center
+      = button_to "I Want To Attend", { action: :experiences_interested, uuid: @profile.uuid }, method: :post, class: 'btn btn-success'
+
+    .col-xs-4.text-center
+      = button_to "I Can Host", { action: :experiences_interested, uuid: @profile.uuid }, method: :post, class: 'btn btn-info'
+

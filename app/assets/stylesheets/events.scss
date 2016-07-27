@@ -1,3 +1,5 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+
 body {
   font-family: 'Open Sans', Helvetica, sans-serif;
   color: #404040;
@@ -98,4 +100,11 @@ hr {
   vertical-align: middle;
   background-color: #FF653F;
   border: none;
+}
+
+h2.experiences {
+  font-family: Montserrat, sans-serif;
+  color: #F37070;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
