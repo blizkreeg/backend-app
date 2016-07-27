@@ -9,7 +9,7 @@ test: &test
     - '100001582043296' # divya
     - '1044336782295713' # divya
     - '1230186540360141' # abinash
-    - '100000913762285' # sarthak
+    - '1276109749096138' # sarthak
 development:
   <<: *test
 production:
