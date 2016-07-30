@@ -288,7 +288,7 @@ class Api::V1::ProfilesController < ApplicationController
       when 'development'
         'text'
       when 'test'
-        'text'
+        'link'
       when 'production'
         if !@current_profile.approved? || (@current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4))
           'none'
@@ -301,7 +301,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     case @content_type
     when 'link'
-      @link_url = ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
+      @link_url = ENV['EVENTS_HOST_URL'] + "/experiences?uuid=#{@current_profile.uuid}"
     end
 
     render 'api/v1/shared/home', status: 200

@@ -18,6 +18,9 @@ class Event < ActiveRecord::Base
 
   jsonb_accessor :properties, ATTRIBUTES
 
+  def self.register_interest_in_experiences(uuid, guest_or_host)
+  end
+
   def self.current_or_future_events
     all.select { |event| event.happening_on >= Date.today  }
   end

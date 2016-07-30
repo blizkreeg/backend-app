@@ -43,6 +43,7 @@ class EventsController < ApplicationController
   end
 
   def experiences_interested
+
   end
 
   private
