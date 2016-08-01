@@ -280,7 +280,7 @@ class Api::V1::ProfilesController < ApplicationController
       when 'production'
         if !@current_profile.approved? || (@current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4))
           'none'
-        elsif @current_profile.male?
+        elsif @current_profile.approved_for_stb
           'link'
         else
           'none'
@@ -289,7 +289,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     case @content_type
     when 'link'
-      @link_url = "https://ekcoffee.wordpress.com/2016/07/29/men-here-are-some-tips-your-profile-pictures/"  # ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
+      @link_url = ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
     end
 
     render 'api/v1/shared/home', status: 200
