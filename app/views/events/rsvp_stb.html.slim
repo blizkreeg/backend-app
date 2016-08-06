@@ -76,4 +76,5 @@ div style='margin-bottom:25px;'
 
             h3.text-center Convinced &amp; Interested?
             h4.text-center #{event.spots_remaining(@profile)} spots remaining
-            = link_to "Buy Ticket", event.payment_link, class: 'submit btn btn-success rsvp-button'
+            - if event.spots_remaining(@profile) > 0
+              = link_to "Buy Ticket", event.payment_link, class: 'submit btn btn-success rsvp-button'
