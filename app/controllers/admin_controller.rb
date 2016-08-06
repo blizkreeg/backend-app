@@ -163,6 +163,19 @@ class AdminController < ApplicationController
     redirect_to '/dashboard'
   end
 
+  def destroy_user
+    @profile = Profile.find(params[:uuid])
+    if @profile.matched_with.detect { |m| m.active }.present? || @profile.matches.detect { |m| m.active }.present?
+      flash[:error] = 'Cannot delete user who is in the middle of a conversation/mutually matched with someone'
+      redirect_to :back
+      return
+    end
+
+    Profile.find(params[:uuid]).destroy
+
+    redirect_to :back
+  end
+
   private
 
   def load_admin_user

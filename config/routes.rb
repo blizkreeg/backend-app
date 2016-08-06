@@ -67,6 +67,7 @@ Rails.application.routes.draw do
     post '/assign-desirability-score', to: 'admin#assign_desirability_score_user', as: 'admin_assign_desirability_score_user'
     get '/conversations', to: 'admin#show_conversations'
     get '/dates', to: 'admin#show_dates'
+    post '/delete-user', to: 'admin#destroy_user', as: 'admin_destroy_user'
 
     # old admin dashboard - TBD: remove/merge this functionality into above
     get '/login', to: 'accounts#login'
