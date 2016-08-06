@@ -27,8 +27,9 @@ hr
           = button_to 'Remove from STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: false }, class: 'submit btn btn-default', form_class: 'inline' }
         - else
           = button_to 'Approve for STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: true }, class: 'submit btn btn-info', form_class: 'inline' }
-      li.inline
-        = button_to "Delete User", admin_destroy_user_path, {  params: { uuid: @profile.uuid }, class: 'submit btn btn-danger', form_class: 'inline', data: { confirm: "Are you sure you want to delete?\n\r#{@profile.firstname} #{@profile.lastname}\r#{@profile.uuid}" } }
+      - if @profile.marked_for_deletion
+        li.inline
+          = button_to "Delete User", admin_destroy_user_path, {  params: { uuid: @profile.uuid }, class: 'submit btn btn-danger', form_class: 'inline', data: { confirm: "Are you sure you want to delete?\n\r#{@profile.firstname} #{@profile.lastname}\r#{@profile.uuid}" } }
 hr
 .row style='margin-bottom: 6px;'
   .col-xs-12 style='float:right;'
