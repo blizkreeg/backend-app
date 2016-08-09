@@ -4,6 +4,7 @@ class UserMailer < ApplicationMailer
     return if @profile.blank?
     @match_profiles = match_profiles_uuids.map { |uuid| Profile.find(uuid) rescue nil }.compact
     return if @match_profiles.blank?
-    mail(to: @profile.email, subject: "All the people who have liked you on ekCoffee")
+
+    mail(to: @profile.email, subject: "#{@profile.firstname}, you have #{@match_profiles.count} potential matches on ekCoffee.")
   end
 end
