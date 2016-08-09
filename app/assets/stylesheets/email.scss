@@ -1,0 +1,140 @@
+/* CLIENT-SPECIFIC STYLES */
+body, table, td, a{-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+table, td{mso-table-lspace: 0pt; mso-table-rspace: 0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+img{-ms-interpolation-mode: bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+
+/* RESET STYLES */
+img{border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none;}
+table{border-collapse: collapse !important;}
+body{height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important;}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  text-align: left;
+  background-color:#F6F6F6;
+  margin: 0;
+  padding: 0;
+  min-width: 100%;
+  -webkit-text-size-adjust:none;
+  -ms-text-size-adjust:none;
+}
+
+td.simpletext {
+  padding: 20px 0 0 0;
+  font-size: 15px;
+  font-family: 'Open Sans', sans-serif;
+  color: #444;
+}
+
+h3 {
+  margin: 0 0 4px 0;
+  padding: 0 0 0 0;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Open Sans', sans-serif;
+  color: #444;
+}
+
+h4 {
+  margin: 0 0 4px 0;
+  padding: 0 0 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Open Sans', sans-serif;
+  color: #444;
+}
+
+@media screen and (max-width: 768px) {
+  body {
+    font-size: 18px;
+  }
+
+  td.simpletext {
+    font-size: 18px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  h4 {
+    font-size: 18px;
+  }
+
+  /* ALLOWS FOR FLUID TABLES */
+  .wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* ADJUSTS LAYOUT OF LOGO IMAGE */
+  .logo img {
+    margin: 0 auto !important;
+  }
+
+  /* USE THESE CLASSES TO HIDE CONTENT ON MOBILE */
+  .mobile-hide {
+    display: none !important;
+  }
+
+  .img-max {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  /* FULL-WIDTH TABLES */
+  .responsive-table {
+    width: 100% !important;
+  }
+
+  /* UTILITY CLASSES FOR ADJUSTING PADDING ON MOBILE */
+  .padding {
+    padding: 10px 5% 15px 5% !important;
+  }
+
+  .padding-meta {
+    padding: 30px 5% 0px 5% !important;
+    text-align: center;
+  }
+
+  .padding-copy {
+    padding: 10px 5% 10px 5% !important;
+    text-align: center;
+  }
+
+  .no-padding {
+    padding: 0 !important;
+  }
+
+  .section-padding {
+    padding: 50px 15px 50px 15px !important;
+  }
+
+  /* ADJUST BUTTONS ON MOBILE */
+  .mobile-button-container {
+      margin: 0 auto;
+      width: 100% !important;
+  }
+
+  .mobile-button {
+      padding: 15px !important;
+      border: 0 !important;
+      font-size: 16px !important;
+      display: block !important;
+  }
+}
+
+/* iOS BLUE LINKS */
+a[x-apple-data-detectors] {
+  color: inherit !important;
+  text-decoration: none !important;
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+
+/* ANDROID CENTER FIX */
+div[style*="margin: 16px 0;"] { margin: 0 !important; }
+

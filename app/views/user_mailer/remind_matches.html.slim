@@ -1,0 +1,51 @@
+table border="0" cellpadding="0" cellspacing="0" width="100%" style='text-align: left;'
+    tr
+      td bgcolor="#ffffff" align="center" style="padding: 15px;" class="section-padding"
+        /[if (gte mso 9)|(IE)]
+          table align="center" border="0" cellspacing="0" cellpadding="0" width="500"
+            tr
+              td align="center" valign="top" width="500"
+        table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px;" class="responsive-table"
+          tr
+            td
+              table width="100%" border="0" cellspacing="0" cellpadding="0"
+                tr
+                  td
+                    table width="100%" border="0" cellspacing="0" cellpadding="0"
+                      tr
+                        td.simpletext align="left"
+                          | Hey #{@profile.firstname},
+
+                      tr
+                        td.simpletext align="left"
+                          | You haven't checked out the ekCoffee app in a while and we thought we'll let you know about some of the matches you have waiting in your queue!
+
+                      tr
+                        td align="left" style="padding-top: 10px;"
+                          table width="100%" border="0" cellspacing="0" cellpadding="0"
+                            - @match_profiles.each do |match_profile|
+                              tr
+                                td width="120" style="padding: 5px 0px;"
+                                  = cl_image_tag (match_profile.photos.primary.take.try(:public_id) || ''), width: 100, height: 100, crop: :thumb, gravity: 'face:center', radius: :max
+                                td.match-profiles style="padding: 5px 0px;"
+                                  h3
+                                    = match_profile.firstname
+                      tr
+                        td.simpletext align="left"
+                          | Check them out in the ekCoffee app. One of them could be someone you might enjoy meeting! ☺️
+                      tr
+                        td.simpletext align="left"
+                          | Cheers,
+                          br
+                          | ekCoffee Team
+    tr
+        td bgcolor="#ffffff" align="center" style="padding: 20px 0px;"
+            /[if (gte mso 9)|(IE)]
+              table align="center" border="0" cellspacing="0" cellpadding="0" width="500"
+                tr
+                  td align="center" valign="top" width="500"
+            table width="100%" border="0" cellspacing="0" cellpadding="0" align="center" style="max-width: 500px;border-top: 1px solid #eee;padding-top:5px;" class="responsive-table"
+              tr
+                td.simpletext align="center" style="padding: 10px 0px;font-size: 12px; line-height: 18px; color:#666666;"
+                  | 1800 Vallejo St 1, San Francisco, CA 94123 |
+                  <a href="[unsubscribe]" target="_blank">Unsubscribe</a>
