@@ -281,7 +281,7 @@ class Api::V1::ProfilesController < ApplicationController
         if !@current_profile.approved? || (@current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4))
           'none'
         elsif (@current_profile.approved_for_stb && (Geocoder::Calculations.distance_between([@current_profile.latitude, @current_profile.longitude], [18.5204, 73.8567]) * 1_000 <= 25_000)) || @current_profile.staff_or_internal
-          'link'
+          'none'
         else
           'none'
         end
