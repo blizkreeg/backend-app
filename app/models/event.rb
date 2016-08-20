@@ -11,7 +11,9 @@ class Event < ActiveRecord::Base
     total_spots:        :integer,
     male_spots:         :integer,
     female_spots:       :integer,
-    photo:              :string
+    photo:              :string,
+    description:        :string,
+    payment_link:       :string
   }
 
   jsonb_accessor :properties, ATTRIBUTES

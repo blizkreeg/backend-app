@@ -38,6 +38,8 @@ namespace :events do
         event.male_spots = ws[row, 6]
         event.female_spots = ws[row, 7]
         event.photo = ws[row, 8]
+        event.payment_link = ws[row, 10]
+        event.description = ws[row, 11]
 
         event.save!
 

@@ -1,53 +1,80 @@
-div.text-center style='100%;margin-bottom:10px;'
-  = image_tag 'stb-logo.png', width: 120
-h5.text-center
-  = link_to 'Learn More', 'https://ekcoffee.com/singlesthatbrunch?show_dload=0', style: 'color: #303030;text-decoration:underline;'
-h2.upcoming.text-center style='margin-bottom:25px;' Upcoming Events
-hr
-- @events.each do |event|
-  div style='padding: 20px 0px;border-bottom:1px solid #ddd;'
-    .row
-      .col-xs-12
-        div style='text-align:center;margin-bottom:15px;position:relative;'
-          = cl_image_tag 'canteen1-kxUG--310x465_LiveMint_wxrxka', width: 360, height: 270, crop: :fill
-          .overlay
-          p.when
-            / i.fa.fa-calendar-check-o
-            | &nbsp; #{event.happening_on.strftime("%a, %B %-d %Y")} at #{event.happening_at}
-          p.cost
-            i.fa.fa-ticket
-            / | &nbsp; Event Fee &nbsp;
-            | &nbsp; Rs. 250
-            / | &nbsp; includes coffee.
-        div style='display:inline;padding-left:20px;float:left;width:100%;'
-          p.place style='font-weight:400;color:#303030;'
-            | Singles Brunch at #{event.place}
-          - if event.spots_remaining(@profile) == 0
-            p.spots
-              i.fa.fa-star
-              | &nbsp; Event FULL
-          - else
-            p.spots
-              i.fa.fa-star &nbsp;
-              strong #{event.spots_remaining(@profile)}
-              | &nbsp; spots remaining
-            p.addr
-              i.fa.fa-map-marker
-              span style='color:#555;' &nbsp; #{event.address}
+div style='margin-bottom:25px;'
+  div.text-center style='100%;margin-bottom:10px;'
+    = image_tag 'stb-logo.png', width: 120
+  / h5.text-center
+  /   = link_to 'Learn More', 'https://ekcoffee.com/singlesthatbrunch?show_dload=0', style: 'color: #303030;text-decoration:underline;'
+  / h2.upcoming.text-center style='margin-bottom:25px;' Upcoming Events
+  / hr
+  - @events.each do |event|
+    div style='padding: 20px 0px;'
+      .row
+        .col-xs-12
+          div style='text-align:center;margin-bottom:15px;position:relative;'
+            = cl_image_tag event.photo, width: 360, height: 270, crop: :fill
+            .overlay
+            p.when
+              / i.fa.fa-calendar-check-o
+              | &nbsp; #{event.happening_on.strftime("%a, %B %-d %Y")} at #{event.happening_at}
+            p.cost
+              / i.fa.fa-ticket
+              span style='font-size:13px;color:white;'
+                | BRUNCH TICKET
+              br
+              | &nbsp; Rs. 250
+              / | &nbsp; includes coffee.
+          div style='display:inline;padding-left:10px;padding-right:10px;float:left;width:100%;'
+            p.place style='font-weight:600;color:#303030;'
+              | Singles Brunch at #{event.place}
             p
-              i.fa.fa-info
-              | &nbsp; Your brunch ticket <strong>reserves a spot</strong> for you and covers our running costs. Your ticket includes a first drink (up to Rs. 125), which is on us! <strong>At the brunch, you pay for what you order.</strong>
-            - if event.rsvp_for(@profile).present?
-              p.going
-                span style='font-size:3vmin;' Going: &nbsp;
-                - event.attending.each do |profile|
-                  = cl_image_tag profile.photos.primary.take.public_id, width: 48, height: 48, crop: 'thumb', gravity: 'face', radius: 'max'
-            - if event.rsvp_for(@profile).present?
-              p.cta
-                h4 You're on the list!
-                = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
+              = event.description
+            p
+              = cl_image_tag 'eco-images_d271oy', width: 335
+            - if event.spots_remaining(@profile) == 0
+              p.spots
+                i.fa.fa-star
+                | &nbsp; Event FULL
             - else
-              p.cta
-                - if event.spots_remaining(@profile) > 0
-                  = link_to "Buy Ticket", 'https://www.instamojo.com/vthanedar/singles-that-brunch-july-17th-2016-the-bomba/', class: 'submit btn btn-success rsvp-button'
-                  / = button_to "Buy Ticket", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}
+              p.spots
+                i.fa.fa-star &nbsp;
+                strong #{event.spots_remaining(@profile)}
+                | &nbsp; spots remaining
+              p.addr
+                i.fa.fa-map-marker
+                span style='color:#555;' &nbsp; #{event.address}
+              p
+                i.fa.fa-info
+                | &nbsp; Your brunch ticket <strong>reserves a spot</strong> for you and covers our running costs. Your ticket includes a first drink (up to Rs. 125), which is on us! <strong>At the brunch, you pay for what you order.</strong>
+              - if event.rsvp_for(@profile).present?
+                p.going
+                  span style='font-size:3vmin;' Going: &nbsp;
+                  - event.attending.each do |profile|
+                    = cl_image_tag profile.photos.primary.take.public_id, width: 48, height: 48, crop: 'thumb', gravity: 'face', radius: 'max'
+              - if event.rsvp_for(@profile).present?
+                p.cta
+                  h4 You're on the list!
+                  = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
+              - else
+                p.cta
+                  - if event.spots_remaining(@profile) > 0
+                    = link_to "Buy Ticket", event.payment_link, class: 'submit btn btn-success rsvp-button'
+                    / = button_to "Buy Ticket", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}
+            div.clearfix
+            h3 What is Singles That Brunch?
+            p
+              | Brought to you by ekCoffee, Singles That Brunch is a community of singles who enjoy going on brunches only to find that most of their coupled-up friends have plans.
+            h3 Who is this for?
+            p
+              | If you're single, love the thought of a relaxed brunch, but don’t get enough opportunities to meet new people, this is for you! And while you could go out for brunch by yourself, you miss the camaraderie of a group.
+            h3 Who will I meet?
+            p
+              | Interesting single professionals who love a good conversation over pancakes and coffee in a relaxed, organic setting. Also, we maintain the gender ratio, all our brunches have a healthy mix of men & women both! :)
+            h3 How have the past brunches been like?
+            p
+              | Our fifth Singles That Brunch at The Desi Deli on the 7th of August was a hit! We had an eclectic group of 6 singles — a scientist, an architect and animal lover, an Entrepreneur, a Designer, and a Marketing professional! The conversation ranged from cross-fit training, crows, culinary arts, a chef's favorites, to land-locked cities! Here are a few pictures from the past events:
+            p
+              = cl_image_tag 'past-stb-photos_sikcte', width: 335
+
+            h3.text-center Convinced &amp; Interested?
+            h4.text-center #{event.spots_remaining(@profile)} spots remaining
+            - if event.spots_remaining(@profile) > 0
+              = link_to "Buy Ticket", event.payment_link, class: 'submit btn btn-success rsvp-button'

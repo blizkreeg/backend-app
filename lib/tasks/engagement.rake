@@ -2,10 +2,14 @@ namespace :engagement do
   task :day7_comeback => :environment do
     not_active_have_matches = Profile.visible.last_seen_at_before(DateTime.now-7.days).select { |p| p.matches.undecided.count > 0 }
     not_active_have_matches.each do |p|
-      msg = "#{p.firstname}, where are you hiding? We have #{p.matches.undecided.count} new matches for you!"
+      msg = "#{p.firstname}, you have #{p.matches.undecided.count} new matches waiting for you 😎"
       PushNotifier.delay.record_event(p.uuid, 'general_announcement', body: msg)
+      if p.email.present?
+        UserMailer.remind_matches(p.uuid, p.matches.undecided.take(10).map(&:matched_profile).map(&:uuid)).deliver_now
+      end
+      puts "sent notification of #{p.matches.undecided.count} to #{p.firstname} #{p.email}"
     end
-    puts "sent notifications to #{not_active_have_matches.count} users"
+    puts "\nsent notifications to #{not_active_have_matches.count} users"
   end
 
   task :day2_complete_profile => :environment do

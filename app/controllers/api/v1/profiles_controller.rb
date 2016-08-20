@@ -280,14 +280,16 @@ class Api::V1::ProfilesController < ApplicationController
       when 'production'
         if !@current_profile.approved? || (@current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4))
           'none'
+        elsif (@current_profile.approved_for_stb && (Geocoder::Calculations.distance_between([@current_profile.latitude, @current_profile.longitude], [18.5204, 73.8567]) * 1_000 <= 25_000)) || @current_profile.staff_or_internal
+          'none'
         else
-          'text'
+          'none'
         end
       end
 
     case @content_type
     when 'link'
-      @link_url = "https://www.facebook.com/ekCoffee/photos/?tab=album&album_id=1402136039803456"  # ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
+      @link_url = ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
     end
 
     render 'api/v1/shared/home', status: 200
