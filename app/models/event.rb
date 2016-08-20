@@ -4,6 +4,7 @@ class Event < ActiveRecord::Base
   ATTENDING_STATUSES = %w(waitlisted going)
 
   ATTRIBUTES = {
+    name:               :string,
     place:              :string,
     happening_on:       :date,
     happening_at:       :string,

@@ -1,0 +1,323 @@
+doctype html
+head
+  title What's In My Data?
+  = javascript_include_tag 'https://code.jquery.com/jquery-3.1.0.min.js'
+  = javascript_include_tag 'https://use.fontawesome.com/d8d11b3675.js'
+  css:
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-size: 16px;
+      font-family: 'DIN Next Light', 'Open Sans', 'Raleway', 'Helvetica Neue', sans-serif;
+      color: #444;
+      font-weight: 300;
+    }
+
+    .container {
+      width: 960px;
+      height: 100%;
+      margin: 0px auto;
+      padding: 0;
+    }
+
+    .cover {
+      background-color: rgb(0,133,147);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: 0 0;
+      min-height: 500px;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-name, .logo-name a, .logo-name a:hover, .logo-name a:visited {
+      font-size: 18px;
+      letter-spacing: 2px;
+      color: white;
+      text-transform: uppercase;
+      padding-top: 15px;
+      font-family: 'Raleway', 'Helvetica Neue', sans-serif;
+      font-weight: 400;
+    }
+
+    .logo-name svg {
+      /*width: 100%;
+      height: 100%;
+      position: absolute;*/
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      margin: auto;
+      fill: #FFFFFF;
+      fill-opacity: 1;
+      stroke: transparent;
+      stroke-width: 0px;
+    }
+
+    .lede {
+      position: relative;
+      margin-top: 50px;
+      color: white;
+      width: 575px;
+    }
+
+    .lede h1 {
+      font-size: 60px;
+      line-height: 80px;
+      line-height: 1.4em;
+    }
+
+    .lede h3 {
+      font-family: 'Futura', 'Courier', monospace;
+      font-size: 32px;
+      letter-spacing: 0.8px;
+      font-weight: 300;
+    }
+
+    div.cta {
+      padding-top: 25px;
+      text-align: center;
+      margin: 0px auto;
+      padding-bottom: 25px;
+    }
+
+    div.cta h3 {
+      font-size: 24px;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    h2 {
+      font-size: 22px;
+      line-height: 30px;
+      font-weight: 400;
+    }
+
+    h3 {
+      margin-top: 45px;
+      font-size: 16px;
+      line-height: 26px;
+      font-weight: 600;
+    }
+
+    h4 {
+      font-size: 14px;
+      line-height: 22px;
+      font-weight: 600;
+    }
+
+    input {
+      height: 50px;
+      background: #ffffff;
+      border: 1px solid #56c9ac;
+      border-radius: 3px;
+      -moz-border-radius: 3px;
+      -webkit-border-radius: 3px;
+      color: #121212;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: "Open Sans";
+      text-align: left;
+      padding: 2px 6px;
+      width: 240px;
+    }
+
+    input.submit {
+      background-color: rgb(0,133,147);
+      color: white;
+      border: none;
+      text-align: center;
+      width: auto;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .inline {
+      display: inline;
+    }
+
+    .white {
+      color: white;
+    }
+
+    hr {
+      border-top: 1px solid #888;
+    }
+
+    div.how {
+      padding: 25px 0px;
+    }
+
+    .footer {
+      clear: both;
+      margin-top: 50px;
+      text-align: center;
+      padding-bottom: 50px;
+    }
+
+    #form-submitted {
+      padding: 10px 10px;
+      background-color: #fff;
+      border: 1px solid #cdcdcd;
+      color: #555;
+      margin: 0px auto;
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .feature {
+      width: 22%;
+      float: left;
+      position: relative;
+    }
+
+    .feature-margin-right {
+      margin-right: 4%;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .strike {
+      text-decoration: line-through;
+    }
+
+    div.section {
+      clear: both;
+      margin: 25px 0;
+    }
+
+    h1.section-heading {
+      font-weight:300;
+      text-align:center;
+      font-weight:600;
+      color:#555;
+    }
+
+    .right-arrow {
+      position: absolute;
+      right: 0;
+      top: 48%;
+    }
+body
+  .cover
+    .container
+      .logo-name
+        / <svg version="1.1" xmlns="http://www.w3.org/2000/svg" data-original-aspect-ratio="1.2731048892197865" style="width: 51px; height: 40px;">
+        /   <g transform="translate(0,0)"><rect y="12.224716" width="9.084422" height="27.039156"></rect><rect x="40.905389" y="21.564032" width="9.094618" height="17.710035"></rect><rect x="13.631731" width="9.084422" height="39.274068"></rect><rect x="27.273658" y="9.380099" width="9.084422" height="29.893968"></rect></g></svg>
+        = image_tag 'http://res.cloudinary.com/ekcoffee/image/upload/v1470955693/whatsinmydata_ztyq6m.png', width: 24, height: 24, style: "vertical-align: top;"
+        | &nbsp; WHAT'S IN MY DATA?
+
+      .lede
+        h1
+          | Analyze, report, and visualize CSV and spreadsheet data.
+        hr style='border-top: 1px solid white;'
+        h3
+          | Fast &amp; without a single line of code!
+  .signup
+    .container
+      div.cta
+        p.launching
+          javascript:
+            var $ = jQuery.noConflict();
+            console.log(window.location.search.indexOf('submitted'));
+            if(window.location.search.indexOf('submitted') == 1) {
+              $('.launching').append("<div id='form-submitted'>Thank you! Expect to hear from us soon.</div>")
+            }
+          | Launching September 2016
+        form action="https://formspree.io/vintya9@gmail.com" method="POST"
+          = hidden_field_tag '_next', "http://whatsinmydata.com?submitted=true"
+          table style='margin: 0px auto;'
+            tr
+              td
+                = text_field_tag :email, '', placeholder: 'Email address'
+              td
+                h3.inline &nbsp;
+                = submit_tag "Sign up for early access", class: 'submit'
+  .features style='background-color:#eee;height:auto;overflow:auto;'
+    .container
+      div.section
+        h1.section-heading
+          | FEATURES
+        div.feature.feature-margin-right.text-center
+          h2 No Code To Write
+          p
+            i.fa.fa-code.fa-3x.strike
+          p We're building What's In My Data? keeping in mind the lay person who doesn't know how to code. Or may be you do code but want to just analyze and inspect a piece of data fast and see some results before you dive in more.
+
+        div.feature.feature-margin-right.text-center
+          h2 Analyze &amp; Inspect
+          p
+            i.fa.fa-search-plus.fa-3x
+          p Simply upload your CSV file and get a search interface for your data set.
+
+        div.feature.feature-margin-right.text-center
+          h2 Report &amp; Visualize
+          p
+            i.fa.fa-area-chart.fa-3x
+          p Need to export the results of a search? Want to chart and visualize a query or portion of the dataset? What's In My Data? lets you do it all at the click of a button.
+
+        div.feature.text-center
+          h2 Complete Privacy
+          p
+            i.fa.fa-lock.fa-3x
+          p Your dataset and search interface is not accessible to anyone except you.
+  .workings
+    .container
+      div.section
+        h1.section-heading
+          | HOW IT WORKS
+        div.text-center
+          h2
+            | Upload your CSV file
+          p
+            i.fa.fa-cloud-upload.fa-3x
+          p
+            i.fa.fa-arrow-down.fa-2x
+
+        div.text-center
+          h2 Get a search dashboard
+          p
+            | (within seconds)
+          p
+            i.fa.fa-dashboard.fa-3x
+          p
+            i.fa.fa-arrow-down.fa-2x
+
+        div.text-center
+          h2 Run search queries &amp; visualize the data!
+          p
+            i.fa.fa-bar-chart.fa-3x
+  .signup style='background-color:#212a31;'
+    .container
+      div.cta
+        h1.text-center.white
+          | Want To Learn More?
+        form action="https://formspree.io/vintya9@gmail.com" method="POST"
+          = hidden_field_tag '_next', "http://whatsinmydata.com?submitted=true"
+          table style='margin: 0px auto;'
+            tr
+              td
+                = text_field_tag :email, '', placeholder: 'Email address'
+              td
+                h3.inline &nbsp;
+                = submit_tag "Sign up for early access", class: 'submit'
+
+  .footer
+    .container
+      p
+        | Made in San Francisco
+        |&nbsp; | &nbsp;
+        | Copyright &copy; 2016 What's In My Data?

@@ -187,6 +187,23 @@ def seed_places
   end
 end
 
+def seed_events
+  50.times do
+    Event.create!(
+      name: 'Hike at Mt. Tamalpais',
+      place: "The Colaba Social",
+      happening_on: Date.today + rand(5).days,
+      happening_at: "#{12 + rand(8)}pm",
+      address: "123, Vallejo",
+      total_spots: 8,
+      male_spots: 4,
+      female_spots: 4,
+      description: '',
+      payment_link: 'https://google.com'
+    )
+  end
+end
+
 def seed_all
   seed_users
   seed_places
@@ -198,6 +215,8 @@ elsif ENV['TYPE'] == 'places'
   seed_places
 elsif ENV['TYPE'] == 'photos'
   seed_photos
+elsif ENV['TYPE'] == 'events'
+  seed_events
 else
   seed_all
 end

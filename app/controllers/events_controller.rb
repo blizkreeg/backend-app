@@ -8,6 +8,10 @@ class EventsController < ApplicationController
 
   layout 'events'
 
+  def index
+    @events = Event.happening_on_after(Date.today-1)
+  end
+
   def rsvp_stb
     @events = Event.current_or_future_events
     rsvped_for_event = @events.select { |event| event.rsvp_for(@profile).present? }.first
@@ -43,5 +47,6 @@ class EventsController < ApplicationController
 
   def load_profile
     @profile = Profile.find(params[:uuid])
+  rescue ActiveRecord::RecordNotFound
   end
 end

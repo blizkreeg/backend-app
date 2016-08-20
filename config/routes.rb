@@ -98,5 +98,11 @@ Rails.application.routes.draw do
     get '/payment-success', to: 'events#payment_success'
   end
 
+  constraints SubdomainConstraint.new('brew') do
+    get '/events', to: 'events#index'
+  end
+
+  get '/moosecsv', to: 'moose#moosecsv'
+
   get '*unmatched_route', to: 'application#route_not_found'
 end
