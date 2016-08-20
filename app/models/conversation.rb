@@ -191,7 +191,7 @@ class Conversation < ActiveRecord::Base
       sender_uuid: nil,
       recipient_uuid: nil,
       content: content,
-      sent_at: (Time.now.to_f * 1_000).to_i
+      sent_at: (Time.now.to_f * 1_000).to_i,
       ack: nil
     }
   end
