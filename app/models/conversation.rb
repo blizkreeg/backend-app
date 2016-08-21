@@ -32,7 +32,8 @@ class Conversation < ActiveRecord::Base
   CLOSE_NOTICE_FROM_OPEN = 144.hours
   CLOSE_TIME = 168.hours # 7.days
 
-  OPENING_MESSAGE = "How awesome! You're both curious about each other.\nSay hello :-)\n\nThis chat will be open for #{CLOSE_TIME / 86_400} days."
+  OPENING_MESSAGE = "Hooray, you're both curious! Say hello and get to know each other :-)\n\nThis chat will be open for #{CLOSE_TIME / 86_400} days."
+  CLOSING_MESSAGE = "We hope you have both exchanged numbers. This chat will close in 24 hours."
   CLOSED_BECAUSE_EXPIRED = 'Expired'
   CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
   MAX_PARTICIPANTS = 2
