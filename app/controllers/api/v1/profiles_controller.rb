@@ -112,9 +112,21 @@ class Api::V1::ProfilesController < ApplicationController
     if found_city.blank?
       @people = []
     else
+      worksheet_num =
+      case Rails.env
+      when 'production'
+        0
+      when 'test'
+        1
+      when 'development'
+        2
+      else
+        2
+      end
+
       # https://docs.google.com/spreadsheets/d/1ldIZou60XG-zAPZ1HRT0oQNUb1VrhRZFzl-CkKjCbJo/
       session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
-      ws = session.spreadsheet_by_key("1ldIZou60XG-zAPZ1HRT0oQNUb1VrhRZFzl-CkKjCbJo").worksheets[0]
+      ws = session.spreadsheet_by_key("1ldIZou60XG-zAPZ1HRT0oQNUb1VrhRZFzl-CkKjCbJo").worksheets[worksheet_num]
 
       # doc version stored at [1,2]
       rows = Rails.cache.fetch("featured_profiles_#{found_city[:name].downcase.gsub(/[^\w]/i, '')}_v#{ws[1,2]}", expires_in: 30.days) do
