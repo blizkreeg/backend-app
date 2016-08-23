@@ -8,7 +8,7 @@ class Photo < ActiveRecord::Base
   MAX_HEIGHT = 1000
   THUMBNAIL_TRANSFORMATIONS = 'c_fill,g_face:center,r_max'
   PROFILE_TRANSFORMATIONS = 'c_fill,g_face:center,q_50'
-  FULLSCREEN_TRANSFORMATIONS = 'c_fill,g_face:center,q_50'
+  FULLSCREEN_TRANSFORMATIONS = 'c_fill,q_50'
 
   # scope :valid, -> { where("(properties->>'marked_for_deletion')::boolean = false").order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc") }
   scope :approved, -> { with_approved(true) }
