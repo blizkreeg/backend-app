@@ -96,8 +96,8 @@ Rails.application.routes.draw do
     delete '/cancel-stb', to: 'events#cancel_stb'
     get '/registered', to: 'events#registered'
     get '/payment-success', to: 'events#payment_success'
-    get '/experiences', to: 'events#experiences'
-    post '/experiences-interested', to: 'events#experiences_interested'
+    get '/announce_interests', to: 'events#announce_interests'
+    post '/register-interests', to: 'events#register_interests', as: :register_interests
   end
 
   get '*unmatched_route', to: 'application#route_not_found'

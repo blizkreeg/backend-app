@@ -1,20 +1,18 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
+html {
+  font-size: 62.5%;
+}
+
 body {
   font-family: 'Open Sans', Helvetica, sans-serif;
-  color: #404040;
-  // font-size: 3vmin;
-}
-
-a, a:visited {
-}
-
-a:hover {
-  text-decoration: none;
+  color: #444;
+  font-size: 1.6rem;
+  font-weight: normal;
 }
 
 .content {
-  // padding: 10px 10px 0px 10px;
+  padding: 15px 0px 25px 0px;
   background-color: white;
   overflow-x:hidden;
   width:100%;
@@ -111,4 +109,28 @@ h1.experiences {
   left: 25px;
   top: 10px;
   text-shadow: 0px 0px 4px #969696;
+}
+
+
+.btn-cta, .btn-cta:hover, .btn-cta:active {
+  background-color: #0d3d56;
+  color: #fff;
+  border-color: #0d3d56;
+  border-radius: 2px;
+}
+
+.type-of-activity {
+  display: block;
+  color: #093145;
+  background-color: #ebc944;
+  padding: 8px;
+  margin: 6px 0px;
+  border-radius: 3px;
+  white-space: nowrap;
+  box-shadow: 2px 2px #ccc;
+}
+
+.type-of-activity.chosen {
+  color: #ffffff;
+  background-color: #093145;
 }

@@ -39,11 +39,13 @@ class EventsController < ApplicationController
     redirect_to action: :rsvp_stb, params: { uuid: params[:uuid] }
   end
 
-  def experiences
+  def announce_interests
+    render 'announce-interests'
   end
 
-  def experiences_interested
-
+  def register_interests
+    puts params.inspect
+    render 'thankyou-interests'
   end
 
   private
