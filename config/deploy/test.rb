@@ -1,5 +1,7 @@
 set :stage, :test
 set :rails_env, 'test'
+set :rack_env, 'test'
+set :puma_env, 'test'
 
 # server-based syntax
 # ======================
