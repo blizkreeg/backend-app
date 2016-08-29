@@ -1,16 +1,13 @@
-set :stage, :production
-set :rails_env, 'production'
+set :stage, :test
+set :rails_env, 'test'
 
 # server-based syntax
 # ======================
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-server '128.199.234.90', user: 'deploy', roles: %w{app sidekiq}, primary: true
-server '128.199.164.71', user: 'deploy', roles: %w{app firebase}#, other_property: :other_value
-server '128.199.234.90', user: 'deploy', roles: %w{migrator}
-
-
+server '139.59.22.238', user: 'deploy', roles: %w{app firebase sidekiq}, primary: true
+server '139.59.22.238', user: 'deploy', roles: %w{migrator}
 
 # role-based syntax
 # ==================
@@ -20,10 +17,10 @@ server '128.199.234.90', user: 'deploy', roles: %w{migrator}
 # property set. Specify the username and a domain or IP for the server.
 # Don't use `:all`, it's a meta role.
 
-role :app, %w{deploy@128.199.234.90 deploy@128.199.164.71}#, my_property: :my_value
-role :sidekiq, %w(deploy@128.199.234.90)
-role :firebase, %w(deploy@128.199.164.71)
-role :migrator,  %w{deploy@128.199.234.90}
+role :app, %w{deploy@139.59.22.238}#, my_property: :my_value
+role :sidekiq, %w(deploy@139.59.22.238)
+role :firebase, %w(deploy@139.59.22.238)
+role :migrator,  %w{deploy@139.59.22.238}
 
 # Configuration
 # =============
