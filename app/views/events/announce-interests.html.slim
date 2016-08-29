@@ -64,7 +64,7 @@ div.text-center
     = hidden_field_tag :uuid, params[:uuid]
     .form-group
       - Event::ACTIVITES.each do |activity|
-        = hidden_field_tag "activity_#{activity.second}", 0
+        = hidden_field_tag "activity[][#{activity.second}]", 0, id: "activity_#{activity.second}"
         .type-of-activity data-value="#{activity.second}"
           span
             | #{activity.first}
