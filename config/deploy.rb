@@ -7,6 +7,7 @@ set :repo_url, 'git@github.com:blizkreeg/backend-app.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
+set :branch, ENV['BRANCH'] || 'master'
 
 set :deploy_to, "/home/#{fetch(:user)}/#{fetch(:application)}"
 set :rails_env, 'production'
