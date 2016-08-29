@@ -2,12 +2,12 @@ class GoogleSheet
   mattr_reader :session
   attr_accessor :gsheet, :id, :worksheet, :cache_key, :cache_key_expires_in
 
+  DOC_VERSION_STRING = "Version"
   DOC_VERSION_ROW = 1
   DOC_VERSION_COL = 2
   PROD_WORKSHEET = 0
   TEST_WORKSHEET = 1
   DEV_WORKSHEET = 2
-
 
   def self.set_session
     @@session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
@@ -33,9 +33,10 @@ class GoogleSheet
   def initialize(key, worksheet_num=nil, options={})
     @id = key
     @worksheet = worksheet_num || GoogleSheet.default_worksheet
-    @cache_key_expires_in = options[:cache_key_expires_in]
+    @cache_key_expires_in = options[:cache_key_expires_in] || 7.days
     @gsheet = GoogleSheet.session.spreadsheet_by_key(@id).worksheets[@worksheet]
-    @cache_key = [@id, (options[:cache_key] || ''), "v#{gsheet[DOC_VERSION_ROW, DOC_VERSION_COL]}"].join('_')
+    version = @gsheet[DOC_VERSION_ROW, 1] == "Version" ? @gsheet[DOC_VERSION_ROW, DOC_VERSION_COL] : 0
+    @cache_key = [@id, (options[:cache_key] || ''), "v#{version}"].join('_')
   end
 
   def rows(skip_rows=nil)
