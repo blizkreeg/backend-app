@@ -46,4 +46,8 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   config.test_mode = true
+
+  # to get assets to compile on test
+  config.assets.compile = false
+  config.assets.digest = true
 end

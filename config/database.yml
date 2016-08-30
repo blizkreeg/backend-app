@@ -17,9 +17,10 @@ development:
 # Do not set this db to the same as development or production.
 test:
   <<: *default
+  host: <%= ENV['PG_HOST'] || 'localhost' %>
   database: ekcoffee_test
   username: ekcoffee
-  password: <%= ENV['PG_PASS'] %>
+  password:
 
 production:
   <<: *default

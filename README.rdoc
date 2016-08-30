@@ -42,6 +42,13 @@ rake db:migrate
 
 * Services (job queues, cache servers, search engines, etc.)
 
+** Firebase
+
+```
+RAILS_ENV= FIREBASE_SECRET= HOST_URL= node node_scripts/firebase_master.js
+RAILS_ENV= FIREBASE_SECRET= HOST_URL= node node_scripts/firebase_worker.js
+```
+
 * Deployment instructions
 
 * ...
