@@ -296,7 +296,7 @@ class Api::V1::ProfilesController < ApplicationController
           if !@current_profile.approved? || (@current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4))
             'none'
           else
-            'text'
+            'link'
           end
         end
       end
