@@ -24,7 +24,8 @@ class Event < ActiveRecord::Base
     ['Dinners', 'dinners'],
     ['Happy Hours/Sundowners', 'happyhours'],
     ['Salsa and Dancing', 'dancing'],
-    ['Going to Concerts & Music Venues', 'music']
+    ['Going to Concerts & Music Venues', 'music'],
+    ['Group Cooking Classes', 'cooking']
   ]
 
   jsonb_accessor :properties, ATTRIBUTES
