@@ -52,6 +52,7 @@ class EventsController < ApplicationController
       @profile.age,
       @profile.firstname,
       @profile.lastname,
+      @profile.desirability_score,
       params[:activity].first.select { |key, value| value == "1" }.keys.join(', '),
       params[:will_host],
       params[:will_attend]
