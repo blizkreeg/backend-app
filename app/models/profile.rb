@@ -114,6 +114,7 @@ class Profile < ActiveRecord::Base
     about_me_ideal_weekend:       :string,
     about_me_bucket_list:         :string,
     about_me_quirk:               :string,
+    phone:                        :string,
     inactive:                     :boolean,
     inactive_reason:              :string,
     disable_notifications_setting: :boolean,

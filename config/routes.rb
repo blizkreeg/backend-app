@@ -101,6 +101,7 @@ Rails.application.routes.draw do
   end
 
   constraints SubdomainConstraint.new('brew') do
+    get '/brew', to: 'brew#home'
     get '/events', to: 'events#index'
   end
 
