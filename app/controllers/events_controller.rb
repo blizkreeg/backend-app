@@ -39,6 +39,28 @@ class EventsController < ApplicationController
     redirect_to action: :rsvp_stb, params: { uuid: params[:uuid] }
   end
 
+  def announce_interests
+    render 'announce-interests'
+  end
+
+  def register_interests
+    gsheet = GoogleSheet.new('1QTtUWo3gWZLDDo6UIYVVMs71p3MIsItM-o2TH6zzX9I')
+    gsheet.insert_row([
+      @profile.uuid,
+      @profile.gender,
+      @profile.location_city,
+      @profile.age,
+      @profile.firstname,
+      @profile.lastname,
+      @profile.desirability_score,
+      params[:activity].first.select { |key, value| value == "1" }.keys.join(', '),
+      params[:will_host],
+      params[:will_attend]
+    ])
+
+    render 'thankyou-interests'
+  end
+
   private
 
   def load_profile

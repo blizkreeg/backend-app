@@ -1,18 +1,23 @@
+@import 'https://fonts.googleapis.com/css?family=Josefin+Sans|Source+Sans+Pro';
+
+html {
+  font-size: 62.5%;
+}
+
 body {
   font-family: 'Open Sans', Helvetica, sans-serif;
-  color: #404040;
-  // font-size: 3vmin;
+  color: #454545;
+  font-size: 1.6rem;
+  font-weight: normal;
 }
 
-a, a:visited {
-}
-
-a:hover {
-  text-decoration: none;
+h1, h2, h3, h4 {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #1c1c1c;
 }
 
 .content {
-  padding: 30px 10px 0px 10px;
+  padding: 15px 0px 25px 0px;
   background-color: white;
   overflow-x:hidden;
   width:100%;
@@ -98,4 +103,40 @@ hr {
   vertical-align: middle;
   background-color: #FF653F;
   border: none;
+}
+
+.btn-cta, .btn-cta:hover, .btn-cta:active {
+  background-color: #0d3d56;
+  color: #fff;
+  border-color: #0d3d56;
+  border-radius: 2px;
+}
+
+.type-of-activity {
+  display: block;
+  color: #093145;
+  background-color: #ebc944;
+  padding: 8px;
+  margin: 6px 0px;
+  border-radius: 3px;
+  white-space: nowrap;
+  box-shadow: 2px 2px #ccc;
+}
+
+.type-of-activity.chosen {
+  color: #ffffff;
+  background-color: #093145;
+}
+
+.emphasis {
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 2.5rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.10909;
+}
+
+.light {
+  font-weight: 300;
+  color: #333;
 }

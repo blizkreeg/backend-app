@@ -112,9 +112,21 @@ class Api::V1::ProfilesController < ApplicationController
     if found_city.blank?
       @people = []
     else
+      worksheet_num =
+      case Rails.env
+      when 'production'
+        0
+      when 'test'
+        1
+      when 'development'
+        2
+      else
+        2
+      end
+
       # https://docs.google.com/spreadsheets/d/1ldIZou60XG-zAPZ1HRT0oQNUb1VrhRZFzl-CkKjCbJo/
       session = GoogleDrive.saved_session("#{Rails.root}/config/gdrive.json")
-      ws = session.spreadsheet_by_key("1ldIZou60XG-zAPZ1HRT0oQNUb1VrhRZFzl-CkKjCbJo").worksheets[0]
+      ws = session.spreadsheet_by_key("1ldIZou60XG-zAPZ1HRT0oQNUb1VrhRZFzl-CkKjCbJo").worksheets[worksheet_num]
 
       # doc version stored at [1,2]
       rows = Rails.cache.fetch("featured_profiles_#{found_city[:name].downcase.gsub(/[^\w]/i, '')}_v#{ws[1,2]}", expires_in: 30.days) do
@@ -276,20 +288,22 @@ class Api::V1::ProfilesController < ApplicationController
       when 'development'
         'text'
       when 'test'
-        'text'
+        'link'
       when 'production'
-        if !@current_profile.approved? || (@current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4))
-          'none'
-        elsif (@current_profile.approved_for_stb && (Geocoder::Calculations.distance_between([@current_profile.latitude, @current_profile.longitude], [18.5204, 73.8567]) * 1_000 <= 25_000)) || @current_profile.staff_or_internal
-          'none'
+        if @current_profile.staff_or_internal
+          'link'
         else
-          'none'
+          if !@current_profile.approved? || (@current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4))
+            'none'
+          else
+            'link'
+          end
         end
       end
 
     case @content_type
     when 'link'
-      @link_url = ENV['EVENTS_HOST_URL'] + "/rsvp-stb?uuid=#{@current_profile.uuid}"
+      @link_url = ENV['EVENTS_HOST_URL'] + "/announce-interests?uuid=#{@current_profile.uuid}"
     end
 
     render 'api/v1/shared/home', status: 200

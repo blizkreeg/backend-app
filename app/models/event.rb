@@ -16,7 +16,22 @@ class Event < ActiveRecord::Base
     payment_link:       :string
   }
 
+  ACTIVITES = [
+    ['Sunday Brunches', 'sundaybrunch'],
+    ['Photography Walks', 'photowalk'],
+    ['Local Hikes/Treks', 'localhike'],
+    ['Board Games at a Cafe', 'boardgames'],
+    ['Dinners', 'dinners'],
+    ['Happy Hours/Sundowners', 'happyhours'],
+    ['Salsa and Dancing', 'dancing'],
+    ['Going to Concerts & Music Venues', 'music'],
+    ['Group Cooking Classes', 'cooking']
+  ]
+
   jsonb_accessor :properties, ATTRIBUTES
+
+  def self.register_interest_in_experiences(uuid, guest_or_host)
+  end
 
   def self.current_or_future_events
     all.select { |event| event.happening_on >= Date.today  }

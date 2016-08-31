@@ -323,7 +323,7 @@ class Profile < ActiveRecord::Base
   rescue ActiveRecord::RecordNotFound
     EKC.logger.info "Profile not found. uuid: #{uuid}. Cannot update Clevertap profile."
   rescue StandardError => e
-    EKC.logger.error "Clevertap profile update failed. status: #{response.status}, body: #{response.body}, exception: #{e.class.name} : #{e.message}"
+    EKC.logger.error "Clevertap profile update failed. status: #{response.try(:status)}, body: #{response.try(:body)}, exception: #{e.class.name} : #{e.message}"
   end
 
   def self.seed_photos_from_facebook(uuid)
