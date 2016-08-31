@@ -47,6 +47,8 @@ class Profile < ActiveRecord::Base
   has_many :real_dates, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
   has_many :event_logs, class_name: 'ProfileEventLog', primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
   has_many :event_rsvps, primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
+  has_many :brewings
+  has_many :brews, through: :brewings
 
   # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
   # set property tracking flags to 'flags'

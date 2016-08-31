@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160530221659) do
+ActiveRecord::Schema.define(version: 20160831001340) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,23 @@ ActiveRecord::Schema.define(version: 20160530221659) do
   enable_extension "pgcrypto"
   enable_extension "cube"
   enable_extension "earthdistance"
+
+  create_table "brewings", force: :cascade do |t|
+    t.uuid     "profile_uuid",              null: false
+    t.integer  "brew_id",                   null: false
+    t.jsonb    "properties",   default: {}, null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "brewings", ["brew_id"], name: "index_brewings_on_brew_id", using: :btree
+  add_index "brewings", ["profile_uuid"], name: "index_brewings_on_profile_uuid", using: :btree
+
+  create_table "brews", force: :cascade do |t|
+    t.jsonb    "properties", default: {}, null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
 
   create_table "conversation_healths", id: :bigserial, force: :cascade do |t|
     t.jsonb    "properties",                default: {}
@@ -163,6 +180,8 @@ ActiveRecord::Schema.define(version: 20160530221659) do
   add_index "social_authentications", ["oauth_provider", "oauth_uid"], name: "index_social_authentications_on_oauth_provider_and_oauth_uid", unique: true, using: :btree
   add_index "social_authentications", ["profile_uuid"], name: "index_social_authentications_on_profile_uuid", using: :btree
 
+  add_foreign_key "brewings", "brews"
+  add_foreign_key "brewings", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "conversation_healths", "conversations"
   add_foreign_key "conversation_healths", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "date_suggestions", "conversations"
