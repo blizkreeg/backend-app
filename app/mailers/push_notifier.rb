@@ -214,7 +214,7 @@ class PushNotifier
                         \r\nmessage: #{e.message} \
                         \r\npayload: #{payload_body.to_json} \
                         \r\nstacktrace: #{e.backtrace.join('\n')}"
-      attempt += MAX_ATTEMPTS
+      attempt += 1
       if attempt <= MAX_ATTEMPTS
         sleep 0.25
         retry
@@ -300,7 +300,7 @@ class PushNotifier
                         \r\nmessage: #{e.message} \
                         \r\npayload: #{payload_body.to_json} \
                         \r\nstacktrace: #{e.backtrace.join('\n')}"
-      attempt += MAX_ATTEMPTS
+      attempt += 1
       if attempt <= MAX_ATTEMPTS
         sleep 0.25
         retry
