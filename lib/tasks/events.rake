@@ -40,6 +40,9 @@ namespace :events do
         event.photo = ws[row, 8]
         event.payment_link = ws[row, 10]
         event.description = ws[row, 11]
+        event.name = ws[row, 12]
+        event.min_age = ws[row, 13]
+        event.max_age = ws[row, 14]
 
         event.save!
 

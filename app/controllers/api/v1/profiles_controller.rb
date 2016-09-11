@@ -286,7 +286,7 @@ class Api::V1::ProfilesController < ApplicationController
     @content_type =
       case Rails.env
       when 'development'
-        'text'
+        'link'
       when 'test'
         'link'
       when 'production'
@@ -303,7 +303,11 @@ class Api::V1::ProfilesController < ApplicationController
 
     case @content_type
     when 'link'
-      @link_url = ENV['EVENTS_HOST_URL'] + "/announce-interests?uuid=#{@current_profile.uuid}"
+      if Rails.env.production?
+        @link_url = ENV['EVENTS_HOST_URL'] + "/announce-interests?uuid=#{@current_profile.uuid}"
+      else
+        @link_url = ENV['EVENTS_HOST_URL'] + "/brews?uuid=#{@current_profile.uuid}"
+      end
     end
 
     render 'api/v1/shared/home', status: 200

@@ -4,6 +4,7 @@ class Event < ActiveRecord::Base
   ATTENDING_STATUSES = %w(waitlisted going)
 
   ATTRIBUTES = {
+    name:               :string,
     place:              :string,
     happening_on:       :date,
     happening_at:       :string,
@@ -13,7 +14,9 @@ class Event < ActiveRecord::Base
     female_spots:       :integer,
     photo:              :string,
     description:        :string,
-    payment_link:       :string
+    payment_link:       :string,
+    min_age:            :integer,
+    max_age:            :integer
   }
 
   ACTIVITES = [
