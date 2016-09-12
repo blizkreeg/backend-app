@@ -2,6 +2,13 @@ module ProfileBrewHelper
   extend ActiveSupport::Concern
 
   def upcoming_brews
-    Event.current_or_future_events#.min_age_lte(self.age).max_age_gte(self.age)
+    events = Event.current_or_future_events
+
+    # staff sees all events w/ no filters
+    unless self.staff_or_internal
+      events = events.min_age_lte(self.age).max_age_gte(self.age)
+    end
+
+    events
   end
 end
