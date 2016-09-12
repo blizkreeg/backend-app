@@ -72,10 +72,6 @@ class AdminController < ApplicationController
     p.visible = params[:moderation_status] == 'approved' ? true : false
     p.save!
 
-    if params[:moderation_status] == 'approved'
-      PushNotifier.delay.record_event(p.uuid, 'approved_for_matching', myname: p.firstname)
-    end
-
     redirect_to :back
   end
 
