@@ -1,6 +1,6 @@
 .emphasis.text-center Brews For You
 - @events.each do |event|
-  div style='padding: 20px 0px 0px 0px;'
+  div.activity-container
     .row
       .col-xs-12
         div#cover-image.cover-background
@@ -13,7 +13,7 @@
         div.activity-details
           .ambassador
             - ambassador = event.event_rsvps.is_ambassador.take.profile
-            p.title Activity Ambassador
+            h5.title.section-heading Activity Ambassador
             p.photo
               = cl_image_tag ambassador.photos.primary.first.public_id, width: 100, height: 100, crop: :fill, radius: :max, format: :png, border: "1px_solid_white"
             p.name #{ambassador.firstname}
@@ -81,5 +81,5 @@ javascript:
   $(function() {
     var w = $(window).width();
     var imageId = $('#cl_image_id').val();
-    $('#cover-image').prepend($.cloudinary.image(imageId, { width: w, height: 400, crop: "fill" }));
+    $('#cover-image').prepend($.cloudinary.image(imageId, { width: w, height: 350, crop: "fill" }));
   });
