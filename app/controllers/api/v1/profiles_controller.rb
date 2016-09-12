@@ -302,19 +302,17 @@ class Api::V1::ProfilesController < ApplicationController
       end
 
     if @current_profile.staff_or_internal
-      @link_url = ENV['EVENTS_HOST_URL'] + "/brews?uuid=#{@current_profile.uuid}"
+      @cta_url = ENV['EVENTS_HOST_URL'] + "/brews?uuid=#{@current_profile.uuid}"
+      @cta_button_title = 'See My Brews'
     else
-      @link_url = ENV['EVENTS_HOST_URL'] + "/announce-interests?uuid=#{@current_profile.uuid}"
+      if @current_profile.upcoming_brews.present?
+        @cta_url = ENV['EVENTS_HOST_URL'] + "/brews?uuid=#{@current_profile.uuid}"
+        @cta_button_title = 'See My Brews'
+      else
+        @cta_url = ENV['EVENTS_HOST_URL'] + "/announce-interests?uuid=#{@current_profile.uuid}"
+        @cta_button_title = 'Learn More'
+      end
     end
-
-    # case @content_type
-    # when 'link'
-    #   if Rails.env.production?
-    #     @link_url = ENV['EVENTS_HOST_URL'] + "/announce-interests?uuid=#{@current_profile.uuid}"
-    #   else
-    #     @link_url = ENV['EVENTS_HOST_URL'] + "/brews?uuid=#{@current_profile.uuid}"
-    #   end
-    # end
 
     render 'api/v1/shared/home', status: 200
   end

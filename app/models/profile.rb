@@ -2,6 +2,7 @@ class Profile < ActiveRecord::Base
   # include JsonbAttributeHelpers
   include ProfileAttributeHelpers
   include ProfileStateMachine
+  include ProfileBrewHelper
 
   # https://libraries.io/rubygems/ar_doc_store/0.0.4
   # since we don't have a serial id column
