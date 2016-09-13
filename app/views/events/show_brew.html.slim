@@ -42,22 +42,23 @@
               li
                 i.fa.fa-info
                 | &nbsp; Your brunch ticket <strong>reserves a spot</strong> for you. At the brunch, <strong>you pay for what you order.</strong>
-          - if event.rsvp_for(@profile).present?
-            h5.section-heading Who's going?
-            .going
-              .people
-                - event.attending.each do |profile|
-                  = cl_image_tag profile.photos.primary.take.public_id, width: 48, height: 48, crop: 'thumb', gravity: 'face', radius: 'max'
-              .confirmation
-                | You're going!
-              / p.cta
-              /   h4 You're on the list!
-              /   = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
-          - else
-            p.cta
-              - if event.spots_remaining(@profile) > 0
-                = link_to "Buy Ticket", event.payment_link, class: 'submit btn btn-success rsvp-button'
-                / = button_to "Buy Ticket", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}
+          h5.section-heading Who's going?
+          .going
+            .people
+              - event.attending.each do |profile|
+                - next if profile.photos.primary.blank?
+                = cl_image_tag profile.photos.primary.take.public_id, width: 48, height: 48, crop: 'thumb', gravity: 'face', radius: 'max'
+            - if event.rsvp_for(@profile).present?
+                .confirmation
+                  | You're going!
+                / p.cta
+                /   h4 You're on the list!
+                /   = button_to "I have to cancel", { action: :cancel_stb }, { method: :delete, params: { event_id: event.id, uuid: @profile.uuid }, class: 'submit btn btn-danger rsvp-button', form_class: 'inline'}
+            - else
+              p.cta
+                - if event.spots_remaining(@profile) > 0
+                  = link_to "Buy Ticket", event.payment_link, class: 'submit btn btn-success rsvp-button'
+                  / = button_to "Buy Ticket", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}
 
           dl.explain-brews
             dt
