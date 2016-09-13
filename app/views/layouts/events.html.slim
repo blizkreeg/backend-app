@@ -12,6 +12,11 @@ html
     javascript:
       $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
   body
+    - if request_from_iphone?
+      .topnotice
+        | To view this event properly, on iPhone, please disable the Readability mode by tapping on the Reader icon &nbsp;
+        = image_tag 'safari-reader-icon.jpg', height: 22
+        | &nbsp; in the bar above to make sure it is not turned on.
     .logo
       = image_tag 'ekc-logo.jpg'
     = yield

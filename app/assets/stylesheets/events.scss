@@ -230,7 +230,7 @@ hr {
 .explain-brews {
   position:relative;
   clear:both;
-  margin-top:20px;
+  margin-top: 20px;
 }
 
 .going {
@@ -260,4 +260,13 @@ hr {
   letter-spacing: 2px;
   color: #7f7a7b;
   font-family: 'Avenir Next', 'Avenir', 'Open Sans', sans-serif;
+}
+
+.topnotice {
+  width: 100%;
+  padding: 4px 10px;
+  background-color: #3f3a3b;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
 }

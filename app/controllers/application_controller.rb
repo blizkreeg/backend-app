@@ -13,6 +13,8 @@ class ApplicationController < ActionController::Base
   before_action :set_current_profile
   # before_action :prepare_exception_notifier
 
+  helper_method :request_from_iphone?
+
   after_action :log_response
 
   UNAUTHORIZED_BAD_TOKEN = 'invalid_token'
@@ -38,6 +40,10 @@ class ApplicationController < ActionController::Base
   def render(*args)
     @current_profile.reload if @current_profile.present?
     super
+  end
+
+  def request_from_iphone?
+    request.user_agent =~ /iPhone/i
   end
 
   protected
