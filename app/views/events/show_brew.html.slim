@@ -89,7 +89,3 @@ javascript:
     var imageId = $('#cl_image_id').val();
     $('#cover-image').prepend($.cloudinary.image(imageId, { width: w, height: 350, crop: "fill" }));
   });
-
-  if(navigator.userAgent.includes("iPhone")) {
-    $('#topnotice').removeClass('hidden');
-  }
