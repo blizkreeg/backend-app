@@ -270,3 +270,9 @@ hr {
   font-family: 'Open Sans', sans-serif;
   font-size: 15px;
 }
+
+.comment {
+  // nothing here - this is to throw off iOS Safari so it doesn't enter
+  // readability mode
+  // SO: http://stackoverflow.com/questions/2999600/how-to-disable-safari-reader-in-a-web-page/15418461#15418461
+}

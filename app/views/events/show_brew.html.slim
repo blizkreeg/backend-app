@@ -1,16 +1,16 @@
 .emphasis.text-center Brews For You
 - @events.each do |event|
-  div.activity-container
+  div.activity-container.comment
     .row
       .col-xs-12
-        div#cover-image.cover-background
+        div#cover-image.cover-background.comment
           = hidden_field_tag :cl_image_id, event.photo, id: 'cl_image_id'
           .overlay
             .title
               p.name #{event.name}
               p @
               p.place #{event.place}
-        div.activity-details
+        div.activity-details.comment
           .ambassador
             - ambassador = event.event_rsvps.is_ambassador.take.profile
             h5.title.section-heading Activity Ambassador
@@ -60,7 +60,7 @@
                   = link_to "Buy Ticket", event.payment_link, class: 'submit btn btn-success rsvp-button'
                   / = button_to "Buy Ticket", { action: :register_stb }, { params: { event_id: event.id, uuid: @profile.uuid, attending_status: 'going' }, class: 'submit btn btn-success rsvp-button', form_class: 'inline'}
 
-          dl.explain-brews
+          dl.explain-brews.comment
             dt
               h3 What are Brews?
             dd
