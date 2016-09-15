@@ -78,10 +78,13 @@
               = cl_image_tag 'past-stb-photos_sikcte', width: 335
 
             - unless event.rsvp_for(@profile).present?
-              h3.text-center Interested in Going?
-              h4.text-center #{event.spots_remaining(@profile)} spots remaining
-              - if event.spots_remaining(@profile) > 0
+              h3.text-center Interested in going?
+              - spots_remaining = event.spots_remaining(@profile)
+              - if spots_remaining > 0
+                h4.text-center #{spots_remaining} spots remaining
                 = link_to "Buy Ticket", event.payment_link, class: 'submit btn btn-success rsvp-button'
+              - else
+                h4.text-center Sorry! This event is full. Hope you can join us at another one.
 
 javascript:
   $(function() {
