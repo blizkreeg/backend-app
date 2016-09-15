@@ -47,7 +47,6 @@ Rails.application.routes.draw do
   constraints SubdomainConstraint.new('admin') do
     mount Sidekiq::Web, at: "/sq"
 
-    get '/', to: redirect('/dashboard')
     get  '/dashboard', to: 'admin#dashboard'
     post '/lookup-user', to: 'admin#lookup_user'
     get  '/show-user/:uuid', to: 'admin#show_user', as: 'admin_show_user'
@@ -106,6 +105,8 @@ Rails.application.routes.draw do
   end
 
   get '/moosecsv', to: 'moose#moosecsv'
+
+  root to: 'pages#home'
 
   get '*unmatched_route', to: 'application#route_not_found'
 end
