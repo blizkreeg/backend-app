@@ -32,7 +32,7 @@ class AdminController < ApplicationController
   end
 
   def stb_dashboard
-    @current_or_future_events = Event.current_or_future_events
+    @current_or_future_events = Event.all#current_or_future_events
   end
 
   def all_users
