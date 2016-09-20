@@ -11,6 +11,8 @@ class UserNotifier
   def self.send_welcome_messages_via_butler(uuid)
     p = Profile.find(uuid)
 
+    return if p.blacklisted?
+
     messages = [SALUTATION % {firstname: p.firstname}] + WELCOME_MESSAGES
     Profile.delay.send_butler_messages(p.uuid, messages)
     PushNotifier.delay_for(1.minute).record_event(p.uuid, 'new_butler_message', myname: p.firstname)
