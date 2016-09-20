@@ -182,7 +182,6 @@ class Profile < ActiveRecord::Base
     nophotos: 'No approved photos',
     spam: 'Spam profile'
   }
-  # WELCOME_MESSAGE = "Hi %name, welcome to ekCoffee! I will You can reach out to me any time here. Don't hesitate, no matter what your question may be! I'm here to help make your life easier :)"
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
   # jsonb_attr_helper :properties, ATTRIBUTES
@@ -229,7 +228,6 @@ class Profile < ActiveRecord::Base
   end
 
   after_commit :upload_facebook_profile_photos, on: :create
-  # after_commit :send_welcome_butler_message, on: :create
   after_commit :update_clevertap, on: :create
   after_validation :reverse_geocode, if: ->(profile){ profile.location_changed? && profile.latitude.present? && profile.longitude.present? }
   before_save :set_search_latlng, if: Proc.new { |profile| profile.location_changed? }
@@ -237,6 +235,7 @@ class Profile < ActiveRecord::Base
   before_save :set_age, if: Proc.new { |profile| profile.dob_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
   after_create :flag_if_not_single
+  after_create :send_welcome_messages
   before_create :set_default_moderation
   before_create :initialize_butler_conversation
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
@@ -461,10 +460,6 @@ class Profile < ActiveRecord::Base
 
   def upload_facebook_profile_photos
     Profile.delay.seed_photos_from_facebook(self.uuid)
-  end
-
-  def send_welcome_butler_message
-    Profile.delay_for(5.minutes).send_butler_messages(self.uuid, [WELCOME_MESSAGE.gsub("%name", self.firstname)])
   end
 
   def create_initial_matches
@@ -757,6 +752,12 @@ class Profile < ActiveRecord::Base
     # profiles are reviewed first time before serving them up as matches
     self.moderation_status = 'unmoderated'
     self.visible = false
+
+    true
+  end
+
+  def send_welcome_messages
+    UserNotifier.delay_for(60.minutes).send_welcome_messages_via_butler(self.uuid) rescue nil
 
     true
   end
