@@ -123,6 +123,7 @@ module ConversationStateMachine
         return if conv.close_notice?
 
         conv.notify_conversation_close!
+        $firebase_conversations.push(conv.firebase_messages_endpoint, conv.notice_message_hash(Conversation::CLOSING_MESSAGE))
 
         PushNotifier.delay.record_event(conv.initiator.uuid, 'conv_close_notice', name: conv.responder.firstname)
         PushNotifier.delay.record_event(conv.responder.uuid, 'conv_close_notice', name: conv.initiator.firstname)

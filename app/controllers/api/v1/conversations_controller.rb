@@ -11,7 +11,7 @@ class Api::V1::ConversationsController < ApplicationController
     new_conversation = @conversation.fresh?
 
     # now append the message
-    @conversation.add_message!(params[:data][:content], @current_profile.uuid)
+    @conversation.add_message!(params[:data][:content], @current_profile.uuid, Message::TYPE_CHAT)
 
     # message from the initiator?
     if @current_profile.initiated_conversation?(@conversation)

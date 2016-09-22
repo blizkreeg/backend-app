@@ -374,10 +374,12 @@ class Profile < ActiveRecord::Base
 
     messages.each do |message|
       data = {
+        type: Message::TYPE_CHAT,
         recipient_uuid: profile.uuid,
+        sender_uuid: nil,
         content: message,
         sent_at: (Time.now.to_f * 1_000).to_i,
-        processed: true
+        processed: true,
       }
 
       $firebase_butler_conversations.push(profile.firebase_butler_messages_endpoint, data)

@@ -9,10 +9,14 @@ class Message < ActiveRecord::Base
 
   default_scope { order('created_at DESC') }
 
+  TYPE_NOTICE = 'notice'
+  TYPE_CHAT = 'chat'
+
   ATTRIBUTES = {
-    content: :string,
-    read: :boolean,
-    read_at: :date_time
+    message_type: :string,
+    content:      :string,
+    read:         :boolean,
+    read_at:      :date_time,
   }
 
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
@@ -27,6 +31,7 @@ class Message < ActiveRecord::Base
 
   def firebase_json
     {
+      message_type: self.type,
       sender_uuid: self.sender_uuid,
       recipient_uuid: self.recipient_uuid,
       content: self.content,

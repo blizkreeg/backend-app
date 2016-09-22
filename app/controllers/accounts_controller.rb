@@ -165,7 +165,7 @@ class AccountsController < ApplicationController
 
     if profile.female?
       c = @match.conversation
-      c.add_message!('test message from guy', @match.matched_profile.uuid)
+      c.add_message!('test message from guy', @match.matched_profile.uuid, Message::TYPE_CHAT)
       c.save!
 
       t = @match.matched_profile
