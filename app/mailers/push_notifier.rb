@@ -46,7 +46,7 @@ class PushNotifier
       required_parameters: ['match_name'],
       event_name: 'Conversation State Change',
       event_details: { state: 'Open' },
-      has_push_notification: false
+      has_push_notification: true
     },
     'conv_health_check' => {
       title: "ekCoffee",
