@@ -41,7 +41,9 @@ class PushNotifier
       has_push_notification: true
     },
     'conv_open' => {
-      required_parameters: [],
+      title: "ekCoffee",
+      body: "@match_name is interested in you too! Your chat line is now open :)",
+      required_parameters: ['match_name'],
       event_name: 'Conversation State Change',
       event_details: { state: 'Open' },
       has_push_notification: false
