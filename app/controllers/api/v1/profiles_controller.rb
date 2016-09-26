@@ -301,6 +301,13 @@ class Api::V1::ProfilesController < ApplicationController
         end
       end
 
+    @cta_title = "Announcing, ekCoffee Brews"
+    @cta_content = <<eos
+    Don't you sometimes wish you could meet more singles over an activity that you enjoy doing? \r\n\r\n
+    If so, we've got just the thing for you. ekCoffee Brews is a new way for you to meet singles in a group.
+    Post an activity or join one and meet interesting people while doing something fun!
+eos
+
     if @current_profile.staff_or_internal
       @cta_url = ENV['EVENTS_HOST_URL'] + "/brews?uuid=#{@current_profile.uuid}"
       @cta_button_title = 'See My Brews'
@@ -313,6 +320,16 @@ class Api::V1::ProfilesController < ApplicationController
         @cta_button_title = 'Learn More'
       end
     end
+
+    # override
+    if @current_profile.male?
+      @cta_title = "Are Your Photos Good?"
+      @cta_content = <<eos
+      9 out of 10 times you're not getting a match because your photos don't do justice to who you are. \r\n\r\n
+      Check out our guide to better photos. You'll be glad you did.
+eos
+      @cta_button_title = "ekCoffee Man's Guide to Better Photos →"
+      @cta_url = "https://www.facebook.com/ekCoffee/photos/a.683382955012105.1073741825.118004881549918/1466375583379501/"
 
     render 'api/v1/shared/home', status: 200
   end
