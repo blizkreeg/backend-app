@@ -330,6 +330,7 @@ eos
 eos
       @cta_button_title = "ekCoffee Man's Guide to Better Photos →"
       @cta_url = "https://www.facebook.com/ekCoffee/photos/a.683382955012105.1073741825.118004881549918/1466375583379501/"
+    end
 
     render 'api/v1/shared/home', status: 200
   end
