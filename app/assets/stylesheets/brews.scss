@@ -1,3 +1,471 @@
 // Place all the styles related to the Brews controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+// a nice yellow-ish bg color #fff8ef
+
+@import 'typography';
+
+body {
+  font-family: $body_font;
+  margin-bottom: 50px;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.list--unstyled {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+a.no-decor, a.no-decor:visited, a.no-decor:hover {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.text--light {
+  font-weight: 200;
+}
+
+.full-width {
+  width: 100%;
+}
+
+// hide scrollbars
+::-webkit-scrollbar {
+    display: none;
+}
+
+#homepage-cover {
+  display: flex;
+  margin-top: 20px;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-image: image-url('brew-cover.png');
+  height: 450px;
+}
+
+@media only screen and (max-width: 799px) {
+  #homepage-cover {
+    height: 300px;
+  }
+}
+
+#homepage-cover .headline {
+
+}
+
+.brews-enum-container {
+  padding: 15px 0;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.explain-brew {}
+
+.explain-brew__container {
+  padding: 8px;
+  text-align: center;
+}
+
+.no-padding {
+  padding: 0
+}
+
+.padding-20 {
+  padding: 20px;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+.max960 {
+  max-width: 960px;
+  margin: 0px auto;
+  padding: 0;
+  position: relative;
+}
+
+#site-header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.logo-container {
+  align-self: center;
+  display: flex;
+  flex-flow: row nowrap;
+  width: 90px;
+  height: 90px;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #f68a8a;
+
+  .name {
+    font-size: 28px;
+    color: #ff6961;
+    font-weight: 400;
+  }
+}
+
+.cell-container {
+  padding: 20px;
+}
+
+.header-title {
+  font-family: $header_title;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.centered-header-row {
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+#brews-main-header {
+  margin-bottom: 10px;
+}
+
+.activity-preview {
+  font-size: 14px;
+  border: 1px solid #ccc;
+}
+
+.activity-preview .icon {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+}
+
+.activity-preview .title {
+  justify-content: center;
+  padding: 8px;
+}
+
+.activity-preview .title .mdl-card__title-text {
+  font-size: 18px;
+}
+
+.activity-preview .short-desc {
+  text-align: center;
+  padding: 8px;
+}
+
+.activity-preview .details-container {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 10px;
+  justify-content: center;
+}
+
+@media screen and (min-width: 800px) {
+  .activity-detail-container {
+    border: 1px solid #e4e4e4;
+    padding: 25px;
+    border-radius: 2px;
+  }
+
+  .create-brew-container {
+    border: 1px solid #e4e4e4;
+    padding: 25px;
+    border-radius: 2px;
+  }
+}
+
+.activity-detail {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.activity-detail > div {
+  width: 100%;
+  text-align: center;
+}
+
+.activity .details i {
+  display: flex;
+  align-self: center;
+  padding-right: 10px;
+}
+
+.activity .details .date,
+.activity .details .place {
+  display: flex;
+  width: 100%;
+  padding: 1px;
+}
+
+.activity-preview .attending {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 4px 8px;
+  justify-content: flex-start;
+}
+
+.activity-preview .attending .summary {
+  margin: 4px;
+  justify-content: center;
+}
+
+.activity-preview .attending .summary .going {
+  font-weight: 400;
+  color: green;
+}
+
+.activity-preview .attending .summary .remaining {
+  font-weight: 400;
+  color: #ffcc00;
+}
+
+.activity-preview .attending .picture {
+  width: 48px;
+  height: 48px;
+  margin: 4px;
+  border: 1px solid #d8d8d8;
+}
+
+.face-squares {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #e4e4e4;
+  padding: 20px;
+}
+
+.face-squares__face-image {
+  padding: 2px;
+  border: 1px solid #e9e9e9;
+  border-radius: 2px;
+}
+
+.group-stats {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.group-stats__stat {
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #999;
+  text-align: center;
+}
+
+.group-stats__stat__supporting-text {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.group-stats__stat__number {
+  font-weight: 400;
+  font-size: 18px;
+}
+
+@media only screen and (max-width: 799px) {
+
+}
+
+.profile-card {
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid #e4e4e4;
+  border-radius: 2px;
+  font-size: 16px;
+  text-align: center;
+
+  .separator {
+    padding: 10px;
+  }
+}
+
+.profile-card__supporting-text {
+  font-weight: 300;
+  font-style: italic;
+  font-size: 14px;
+  color: #888;
+}
+
+.profile-card__name {
+  font-size: 18px;
+}
+
+.profile-card__photo {
+  height: 250px;
+  width: 400px;
+  background-color: black;
+}
+
+.profile-card__age-profession {
+  text-align: center;
+}
+
+.profile-card__location {
+  padding: 4px;
+  text-align: center;
+}
+
+.profile-card__education {
+  text-align: center;
+}
+
+.profile-card__education__highest-degree {
+  font-weight: 600;
+}
+
+.profile-card__education__schools {
+}
+
+.profile-card__education__schools ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.profile-card__interests {
+  padding: 20px;
+}
+
+.brew-form {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.brew-form__field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.brew-form__field-title {
+  font-size: 18px;
+  font-weight: 400;
+  padding: 2px;
+}
+
+.brew-form__field-title__supporting-text {
+  font-style: italic;
+  font-weight: 300;
+  font-size: 14px;
+  color: #888;
+}
+
+.brew-form .mdl-textfield__label {
+  font-size: 16px;
+  color: #888;
+  font-weight: 400;
+}
+
+.brew-form__select-datetime {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px 0px;
+}
+
+.brew-form__select-date {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.brew-form__select-time {
+  width: 90%;
+}
+
+.brew-form__select-time__range {
+}
+
+.brew-form__select-time-display {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.brew-form__select-tag {
+  color: #333;
+  background-color: #dedede;
+  border: 1px solid #cdcdcd;
+  padding: 8px;
+  margin: 0px 6px 4px 0px;
+  border-radius: 1px;
+  white-space: nowrap;
+}
+
+.brew-form__select-tag--chosen {
+  color: #ffffff;
+  background-color: #ff6961;
+  border: 1px solid #ffffff;
+}
+
+input[type=range]{
+  /*removes default webkit styles*/
+  -webkit-appearance: none;
+
+  /*fix for FF unable to apply focus style bug */
+  border: 1px solid white;
+
+  /*required for proper track sizing in FF*/
+  width: 100%;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ff6961;
+    margin-top: -4px;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+.brew-form__select-gender {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}

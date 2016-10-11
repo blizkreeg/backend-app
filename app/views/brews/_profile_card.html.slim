@@ -1,0 +1,28 @@
+.profile-card
+  .profile-card__photo
+    = cl_image_tag 'a1cfe92a3e4b9237fe14', crop: :fill, gravity: :face, height: 250, width: 400
+  .profile-card__identifying-info.separator
+    .profile-card__name
+      h4 Jenny
+    .profile-card__age-profession
+      | 29, Manager
+  .profile-card__location.separator
+    span.profile-card__supporting-text lives in
+    br
+    span San Francisco
+  .profile-card__education.separator
+    / .profile-card__education__highest-degree
+    /   | Masters
+    .profile-card__education__schools
+      span.profile-card__supporting-text studied at
+      br
+      ul
+        li UC San Francisco
+        li Berkeley
+  .profile-card__height.separator
+    span.profile-card__supporting-text height
+    br
+    span 5'11"
+  / .profile-card__interests.separator
+  /   span.profile-card__supporting-text interests
+  /   br

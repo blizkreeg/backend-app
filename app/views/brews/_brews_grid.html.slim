@@ -1,0 +1,32 @@
+.mdl-grid
+  - 8.times do
+    .mdl-card.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop.activity-preview.activity
+      = link_to(brew_path(123), class: 'no-decor') do
+        .icon
+          i.material-icons.md-36 motorcycle
+        .title.mdl-card__title
+          h3.mdl-card__title-text.mdl-typography--text-center
+            | Singles Brunch Singles Brunch Singles
+        .short-desc.mdl-card__supporting-text
+          | akjhdfkljasdhf hakljsdfaklsjdfhaks asfdasgdjkfagsdfg adsfhjagsdfjagsdf
+        .details-container
+          .details
+            .date
+              i.material-icons.md-18 date_range
+              | Sunday, Sep 24
+            .place
+              i.material-icons.md-18 place
+              | Tea Villa Cafe
+        / when activity has min. threshold people committed
+        .attending
+          .summary.full-width
+            span.going 4 singles going
+            span &nbsp;|&nbsp;
+            span.remaining 3 spots remaining
+          .picture
+          .picture
+          .picture
+
+        / when activity needs min. threshold people
+        .cta
+          = link_to "Join this brew", '#', class: 'mdl-button mdl-js-button mdl-button--raised'

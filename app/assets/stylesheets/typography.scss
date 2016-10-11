@@ -1,0 +1,13 @@
+@import 'https://fonts.googleapis.com/css?family=Josefin+Sans|Source+Sans+Pro';
+
+$body_font: 'Source Sans Pro', sans-serif !important;
+$header_title: 'Josefin Sans', sans-serif;
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Bariol';
+}
+
+p {
+  font-size: 16px;
+  line-height: 22px;
+}

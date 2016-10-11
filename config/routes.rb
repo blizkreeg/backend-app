@@ -1,3 +1,4 @@
+# TODO break up this file into multiple files
 Rails.application.routes.draw do
   constraints SubdomainConstraint.new('app-api') do
     scope module: 'api' do
@@ -39,6 +40,23 @@ Rails.application.routes.draw do
         resources :accounts
       end
     end
+  end
+
+  constraints SubdomainConstraint.new('events') do
+    # events
+    get '/rsvp-stb', to: 'events#rsvp_stb'
+    post '/register-stb', to: 'events#register_stb'
+    delete '/cancel-stb', to: 'events#cancel_stb'
+    get '/registered', to: 'events#registered'
+    get '/payment-success', to: 'events#payment_success'
+    get '/announce-interests', to: 'events#announce_interests'
+    post '/register-interests', to: 'events#register_interests', as: :register_interests
+  end
+
+  constraints SubdomainConstraint.new('brew') do
+    resources :brews, only: [:index, :new, :create, :show]
+
+    get '/homepage', to: 'brews#homepage'
   end
 
   #
@@ -86,22 +104,6 @@ Rails.application.routes.draw do
 
     # stb dashboard
     get '/stb-dashboard', to: 'admin#stb_dashboard'
-  end
-
-  constraints SubdomainConstraint.new('events') do
-    # events
-    get '/rsvp-stb', to: 'events#rsvp_stb'
-    post '/register-stb', to: 'events#register_stb'
-    delete '/cancel-stb', to: 'events#cancel_stb'
-    get '/registered', to: 'events#registered'
-    get '/payment-success', to: 'events#payment_success'
-    get '/announce-interests', to: 'events#announce_interests'
-    post '/register-interests', to: 'events#register_interests', as: :register_interests
-  end
-
-  constraints SubdomainConstraint.new('brew') do
-    get '/brew', to: 'brew#home'
-    get '/events', to: 'events#index'
   end
 
   get '/moosecsv', to: 'moose#moosecsv'

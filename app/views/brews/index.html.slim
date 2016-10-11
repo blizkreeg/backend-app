@@ -1,0 +1,11 @@
+.mdl-layout.mdl-js-layout
+  = render partial: 'shared/header'
+
+  main.mdl-layout__content
+    .max960
+      h4.text-center Brews For You
+      .mdl-grid
+        .mdl-layout-spacer
+        .mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--8-col-desktop
+          = render partial: 'brews/brews_grid'
+        .mdl-layout-spacer

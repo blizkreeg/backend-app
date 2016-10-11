@@ -1,28 +1,39 @@
 class Brew < ActiveRecord::Base
   has_many :brewings
   has_many :profiles, through: :brewings
+  belongs_to :brew_category
 
-  DEFAULT_SPOTS = 8
+  DEFAULT_GROUP_SIZE = 8
+  POST_BREW_MIN_NUM_DAYS_OUT = 2
+  POST_BREW_MAX_NUM_DAYS_OUT = 7
+
+  GROUP_MAKEUPS = {
+    'Balanced (men & women)' => 0,
+    'Women only' => 1,
+    'Men only' => 2
+  }
 
   ATTRIBUTES = {
     title: :string,
-    on: :date,
-    starts_at: :time,
-    duration: :integer, # mins
-    place: :string,
-    short_description: :text,
     notes: :text,
-    spots: :integer,
+    happening_on: :date,
+    starts_at: :time,
+    place: :string,
+    address: :string,
+    max_group_size: :integer,
     category: :string,
+    min_age: :integer,
+    max_age: :integer,
+    group_makeup: :integer
   }
 
   jsonb_accessor :properties, ATTRIBUTES
 
-  after_initialize :set_default_spots
+  before_save :set_group_size
 
   private
 
-  def set_default_spots
-    self.spots ||= DEFAULT_SPOTS
+  def set_group_size
+    self.max_group_size ||= DEFAULT_GROUP_SIZE
   end
 end

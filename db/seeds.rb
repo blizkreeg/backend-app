@@ -204,6 +204,10 @@ def seed_events
   end
 end
 
+def seed_brews
+
+end
+
 def seed_all
   seed_users
   seed_places
@@ -217,6 +221,8 @@ elsif ENV['TYPE'] == 'photos'
   seed_photos
 elsif ENV['TYPE'] == 'events'
   seed_events
+elsif ENV['TYPE'] == 'brews'
+  seed_brews
 else
   seed_all
 end
