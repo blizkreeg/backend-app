@@ -5,7 +5,7 @@ hr
   .col-xs-12.col-sm-4.text-right style='margin-bottom:25px;'
     ul.unstyled-list
       li.inline
-        - if @profile.has_new_butler_message
+        - if @profile.needs_butler_attention
           = button_to 'Mark as Resolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: true }, class: 'submit btn btn-success', form_class: 'inline'}
         - else
           = button_to 'Mark as Unresolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: false }, class: 'submit btn btn-danger', form_class: 'inline'}

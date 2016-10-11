@@ -17,7 +17,7 @@ class Api::V1::AccountsController < ApplicationController
 
   def update_user_new_butler_message
     if params[:data][:uuid]
-      Profile.update(params[:data][:uuid], has_new_butler_message: true)
+      Profile.update(params[:data][:uuid], needs_butler_attention: true)
     else
       EKC.logger.error "UUID is null"
     end

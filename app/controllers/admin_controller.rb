@@ -131,9 +131,9 @@ class AdminController < ApplicationController
   end
 
   def new_butler_chats
-    @new_butler_message_men_cnt = Profile.with_gender('male').with_has_new_butler_message(true).count
-    @new_butler_message_women_cnt = Profile.with_gender('female').with_has_new_butler_message(true).count
-    @profiles = Profile.with_has_new_butler_message(true).limit(25)
+    @new_butler_message_men_cnt = Profile.with_gender('male').with_needs_butler_attention(true).count
+    @new_butler_message_women_cnt = Profile.with_gender('female').with_needs_butler_attention(true).count
+    @profiles = Profile.with_needs_butler_attention(true).limit(25)
   end
 
   def show_butler_chat
@@ -141,13 +141,14 @@ class AdminController < ApplicationController
   end
 
   def update_butler_chat_flag
-    Profile.update(params[:profile_uuid], has_new_butler_message: (params[:resolved] == 'false'))
+    Profile.update(params[:profile_uuid], needs_butler_attention: (params[:resolved] == 'false'))
 
     redirect_to :back
   end
 
   def send_butler_chat_notification
     PushNotifier.delay.record_event(params[:profile_uuid], 'new_butler_message', myname: params[:myname])
+    Profile.update(params[:profile_uuid], has_new_butler_message: true)
     flash[:success] = 'Notification sent!'
 
     redirect_to :back
@@ -186,7 +187,7 @@ class AdminController < ApplicationController
   end
 
   def load_metrics
-    @new_butler_chats_cnt = Profile.with_has_new_butler_message(true).count
+    @new_butler_chats_cnt = Profile.with_needs_butler_attention(true).count
     @profiles_cnt = Profile.count
     @unmoderated_cnt = Profile.with_moderation_status('unmoderated').order("created_at ASC").count
     @suspicious_cnt = Profile.with_moderation_status('unmoderated').possibly_not_single.count
