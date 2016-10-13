@@ -28,7 +28,18 @@ set :conditionally_migrate, true
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle')
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml', 'config/puma.rb', '.rbenv-vars')
 
-set :bundle_without, %w{development test}.join(' ')
+task :production do
+  set :bundle_without, %w{development test}.join(' ')
+end
+
+task :staging do
+  set :bundle_without, %w{development test}.join(' ')
+end
+
+task :test do
+  set :bundle_without, 'development'
+end
+
 set :rbenv_map_bins, %w{rake gem bundle ruby rails sidekiq sidekiqctl}
 
 set :puma_user, fetch(:user)
