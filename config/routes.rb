@@ -4,6 +4,8 @@ Rails.application.routes.draw do
       namespace 'v1' do
         get '/home', to: 'profiles#home'
 
+        resources :posts, only: [:index]
+
         post '/sign-in', to: 'profiles#sign_in'
         post '/waiting-list', to: 'profiles#add_to_waiting_list'
 

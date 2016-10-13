@@ -187,9 +187,36 @@ def seed_places
   end
 end
 
+def seed_posts
+  ActiveRecord::Base.connection.execute("TRUNCATE posts") unless Rails.env.production?
+
+  100.times do
+    post = Post.new
+    post.type = [Post::IMAGE_TYPE, Post::VIDEO_TYPE, Post::ARTICLE_TYPE].sample
+    post.title = Forgery('lorem_ipsum').title
+    post.excerpt = Forgery('lorem_ipsum').text
+    post.posted_on = Time.now + ((-50..50).to_a.sample).days
+    if post.image?
+      post.image_public_id = 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r'
+    end
+    if post.video?
+      post.video_url = 'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4'
+    end
+    if post.article?
+      post.image_public_id = rand % 2 == 0 ? 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r' : nil
+      post.link_to_url = 'http://nautil.us/issue/41/selection/the-problem-with-modern-romance-is-too-much-choice'
+    end
+    post.share_text = post.default_share_text
+    post.save!
+  end
+
+  puts "seeded with 100 posts"
+end
+
 def seed_all
   seed_users
   seed_places
+  seed_posts
 end
 
 if ENV['TYPE'] == 'users'
@@ -198,6 +225,8 @@ elsif ENV['TYPE'] == 'places'
   seed_places
 elsif ENV['TYPE'] == 'photos'
   seed_photos
+elsif ENV['TYPE'] == 'posts'
+  seed_posts
 else
   seed_all
 end
