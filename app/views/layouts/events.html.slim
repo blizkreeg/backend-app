@@ -1,15 +1,17 @@
 doctype html
 html
-head
-  script src="https://use.typekit.net/gdx8wha.js"
-  script
-    / try{Typekit.load({ async: true });}catch(e){}
-  meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
-  = stylesheet_link_tag 'web', media: 'all', 'data-turbolinks-track' => true
-  = javascript_include_tag 'https://use.fontawesome.com/ebabc2ab89.js'
-  = javascript_include_tag 'application'
-  = csrf_meta_tags
-body
-  .container
-    .content
-      = yield
+  head
+    / script src="https://use.typekit.net/gdx8wha.js"
+    / javascript:
+    /   try{Typekit.load({ async: true });}catch(e){}
+    meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    = stylesheet_link_tag 'web', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'https://use.fontawesome.com/ebabc2ab89.js'
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+    javascript:
+      $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
+  body
+    .logo
+      = image_tag 'ekc-logo.jpg'
+    = yield

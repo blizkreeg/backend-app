@@ -32,7 +32,7 @@ class AdminController < ApplicationController
   end
 
   def stb_dashboard
-    @current_or_future_events = Event.current_or_future_events
+    @current_or_future_events = Event.all#current_or_future_events
   end
 
   def all_users
@@ -71,10 +71,6 @@ class AdminController < ApplicationController
     p.moderation_status = params[:moderation_status]
     p.visible = params[:moderation_status] == 'approved' ? true : false
     p.save!
-
-    if params[:moderation_status] == 'approved'
-      PushNotifier.delay.record_event(p.uuid, 'approved_for_matching', myname: p.firstname)
-    end
 
     redirect_to :back
   end

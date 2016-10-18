@@ -72,8 +72,12 @@ namespace :matches do
         next if matched_profile.state == 'mutual_match' || matched_profile.state == 'in_conversation'
         next if matched_profile.active_mutual_match.present?
 
-        Matchmaker.transition_to_mutual_match(profile.uuid, match.id)
-        puts "[#{EKC.now_in_pacific_time}] -- found mutual match for #{profile.uuid}, changing state to 'mutual_match'"
+        match.active!
+        match.reverse.active!
+        match.conversation.open!
+
+        # Matchmaker.transition_to_mutual_match(profile.uuid, match.id)
+        puts "[#{EKC.now_in_pacific_time}] -- found mutual match between #{profile.uuid} <> #{matched_profile.uuid}, changing state to 'in_conversation'"
 
         break
       end

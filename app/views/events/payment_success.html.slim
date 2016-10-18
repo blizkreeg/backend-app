@@ -1,9 +1,7 @@
-div.text-center style='100%;margin-bottom:25px;'
-  = image_tag 'stb-logo.png', width: 120
 .row
   .col-xs-12
     div style='text-align:center;margin-bottom:15px;position:relative;'
-      = cl_image_tag '73be549b2366b473b50cc3886cce87ef_deinko', width: 360, height: 270, crop: :fill
+      = cl_image_tag @event.photo, width: 360, height: 270, crop: :fill
       .overlay
       p.when
         / i.fa.fa-calendar-check-o
@@ -19,7 +17,7 @@ div.text-center style='100%;margin-bottom:25px;'
       h4.text-center
         | We'll email you an invite soon and details about the event. Please read it :-)
       h4.text-center
-        | You should also get a receipt shortly. Feel free to reach out to us at +91-8291407276 or hello@ekcoffee.com if you have any questions.
+        | You should also get a receipt shortly. Feel free to reach out to us at hello@ekcoffee.com if you have any questions.
 
 hr
 .row

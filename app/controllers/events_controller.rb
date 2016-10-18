@@ -65,6 +65,15 @@ class EventsController < ApplicationController
     render 'thankyou-interests'
   end
 
+  def show_brew
+    @events = @profile.upcoming_brews
+    # rsvped_for_event = @events.select { |event| event.rsvp_for(@profile).present? }.first
+    # if rsvped_for_event.present?
+    #   redirect_to action: :registered, params: { event_id: rsvped_for_event.id, uuid: @profile.uuid }
+    #   return
+    # end
+  end
+
   private
 
   def load_profile

@@ -16,6 +16,8 @@ module Constants
 
   MATCHES_DELIVERED_AT_HOURS = [0, 12, 15, 18, 21]
 
+  COFOUNDERS = %w(Vineet Anu)
+
   MIN_AGE = 18
   FAITHS = %w(
     Agnostic

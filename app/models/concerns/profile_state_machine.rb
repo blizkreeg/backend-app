@@ -65,6 +65,9 @@ module ProfileStateMachine
 
       event :conversation_mode do
         transitions from: :mutual_match, to: :in_conversation
+        transitions from: :waiting_for_matches, to: :in_conversation
+        transitions from: :has_matches, to: :in_conversation
+        transitions from: :show_matches, to: :in_conversation
         transitions from: :waiting_for_matches_and_response, to: :in_conversation
         transitions from: :has_matches_and_waiting_for_response, to: :in_conversation
         transitions from: :show_matches_and_waiting_for_response, to: :in_conversation

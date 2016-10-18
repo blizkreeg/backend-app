@@ -5,7 +5,8 @@ class EventRsvp < ActiveRecord::Base
   ATTENDING_STATUSES = %w(waitlisted going)
 
   ATTRIBUTES = {
-    attending_status:   :string
+    attending_status:   :string,
+    ambassador: :boolean
   }
 
   jsonb_accessor :properties, ATTRIBUTES

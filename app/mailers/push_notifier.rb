@@ -41,10 +41,12 @@ class PushNotifier
       has_push_notification: true
     },
     'conv_open' => {
-      required_parameters: [],
+      title: "ekCoffee",
+      body: "@match_name is interested in you too! Your chat line is now open :)",
+      required_parameters: ['match_name'],
       event_name: 'Conversation State Change',
       event_details: { state: 'Open' },
-      has_push_notification: false
+      has_push_notification: true
     },
     'conv_health_check' => {
       title: "ekCoffee",
@@ -214,7 +216,7 @@ class PushNotifier
                         \r\nmessage: #{e.message} \
                         \r\npayload: #{payload_body.to_json} \
                         \r\nstacktrace: #{e.backtrace.join('\n')}"
-      attempt += MAX_ATTEMPTS
+      attempt += 1
       if attempt <= MAX_ATTEMPTS
         sleep 0.25
         retry
@@ -300,7 +302,7 @@ class PushNotifier
                         \r\nmessage: #{e.message} \
                         \r\npayload: #{payload_body.to_json} \
                         \r\nstacktrace: #{e.backtrace.join('\n')}"
-      attempt += MAX_ATTEMPTS
+      attempt += 1
       if attempt <= MAX_ATTEMPTS
         sleep 0.25
         retry

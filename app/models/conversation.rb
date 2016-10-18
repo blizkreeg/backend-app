@@ -8,10 +8,6 @@ class Conversation < ActiveRecord::Base
   has_many :real_dates, dependent: :destroy
   has_many :date_suggestions, dependent: :destroy
 
-  CLOSED_BECAUSE_EXPIRED = 'Expired'
-  CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
-  MAX_PARTICIPANTS = 2
-
   # Conversation Timeline
   # 00h:  OPEN
   # 24h:  how's it going?
@@ -35,6 +31,12 @@ class Conversation < ActiveRecord::Base
   CHECK_IF_MEETING_FROM_OPEN = 120.hours
   CLOSE_NOTICE_FROM_OPEN = 144.hours
   CLOSE_TIME = 168.hours # 7.days
+
+  OPENING_MESSAGE = "Hooray, you're both curious! Say hello and get to know each other :-)\n\nThis chat will be open for #{CLOSE_TIME / 86_400} days."
+  CLOSING_MESSAGE = "We hope you have both exchanged numbers. This chat will close in 24 hours."
+  CLOSED_BECAUSE_EXPIRED = 'Expired'
+  CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
+  MAX_PARTICIPANTS = 2
 
   ATTRIBUTES = {
     participant_uuids: :string_array,
@@ -132,6 +134,7 @@ class Conversation < ActiveRecord::Base
     end
 
     initialize_firebase
+    $firebase_conversations.push(self.firebase_messages_endpoint, self.notice_message_hash(OPENING_MESSAGE))
 
     # Queue up conversation state changes
     Conversation.delay_for(HEALTH_CHECK_FROM_OPEN).move_conversation_to(self.id, 'health_check')
@@ -140,9 +143,11 @@ class Conversation < ActiveRecord::Base
     Conversation.delay_for(CLOSE_NOTICE_FROM_OPEN).move_conversation_to(self.id, 'close_notice')
     Conversation.delay_for(CLOSE_TIME).expire_conversation(self.id)
 
+    # notify participants
     self.participants.each do |participant|
-      PushNotifier.delay.record_event(participant.uuid, 'conv_open')
-      ProfileEventLogWorker.perform_async(participant.uuid, :entered_into_conversation, uuid: self.the_other_who_is_not(participant.uuid))
+      other = self.the_other_who_is_not(participant.uuid)
+      PushNotifier.delay.record_event(participant.uuid, 'conv_open', match_name: other.firstname)
+      ProfileEventLogWorker.perform_async(participant.uuid, :entered_into_conversation, uuid: other.uuid)
     end
   end
 
@@ -158,12 +163,17 @@ class Conversation < ActiveRecord::Base
     close_conversation_firebase
   end
 
-  def add_message!(content, sender_uuid)
-    if content.present?
-      message = Message.new(content: content, sender_uuid: sender_uuid, recipient_uuid: self.the_other_who_is_not(sender_uuid).uuid)
-      self.messages.push(message)
-      self.save!
+  def add_message!(content, sender_uuid, message_type)
+    if content.blank?
+      EKC.logger.error("Trying to add empty message for conversation: #{c.id}, sender_uuid: #{sender_uuid}, message_type: #{message_type}")
+      return
     end
+
+    message = Message.new(message_type: message_type,
+                          content: content,
+                          sender_uuid: sender_uuid,
+                          recipient_uuid: self.the_other_who_is_not(sender_uuid).uuid)
+    self.messages.push(message)
   end
 
   def both_ready_to_meet?
@@ -175,5 +185,16 @@ class Conversation < ActiveRecord::Base
 
     # TBD -- format this in the user's timezone
     "#{self.closes_at.day.ordinalize} #{self.closes_at.strftime('%b')} at #{self.closes_at.strftime('%k:%M%P')}"
+  end
+
+  def notice_message_hash(content)
+    {
+      message_type: Message::TYPE_NOTICE,
+      sender_uuid: nil,
+      recipient_uuid: nil,
+      content: content,
+      sent_at: (Time.now.to_f * 1_000).to_i,
+      ack: nil
+    }
   end
 end

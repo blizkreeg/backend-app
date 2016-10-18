@@ -6,13 +6,13 @@ html {
 
 body {
   font-family: 'Open Sans', Helvetica, sans-serif;
-  color: #454545;
+  color: #333;
   font-size: 1.6rem;
-  font-weight: normal;
+  font-weight: 300;
 }
 
 h1, h2, h3, h4 {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Josefin Sans', sans-serif;
   color: #1c1c1c;
 }
 
@@ -31,20 +31,97 @@ ul {
   padding: 0 0 0 20px;
 }
 
+ul.details {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.details li {
+  margin-bottom: 10px;
+}
+
+.activity-container {
+  padding: 20px 0px 0px 0px;
+  overflow: hidden;
+}
+
 .place {
   font-size: 22px;
 }
 
 .overlay {
-  background: rgba(0,0,0,.5);
+  // background: rgba(81, 161, 161, 0.8);
+  background: rgba(208, 158, 45, 0.8);
   // background: -webkit-linear-gradient(to top,rgba(0,0,0,.6) 0,rgba(0,0,0,0) 100%);
   // background: -moz-linear-gradient(to top,rgba(0,0,0,.6) 0,rgba(0,0,0,0) 100%);
   // background: -o-linear-gradient(to top,rgba(0,0,0,.6) 0,rgba(0,0,0,0) 100%);
   // background: linear-gradient(to top,rgba(0,0,0,.6) 0,rgba(0,0,0,0) 100%);
   position: absolute;
-  width: 360px;
-  height: 100px;
+  width: 100%;
   bottom: 0;
+  color: white;
+  padding: 10px 0px;
+}
+
+.overlay .title {
+  text-align: center;
+}
+
+.overlay .title .name {
+  font-size: 2.6rem;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+.overlay .title .place {
+  font-size: 1.8rem;
+}
+
+.activity-details {
+  display: inline;
+  padding-left: 15px;
+  padding-right: 15px;
+  float: left;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.activity-details .ambassador {
+  clear: both;
+  text-align: center;
+  width: 100%;
+  bottom: 10px;
+  text-align: center;
+}
+
+.overlay h3 {
+  font-size: 2.5em;
+}
+
+.overlay h4 {
+  font-size: 2.5rem;
+}
+
+.overlay h3, .overlay h4 {
+  color: white;
+}
+
+.overlay .cost > span {
+  font-size: 13px;
+  color: white;
+}
+
+.ambassador .title {}
+
+.ambassador .photo {
+  margin: 0px auto;
+  text-align: center;
+}
+
+.ambassador .name {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 1px;
 }
 
 .when {
@@ -53,9 +130,10 @@ ul {
   border: 1px solid white;
   border-radius: 4px;
   bottom: 6px; left: 25px;
-  width: 170px;
+  width: 50%;
   color: white;
   font-size: 18px;
+  text-align: center;
 }
 
 .cost {
@@ -73,18 +151,6 @@ ul {
 .cta {
   width: 100%;
   float: right;
-}
-
-.spots {
-  font-size: 4vmin;
-}
-
-.addr {
-  font-size: 3.5vmin;
-}
-
-.going {
-  font-size: 2vmin;
 }
 
 .upcoming {
@@ -139,4 +205,74 @@ hr {
 .light {
   font-weight: 300;
   color: #333;
+}
+
+.logo {
+  margin: 15px 0px;
+  text-align: center;
+}
+
+.logo > img {
+  width: 200px;
+}
+
+.cover-background {
+  // style='text-align:center;margin-bottom:15px;position:relative;width:360px;margin:0px auto;'
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  position: relative;
+  width: 100%;
+  border: none;
+}
+
+.explain-brews {
+  position:relative;
+  clear:both;
+  margin-top: 20px;
+}
+
+.going {
+  clear: both;
+}
+
+.going .people {
+  clear: both;
+  margin-bottom: 20px;
+}
+
+.going .confirmation {
+  clear: both;
+  margin: 0px auto;
+  width: 80%;
+  padding: 6px 6px;
+  background-color: #404040;
+  color: white;
+  text-align: center;
+  border-radius: 2px;
+}
+
+.section-heading {
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: #7f7a7b;
+  font-family: 'Avenir Next', 'Avenir', 'Open Sans', sans-serif;
+}
+
+#topnotice {
+  width: 100%;
+  padding: 4px 10px;
+  background-color: #3f3a3b;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
+}
+
+.comment {
+  // nothing here - this is to throw off iOS Safari so it doesn't enter
+  // readability mode
+  // SO: http://stackoverflow.com/questions/2999600/how-to-disable-safari-reader-in-a-web-page/15418461#15418461
 }
