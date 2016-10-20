@@ -18,7 +18,7 @@ class Post < ActiveRecord::Base
 
   jsonb_accessor :properties, ATTRIBUTES
 
-  validates :title, :excerpt, :type, presence: true
+  validates :title, :type, presence: true
 
   def image?
     self.type == IMAGE_TYPE
