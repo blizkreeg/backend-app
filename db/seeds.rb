@@ -200,6 +200,7 @@ def seed_posts
       post.image_public_id = 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r'
     end
     if post.video?
+      post.image_public_id = '536ac5309104dacfd2d7'
       post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
       post.video_url = 'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4'
     end
