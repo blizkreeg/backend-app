@@ -196,14 +196,15 @@ def seed_posts
     post.title = Forgery(:lorem_ipsum).words(5 + rand(10))
     post.posted_on = Time.now + ((-50..50).to_a.sample).days
     if post.image?
-      post.excerpt = rand % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
+      post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
       post.image_public_id = 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r'
     end
     if post.video?
-      post.excerpt = rand % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
+      post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
       post.video_url = 'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4'
     end
     if post.article?
+      post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
       post.image_public_id = rand % 2 == 0 ? 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r' : nil
       post.link_to_url = 'http://nautil.us/issue/41/selection/the-problem-with-modern-romance-is-too-much-choice'
     end
