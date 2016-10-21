@@ -202,7 +202,7 @@ def seed_posts
     if post.video?
       post.image_public_id = '536ac5309104dacfd2d7'
       post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
-      post.video_url = 'http://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_1mb.mp4'
+      post.video_url = 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4'
     end
     if post.article?
       post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
@@ -210,6 +210,7 @@ def seed_posts
       post.link_to_url = 'http://nautil.us/issue/41/selection/the-problem-with-modern-romance-is-too-much-choice'
     end
     post.share_text = post.default_share_text
+    post.share_link = 'https://magazine.ekcoffee.com'
     post.save!
   end
 

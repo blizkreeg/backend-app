@@ -11,6 +11,7 @@ class Post < ActiveRecord::Base
     image_public_id:    :string,
     video_url:          :string,
     share_text:         :string,
+    share_link:         :string,
     posted_on:          :date_time
   }
 
@@ -33,6 +34,6 @@ class Post < ActiveRecord::Base
   end
 
   def default_share_text
-    "See this on ekCoffee: #{self.title} at http://blog.ekcoffee.com/"
+    "See this on ekCoffee: #{self.title} at "
   end
 end
