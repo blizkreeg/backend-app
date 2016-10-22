@@ -14,3 +14,4 @@ if post.article?
 end
 
 json.share_text post.default_share_text
+json.share_link post.share_link
