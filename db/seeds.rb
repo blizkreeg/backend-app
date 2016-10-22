@@ -200,7 +200,7 @@ def seed_posts
       post.image_public_id = 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r'
     end
     if post.video?
-      post.image_public_id = '536ac5309104dacfd2d7'
+      post.image_public_id = '_MG_0580_uvtgbb'
       post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
       post.video_url = 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4'
     end
