@@ -75,6 +75,8 @@ Rails.application.routes.draw do
     get '/login', to: 'accounts#login'
     get '/all', to: 'accounts#index'
     get '/show', to: 'accounts#show'
+    get '/test-flow', to: 'accounts#test_flow'
+    post '/update-test-flow', to: 'accounts#update_test_flow'
     post '/create-matches', to: 'accounts#create_matches'
     get '/show/butler', to: 'accounts#show_butler_chat'
     get '/auth/:provider/callback', to: 'accounts#callback', as: :omniauth_callback

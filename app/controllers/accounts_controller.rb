@@ -43,6 +43,68 @@ class AccountsController < ApplicationController
   def show
   end
 
+  def test_flow
+
+  end
+
+  def update_test_flow
+    state = params[:state] # update to this state
+
+    case state
+    when 'waiting_for_matches'
+      @profile.update!(state: state, state_endpoint: nil, substate: nil, substate_endpoint: nil)
+
+      if @profile.active_mutual_match
+        match = @profile.active_mutual_match
+        match.matched_profile.update! state: state
+
+        if match.conversation
+          match.conversation.messages.map(&:destroy)
+          match.conversation.destroy
+        end
+
+        match.reverse.destroy rescue nil
+        match.destroy
+      end
+
+      @profile.reload
+
+      @profile.matches.each do |match|
+        if match.conversation
+          match.conversation.messages.map(&:destroy)
+          match.conversation.destroy
+        end
+
+        match.reverse.destroy rescue nil
+        match.destroy
+      end
+    when 'has_matches'
+      Matchmaker.generate_new_matches_for(@profile.uuid, onesided: false)
+      @profile.new_matches!(:has_matches, Rails.application.routes.url_helpers.v1_profile_matches_path(@profile))
+    when 'show_matches'
+    when 'in_conversation'
+      byebug
+      match = @profile.matches.take
+      match.update! decision: 'Like'
+      match.reverse.update! decision: 'Like'
+      Match.enable_mutual_flag_and_create_conversation!([match.id, match.reverse.id])
+      match.active!
+      match.reverse.active!
+      match.conversation.open!
+      # case substate
+      # when 'info'
+      # when 'ready_to_meet'
+      # when 'health_check'
+      # when 'show_date_suggestions'
+      # when 'radio_silence'
+      # when 'check_if_meeting'
+      # when 'close_notice'
+      # end
+    end
+
+    redirect_to :back
+  end
+
   def create_matches
     Matchmaker.generate_new_matches_for(@profile.uuid)
     @profile.reload
