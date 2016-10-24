@@ -79,7 +79,13 @@ class AccountsController < ApplicationController
         match.destroy
       end
     when 'has_matches'
-      Matchmaker.generate_new_matches_for(@profile.uuid, onesided: false)
+      matched_profiles = Profile.of_gender(@profile.seeking_gender).limit(3)
+      matched_profiles.each do |matched_profile|
+        Matchmaker.create_matches_between(@profile.uuid, matched_profile.uuid,
+                                    normalized_distance: 0,
+                                    friends_with: false,
+                                    num_common_friends: rand(3))
+      end
       @profile.new_matches!(:has_matches, Rails.application.routes.url_helpers.v1_profile_matches_path(@profile))
     when 'show_matches'
     when 'in_conversation'
