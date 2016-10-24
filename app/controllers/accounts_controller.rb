@@ -83,7 +83,6 @@ class AccountsController < ApplicationController
       @profile.new_matches!(:has_matches, Rails.application.routes.url_helpers.v1_profile_matches_path(@profile))
     when 'show_matches'
     when 'in_conversation'
-      byebug
       match = @profile.matches.take
       match.update! decision: 'Like'
       match.reverse.update! decision: 'Like'
