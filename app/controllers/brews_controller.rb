@@ -2,6 +2,7 @@ class BrewsController < WebController
   layout 'brews'
 
   before_action :authenticated?, except: [:homepage]
+  before_action :redirect_app_users, only: [:homepage], if: lambda { from_app? }
 
   def homepage
   end
@@ -53,6 +54,14 @@ class BrewsController < WebController
   def authenticated?
     if @current_profile.blank?
       raise "You're not logged in!"
+    end
+  end
+
+  def redirect_app_users
+    if @current_profile.phone.present?
+      redirect_to action: :index and return
+    else
+      redirect_to action: :welcome and return
     end
   end
 end

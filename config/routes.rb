@@ -1,5 +1,20 @@
 # TODO break up this file into multiple files
 Rails.application.routes.draw do
+
+  # Brew
+
+  resources :brews, only: [:index, :new, :create, :show] do
+    get '/register', to: 'brews#register', as: :register
+  end
+
+  get '/homepage', to: 'brews#homepage'
+  get '/welcome', to: 'brews#welcome_ekcoffee_users'
+  post '/update-phone', to: 'brews#update_phone', as: :update_phone
+
+  root to: 'brews#homepage'
+
+  # ekCoffee app API
+
   constraints SubdomainConstraint.new('app-api') do
     scope module: 'api' do
       namespace 'v1' do
@@ -55,19 +70,8 @@ Rails.application.routes.draw do
     post '/register-interests', to: 'events#register_interests', as: :register_interests
   end
 
-  constraints SubdomainConstraint.new('brew') do
-    resources :brews, only: [:index, :new, :create, :show] do
-      get '/register', to: 'brews#register', as: :register
-    end
+  # Admin Dashboard
 
-    get '/homepage', to: 'brews#homepage'
-    get '/welcome', to: 'brews#welcome_ekcoffee_users'
-    post '/update-phone', to: 'brews#update_phone', as: :update_phone
-  end
-
-  #
-  # ADMIN DASHBOARD
-  #
   constraints SubdomainConstraint.new('admin') do
     mount Sidekiq::Web, at: "/sq"
 
@@ -114,9 +118,8 @@ Rails.application.routes.draw do
     get '/stb-dashboard', to: 'admin#stb_dashboard'
   end
 
+  # TODO remove this
   get '/moosecsv', to: 'moose#moosecsv'
-
-  root to: 'pages#home'
 
   get '*unmatched_route', to: 'application#route_not_found'
 end

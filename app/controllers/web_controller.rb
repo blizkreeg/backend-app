@@ -3,7 +3,7 @@ class WebController < ApplicationController
 
   before_action :check_for_mobile_device
   before_action :check_if_request_from_app
-  before_action :load_ekcoffee_profile, if: lambda { @request_from_ekc_app.present? }
+  before_action :load_ekcoffee_profile, if: lambda { from_app? }
 
   protected
 

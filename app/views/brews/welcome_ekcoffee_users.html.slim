@@ -50,11 +50,11 @@ main style='background-color: #f6f6f6'
                 = phone_field_tag :phone, @current_profile.phone, class: 'mdl-textfield__input', maxlength: 10, required: true, placeholder: '9821066894', style: 'width: 200px;height:50px;background-color:white;border:1px solid #ccc;padding: 0px 10px;font-size:26px;text-align:center;font-weight:200;letter-spacing:2.4px;'
               .mdl-cell
                 = button_tag(method: :post) do
-                  i.material-icons style='font-size:32px;' arrow_forward
+                  i.material-icons style='font-size:32px;background:none;border:none;' arrow_forward
 
       .mdl-layout-spacer
 
 javascript:
-  $(function() {
-    $('.welcome-cover').css('height', $(window).height()/2);
-  });
+  //$(function() {
+  //  $('.welcome-cover').css('height', $(window).height()/2);
+  //});
