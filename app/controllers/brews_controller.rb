@@ -61,7 +61,7 @@ class BrewsController < WebController
     if @current_profile.phone.present?
       redirect_to action: :index and return
     else
-      redirect_to action: :welcome and return
+      redirect_to action: :welcome_ekcoffee_users and return
     end
   end
 end

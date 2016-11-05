@@ -456,6 +456,7 @@ a.disabled {
   width: 100%;
   height: 59px;
   background-color: $mobile_menu_bgcolor;
+  border-top: 0.5px solid $mobile_menu_bordercolor;
   border-bottom: 0.5px solid $mobile_menu_bordercolor;
   position: fixed;
   top: 0;

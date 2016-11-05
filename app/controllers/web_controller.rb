@@ -34,7 +34,7 @@ class WebController < ApplicationController
   end
 
   def load_ekcoffee_profile
-    uuid = session[:uuid] || request.headers[EKCOFFEE_APP_PROFILE_UUID_HEADER]
+    uuid = session[:uuid] || request_uuid
 
     raise "You're not logged in" if uuid.blank?
 
@@ -46,6 +46,19 @@ class WebController < ApplicationController
   end
 
   def from_app?
-    request.headers[EKCOFFEE_APP_HEADER] == '1'
+    if Rails.env.production?
+      request.headers[EKCOFFEE_APP_HEADER] == '1'
+    else
+      (request.headers[EKCOFFEE_APP_HEADER] == '1') ||
+      (params[:ekcapp] == '1')
+    end
+  end
+
+  def request_uuid
+    if Rails.env.production?
+      request.headers[EKCOFFEE_APP_PROFILE_UUID_HEADER]
+    else
+      request.headers[EKCOFFEE_APP_PROFILE_UUID_HEADER] || params[:uuid]
+    end
   end
 end
