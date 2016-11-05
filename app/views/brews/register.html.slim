@@ -3,10 +3,11 @@
     = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brew_path(@brew), title: 'Join this Brew' }
 
 main
+  .mobile-action-bar-holder
   .max960
     .mdl-layout-spacer
     .brew-detail-outer.mdl-cell.mdl-cell--4-col-phone.mdl-cell--6-col-tablet.mdl-cell--6-col-desktop
-      .brew-detail
+      .brew-detail.activity.details
         .brew-detail__info
           h4.text-center
             span.brew-detail__info__title

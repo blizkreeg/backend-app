@@ -4,8 +4,8 @@
   - brews.each do |brew|
     .mdl-card.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop.activity-preview.activity
       = link_to(brew_path(brew.id), class: 'no-decor') do
-        .icon
-          i.material-icons.md-36 motorcycle
+        / .icon
+        /   i.material-icons.md-36 motorcycle
         - if rand(10) % 2 == 0
           .primary-image data-image-id='_MG_0580_uvtgbb'
         .title.mdl-card__title
@@ -18,19 +18,10 @@
           .details
             = render partial: 'brews/components/details', locals: { brew: brew }
         .attending
-          .summary.full-width
+          .summary.full-width.text-center
             span.going
               = names_snippet(brew)
-              - going = [' ']
-              - if brew.profiles.count == 1
-                - going << 'is'
-              - else
-                - going << 'are'
-              - if brew.tipped?
-                - going << 'going.'
-              - else
-                - going << 'going.' # TODO change to interested when the feature to tip events is implemented
-              = going.join(' ')
+              = going_snippet(brew)
           = render partial: 'brews/faces', locals: { brew: brew, profiles: brew.profiles, link_profile: false }
 
           / - unless brew.tipped?

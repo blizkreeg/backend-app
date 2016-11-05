@@ -61,6 +61,24 @@ module BrewsHelper
     str
   end
 
+  def going_snippet(brew)
+    going = [' ']
+
+    if brew.profiles.count == 1
+      going << 'is'
+    else
+      going << 'are'
+    end
+
+    if brew.tipped?
+      going << 'going.'
+    else
+      going << 'going.' # TODO change to interested when the feature to tip events is implemented
+    end
+
+    going.join(' ')
+  end
+
   def places_remaining(num)
     if num > 1
       "#{num} places remaining"

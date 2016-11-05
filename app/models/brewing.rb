@@ -3,8 +3,10 @@ class Brewing < ActiveRecord::Base
   belongs_to :brew, touch: true
 
   ATTRIBUTES = {
-
+    host: :boolean
   }
 
   jsonb_accessor :properties, ATTRIBUTES
+
+  scope :hosts, -> { is_host }
 end

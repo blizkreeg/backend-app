@@ -85,9 +85,10 @@ a.disabled {
   flex-flow: column nowrap;
   justify-content: space-between;
   align-items: center;
-  background-image: image-url('brew-cover-2.png');
-  background-position: 0 0;
-  height: 350px;
+  background-image: image-url('brew-india-cover.jpg');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  height: 300px;
   color: white;
 }
 
@@ -98,21 +99,24 @@ a.disabled {
   }
 }
 
-.homepage-cover .headline {
-  color: white;
-}
-
 .brews-enum-container {
   padding: 15px 0;
   display: flex;
   flex-flow: row nowrap;
 }
 
-.explain-brew {}
+.explain-brew {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-end;
+  height: 300px;
+  width: inherit;
+  // background: rgba(242,186,102, 0.33);
+}
 
 .explain-brew__container {
-  padding: 8px;
   text-align: center;
+  color: #ffffff;
 }
 
 .no-padding {
@@ -277,20 +281,17 @@ a.disabled {
   // text-align: center;
 }
 
-.activity .details i {
-  display: flex;
-  align-self: center;
+.details i {
   padding-right: 10px;
 }
 
 .activity .details .price,
 .activity .details .date,
 .activity .details .place {
-  display: flex;
-  width: 100%;
-  padding: 5px;
+  padding: 5px 0px;
   font-size: 16px;
   font-weight: 300;
+  text-align: center;
 }
 
 .activity-preview .attending {
@@ -343,7 +344,7 @@ a.disabled {
 }
 
 .face-squares__face-image {
-  padding: 2px;
+  padding: 4px;
   border-radius: 2px;
 }
 
@@ -811,3 +812,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   }
 }
 
+.flash-message {
+  text-align: center;
+  background-color: #ffcd16;
+  color: #333;
+  padding: 10px 6px;
+  overflow: auto;
+}

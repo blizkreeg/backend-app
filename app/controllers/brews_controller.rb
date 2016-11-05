@@ -3,6 +3,7 @@ class BrewsController < WebController
 
   before_action :authenticated?, except: [:homepage]
   before_action :redirect_app_users, only: [:homepage], if: lambda { from_app? }
+  before_action :has_brews_in_review?, only: [:index]
 
   def homepage
   end
@@ -23,7 +24,9 @@ class BrewsController < WebController
   end
 
   def create
-    Brew.create!(brew_params)
+    @brew = Brew.create!(brew_params)
+    @brew.brewings.build(profile: @current_profile, host: true)
+    @brew.save!
 
     redirect_to action: 'index'
   end
@@ -62,6 +65,12 @@ class BrewsController < WebController
       redirect_to action: :index and return
     else
       redirect_to action: :welcome_ekcoffee_users and return
+    end
+  end
+
+  def has_brews_in_review?
+    if @current_profile.brews.merge(Brewing.hosts).with_moderation_status('in_review').count > 0
+      flash[:message] = "We are reviewing your Brew. Stay tuned!"
     end
   end
 end

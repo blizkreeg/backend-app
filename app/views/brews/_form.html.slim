@@ -43,6 +43,14 @@
         /   = f.text_field :title, class: 'mdl-textfield__input'
 
   .brew-form__field
+    .brew-form__field-title Where?
+    .brew-form__field-title__supporting-text Place where everyone meets.
+    .mdl-textfield.mdl-textfield--expandable.full-width
+      / = f.label :title, "Enter something that interests you", class: 'mdl-textfield__label'
+      = f.text_field :place, class: 'mdl-textfield__input'
+
+
+  .brew-form__field
     .brew-form__field-title Anything else you want to add?
     .brew-form__field-title__supporting-text Optional
     .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.full-width
@@ -91,10 +99,33 @@ javascript:
       })
     }
 
+    function titleValue() {
+      return $('input[name="brew[title]"]').val();
+    }
+
+    function placeValue() {
+      return $('input[name="brew[place]"]').val();
+    }
+
+    function requiredFieldsSet() {
+      return ((titleValue() != "") && (placeValue() != ""));
+    }
+
     function titleChanged() {
       $('input[name="brew[title]"]').on('change paste keyup blur', function() {
-        console.log($(this).val());
-        if($(this).val() == "") {
+        if(!requiredFieldsSet()) {
+          $('.action-bar__submit-button').prop('disabled');
+          $('.action-bar__submit-button').addClass('disabled');
+        } else {
+          $('.action-bar__submit-button').removeProp('disabled');
+          $('.action-bar__submit-button').removeClass('disabled');
+        }
+      })
+    }
+
+    function placeChanged() {
+      $('input[name="brew[place]"]').on('change paste keyup blur', function() {
+        if(!requiredFieldsSet()) {
           $('.action-bar__submit-button').prop('disabled');
           $('.action-bar__submit-button').addClass('disabled');
         } else {
@@ -105,6 +136,7 @@ javascript:
     }
 
     titleChanged();
+    placeChanged();
     fillActivityTitle();
     toggleActivityOnClick();
     submitForm();

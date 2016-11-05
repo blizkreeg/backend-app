@@ -1,10 +1,9 @@
-.price
-  = render partial: 'brews/components/price', locals: { brew: brew }
-.date
-  i.material-icons.md-18 schedule
-  | #{format_date(brew.happening_on)}
-  br
-  | #{format_time(brew.starts_at)}
-.place
-  i.material-icons.md-18 place
-  = brew.place
+.mdl-grid.mdl-grid--no-spacing style='display:flex;flex-flow:column nowrap;justify-content:center;align-items:center;width:100%;'
+  .price
+    = render partial: 'brews/components/price', locals: { brew: brew }
+  .date
+    i.material-icons.md-18 schedule
+    | #{format_date(brew.happening_on)} at #{format_time(brew.starts_at)}
+  .place
+    i.material-icons.md-18 place
+    = brew.place

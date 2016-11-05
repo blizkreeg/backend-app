@@ -3,14 +3,15 @@
     = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brews_path, title: 'Brew' }
 
 main
+  .mobile-action-bar-holder
   .max960
     .mdl-grid
       .mdl-layout-spacer
       .brew-detail-outer.mdl-cell.mdl-cell--4-col-phone.mdl-cell--6-col-tablet.mdl-cell--6-col-desktop
         .brew-detail.activity
           .brew-detail__info
-            .icon
-              i.material-icons.md-36 motorcycle
+            / .icon
+            /   i.material-icons.md-36 motorcycle
             h4.text-center
               span.brew-detail__info__title
                 = @brew.title
@@ -29,9 +30,8 @@ main
 
           #preview-faces
             h6.text-center
-              | Rahul, Chris, and 5 more going.
-              br
-              | Tap to see more.
+              = names_snippet(@brew)
+              = going_snippet(@brew)
             = render partial: 'brews/faces', locals: { profiles: @brew.profiles, link_profile: true }
 
           #profile-cards
