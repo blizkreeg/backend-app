@@ -23,7 +23,7 @@ main
 
           - if @brew.profiles.count > 0
             #group-dynamics
-              h6.text-center Know your Brew
+              h6.text-center Know Your Brew
               = render partial: 'brews/components/group_makeup', locals: { brew: @brew }
 
           - total_going = @brew.profiles.count
@@ -39,7 +39,7 @@ main
               = render partial: 'brews/profile_card', locals: { profile: profile }
 
           #join-cta.text-center
-            h5 Interested in joining them?
+            h5 Interested in joining?
             h6 Getting together #{format_date(@brew.happening_on)}
 
       .mdl-layout-spacer
@@ -47,7 +47,15 @@ main
   = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: "Join this Brew", dest: brew_register_path(@brew) }
 
 / TODO move to js file
-/ javascript:
+javascript:
+  $(function() {
+    width = $(window).width(); //$('.profile-card').width();
+    $('.profile-card-lightbox').each(function() {
+      var $card = $(this);
+      var imageId = $card.find('.profile-card__photo').data('image-id');
+      $card.find('.profile-card__photo').append($.cloudinary.image(imageId, { width: width, height: $(window).height(), crop: 'fill', gravity: 'face' }));
+    });
+  });
 /   $(function() {
 /     $('.face-squares__face-image').on('click', function() {
 /       var profileId = $(this).data('profile-id');

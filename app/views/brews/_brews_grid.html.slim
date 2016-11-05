@@ -1,6 +1,7 @@
 .mdl-grid
   .mdl-cell.mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--12-col-desktop
-    h4 #{index_page_heading}
+    .index-heading
+      = index_page_heading
   - brews.each do |brew|
     .mdl-card.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop.activity-preview.activity
       = link_to(brew_path(brew.id), class: 'no-decor') do
@@ -37,9 +38,8 @@
         .places-remaining
           = raw(places_remaining(brew.places_remaining_for_gender(current_profile.gender)))
 
-        / dummy div to prevent the cta button from overlapping content
+        / dummy div to prevent the CTA button from overlapping content
         .fixed-bottom
-        / when activity needs min. threshold people
       .cta
         = render partial: 'brews/brew_cta_button', locals: { placement: 'absolute', title: "I'm interested", dest: brew_path(brew.id) }
 

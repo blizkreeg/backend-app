@@ -34,15 +34,17 @@
 }
 
 $body_font: -apple-system, '.SFNSText-Regular', BlinkMacSystemFont, 'Open Sans', Roboto, sans-serif !important;
+$heading_font: -apple-system-headline, BlinkMacSystemFont, sans-serif;
+$subheading_font: -apple-system-subheadline, BlinkMacSystemFont, sans-serif, 'Bariol';
 $header_title: 'Josefin Sans', sans-serif;
 
 h1, h2, h3 {
-  font-family: -apple-system-headline, BlinkMacSystemFont, sans-serif;
+  font-family: $heading_font;
   font-weight: 400;
 }
 
 h4, h5, h6 {
-  font-family: -apple-system-subheadline, BlinkMacSystemFont, sans-serif, 'Bariol';
+  font-family: $subheading_font;
   font-weight: 300;
 }
 
