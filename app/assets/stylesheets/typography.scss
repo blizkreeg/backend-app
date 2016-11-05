@@ -33,10 +33,9 @@
   font-feature-settings: 'liga';
 }
 
-$body_font: -apple-system, '.SFNSText-Regular', BlinkMacSystemFont, 'Open Sans', Roboto, sans-serif !important;
-$heading_font: -apple-system-headline, BlinkMacSystemFont, sans-serif;
-$subheading_font: -apple-system-subheadline, BlinkMacSystemFont, sans-serif, 'Bariol';
-$header_title: 'Josefin Sans', sans-serif;
+$body_font: -apple-system, '.SFNSText-Regular', BlinkMacSystemFont, Roboto, sans-serif !important;
+$heading_font: -apple-system-headline, 'SFNSDisplay-Medium', BlinkMacSystemFont, 'Noto Sans', 'Roboto', sans-serif;
+$subheading_font: -apple-system-subheadline, 'SFNSDisplay-Regular', BlinkMacSystemFont, 'Noto Sans', Roboto, sans-serif, 'Bariol';
 
 h1, h2, h3 {
   font-family: $heading_font;
