@@ -291,6 +291,7 @@ a.disabled {
   padding: 5px 0px;
   font-size: 18px;
   text-align: center;
+  font-family: $subheading_font;
 }
 
 .activity-preview .attending {
@@ -564,6 +565,8 @@ a.disabled {
   position: absolute;
   top: 60px;
   left: 0;
+  min-width: 100%;
+  min-height: 600px;
 }
 
 .profile-card__education__schools {
