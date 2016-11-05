@@ -50,7 +50,7 @@ class WebController < ApplicationController
       request.headers[EKCOFFEE_APP_HEADER] == '1'
     else
       (request.headers[EKCOFFEE_APP_HEADER] == '1') ||
-      (params[:ekcapp] == '1')
+      (session[:request_from_ekc_app] || params[:ekcapp] == '1')
     end
   end
 

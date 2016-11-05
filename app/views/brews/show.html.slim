@@ -20,31 +20,12 @@ main
             .details
               = render partial: 'brews/components/details', locals: { brew: @brew }
 
-          #group-dynamics
-            h6.text-center About This Group
-            .group-stats
-              .group-stats__stat
-                .group-stats__stat__supporting-text
-                  | GROUP MAKEUP
-                .group-stats__stat__number
-                  | 3 men, 4 women
-              .group-stats__stat
-                .group-stats__stat__supporting-text
-                  | AGES
-                .group-stats__stat__number
-                  | 29 - 34
-              .group-stats__stat
-                .group-stats__stat__supporting-text
-                  | SCHOOLS WENT TO
-                .group-stats__stat__number
-                  | #{['UCSB', 'Berkeley', 'MIT', 'Pomona College'].join(', ')}
-              .group-stats__stat
-                .group-stats__stat__supporting-text
-                  | WHAT THEY DO
-                .group-stats__stat__number
-                  | #{['Manager', 'Engineer', 'Sales Professional', 'Marketing'].join(', ')}
+          - if @brew.profiles.count > 0
+            #group-dynamics
+              h6.text-center Know your Brew
+              = render partial: 'brews/components/group_makeup', locals: { brew: @brew }
 
-          - total_going = rand(7)
+          - total_going = @brew.profiles.count
 
           #preview-faces
             h6.text-center
@@ -57,9 +38,9 @@ main
             - @brew.profiles.each do |profile|
               = render partial: 'brews/profile_card', locals: { profile: profile }
 
-          #join-cta
-            h5.text-center Interested in joining?
-            h6 They're meeting on #{format_date(@brew.happening_on)} at Rose's Cafe
+          #join-cta.text-center
+            h5 Interested in joining them?
+            h6 Getting together #{format_date(@brew.happening_on)}
 
       .mdl-layout-spacer
 

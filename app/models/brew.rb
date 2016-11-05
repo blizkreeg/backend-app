@@ -63,6 +63,22 @@ class Brew < ActiveRecord::Base
     end
   end
 
+  def male_signups
+    self.profiles.with_gender('male')
+  end
+
+  def female_signups
+    self.profiles.with_gender('female')
+  end
+
+  def youngest_person
+    self.profiles.youngest
+  end
+
+  def oldest_person
+    self.profiles.oldest
+  end
+
   private
 
   def set_price
@@ -74,7 +90,7 @@ class Brew < ActiveRecord::Base
   end
 
   def defaults_to_under_review
-    self.moderation_status = 'in_review'
+    self.moderation_status ||= 'in_review'
   end
 
   def approve!

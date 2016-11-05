@@ -1,0 +1,24 @@
+.group-stats
+  / .group-stats__stat
+  /   .group-stats__stat__supporting-text
+  /     | GROUP MAKEUP
+  /   .group-stats__stat__number
+  /     | #{brew.male_signups.count} men, #{brew.female_signups.count} women
+  .group-stats__stat
+    .group-stats__stat__supporting-text
+      i.material-icons style='color:#666;'
+        | person
+    .group-stats__stat__number
+      | #{brew.youngest_person.age} - #{brew.oldest_person.age}
+  .group-stats__stat
+    .group-stats__stat__supporting-text
+      i.material-icons style='color:#f2ba66;'
+        | school
+    .group-stats__stat__number
+      = brew.profiles.map(&:schools_attended).flatten.first(8).uniq.join(', ')
+  .group-stats__stat
+    .group-stats__stat__supporting-text
+      i.material-icons style='color:#31acfa;'
+        | work
+    .group-stats__stat__number
+      = brew.profiles.map(&:profession).flatten.uniq.join(', ')
