@@ -1,32 +1,83 @@
 .mdl-grid
-  - 8.times do
+  .mdl-cell.mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--12-col-desktop
+    h4 #{index_page_heading}
+  - brews.each do |brew|
     .mdl-card.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop.activity-preview.activity
-      = link_to(brew_path(123), class: 'no-decor') do
+      = link_to(brew_path(brew.id), class: 'no-decor') do
         .icon
           i.material-icons.md-36 motorcycle
+        - if rand(10) % 2 == 0
+          .primary-image data-image-id='_MG_0580_uvtgbb'
         .title.mdl-card__title
           h3.mdl-card__title-text.mdl-typography--text-center
-            | Singles Brunch Singles Brunch Singles
-        .short-desc.mdl-card__supporting-text
-          | akjhdfkljasdhf hakljsdfaklsjdfhaks asfdasgdjkfagsdfg adsfhjagsdfjagsdf
+            = brew.title
+        - if brew.notes.present?
+          .short-desc.mdl-card__supporting-text
+            = brew.notes
         .details-container
           .details
-            .date
-              i.material-icons.md-18 date_range
-              | Sunday, Sep 24
-            .place
-              i.material-icons.md-18 place
-              | Tea Villa Cafe
-        / when activity has min. threshold people committed
+            = render partial: 'brews/components/details', locals: { brew: brew }
         .attending
           .summary.full-width
-            span.going 4 singles going
-            span &nbsp;|&nbsp;
-            span.remaining 3 spots remaining
-          .picture
-          .picture
-          .picture
+            span.going
+              = names_snippet(brew)
+              - going = [' ']
+              - if brew.profiles.count == 1
+                - going << 'is'
+              - else
+                - going << 'are'
+              - if brew.tipped?
+                - going << 'going.'
+              - else
+                - going << 'going.' # TODO change to interested when the feature to tip events is implemented
+              = going.join(' ')
+          = render partial: 'brews/faces', locals: { brew: brew, profiles: brew.profiles, link_profile: false }
 
+          / - unless brew.tipped?
+          /   .interested
+          /     .time-remaining-chart data-percent='76'
+          /       span.time 1
+          /       span.label hour
+          /     div.clearfix
+          /       | 1 hour remaining for 2 men and 3 women to make this happen!
+          / - else
+          /   | 2 spots remaining.
+
+        .places-remaining
+          = raw(places_remaining(brew.places_remaining_for_gender(current_profile.gender)))
+
+        / dummy div to prevent the cta button from overlapping content
+        .fixed-bottom
         / when activity needs min. threshold people
-        .cta
-          = link_to "Join this brew", '#', class: 'mdl-button mdl-js-button mdl-button--raised'
+      .cta
+        = render partial: 'brews/brew_cta_button', locals: { placement: 'absolute', title: "I'm interested", dest: brew_path(brew.id) }
+
+/ TODO move to js file
+javascript:
+  function loadTimeCharts() {
+    $('.time-remaining-chart').easyPieChart({
+      scaleColor: false,
+      trackColor: 'rgba(255,0,0,0.1)',
+      lineWidth: 4,
+      lineCap: 'butt',
+      size: 75,
+      barColor: '#fd5b63',
+      animate: 1000,
+    });
+  }
+
+  function loadBrewImages() {
+    var w = $(window).width();
+    var $imageDivs = $('.primary-image');
+    _.each($imageDivs, function(imageDiv) {
+      $imageDiv = $(imageDiv);
+      var imageId = $imageDiv.data('image-id');
+      var divWidth = $imageDiv.width();
+      $imageDiv.prepend($.cloudinary.image(imageId, { width: divWidth, height: 160, crop: "fill" }));
+    });
+  }
+
+  $(function() {
+    loadBrewImages();
+    loadTimeCharts();
+  });

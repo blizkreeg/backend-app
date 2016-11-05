@@ -1,4 +1,4 @@
-class Api::V1::PhotosController < ApplicationController
+class Api::V1::PhotosController < ApiController
   respond_to :json
 
   before_action :authenticated?

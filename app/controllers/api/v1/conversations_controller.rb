@@ -1,4 +1,4 @@
-class Api::V1::ConversationsController < ApplicationController
+class Api::V1::ConversationsController < ApiController
   before_action :authenticated?
   before_action :validate_json_schema, except: []
   before_action except: [] do

@@ -5,6 +5,8 @@ Rails.application.routes.draw do
       namespace 'v1' do
         get '/home', to: 'profiles#home'
 
+        resources :posts, only: [:index]
+
         post '/sign-in', to: 'profiles#sign_in'
         post '/waiting-list', to: 'profiles#add_to_waiting_list'
 
@@ -54,9 +56,13 @@ Rails.application.routes.draw do
   end
 
   constraints SubdomainConstraint.new('brew') do
-    resources :brews, only: [:index, :new, :create, :show]
+    resources :brews, only: [:index, :new, :create, :show] do
+      get '/register', to: 'brews#register', as: :register
+    end
 
     get '/homepage', to: 'brews#homepage'
+    get '/welcome', to: 'brews#welcome_ekcoffee_users'
+    post '/update-phone', to: 'brews#update_phone', as: :update_phone
   end
 
   #
@@ -90,6 +96,8 @@ Rails.application.routes.draw do
     get '/login', to: 'accounts#login'
     get '/all', to: 'accounts#index'
     get '/show', to: 'accounts#show'
+    get '/test-flow', to: 'accounts#test_flow'
+    post '/update-test-flow', to: 'accounts#update_test_flow'
     post '/create-matches', to: 'accounts#create_matches'
     get '/show/butler', to: 'accounts#show_butler_chat'
     get '/auth/:provider/callback', to: 'accounts#callback', as: :omniauth_callback

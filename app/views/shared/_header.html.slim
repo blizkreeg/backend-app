@@ -1,4 +1,23 @@
-header#site-header.mdl-layout__header.mdl-layout__header--transparent
-  .logo-container
-    .name
-      | Brew
+- unless @collapse_header
+  header.header
+    .mdl-grid
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--2-col-phone.mdl-cell--4-col-tablet.mdl-cell--4-col-desktop
+        .logo-container
+          .name
+            | Brew
+      .mdl-layout-spacer
+    - unless @request_from_ekc_app
+      .mdl-grid
+        .mdl-layout-spacer
+        .mdl-cell.mdl-cell--4-col-phone.mdl-cell--6-col-tablet.mdl-cell--6-col-desktop
+          .header__nav
+            .header__nav__item
+              h3
+                = link_to "HOW IT WORKS"
+            / .header__nav__item
+            /   h3
+            /     = link_to "CITIES"
+            / .header__nav__item
+            / .header__nav__item
+        .mdl-layout-spacer

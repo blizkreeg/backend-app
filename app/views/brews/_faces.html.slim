@@ -1,0 +1,12 @@
+.face-squares
+  - profiles.each_with_index do |profile, idx|
+    - if link_profile
+      = link_to("#profile-#{profile.uuid}", class: 'no-decor') do
+        = render partial: 'brews/face', locals: { idx: idx, profile: profile }
+    - else
+      = render partial: 'brews/face', locals: { idx: idx, profile: profile }
+  / - if brew.balanced_mf?
+  /   - (brew.max_group_size/2 - profiles.with_gender('male').count).times do
+  /     = render partial: 'brews/face', locals: { draw_gender: 'male' }
+  /   - (brew.max_group_size/2 - profiles.with_gender('female').count).times do
+  /     = render partial: 'brews/face', locals: { draw_gender: 'female' }

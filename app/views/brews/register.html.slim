@@ -1,0 +1,28 @@
+- if mobile_device?
+  .action-bar
+    = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brew_path(@brew), title: 'Join this Brew' }
+
+main
+  .max960
+    .mdl-layout-spacer
+    .brew-detail-outer.mdl-cell.mdl-cell--4-col-phone.mdl-cell--6-col-tablet.mdl-cell--6-col-desktop
+      .brew-detail
+        .brew-detail__info
+          h4.text-center
+            span.brew-detail__info__title
+              = @brew.title
+
+        .details
+          = render partial: 'brews/components/details', locals: { brew: @brew }
+
+  = render partial: 'brews/components/purchase_button', locals: { title: "Signup for this Brew", dest: brew_register_path(@brew) }
+
+  .fine-print.text-center
+    p
+      h6.text--light
+        i.material-icons info_outline
+        br
+        | the fine print
+    p Your Brew pass reserves a spot for you. If this Brew involves food or drink or other costs, you pay for them yourself.
+
+    p If the Brew doesn't take place or is cancelled for any reason, we'll credit your account with the amount you paid. You may use this to register for any future Brew.

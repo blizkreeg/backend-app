@@ -12,4 +12,5 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require brews
+//= require jquery.cloudinary
+//= require jquery.easypiechart.min

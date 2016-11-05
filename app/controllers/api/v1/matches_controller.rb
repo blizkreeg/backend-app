@@ -1,4 +1,4 @@
-class Api::V1::MatchesController < ApplicationController
+class Api::V1::MatchesController < ApiController
   skip_before_action :verify_authenticity_token
   before_action :authenticated?
   before_action :validate_json_schema, except: []

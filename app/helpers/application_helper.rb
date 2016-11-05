@@ -56,4 +56,8 @@ module ApplicationHelper
 
     ((n.to_f / total) * 100).round(1)
   end
+
+  def mobile_device?
+    @mobile_device
+  end
 end

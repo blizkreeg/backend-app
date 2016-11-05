@@ -1,14 +1,23 @@
+/ handy! http://apps.timwhitlock.info/emoji/tables/unicode
+
 = form_for @brew, html: { class: 'brew-form' } do |f|
   .brew-form__field
-    .brew-form__field-title What do you want to do?
-    .brew-form__field-title__supporting-text Hike at Mt. Diablo, Brunch at Nopa, something else&hellip;
-    .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.mdl-textfield--floating-label.full-width
-      = f.label :title, "What's your Brew?", class: 'mdl-textfield__label'
+    .brew-form__field-title Who's up for?
+    / .brew-form__field-title__supporting-text a hike this weekend? Italian on Friday.
+    .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.full-width
+      = f.label :title, "Enter something that interests you", class: 'mdl-textfield__label'
       = f.text_field :title, class: 'mdl-textfield__input'
+    .brew-form__field__helper-text
+      p Suggestions to get you started:
+      .click-activity-title &#x1f373; Who loves to Brunch?
+      .click-activity-title &#x1f374; Let's get Dinner
+      .click-activity-title &#x1f3a5; Let's catch a movie together
+      .click-activity-title &#x2615; Coffee and conversation anyone?
+      .click-activity-title &#x1f378; Craving a Cocktail!
 
   .brew-form__field
-    .brew-form__field-title When?
-    .brew-form__field-title__supporting-text We suggest at least 2 days away &amp; at most a week.
+    .brew-form__field-title When do you want to hang out?
+    .brew-form__field-title__supporting-text The day of your activity
     .brew-form__select-datetime
       .brew-form__select-date
         / TBD - make a JS component out of this
@@ -16,32 +25,42 @@
         - (post_brew_start_date..post_brew_end_date).to_a.each_with_index do |date, idx|
           .brew-form__select-date-options.brew-form__select-tag data-index="#{idx}" data-value="#{date.to_s}"
             span #{format_date(date)}
+
+  .brew-form__field
+    .brew-form__field-title Pick a time
+    .brew-form__field-title__supporting-text When is everyone meeting?
+    .brew-form__select-datetime
       .brew-form__select-time
-        = f.label :starts_at, "Pick the time when everyone meets"
-        br
         span.pull-left 9am
         span.pull-right 9pm
-        = f.range_field :starts_at, in: 9..21, step: 0.25, value: @brew.starts_at || 17, class: 'brew-form__select-time__range', oninput: "showTime(value)"
+        = f.range_field :starts_at, in: 9..21, step: 0.5, value: @brew.starts_at || 17, class: 'brew-form__select-time__range', oninput: "showTime(value)"
         .brew-form__select-time-display
-          | #{@brew.starts_at || 17} hours
+          | #{@brew.starts_at || '5:00 pm'}
 
         / .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.mdl-textfield--floating-label.full-width
         /   = f.label :title, 'Pick a time', class: 'mdl-textfield__label'
         /   = f.text_field :title, class: 'mdl-textfield__input'
 
   .brew-form__field
-    .brew-form__field-title Group's age range
-    .brew-form__field-title__supporting-text Must be spread at least 5 years.
+    .brew-form__field-title Anything else you want to add?
+    .brew-form__field-title__supporting-text Optional
+    .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.full-width
+      = f.label :notes, "You may choose to give more details.", class: 'mdl-textfield__label'
+      = f.text_area :notes, class: 'mdl-textfield__input'
+    .brew-form__field__helper-text
+  / .brew-form__field
+  /   .brew-form__field-title Group's age range
+  /   .brew-form__field-title__supporting-text Must be spread at least 5 years.
 
-  .brew-form__field
-    .brew-form__field-title Group's gender makeup
-    .brew-form__field-title__supporting-text Groups may be balanced men + women, all women, or all men.
-    .brew-form__select-gender-composition
-      .brew-form__select-gender
-        - Brew::GROUP_MAKEUPS.each_with_index do |(str, val), idx|
-          = f.hidden_field :group_makeup, id: "happening_on_idx_#{idx}"
-          .brew-form__select-gender-makeup-options.brew-form__select-tag data-index="#{idx}" data-value="#{str}"
-            span #{str}
+  / .brew-form__field
+  /   .brew-form__field-title Group's gender makeup
+  /   .brew-form__field-title__supporting-text Groups may be balanced men + women, all women, or all men.
+  /   .brew-form__select-gender-composition
+  /     .brew-form__select-gender
+  /       - Brew::GROUP_MAKEUPS.each_with_index do |(str, val), idx|
+  /         = f.hidden_field :group_makeup, id: "happening_on_idx_#{idx}"
+  /         .brew-form__select-gender-makeup-options.brew-form__select-tag data-index="#{idx}" data-value="#{str}"
+  /           span #{str}
 
 
 javascript:
@@ -56,9 +75,36 @@ javascript:
       });
     }
 
+    function submitForm() {
+      $('.action-bar__submit-button').on('click', function(e) {
+        e.preventDefault();
+        $('form[class="brew-form"]').submit();
+      });
+    }
+
+    function fillActivityTitle() {
+      $('.click-activity-title').on('click', function(e) {
+        $('#brew_title').val($(this).text().trim());
+        $('label[for="brew_title"]').hide();
+      })
+    }
+
+    fillActivityTitle();
     toggleActivityOnClick();
+    submitForm();
   });
 
   function showTime(value) {
-    $('.brew-form__select-time-display').text(value + ' hours');
+    if(value >= 12 && value < 13) {
+      suffix = 'pm';
+    } else if(value >= 13) {
+      value = value - 12;
+      suffix = 'pm';
+    } else {
+      suffix = 'am';
+    }
+    hour = Math.floor(value);
+    min = ("0" + (value % hour) * 60).slice(-2);
+
+    $('.brew-form__select-time-display').text(hour + ':' + min + ' ' + suffix);
   }

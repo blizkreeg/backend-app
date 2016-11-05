@@ -81,6 +81,7 @@ class Profile < ActiveRecord::Base
     seeking_maximum_height
     seeking_faith
     disable_notifications_setting
+    has_new_butler_message
   )
 
   ATTRIBUTES = {
@@ -146,6 +147,7 @@ class Profile < ActiveRecord::Base
     # TBD: is there a better way to track this?
     sent_matches_notification_at: :date_time,
     has_new_butler_message:       :boolean,
+    needs_butler_attention:       :boolean,
     moderation_status:            :string,
     moderation_status_reason:     :string,
     visible:                      :boolean,
@@ -712,6 +714,7 @@ class Profile < ActiveRecord::Base
   def initialize_butler_conversation
     self.butler_conversation_uuid = SecureRandom.uuid
     self.has_new_butler_message = false
+    self.needs_butler_attention = false
 
     true
   end

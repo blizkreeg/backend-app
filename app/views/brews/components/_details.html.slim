@@ -1,0 +1,10 @@
+.price
+  = render partial: 'brews/components/price', locals: { brew: brew }
+.date
+  i.material-icons.md-18 schedule
+  | #{format_date(brew.happening_on)}
+  br
+  | #{format_time(brew.starts_at)}
+.place
+  i.material-icons.md-18 place
+  = brew.place

@@ -1,65 +1,76 @@
-.mdl-layout.mdl-js-layout
-  = render partial: 'shared/header'
-  main.mdl-layout__content
-    .max960
-      .mdl-grid
-        .mdl-layout-spacer
-        .activity-detail-container.mdl-cell.mdl-cell--4-col-phone.mdl-cell--6-col-tablet.mdl-cell--6-col-desktop
-          .activity-detail
-            .activity-detail__info
-              h4.text-center
-                .icon
-                  i.material-icons.md-36 motorcycle
-                | Singles Brunch at Rose's Cafe
-              p.text-center
-                | akjhdfkljasdhf hakljsdfaklsjdfhaks asfdasgdjkfagsdfg adsfhjagsdfjagsdf
+- if mobile_device?
+  .action-bar
+    = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brews_path, title: 'Brew' }
 
-              .details
-                .date
-                  i.material-icons.md-18 date_range
-                  | Sunday, Sep 24
-                .place
-                  i.material-icons.md-18 place
-                  | Tea Villa Cafe
+main
+  .max960
+    .mdl-grid
+      .mdl-layout-spacer
+      .brew-detail-outer.mdl-cell.mdl-cell--4-col-phone.mdl-cell--6-col-tablet.mdl-cell--6-col-desktop
+        .brew-detail.activity
+          .brew-detail__info
+            .icon
+              i.material-icons.md-36 motorcycle
+            h4.text-center
+              span.brew-detail__info__title
+                = @brew.title
+            p.text-center
+              = @brew.notes
 
-            #group-dynamics
-              h6.text-center Group Dynamics
-              .group-stats
-                .group-stats__stat
-                  .group-stats__stat__supporting-text
-                    | GROUP MAKEUP
-                  .group-stats__stat__number
-                    | 3 men, 4 women
-                .group-stats__stat
-                  .group-stats__stat__supporting-text
-                    | AGES
-                  .group-stats__stat__number
-                    | 29 - 34
-                .group-stats__stat
-                  .group-stats__stat__supporting-text
-                    | SCHOOLS WENT TO
-                  .group-stats__stat__number
-                    | #{['UCSB', 'Berkeley', 'MIT', 'Pomona College'].join(', ')}
-                .group-stats__stat
-                  .group-stats__stat__supporting-text
-                    | WHAT THEY DO
-                  .group-stats__stat__number
-                    | #{['Manager', 'Engineer', 'Sales Professional', 'Marketing'].join(', ')}
+            .details
+              = render partial: 'brews/components/details', locals: { brew: @brew }
 
-            #preview-faces
-              h6.text-center Tap to See Who's Going
-              .face-squares
-                - 4.times do
-                  div.face-squares__face-image
-                    = cl_image_tag 'a1cfe92a3e4b9237fe14', crop: :fill, gravity: :face, height: 75, width: 75
+          #group-dynamics
+            h6.text-center About This Group
+            .group-stats
+              .group-stats__stat
+                .group-stats__stat__supporting-text
+                  | GROUP MAKEUP
+                .group-stats__stat__number
+                  | 3 men, 4 women
+              .group-stats__stat
+                .group-stats__stat__supporting-text
+                  | AGES
+                .group-stats__stat__number
+                  | 29 - 34
+              .group-stats__stat
+                .group-stats__stat__supporting-text
+                  | SCHOOLS WENT TO
+                .group-stats__stat__number
+                  | #{['UCSB', 'Berkeley', 'MIT', 'Pomona College'].join(', ')}
+              .group-stats__stat
+                .group-stats__stat__supporting-text
+                  | WHAT THEY DO
+                .group-stats__stat__number
+                  | #{['Manager', 'Engineer', 'Sales Professional', 'Marketing'].join(', ')}
 
-            #profile-cards
-              - 1.times do
-                = render partial: 'brews/profile_card'
+          - total_going = rand(7)
 
+          #preview-faces
+            h6.text-center
+              | Rahul, Chris, and 5 more going.
+              br
+              | Tap to see more.
+            = render partial: 'brews/faces', locals: { profiles: @brew.profiles, link_profile: true }
 
-            #join-cta
-              h5.text-center Interested in joining this Brew?
-              h6 They're meeting on Saturday at Rose's Cafe
-              = link_to "GET ME IN!", '#', class: 'mdl-button mdl-js-button mdl-button--raised'
-        .mdl-layout-spacer
+          #profile-cards
+            - @brew.profiles.each do |profile|
+              = render partial: 'brews/profile_card', locals: { profile: profile }
+
+          #join-cta
+            h5.text-center Interested in joining?
+            h6 They're meeting on #{format_date(@brew.happening_on)} at Rose's Cafe
+
+      .mdl-layout-spacer
+
+  = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: "Join this Brew", dest: brew_register_path(@brew) }
+
+/ TODO move to js file
+/ javascript:
+/   $(function() {
+/     $('.face-squares__face-image').on('click', function() {
+/       var profileId = $(this).data('profile-id');
+/       $('.profile-card').hide();
+/       $('div.profile-card[data-id="' + profileId + '"]').css('display', 'flex');
+/     });
+/   });

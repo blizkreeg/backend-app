@@ -24,6 +24,8 @@ tags:
     description: Conversation messages
   - name: Accounts
     description: Account settings
+  - name: Posts
+    description: Blog Posts
 
 # *********************** PATHS ****************************
 
@@ -1167,6 +1169,54 @@ paths:
           description: Server error
           schema:
             $ref: '#/definitions/500'
+  /posts:
+    get:
+      tags:
+      - Posts
+      summary: Get content posts
+      parameters:
+        - name: page
+          in: query
+          description: Page offset of next set of posts
+          type: number
+          format: integer
+          required: false
+          allowEmptyValue: true
+        - name: limit
+          in: query
+          description: Number of posts to get
+          type: number
+          format: integer
+          required: false
+          allowEmptyValue: true
+      responses:
+        200:
+          description: list of posts
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  _meta:
+                    $ref: '#/definitions/PostMeta'
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Post'
+        401:
+          description: Not authenticated
+          schema:
+            $ref: '#/definitions/401'
+        403:
+          description: Forbidden. User unauthorized to perform this operation.
+          schema:
+            $ref: '#/definitions/403'
+        500:
+          description: Server error
+          schema:
+            $ref: '#/definitions/500'
+
 
 # *********************** DEFINITIONS ****************************
 
@@ -1509,6 +1559,34 @@ definitions:
         type: string
       place:
         $ref: '#/definitions/DatePlace'
+
+  PostMeta:
+    type: object
+    description: Metadata for post
+    properties:
+      next_page:
+        type: integer
+      count:
+        type: integer
+
+  Post:
+    type: object
+    description: Content Post
+    properties:
+      title:
+        type: string
+      excerpt:
+        type: string
+      type:
+        type: string
+      link_to_url:
+        type: string
+      image_public_id:
+        type: string
+      video_url:
+        type: string
+      share_text:
+        type: string
   State:
     type: object
     description: User state

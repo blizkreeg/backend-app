@@ -1,6 +1,6 @@
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE unless Rails.env.production?
 
-class Api::V1::ProfilesController < ApplicationController
+class Api::V1::ProfilesController < ApiController
   respond_to :json
 
   PUBLIC_ACCESS_METHODS = [:create, :sign_in, :index, :add_to_waiting_list]

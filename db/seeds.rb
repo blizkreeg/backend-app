@@ -187,30 +187,64 @@ def seed_places
   end
 end
 
-def seed_events
-  50.times do
-    Event.create!(
-      name: 'Hike at Mt. Tamalpais',
-      place: "The Colaba Social",
-      happening_on: Date.today + rand(5).days,
-      happening_at: "#{12 + rand(8)}pm",
-      address: "123, Vallejo",
-      total_spots: 8,
-      male_spots: 4,
-      female_spots: 4,
-      description: '',
-      payment_link: 'https://google.com'
-    )
+def seed_posts
+  ActiveRecord::Base.connection.execute("TRUNCATE posts") unless Rails.env.production?
+
+  100.times do
+    post = Post.new
+    post.type = [Post::IMAGE_TYPE, Post::VIDEO_TYPE, Post::ARTICLE_TYPE].sample
+    post.title = Forgery(:lorem_ipsum).words(5 + rand(10))
+    post.posted_on = Time.now + ((-50..50).to_a.sample).days
+    if post.image?
+      post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
+      post.image_public_id = 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r'
+    end
+    if post.video?
+      post.image_public_id = '_MG_0580_uvtgbb'
+      post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
+      post.video_url = 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4'
+    end
+    if post.article?
+      post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
+      post.image_public_id = rand % 2 == 0 ? 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r' : nil
+      post.link_to_url = 'http://nautil.us/issue/41/selection/the-problem-with-modern-romance-is-too-much-choice'
+    end
+    post.share_text = post.default_share_text
+    post.share_link = 'https://magazine.ekcoffee.com'
+    post.save!
   end
+
+  puts "seeded with 100 posts"
 end
 
 def seed_brews
+  ActiveRecord::Base.connection.execute("TRUNCATE brews CASCADE") unless Rails.env.production?
 
+  25.times do
+    brew = Brew.new
+    brew.title = Forgery('lorem_ipsum').title
+    brew.notes = Forgery('lorem_ipsum').text
+    brew.happening_on = Date.today + ((2..7).to_a.sample).days
+    brew.starts_at = (9..21).to_a.sample
+    brew.primary_image_cloudinary_id = rand(10) % 2 == 0 ? '_MG_0580_uvtgbb' : nil
+    brew.place = Forgery('lorem_ipsum').title
+    brew.max_group_size = 8
+    brew.group_makeup = 0
+    brew.min_age = 21 + rand(20)
+    brew.max_age = brew.min_age + 5
+    brew.save!
+
+    num_rsvp = rand(8)
+    brew.profiles = Profile.order("RANDOM()").limit(num_rsvp) if num_rsvp > 0
+   end
+
+   puts "seeded with 100 brews"
 end
 
 def seed_all
   seed_users
   seed_places
+  seed_posts
 end
 
 if ENV['TYPE'] == 'users'
@@ -223,6 +257,8 @@ elsif ENV['TYPE'] == 'events'
   seed_events
 elsif ENV['TYPE'] == 'brews'
   seed_brews
+elsif ENV['TYPE'] == 'posts'
+  seed_posts
 else
   seed_all
 end

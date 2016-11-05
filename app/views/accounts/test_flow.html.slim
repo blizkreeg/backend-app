@@ -1,0 +1,6 @@
+p
+  = button_to "Reset", { action: :update_test_flow, uuid: @profile.uuid, state: 'waiting_for_matches' }, method: :post
+p
+  = button_to "Generate Matches", { action: :update_test_flow, uuid: @profile.uuid, state: 'has_matches' }, method: :post
+p
+  = button_to "Conversation Mode", { action: :update_test_flow, uuid: @profile.uuid, state: 'in_conversation' }, method: :post

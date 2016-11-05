@@ -1,55 +1,52 @@
-.mdl-layout.mdl-js-layout
-  = render partial: 'shared/header'
+main
+  .full-width.homepage-cover.cover-image
+    .headline.text-center
+      h2 Tired of dating apps? Try something new.
+    / A new way of meeting and socializing with singles like you.
 
-  main.mdl-layout__content
-    .full-width#homepage-cover
-      .headline
-        h3.text-center Tired of dating apps? Try something new.
-      / A new way of meeting and socializing with singles like you.
+  .max960
+    h4.text-center Go <em>real-life</em>.
+    h5.text-center Hang out with select groups of singles that interest you for a fun social.
+    .brews-enum-container.mdl-grid.mdl-grid--no-spacing
+      .mdl-cell
+      .mdl-cell
+      .mdl-cell
+      .mdl-cell
+      .mdl-cell
+      .mdl-cell
+      .mdl-cell
+      .mdl-cell
+      .mdl-cell
+      .mdl-cell
+      .mdl-cell
+    .mdl-grid.mdl-grid--no-spacing
+      .explain-brew.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop
+        .explain-brew__container
+          h4 Get offline
+          p Consider Brew as a real alternative to dating apps. If endless swiping isn't going anywhere for you, you'll love Brew.
+          p This is a way for you to mix it up, see new faces, or just get outside without an agenda.
+          /p Brew is a way for you to mix it up, to meet and connect over a laugh, a drink, a thing you do. But dating isn't the sole purpose here. Sometimes you just want to make new friends, see new faces, or get out and do something without an agenda.
+      .explain-brew.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop
+        .explain-brew__container
+          h4 Do stuff
+          p Brews range from singles brunches, happy hours, concerts, pickup games, and whatever else is interesting and fun in a group.
+          p Suggest new activities or join existing ones. Brews form around your interests!
+      .explain-brew.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop
+        .explain-brew__container
+          h4
+            | Socialize
+          p Every Brew is formed around people of your stripe and age preference. You'll get to see group dynamics for every Brew.
+          p Check out who's going and decide which Brews interest you. There are no surprises.
 
-    .max960
-      h4.text-center Go out. Meet some new people.
-      h5.text-center Hang out with groups of 6 - 8 singles that interest you for a fun social.
-      .brews-enum-container.mdl-grid.mdl-grid--no-spacing
-        .mdl-cell
-        .mdl-cell
-        .mdl-cell
-        .mdl-cell
-        .mdl-cell
-        .mdl-cell
-        .mdl-cell
-        .mdl-cell
-        .mdl-cell
-        .mdl-cell
-        .mdl-cell
-      .mdl-grid.mdl-grid--no-spacing
-        .explain-brew.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop
-          .explain-brew__container
-            h4 Get offline
-            p Consider Brew as a real alternative to dating apps. If endless swiping isn't going anywhere for you, you'll love Brew.
-            p This is a way for you to mix it up, see new faces, or just get outside without an agenda.
-            /p Brew is a way for you to mix it up, to meet and connect over a laugh, a drink, a thing you do. But dating isn't the sole purpose here. Sometimes you just want to make new friends, see new faces, or get out and do something without an agenda.
-        .explain-brew.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop
-          .explain-brew__container
-            h4 Connect over activities
-            p Brews range from singles brunches, happy hours, concerts, pickup games, and whatever else is interesting and fun in a group.
-            p Suggest new activities or join existing ones. Brews form around your interests!
-        .explain-brew.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop
-          .explain-brew__container
-            h4
-              | Meet people like you
-            p Every Brew is formed around people of your stripe and age preference. You'll get to see group dynamics for every Brew.
-            p Check out who's going and decide which Brews interest you. There are no surprises.
-
-      .mdl-grid
-        .mdl-layout-spacer
-        .mdl-cell.mdl-cell--4-col.mdl-cell--6-col-desktop.text-center
-          h4 I'm down.
-          p Awesome! Login and join an upcoming Brew near you.
-          = link_to 'Continue with Facebook', '/auth/facebook', class: 'mdl-button mdl-js-button mdl-button--raised'
-          p
-            ul.list--unstyled.text--light.text-center
-              li - Facebook helps ensure group quality
-              li - Your activity is not shared on Facebook
-        .mdl-layout-spacer
+    .mdl-grid
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--4-col.mdl-cell--6-col-desktop.text-center
+        h4 I'm down.
+        p Awesome! Login and join an upcoming Brew near you.
+        = link_to 'Continue with Facebook', '/auth/facebook', class: 'mdl-button mdl-js-button mdl-button--raised'
+        p
+          ul.list--unstyled.text--light.text-center
+            li - Facebook helps ensure group quality
+            li - Your activity is not shared on Facebook
+      .mdl-layout-spacer
 

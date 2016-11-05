@@ -1,0 +1,60 @@
+main style='background-color: #f6f6f6'
+  .full-width.welcome-cover.cover-image style='padding-top: 50px;'
+    .headline.text-center
+      h4 Introducing,
+      h2 Brew
+
+      h4 Hang out with singles in your city.
+
+    .mdl-grid.mdl-grid--no-spacing
+      .explain-brew.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop
+        .explain-brew__container
+          h4 Go <em>real-life</em>.
+          h5 Brew is a way for you to mix it up and meet interesting singles in a group setting.
+      / .explain-brew.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop
+      /   .explain-brew__container
+      /     h4 Do stuff
+      /     p Brews range from singles brunches, happy hours, concerts, pickup games, and whatever else is interesting and fun in a group.
+      /     p Suggest new activities or join existing ones. Brews form around your interests!
+      / .explain-brew.mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop
+      /   .explain-brew__container
+      /     h4
+      /       | Socialize
+      /     p Every Brew is formed around people of your stripe and age preference. You'll get to see group dynamics for every Brew.
+      /     p Check out who's going and decide which Brews interest you. There are no surprises.
+
+  .max960
+    .mdl-grid
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop style='justify-content: center;'
+        h5.text-center We'd like to invite you to Brew!
+        p.text-center A new concept by ekCoffee.
+        / .brews-enum-container.mdl-grid.mdl-grid--no-spacing
+        /   .mdl-cell
+        /   .mdl-cell
+        /   .mdl-cell
+        /   .mdl-cell
+        /   .mdl-cell
+        /   .mdl-cell
+        /   .mdl-cell
+        /   .mdl-cell
+        /   .mdl-cell
+        /   .mdl-cell
+        /   .mdl-cell
+        h6.text-center Enter your mobile to join.
+        .phone-input
+          = form_tag update_phone_path, method: :post do
+            .mdl-grid.mdl-grid--no-spacing style='justify-content:center;flex-flow:row nowrap;align-items:center;'
+              .mdl-cell
+              .mdl-cell style='width:auto;'
+                = phone_field_tag :phone, @current_profile.phone, class: 'mdl-textfield__input', maxlength: 10, required: true, placeholder: '9821066894', style: 'width: 200px;height:50px;background-color:white;border:1px solid #ccc;padding: 0px 10px;font-size:26px;text-align:center;font-weight:200;letter-spacing:2.4px;'
+              .mdl-cell
+                = button_tag(method: :post) do
+                  i.material-icons style='font-size:32px;' arrow_forward
+
+      .mdl-layout-spacer
+
+javascript:
+  $(function() {
+    $('.welcome-cover').css('height', $(window).height()/2);
+  });

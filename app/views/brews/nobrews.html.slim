@@ -1,0 +1,17 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { title: 'Brews', submit: true, submit_icon: 'add_circle_outline', submit_url: new_brew_path }
+
+main
+  .mobile-action-bar-holder
+  .max960
+    .mdl-grid
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--8-col-desktop
+        h6.text-center We didn't find a Brew near you.
+        h5.text-center Post what you're interested in doing and get others to join you!
+        h4.text-center What are you interested in?
+        .make-brew.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop
+          = render partial: 'brews/brew_cta_button', locals: { placement: 'relative', title: "<i class='material-icons'>lightbulb_outline</i> Post a Brew", dest: new_brew_path }
+
+
+      .mdl-layout-spacer
