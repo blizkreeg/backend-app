@@ -44,7 +44,7 @@ main
 
       .mdl-layout-spacer
 
-  = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: "Join this Brew", dest: brew_register_path(@brew) }
+  = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: cta_title(@brew, current_profile), dest: (@brew.places_remaining_for_gender(current_profile.gender) > 0 ? brew_register_path(@brew) : '#') }
 
 / TODO move to js file
 javascript:

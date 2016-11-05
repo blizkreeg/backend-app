@@ -36,12 +36,12 @@
           /   | 2 spots remaining.
 
         .places-remaining
-          = raw(places_remaining(brew.places_remaining_for_gender(current_profile.gender)))
+          = raw(places_remaining(brew))
 
         / dummy div to prevent the CTA button from overlapping content
         .fixed-bottom
       .cta
-        = render partial: 'brews/brew_cta_button', locals: { placement: 'absolute', title: "I'm interested", dest: brew_path(brew.id) }
+        = render partial: 'brews/brew_cta_button', locals: { placement: 'absolute', title: cta_title(brew, current_profile), dest: brew_path(brew.id) }
 
 / TODO move to js file
 javascript:
