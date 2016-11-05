@@ -10,6 +10,7 @@ class BrewsController < WebController
     @brews = Brew
               .min_age_lte(@current_profile.age)
               .max_age_gte(@current_profile.age)
+              .with_moderation_status('live')
               .limit(25)
 
     render 'nobrews' if @brews.blank?

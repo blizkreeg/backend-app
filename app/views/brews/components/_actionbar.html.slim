@@ -13,10 +13,12 @@
     = title
   .mdl-layout-spacer
 
+  - submit_status = defined?(default_submit_disabled) && default_submit_disabled
+
   / TODO class only if it's a submit button, can also be get
   - if defined?(submit)
     .action-bar__submit
-      = link_to((submit_url rescue nil) || '#', class: 'action-bar__submit-button') do
+      = link_to((submit_url rescue nil) || '#', class: "action-bar__submit-button #{'disabled' if submit_status}") do
         - if defined?(submit_title)
           = submit_title
         - elsif defined?(submit_icon)

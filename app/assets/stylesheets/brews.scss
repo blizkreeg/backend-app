@@ -32,6 +32,10 @@ a.no-decor, a.no-decor:visited, a.no-decor:hover {
   color: inherit !important;
 }
 
+a.disabled {
+  color: #888 !important;
+}
+
 .text--light {
   font-weight: 200;
 }
@@ -609,7 +613,7 @@ a.no-decor, a.no-decor:visited, a.no-decor:hover {
   font-weight: 600;
   color: #333;
   font-size: 15px;
-  padding: 2px 0px;
+  padding: 5px 0px;
 }
 
 .brew-form {
@@ -620,7 +624,7 @@ a.no-decor, a.no-decor:visited, a.no-decor:hover {
   }
 
   .mdl-textfield__input {
-    height: 60px;
+    height: 45px;
     border: 1px solid rgba(0,0,0,.12);
   }
 }

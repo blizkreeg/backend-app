@@ -1,5 +1,5 @@
 - if mobile_device?
-  = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brews_path, title: 'Post a Brew', submit: true, submit_title: 'Post' }
+  = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brews_path, title: 'Post a Brew', submit: true, submit_title: 'Post', default_submit_disabled: true }
 
 main
   .mobile-action-bar-holder
