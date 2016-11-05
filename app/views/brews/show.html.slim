@@ -53,7 +53,7 @@ javascript:
     $('.profile-card-lightbox').each(function() {
       var $card = $(this);
       var imageId = $card.find('.profile-card__photo').data('image-id');
-      $card.find('.profile-card__photo').append($.cloudinary.image(imageId, { width: width, height: $(window).height(), crop: 'fill', gravity: 'face' }));
+      $card.find('.profile-card__photo').append($.cloudinary.image(imageId, { width: width, height: $(window).innerHeight(), crop: 'fill', gravity: 'face' }));
     });
   });
 /   $(function() {

@@ -17,7 +17,7 @@
 
   .brew-form__field
     .brew-form__field-title What day?
-    .brew-form__field-title__supporting-text The day of your activity
+    .brew-form__field-title__supporting-text The day you want to meet
     .brew-form__select-datetime
       .brew-form__select-date
         / TBD - make a JS component out of this
@@ -44,14 +44,14 @@
 
   .brew-form__field
     .brew-form__field-title Where?
-    .brew-form__field-title__supporting-text Place where everyone meets.
+    .brew-form__field-title__supporting-text The meeting point
     .mdl-textfield.mdl-textfield--expandable.full-width
       / = f.label :title, "Enter something that interests you", class: 'mdl-textfield__label'
       = f.text_field :place, class: 'mdl-textfield__input'
 
 
   .brew-form__field
-    .brew-form__field-title Anything else you want to add?
+    .brew-form__field-title Anything else to add?
     .brew-form__field-title__supporting-text Optional
     .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.full-width
       = f.label :notes, "You may choose to give more details.", class: 'mdl-textfield__label'
