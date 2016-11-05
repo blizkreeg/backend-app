@@ -5,6 +5,10 @@ class WebController < ApplicationController
   before_action :check_if_request_from_app
   before_action :load_ekcoffee_profile, if: lambda { from_app? }
 
+  # headers passed on the web view request
+  EKCOFFEE_APP_HEADER = 'X-EKCOFFEE-APP'
+  EKCOFFEE_APP_PROFILE_UUID_HEADER = 'X-EKCOFFEE-PROFILE-UUID'
+
   protected
 
   def mobile_device?
@@ -30,8 +34,10 @@ class WebController < ApplicationController
   end
 
   def load_ekcoffee_profile
-    uuid = session[:uuid] || params[:uuid]
+    uuid = session[:uuid] || request.headers[EKCOFFEE_APP_PROFILE_UUID_HEADER]
+
     raise "You're not logged in" if uuid.blank?
+
     @current_profile = Profile.find(uuid)
     session[:uuid] = @current_profile.uuid
   rescue ActiveRecord::RecordNotFound => err
@@ -40,7 +46,6 @@ class WebController < ApplicationController
   end
 
   def from_app?
-    # TODO make this more foolproof
-    (params[:ekcapp] == '1') || session[:request_from_ekc_app]
+    request.headers[EKCOFFEE_APP_HEADER] == '1'
   end
 end

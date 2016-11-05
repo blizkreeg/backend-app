@@ -5,7 +5,8 @@ html
     / = stylesheet_link_tag 'https://fonts.googleapis.com/icon?family=Material+Icons'
     = stylesheet_link_tag 'https://code.getmdl.io/1.2.1/material.blue_grey-amber.min.css'
     = javascript_include_tag 'https://code.getmdl.io/1.2.1/material.min.js', defer: true
-    = javascript_include_tag 'http://underscorejs.org/underscore-min.js'
+    / FIXME copy over this script...throws a warning
+    = javascript_include_tag 'https://underscorejs.org/underscore-min.js'
     = stylesheet_link_tag 'web', media: 'all'
     = javascript_include_tag 'brew'
     = csrf_meta_tags
