@@ -56,13 +56,18 @@ main
 / TODO move to js file
 javascript:
   // Dynamically load profile photo
-  $(function() {
+  function loadProfilePhotos() {
     width = $(window).width(); //$('.profile-card').width();
+    height = $(window).height();
     $('.profile-card-lightbox').each(function() {
       var $card = $(this);
       var imageId = $card.find('.profile-card__photo').data('image-id');
-      $card.find('.profile-card__photo img').replaceWith($.cloudinary.image(imageId, { width: width, height: $(window).innerHeight(), crop: 'fill', gravity: 'face' }));
+      $card.find('.profile-card__photo img').replaceWith($.cloudinary.image(imageId, { width: width, height: height, crop: 'fill', gravity: 'face' }));
     });
+  }
+
+  $(function() {
+    window.setTimeout(loadProfilePhotos, 1000);
   });
 
 /   $(function() {
