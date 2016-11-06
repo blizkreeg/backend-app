@@ -16,7 +16,7 @@ main
         .details
           = render partial: 'brews/components/details', locals: { brew: @brew }
 
-  = render partial: 'brews/components/purchase_button', locals: { title: "Signup for this Brew", dest: brew_register_path(@brew) }
+  = render partial: 'brews/components/purchase_button', locals: { title: "Signup for this Brew", dest: @brew.payment_link }
 
   .fine-print.text-center
     p

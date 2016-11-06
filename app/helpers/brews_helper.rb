@@ -82,19 +82,11 @@ module BrewsHelper
   def places_remaining(brew)
     num = brew.places_remaining_for_gender(current_profile.gender)
     if num > 1
-      "#{num} more can go"
+      "#{num} places left."
     elsif num == 1
-      "Almost full, 1 spot left!"
+      "Almost full, 1 place left."
     else
-      "Oh no, this Brew is full! &#x1f61e;"
-    end
-  end
-
-  def cta_title(brew, profile)
-    if brew.places_remaining_for_gender(profile.gender) > 0
-      'Join this Brew'
-    else
-      'Brew full!'
+      "Oh no, this Brew is full. &#x1f61e;"
     end
   end
 end

@@ -63,6 +63,10 @@ class Brew < ActiveRecord::Base
     end
   end
 
+  def full_for?(profile)
+    self.places_remaining_for_gender(profile.gender) == 0
+  end
+
   def male_signups
     self.profiles.with_gender('male')
   end
@@ -79,6 +83,13 @@ class Brew < ActiveRecord::Base
     self.profiles.oldest
   end
 
+  def approve!
+    # FIXME this should be the real link
+    self.payment_link = "/brews/#{self.id}/registered"
+    self.moderation_status = 'live'
+    self.save!
+  end
+
   private
 
   def set_price
@@ -93,11 +104,7 @@ class Brew < ActiveRecord::Base
     self.moderation_status ||= 'in_review'
   end
 
-  def approve!
-    self.update! moderation_status: 'live'
-  end
-
   def reject!(reason)
-    self.update! moderation_status: 'rejected', rejection_reason: reason
+    self.update!(moderation_status: 'rejected', rejection_reason: reason)
   end
 end

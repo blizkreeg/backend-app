@@ -38,10 +38,16 @@
         .places-remaining
           = raw(places_remaining(brew))
 
-        / dummy div to prevent the CTA button from overlapping content
-        .fixed-bottom
+        - if current_profile.rsvped_to_brew?(brew)
+          / dummy div to prevent the CTA button from overlapping content
+          / show only if there's a cta button below
+          .fixed-bottom
       .cta
-        = render partial: 'brews/brew_cta_button', locals: { placement: 'absolute', title: cta_title(brew, current_profile), dest: brew_path(brew.id) }
+        - if current_profile.rsvped_to_brew?(brew)
+          = render partial: 'brews/components/registered_button', locals: { placement: 'absolute', title: "You're going to this Brew!", dest: brew_path(brew.id) }
+        / - else
+        /   - cta_title = brew.full_for?(current_profile) ? 'Brew full!' : "Check it out &rarr;"
+        /   = render partial: 'brews/brew_cta_button', locals: { placement: 'absolute', title: cta_title, dest: brew_path(brew.id) }
 
 / TODO move to js file
 javascript:

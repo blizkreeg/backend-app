@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   resources :brews, only: [:index, :new, :create, :show] do
     get '/register', to: 'brews#register', as: :register
+    get '/registered', to: 'brews#registered', as: :registered
   end
 
   get '/homepage', to: 'brews#homepage'

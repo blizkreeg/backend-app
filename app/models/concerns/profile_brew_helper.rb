@@ -11,4 +11,8 @@ module ProfileBrewHelper
 
     events
   end
+
+  def rsvped_to_brew?(brew)
+    self.brews.where(id: brew.id).exists?
+  end
 end

@@ -234,8 +234,9 @@ namespace :db do
         brew.group_makeup = 0
         brew.min_age = 21 + rand(20)
         brew.max_age = brew.min_age + 5
-        brew.moderation_status = 'live'
         brew.save!
+
+        brew.approve!
 
         num_rsvp = rand(8)
         brew.profiles = Profile.order("RANDOM()").limit(num_rsvp) if num_rsvp > 0

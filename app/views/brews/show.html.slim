@@ -39,23 +39,32 @@ main
               = render partial: 'brews/profile_card', locals: { profile: profile }
 
           #join-cta.text-center
-            h5 Interested in joining?
-            h6 Getting together #{format_date(@brew.happening_on)}
+            - if current_profile.rsvped_to_brew?(@brew)
+              h4 You're going to this Brew &#x1F64C;
+            - else
+              h5 Interested in joining?
+              h6 Getting together #{format_date(@brew.happening_on)}
 
       .mdl-layout-spacer
-
-  = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: cta_title(@brew, current_profile), dest: (@brew.places_remaining_for_gender(current_profile.gender) > 0 ? brew_register_path(@brew) : '#') }
+  - if current_profile.rsvped_to_brew?(@brew)
+    = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "View Details &rarr;", dest: '#' }
+  - else
+    - cta_title = @brew.full_for?(current_profile) ? 'Brew full!' : "Join this Brew"
+    - cta_dest = @brew.full_for?(current_profile) ? '#' : brew_register_path(@brew)
+    = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: cta_title, dest: cta_dest }
 
 / TODO move to js file
 javascript:
+  // Dynamically load profile photo
   $(function() {
     width = $(window).width(); //$('.profile-card').width();
     $('.profile-card-lightbox').each(function() {
       var $card = $(this);
       var imageId = $card.find('.profile-card__photo').data('image-id');
-      $card.find('.profile-card__photo').append($.cloudinary.image(imageId, { width: width, height: $(window).innerHeight(), crop: 'fill', gravity: 'face' }));
+      $card.find('.profile-card__photo img').replaceWith($.cloudinary.image(imageId, { width: width, height: $(window).innerHeight(), crop: 'fill', gravity: 'face' }));
     });
   });
+
 /   $(function() {
 /     $('.face-squares__face-image').on('click', function() {
 /       var profileId = $(this).data('profile-id');
