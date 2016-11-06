@@ -144,6 +144,13 @@ class PushNotifier
       required_parameters: [],
       category: 'SHOW_CONTENT',
       has_push_notification: true
+    },
+    'brew' => { # no event, just push message
+      title: "ekCoffee",
+      body: "Things are happening on Brew!", # override this per content piece
+      required_parameters: ['body'],
+      category: 'SHOW_BREW',
+      has_push_notification: true
     }
   }
 
