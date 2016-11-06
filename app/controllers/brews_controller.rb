@@ -39,6 +39,9 @@ class BrewsController < WebController
     @brew = Brew.find(params[:brew_id])
   end
 
+  def registered
+  end
+
   def welcome_ekcoffee_users
   end
 

@@ -3,8 +3,8 @@
     .action-bar.action-bar__close
       i.material-icons clear
     .profile-card data-id=profile.uuid
-      .profile-card__photo data-image-id='a1cfe92a3e4b9237fe14'
-        = cl_image_tag 'a1cfe92a3e4b9237fe14', width: 300, height: 500, crop: :fill, gravity: :face
+      .profile-card__photo data-image-id=profile.photos.primary.public_id
+        = cl_image_tag profile.photos.primary.take.public_id, width: 300, height: 500, crop: :fill, gravity: :face
       .profile-card__details
         .profile-card__identifying-info.separator
           .profile-card__name-plate
