@@ -194,7 +194,7 @@
 
 #       100.times do
 #         post = Post.new
-#         post.type = [Post::IMAGE_TYPE, Post::VIDEO_TYPE, Post::ARTICLE_TYPE].sample
+#         post.post_type = [Post::IMAGE_TYPE, Post::VIDEO_TYPE, Post::ARTICLE_TYPE].sample
 #         post.title = Forgery(:lorem_ipsum).words(5 + rand(10))
 #         post.posted_on = Time.now + ((-50..50).to_a.sample).days
 #         if post.image?

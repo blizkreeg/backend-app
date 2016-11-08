@@ -6,7 +6,7 @@ class Post < ActiveRecord::Base
   ATTRIBUTES = {
     title:              :string,
     excerpt:            :string,
-    type:               :string,
+    post_type:          :string,
     link_to_url:        :string,
     image_public_id:    :string,
     video_url:          :string,
@@ -19,18 +19,18 @@ class Post < ActiveRecord::Base
 
   jsonb_accessor :properties, ATTRIBUTES
 
-  validates :title, :type, presence: true
+  validates :title, :post_type, presence: true
 
   def image?
-    self.type == IMAGE_TYPE
+    self.post_type == IMAGE_TYPE
   end
 
   def video?
-    self.type == VIDEO_TYPE
+    self.post_type == VIDEO_TYPE
   end
 
   def article?
-    self.type == ARTICLE_TYPE
+    self.post_type == ARTICLE_TYPE
   end
 
   def default_share_text
