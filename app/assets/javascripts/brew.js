@@ -14,3 +14,4 @@
 //= require jquery_ujs
 //= require jquery.cloudinary
 //= require jquery.easypiechart.min
+//= require underscore-min.js
