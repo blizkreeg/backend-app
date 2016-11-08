@@ -6,6 +6,8 @@ class BrewsController < WebController
   before_action :has_brews_in_review?, only: [:index]
 
   def homepage
+    # TODO
+    head 404
   end
 
   def index
