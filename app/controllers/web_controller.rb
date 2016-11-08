@@ -46,19 +46,13 @@ class WebController < ApplicationController
   end
 
   def from_app?
-    if Rails.env.production?
-      request.headers[EKCOFFEE_APP_HEADER] == '1'
-    else
-      (request.headers[EKCOFFEE_APP_HEADER] == '1') ||
-      (session[:request_from_ekc_app] || params[:ekcapp] == '1')
-    end
+    request.headers[EKCOFFEE_APP_HEADER] == '1' ||
+    session[:request_from_ekc_app] ||
+    params[:ekcapp] == '1' # #NotProudOfThis #HackSoWeCanTestInBrowser #AlsoNeededForEarlierAppVersions
   end
 
   def request_uuid
-    if Rails.env.production?
-      request.headers[EKCOFFEE_APP_PROFILE_UUID_HEADER]
-    else
-      request.headers[EKCOFFEE_APP_PROFILE_UUID_HEADER] || params[:uuid]
-    end
+    request.headers[EKCOFFEE_APP_PROFILE_UUID_HEADER] ||
+    params[:uuid] # #NotProudOfThis #HackSoWeCanTestInBrowser #AlsoNeededForEarlierAppVersions
   end
 end

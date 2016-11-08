@@ -13,7 +13,7 @@ class EventsController < ApplicationController
   end
 
   def rsvp_stb
-    @events = [Event.first]# Event.current_or_future_events
+    @events = Event.current_or_future_events
     rsvped_for_event = @events.select { |event| event.rsvp_for(@profile).present? }.first
     if rsvped_for_event.present?
       redirect_to action: :registered, params: { event_id: rsvped_for_event.id, uuid: @profile.uuid }
