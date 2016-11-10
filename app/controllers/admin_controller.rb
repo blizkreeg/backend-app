@@ -31,8 +31,8 @@ class AdminController < ApplicationController
     @unmatched_reasons = Match::UNMATCH_REASONS.map { |k, v|  [v, Match.is_unmatched.with_unmatched_reason(v).count] }
   end
 
-  def stb_dashboard
-    @current_or_future_events = Event.all#current_or_future_events
+  def brew_dashboard
+    @brews = Brew.all
   end
 
   def all_users

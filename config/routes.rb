@@ -116,7 +116,7 @@ Rails.application.routes.draw do
     post '/send-push-notification', to: 'accounts#send_push_notification'
 
     # stb dashboard
-    get '/stb-dashboard', to: 'admin#stb_dashboard'
+    get '/brew-dashboard', to: 'admin#brew_dashboard', as: :brew_dashboard
   end
 
   # TODO remove this

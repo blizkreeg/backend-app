@@ -1,0 +1,20 @@
+h2 Brews
+hr
+  .mdl-grid
+    - @brews.each do |brew|
+      .mdl-cell style='width:100%'
+        .mdl-chip
+          .mdl-chip__text #{brew.id}
+        .mdl-chip
+          .mdl-chip__text #{brew.moderation_status}
+        h4 #{brew.title}
+        p
+          = brew.notes
+        h5
+          = brew.place
+          br
+          | #{brew.happening_on.to_s} at #{brew.starts_at} hours
+        h6
+          | Hosts: &nbsp;
+          - brew.profiles.merge(Brewing.hosts).each do |profile|
+            = link_to profile.firstname, admin_show_user_path(profile)
