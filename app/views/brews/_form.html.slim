@@ -37,7 +37,9 @@
         span.pull-right 9pm
         = f.range_field :starts_at, in: 9..21, step: 0.5, value: @brew.starts_at || 17, class: 'brew-form__select-time__range', oninput: "showTime(value)"
         .brew-form__select-time-display
-          | #{@brew.starts_at || '5:00 pm'}
+          | Let's meet at
+          .brew-form__select-time-display__time
+            | #{@brew.starts_at || '5:00 pm'}
 
         / .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.mdl-textfield--floating-label.full-width
         /   = f.label :title, 'Pick a time', class: 'mdl-textfield__label'
@@ -49,6 +51,8 @@
     .mdl-textfield.mdl-textfield--expandable.full-width
       / = f.label :title, "Enter something that interests you", class: 'mdl-textfield__label'
       = f.text_field :place, class: 'mdl-textfield__input'
+    .brew-form__field__helper-text
+      | Enter the name of the restaurant, cafe, or place where you're deciding to meet.
 
 
   .brew-form__field
@@ -155,5 +159,5 @@ javascript:
     hour = Math.floor(value);
     min = ("0" + (value % hour) * 60).slice(-2);
 
-    $('.brew-form__select-time-display').text(hour + ':' + min + ' ' + suffix);
+    $('.brew-form__select-time-display__time').text(hour + ':' + min + ' ' + suffix);
   }

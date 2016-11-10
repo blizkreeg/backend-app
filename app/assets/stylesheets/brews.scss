@@ -677,8 +677,15 @@ a.disabled {
 }
 
 .brew-form__select-time-display {
+  text-align: center;
+  padding: 10px 0px 0px 0px;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 600;
+}
+
+.brew-form__select-time-display__time {
+  display: inline-block;
+  padding-left: 1px;
 }
 
 .brew-form__select-tag {
