@@ -32,7 +32,7 @@ class AdminController < ApplicationController
   end
 
   def brew_dashboard
-    @brews = Brew.all
+    @brews = Brew.ordered_by_recency
   end
 
   def all_users

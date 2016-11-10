@@ -56,7 +56,8 @@ class BrewsController < WebController
   private
 
   def brew_params
-    params.require(:brew).permit(:title, :happening_on, :starts_at, :notes)
+    attributes = Brew::MASS_UPDATE_ATTRIBUTES
+    params.require(:brew).permit(*attributes)
   end
 
   def authenticated?

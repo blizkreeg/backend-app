@@ -21,6 +21,14 @@ main {
   z-index: 1;
 }
 
+.accent-color {
+  color: #f37070;
+}
+
+.accent-color--dark {
+  color: #e35159;
+}
+
 .list--unstyled {
   list-style: none;
   padding: 0;
@@ -623,7 +631,7 @@ a.disabled {
 
 .brew-form__field__helper-text {
   font-size: 16px;
-  color: #555;
+  color: #595959;
 }
 
 .brew-form .click-activity-title {

@@ -19,6 +19,14 @@ class Brew < ActiveRecord::Base
     live
   )
 
+  MASS_UPDATE_ATTRIBUTES = %i(
+    title
+    happening_on
+    starts_at
+    place
+    notes
+  )
+
   ATTRIBUTES = {
     primary_image_cloudinary_id: :string,
     title: :string,
@@ -34,11 +42,14 @@ class Brew < ActiveRecord::Base
     group_makeup: :integer,
     payment_link: :string,
     price: :integer,
+    min_desirability: :integer,
     moderation_status: :string,
     rejection_reason: :string
   }
 
   jsonb_accessor :properties, ATTRIBUTES
+
+  scope :ordered_by_recency, -> { order("brews.created_at DESC") }
 
   before_create :defaults_to_under_review
   before_create :set_price
@@ -86,6 +97,7 @@ class Brew < ActiveRecord::Base
   def approve!
     # FIXME this should be the real link
     self.payment_link = "/brews/#{self.id}/registered"
+
     self.moderation_status = 'live'
     self.save!
   end

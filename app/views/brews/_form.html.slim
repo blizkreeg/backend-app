@@ -17,7 +17,7 @@
 
   .brew-form__field
     .brew-form__field-title What day?
-    .brew-form__field-title__supporting-text The day you want to meet
+    .brew-form__field-title__supporting-text The day you want to meet.
     .brew-form__select-datetime
       .brew-form__select-date
         / TBD - make a JS component out of this
@@ -26,6 +26,7 @@
         - (post_brew_start_date..post_brew_end_date).to_a.each_with_index do |date, idx|
           div class="brew-form__select-date-options brew-form__select-tag #{'brew-form__select-tag--chosen' if date == value} " data-index="#{idx}" data-value="#{date.to_s}"
             span #{format_date(date)}
+    .brew-form__field__helper-text
 
   .brew-form__field
     .brew-form__field-title When?
