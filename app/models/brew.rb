@@ -32,7 +32,7 @@ class Brew < ActiveRecord::Base
     title: :string,
     notes: :text,
     happening_on: :date,
-    starts_at: :integer,
+    starts_at: :decimal,
     place: :string,
     address: :string,
     max_group_size: :integer,
@@ -102,6 +102,10 @@ class Brew < ActiveRecord::Base
     self.save!
   end
 
+  def reject!(reason)
+    self.update!(moderation_status: 'rejected', rejection_reason: reason)
+  end
+
   private
 
   def set_price
@@ -114,9 +118,5 @@ class Brew < ActiveRecord::Base
 
   def defaults_to_under_review
     self.moderation_status ||= 'in_review'
-  end
-
-  def reject!(reason)
-    self.update!(moderation_status: 'rejected', rejection_reason: reason)
   end
 end
