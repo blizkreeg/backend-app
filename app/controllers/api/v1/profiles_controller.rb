@@ -293,14 +293,16 @@ class Api::V1::ProfilesController < ApiController
 
     @cta_title = "Feel like meeting more people?"
     @cta_content = <<eos
-    Brew is now live! We've built a new way for you to meet singles over a group activity.
-    Enjoy more opportunities to meet interesting people from your city! Want to join?
-    We can't wait!
+    Brew is now live! We've built a new way for you to meet singles over a group activity. Enjoy more opportunities to meet interesting people from your city!
+
+    We can't wait for you to join!
+
+    &#x1f373; &nbsp; &#x1f374; &nbsp; &#x1f3a5; &nbsp; &#x2615; &nbsp; &#x1f378;
 eos
 
     if @content_type == 'link'
       @cta_url = "https://brew.ekcoffee.com?uuid=#{@current_profile.uuid}&ekcapp=1"
-      @cta_button_title = 'Join Brew'
+      @cta_button_title = @current_profile.phone.nil? ? 'Join Brew' : 'My Brews'
     end
 
     render 'api/v1/shared/home', status: 200
