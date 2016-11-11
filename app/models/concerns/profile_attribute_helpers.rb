@@ -56,4 +56,14 @@ module ProfileAttributeHelpers
   def approved?
     self.moderation_status == 'approved'
   end
+
+  def not_approved?
+    self.moderation_status != 'approved'
+  end
+
+  def low_desirability?
+    self.desirability_score <= 4
+  rescue
+    true
+  end
 end
