@@ -11,13 +11,15 @@ class BrewsController < WebController
   end
 
   def index
-    @brews = Brew
-              .min_desirability_gte((@current_profile.desirability_score || 6) - 1) # show brews just one step down from user
-              .min_desirability_lte(@current_profile.desirability_score || 6) # but not out of their band
-              .min_age_lte(@current_profile.age)
-              .max_age_gte(@current_profile.age)
-              .with_moderation_status('live')
-              .limit(25)
+    @brews = @current_profile.staff_or_internal ?
+                Brew.all :
+                Brew
+                  .min_desirability_gte((@current_profile.desirability_score || 6) - 1) # show brews just one step down from user
+                  .min_desirability_lte(@current_profile.desirability_score || 6) # but not out of their band
+                  .min_age_lte(@current_profile.age)
+                  .max_age_gte(@current_profile.age)
+                  .with_moderation_status('live')
+                  .limit(25)
 
     render 'nobrews' if @brews.blank?
     render 'index' unless performed?
