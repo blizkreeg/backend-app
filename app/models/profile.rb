@@ -19,6 +19,7 @@ class Profile < ActiveRecord::Base
   scope :of_faiths, -> (faiths) { where("profiles.properties->>'faith' IN (?)", faiths) }
   scope :of_gender, -> (gender) { with_gender(gender) }
   scope :possibly_not_single, -> { where("profiles.properties->>'possible_relationship_status' IN (?)", ['Married', 'In a relationship']) }
+  scope :not_staff, -> { not_staff_or_internal }
 
   # seeking
   scope :seeking_older_than, -> (age) { where("(CAST(profiles.properties->>'seeking_minimum_age' AS integer)) <= ?", age) }

@@ -23,7 +23,7 @@ module Matchmaker
   def create_first_matches(profile_uuid)
     profile = Profile.find(profile_uuid)
     existing_matches_sql = profile.matches.to_sql
-    matchmaking_query = Profile.visible.active.of_gender(profile.seeking_gender)
+    matchmaking_query = Profile.visible.not_staff.active.of_gender(profile.seeking_gender)
     matchmaking_query = matchmaking_query
                           .older_than(profile.seeking_minimum_age)
                           .younger_than(profile.seeking_maximum_age)
@@ -144,7 +144,7 @@ module Matchmaker
   def new_eligible_matches(profile, opts = {})
     existing_matches_sql = profile.matches.to_sql
 
-    matchmaking_query = Profile.visible.active.of_gender(profile.seeking_gender)
+    matchmaking_query = Profile.visible.not_staff.active.of_gender(profile.seeking_gender)
 
     if USE_MATCHING_MODELS.include? 'preferences'
       matchmaking_query =
