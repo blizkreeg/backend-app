@@ -12,6 +12,8 @@ class BrewsController < WebController
 
   def index
     @brews = Brew
+              .min_desirability_gte((@current_profile.desirability_score || 6) - 1) # show brews just one step down from user
+              .min_desirability_lte(@current_profile.desirability_score || 6) # but not out of their band
               .min_age_lte(@current_profile.age)
               .max_age_gte(@current_profile.age)
               .with_moderation_status('live')
