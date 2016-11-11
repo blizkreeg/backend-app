@@ -98,7 +98,7 @@ class Brew < ActiveRecord::Base
     # FIXME this should be the real link
     self.payment_link = "/brews/#{self.id}/registered"
 
-    self.min_desirability = self.profiles.merge(Brewing.host).first.try(:desirability_score) || 7 # default
+    self.min_desirability = self.profiles.merge(Brewing.hosts).first.try(:desirability_score) || 7 # default
     self.moderation_status = 'live'
     self.save!
   end

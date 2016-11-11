@@ -12,8 +12,6 @@ class BrewsController < WebController
 
   def index
     @brews = Brew
-              .min_desirability_gte(@current_profile.desirability_score - 1) # show brews just one step down from user
-              .min_desirability_lte(@current_profile.desirability_score) # but not out of their band
               .min_age_lte(@current_profile.age)
               .max_age_gte(@current_profile.age)
               .with_moderation_status('live')
@@ -44,6 +42,11 @@ class BrewsController < WebController
   end
 
   def registered
+    flash[:message] = 'You are going to this Brew!'
+    @brew = Brew.find(params[:brew_id])
+    @brew.profiles << @current_profile
+
+    redirect_to action: :show, id: @brew.id
   end
 
   def welcome_ekcoffee_users
