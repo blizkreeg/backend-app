@@ -296,8 +296,6 @@ class Api::V1::ProfilesController < ApiController
     Brew is now live! We've built a new way for you to meet singles over a group activity. Enjoy more opportunities to meet interesting people from your city!
 
     We can't wait for you to join!
-
-    &#x1f373; &nbsp; &#x1f374; &nbsp; &#x1f3a5; &nbsp; &#x2615; &nbsp; &#x1f378;
 eos
 
     if @content_type == 'link'
