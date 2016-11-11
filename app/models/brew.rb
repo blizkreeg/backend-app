@@ -4,8 +4,8 @@ class Brew < ActiveRecord::Base
   belongs_to :brew_category
 
   DEFAULT_GROUP_SIZE = 8
-  POST_BREW_MIN_NUM_DAYS_OUT = 0
-  POST_BREW_MAX_NUM_DAYS_OUT = 4
+  POST_BREW_MIN_NUM_DAYS_OUT = 2
+  POST_BREW_MAX_NUM_DAYS_OUT = 7
 
   GROUP_MAKEUPS = {
     'Balanced (men & women)' => 0,
