@@ -82,7 +82,7 @@ module BrewsHelper
   def places_remaining(brew)
     num = brew.places_remaining_for_gender(current_profile.gender)
     if num > 1
-      "#{num} places left."
+      "" # "#{num} places left."
     elsif num == 1
       "Almost full, 1 place left."
     else

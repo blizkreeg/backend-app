@@ -51,9 +51,7 @@ class Brew < ActiveRecord::Base
 
   scope :ordered_by_recency, -> { order("brews.created_at DESC") }
 
-  before_create :defaults_to_under_review
-  before_create :set_price
-  before_save :set_group_size
+  before_create :set_create_defaults
 
   def tipped?
     self.profiles.of_gender('male').count >= self.max_group_size / 4 &&
@@ -109,15 +107,10 @@ class Brew < ActiveRecord::Base
 
   private
 
-  def set_price
-    self.price = 250
-  end
-
-  def set_group_size
+  def set_create_defaults
+    self.price ||= nil
+    self.group_makeup ||= 0
+    self.moderation_status = 'in_review'
     self.max_group_size ||= DEFAULT_GROUP_SIZE
-  end
-
-  def defaults_to_under_review
-    self.moderation_status ||= 'in_review'
   end
 end
