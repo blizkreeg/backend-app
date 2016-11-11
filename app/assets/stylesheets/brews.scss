@@ -13,7 +13,7 @@ html, body {
   font-size: 16px;
   line-height: 22px;
   font-weight: 300;
-  background-color: #f7f7f7;
+  background-color: #f6f6f5;
   color: #4a4e4f;
 }
 
@@ -235,6 +235,12 @@ a.disabled {
   padding: 0;
 }
 
+.activity-preview .notice {
+  padding: 4px 6px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
 .activity-preview .title {
   justify-content: center;
   padding: 8px;
@@ -277,7 +283,7 @@ a.disabled {
 }
 
 .brew-detail__info__title {
-  color: #f37070;
+  color: #e35159;
 }
 
 .brew-detail > div {
@@ -302,6 +308,9 @@ a.disabled {
   font-weight: 300;
   text-align: center;
   font-family: $subheading_font;
+  display: inline-flex;
+  align-self: center;
+  vertical-align: middle;
 }
 
 .activity-preview .attending {
@@ -872,4 +881,13 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   font-weight: 300;
   font-family: $heading_font;
   padding: 10px 0px 25px 0px;
+}
+
+.index-nudges {
+  font-size: 16px;
+  font-weight: 300;
+  font-family: $subheading_font;
+  padding: 0px;
+  display: inline-flex;
+  vertical-align: middle;
 }

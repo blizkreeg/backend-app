@@ -18,6 +18,7 @@ class BrewsController < WebController
                   .min_desirability_lte(@current_profile.desirability_score || 6) # but not out of their band
                   .min_age_lte(@current_profile.age)
                   .max_age_gte(@current_profile.age)
+                  .happening_on_after(Time.now.in_time_zone(@current_profile.time_zone).to_date - 1.day)
                   .with_moderation_status('live')
                   .limit(25)
 

@@ -2,6 +2,10 @@
   .mdl-cell.mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--12-col-desktop
     .index-heading
       = index_page_heading
+    .index-nudges
+      i.material-icons group
+      | &nbsp; Make it more fun &amp; bring a friend along!
+
   - brews.each do |brew|
     .mdl-card.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop.activity-preview.activity
       = link_to(brew_path(brew.id), class: 'no-decor') do
@@ -9,8 +13,11 @@
         /   i.material-icons.md-36 motorcycle
         / - if rand(10) % 2 == 0
         /   .primary-image data-image-id='_MG_0580_uvtgbb'
+        - if notice(brew).present?
+          .notice
+            = notice(brew)
         .title.mdl-card__title
-          h4.mdl-typography--text-center
+          h4.mdl-typography--text-center.accent-color--dark
             = brew.title
         - if brew.notes.present?
           .short-desc

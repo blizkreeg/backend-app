@@ -43,10 +43,17 @@ module BrewsHelper
 
   def index_page_heading
     [
-      'Which Brew is your beat?',
+      # 'Which Brew is your beat?',
       'Which one will you go to?',
       'Which Brew will you be at?',
-      'Go forth. Be fearless.'
+      'Feel like meeting new people today?'
+      # 'Go forth. Be fearless.'
+    ].sample
+  end
+
+  def nudges
+    [
+      "Make it more fun and invite a friend along to a Brew."
     ].sample
   end
 
@@ -71,9 +78,9 @@ module BrewsHelper
     end
 
     if brew.tipped?
-      going << 'going.'
+      going << 'inte.'
     else
-      going << 'going.' # TODO change to interested when the feature to tip events is implemented
+      going << 'interested.' # TODO change to interested when the feature to tip events is implemented
     end
 
     going.join(' ')
@@ -88,5 +95,9 @@ module BrewsHelper
     else
       "Oh no, this Brew is full. &#x1f61e;"
     end
+  end
+
+  def notice(brew)
+    ''
   end
 end
