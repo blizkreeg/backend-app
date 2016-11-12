@@ -24,7 +24,7 @@ main
 
           - if @brew.profiles.count > 0
             #group-dynamics
-              h6.text-center Know Your Brew
+              h6.text-center Know The Group
               = render partial: 'brews/components/group_makeup', locals: { brew: @brew }
 
           - total_going = @brew.profiles.count

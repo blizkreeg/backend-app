@@ -12,6 +12,8 @@ html
     javascript:
       $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
   body
+    = render partial: 'shared/brew_google_analytics'
+
     / main body
     = yield
 
