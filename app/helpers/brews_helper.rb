@@ -46,7 +46,8 @@ module BrewsHelper
       # 'Which Brew is your beat?',
       'Which one will you go to?',
       'Which Brew will you be at?',
-      'Feel like meeting new people today?'
+      'Feel like meeting new people today?',
+      'Meet new people',
       # 'Go forth. Be fearless.'
     ].sample
   end

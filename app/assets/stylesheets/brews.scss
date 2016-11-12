@@ -12,7 +12,7 @@ html, body {
   margin-bottom: 50px;
   font-size: 16px;
   line-height: 22px;
-  font-weight: 300;
+  font-weight: 400;
   background-color: #f6f6f5;
   color: #4a4e4f;
 }
@@ -45,7 +45,7 @@ a.disabled {
 }
 
 .text--light {
-  font-weight: 200;
+  font-weight: 100;
 }
 
 .full-width {
@@ -308,8 +308,7 @@ a.disabled {
   font-weight: 300;
   text-align: center;
   font-family: $subheading_font;
-  display: inline-flex;
-  align-self: center;
+  display: inline-block;
   vertical-align: middle;
 }
 
@@ -405,7 +404,7 @@ a.disabled {
 }
 
 .group-stats__stat__supporting-text {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
 }
 
@@ -511,7 +510,7 @@ a.disabled {
 
 .action-bar__submit {
   color: #fd5b63;
-  font-weight: 600;
+  font-weight: 500;
   position: fixed;
   right: 10px;
   top: 19px;
@@ -689,7 +688,7 @@ a.disabled {
   text-align: center;
   padding: 10px 0px 0px 0px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .brew-form__select-time-display__time {
