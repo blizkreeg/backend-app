@@ -12,7 +12,9 @@ class BrewsController < WebController
 
   def index
     @brews = @current_profile.staff_or_internal ?
-                Brew.with_moderation_status('live') :
+                Brew
+                  .happening_on_after(Time.now.in_time_zone('Asia/Kolkata').to_date - 1.day)
+                  .with_moderation_status('live') :
                 Brew
                   .min_desirability_gte((@current_profile.desirability_score || 6) - 1) # show brews just one step down from user
                   .min_desirability_lte(@current_profile.desirability_score || 6) # but not out of their band
