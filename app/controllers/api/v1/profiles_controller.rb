@@ -281,19 +281,28 @@ class Api::V1::ProfilesController < ApiController
 
   # TBD: move this to a different controller
   def home
+    # https://user-agents.me/cfnetwork-version-list
+    # TODO fix this hack and have special http headers passed from the app
+    #   doing this until the iOS app has Brew implemented as a tab
+    ios_request = (request.user_agent =~ /\AekCoffee.*CFNetwork.*Darwin\/[\d\.]+\z/i).present?
+
     if Rails.env.production?
       if @current_profile.not_approved? || @current_profile.low_desirability?
         @content_type = 'none'
       else
-        @content_type = 'text'
+        @content_type = ios_request ? 'link' : 'text'
       end
     else
-      @content_type = 'text'
+      @content_type = ios_request ? 'link' : 'text'
     end
 
     @cta_title = "Meet interesting singles in a group."
     @cta_content = <<eos
-    🍸 ☕️ 🍳 🎲 🎭 🙌
+
+
+    🍸  ☕️  🍳  🎲  🎭  🙌
+
+
 
     Get Offline. Do Stuff. Socialize.
 eos
