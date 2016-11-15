@@ -56,6 +56,14 @@ a.disabled {
   width: 100%;
 }
 
+.mt-0 {
+  margin-top: 0px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
 // hide scrollbars
 ::-webkit-scrollbar {
     display: none;
@@ -100,7 +108,7 @@ a.disabled {
   background-image: image-url('brew-india-cover.jpg');
   background-position: 0px 0px;
   background-repeat: no-repeat;
-  height: 300px;
+  height: 275px;
   color: white;
 }
 
@@ -112,9 +120,17 @@ a.disabled {
 }
 
 .brews-enum-container {
-  padding: 15px 0;
+  padding: 5px 0;
   display: flex;
   flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.brews-enum-container > .mdl-cell {
+  align-self: center;
+  width: auto;
+  padding: 0px 10px;
 }
 
 .explain-brew {
