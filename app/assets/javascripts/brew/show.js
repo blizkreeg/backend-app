@@ -8,3 +8,14 @@ function loadProfilePhotos() {
     $card.find('.profile-card__photo img').replaceWith($.cloudinary.image(imageId, { width: width, height: height, crop: 'fill', gravity: 'face' }));
   });
 }
+
+function sendProfileViewedEvent(profileObject) {
+  var eventCategory = 'Profile';
+  var eventAction = 'view';
+
+  ga('send', {
+    hitType: 'event',
+    eventCategory: eventCategory,
+    eventAction: eventAction
+  });
+}
