@@ -795,13 +795,15 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   align-items: center;
   z-index: 5;
 
-  button, a, a:visited, a:hover {
+  button, button:active, button:target, a, a:visited, a:hover {
     color: #fff;
     text-decoration: none;
     font-size: 18px;
     line-height: 24px;
     display: inline-flex;
     vertical-align: middle;
+    background-color: inherit !important;
+    border: none !important;
   }
 }
 
