@@ -299,9 +299,7 @@ class Api::V1::ProfilesController < ApiController
     @cta_title = "Meet interesting singles in a group."
     @cta_content = <<eos
 
-
     🍸  ☕️  🍳  🎲  🎭  🙌
-
 
 
     Get Offline. Do Stuff. Socialize.
