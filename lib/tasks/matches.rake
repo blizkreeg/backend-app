@@ -1,7 +1,37 @@
 namespace :matches do
   desc "generate matches"
   task :generate_new => :environment do
-    puts "[#{EKC.now_in_pacific_time}] -- FINDING NEW MATCHES"
+    generate_new_matches
+  end
+
+  desc "update state for profiles that have matches"
+  task :ready_for_new => :environment do
+    send_matches_notifications
+  end
+
+  desc "run mutual matches"
+  task :find_mutual => :environment do
+    puts "[#{EKC.now_in_pacific_time}] -- FINDING MUTUAL MATCHES"
+    Profile.active.with_gender('male').where("profiles.state != 'mutual_match' AND profiles.state != 'in_conversation' AND profiles.state != 'waiting_for_matches_and_response'").find_each(batch_size: 10) do |profile|
+      profile.matches.mutual.order("matches.created_at ASC").each do |match|
+        matched_profile = match.matched_profile
+        next if matched_profile.state == 'mutual_match' || matched_profile.state == 'in_conversation'
+        next if matched_profile.active_mutual_match.present?
+
+        match.active!
+        match.reverse.active!
+        match.conversation.open!
+
+        # Matchmaker.transition_to_mutual_match(profile.uuid, match.id)
+        puts "[#{EKC.now_in_pacific_time}] -- found mutual match between #{profile.uuid} <> #{matched_profile.uuid}, changing state to 'in_conversation'"
+
+        break
+      end
+    end
+  end
+
+  def generate_new_matches
+    return # disabling matchmaking
 
     Profile.active.find_each(batch_size: 10) do |profile|
       # NOTE: you cannot make this asynchronous or we could run into a condition where two matches between the same people are being created
@@ -21,12 +51,10 @@ namespace :matches do
     end
   end
 
-  desc "update state for profiles that have matches"
-  task :ready_for_new => :environment do
-    puts "[#{EKC.now_in_pacific_time}] -- SENDING NEW MATCHES NOTIFICATION"
+  def send_matches_notifications
+    return # no more notifiying of matches, disabling matchmaking
 
     uuids_to_notify = []
-
     Profile.active.awaiting_matches.find_each(batch_size: 10) do |profile|
       begin
         if profile.has_queued_matches?
@@ -60,27 +88,6 @@ namespace :matches do
     # send notifications in batches of 100
     uuids_to_notify.each_slice(100) do |uuids|
       PushNotifier.send_transactional_push(uuids, 'new_matches')
-    end
-  end
-
-  desc "run mutual matches"
-  task :find_mutual => :environment do
-    puts "[#{EKC.now_in_pacific_time}] -- FINDING MUTUAL MATCHES"
-    Profile.active.with_gender('male').where("profiles.state != 'mutual_match' AND profiles.state != 'in_conversation' AND profiles.state != 'waiting_for_matches_and_response'").find_each(batch_size: 10) do |profile|
-      profile.matches.mutual.order("matches.created_at ASC").each do |match|
-        matched_profile = match.matched_profile
-        next if matched_profile.state == 'mutual_match' || matched_profile.state == 'in_conversation'
-        next if matched_profile.active_mutual_match.present?
-
-        match.active!
-        match.reverse.active!
-        match.conversation.open!
-
-        # Matchmaker.transition_to_mutual_match(profile.uuid, match.id)
-        puts "[#{EKC.now_in_pacific_time}] -- found mutual match between #{profile.uuid} <> #{matched_profile.uuid}, changing state to 'in_conversation'"
-
-        break
-      end
     end
   end
 end

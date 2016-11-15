@@ -285,17 +285,17 @@ class Api::V1::ProfilesController < ApiController
       if @current_profile.not_approved? || @current_profile.low_desirability?
         @content_type = 'none'
       else
-        @content_type = 'link'
+        @content_type = 'text'
       end
     else
-      @content_type = 'link'
+      @content_type = 'text'
     end
 
-    @cta_title = "Feel like meeting more people?"
+    @cta_title = "Meet interesting singles in a group."
     @cta_content = <<eos
-    Brew is now live! We've built a new way for you to meet singles over a group activity. Enjoy more opportunities to meet interesting people from your city!
+    🍸 ☕️ 🍳 🎲 🎭 🙌
 
-    We can't wait for you to join!
+    Get Offline. Do Stuff. Socialize.
 eos
 
     if @content_type == 'link'

@@ -5,6 +5,7 @@ module ApplicationHelper
 
   def homescreen_headline
     return 'Complete Basic Details' if @current_profile.incomplete
+    return 'BREW'
 
     if @current_profile.in_match_waiting_state?
       if @current_profile.matches.undecided.count > 0
@@ -37,6 +38,7 @@ module ApplicationHelper
 
   def homescreen_subheadline
     return 'Your profile is missing a few things' if @current_profile.incomplete
+    return 'Introducing,'
 
     if @current_profile.in_match_waiting_state?
       if @current_profile.matches.undecided.count > 0
