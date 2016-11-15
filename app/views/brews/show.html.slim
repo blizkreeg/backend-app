@@ -16,8 +16,8 @@ main
             h4.text-center
               span.brew-detail__info__title
                 = @brew.title
-            p.text-center
-              = @brew.notes
+            div.text-center
+              = simple_format(@brew.notes)
 
             .details
               = render partial: 'brews/components/details', locals: { brew: @brew }

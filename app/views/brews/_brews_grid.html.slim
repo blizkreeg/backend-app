@@ -22,7 +22,7 @@
             = brew.title
         - if brew.notes.present?
           .short-desc
-            = brew.notes
+            = simple_format(brew.notes)
         .details-container
           .details
             = render partial: 'brews/components/details', locals: { brew: brew }
