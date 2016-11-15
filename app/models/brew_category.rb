@@ -1,5 +1,5 @@
 class BrewCategory < ActiveRecord::Base
-  has_many :brews
+  # has_many :brews
 
   ATTRIBUTES = {
     name: :string

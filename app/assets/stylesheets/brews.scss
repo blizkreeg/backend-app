@@ -25,6 +25,10 @@ main {
   color: #f37070;
 }
 
+.accent-color--title {
+  color: #fd5b63;
+}
+
 .accent-color--dark {
   color: #e35159; // ef5948 too
 }
@@ -236,9 +240,11 @@ a.disabled {
 }
 
 .activity-preview .notice {
-  padding: 4px 6px;
-  text-align: left;
+  padding: 6px 6px;
+  text-align: center;
   border-bottom: 1px solid #eee;
+  background-color: #f6cf84;
+  color: #101010;
 }
 
 .activity-preview .title {
@@ -773,6 +779,49 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     color: #fff;
     text-decoration: none;
     font-size: 18px;
+    line-height: 24px;
+    display: inline-flex;
+    vertical-align: middle;
+  }
+}
+
+.show-interest-button {
+  text-align: center;
+  background-color: #ffac0c;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+
+  button, a, a:visited, a:hover {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 24px;
+    display: inline-flex;
+    vertical-align: middle;
+  }
+}
+
+.interested-button {
+  text-align: center;
+  background-color: #f4b50e;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+
+  a, a:visited, a:hover {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 24px;
+    display: inline-flex;
+    vertical-align: middle;
   }
 }
 
@@ -790,6 +839,9 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     color: #ffac0c;
     text-decoration: none;
     font-size: 18px;
+    line-height: 24px;
+    display: inline-flex;
+    vertical-align: middle;
   }
 }
 
@@ -799,7 +851,9 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   bottom: 0;
   width: 100%;
   height: 60px;
+  content: "&nbsp;";
 }
+
 
 .purchase-button {
   text-align: center;
@@ -889,4 +943,23 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   padding: 0px;
   display: inline-flex;
   vertical-align: middle;
+}
+
+.im-powered-link {
+  display: none !important;
+}
+
+.im-checkout {
+  max-width: 100% !important;
+}
+
+.im-checkout-btn.btn--flat {
+  border-radius: 0 !important;
+  background-color: #ffac0c !important;
+  border: none !important;
+  padding: 10px 0px !important;
+}
+
+.payments--close {
+  color: #000 !important;
 }

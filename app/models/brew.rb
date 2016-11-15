@@ -1,7 +1,7 @@
 class Brew < ActiveRecord::Base
   has_many :brewings
   has_many :profiles, through: :brewings
-  belongs_to :brew_category
+  # belongs_to :brew_category
 
   DEFAULT_GROUP_SIZE = 8
   POST_BREW_MIN_NUM_DAYS_OUT = 2
@@ -17,6 +17,7 @@ class Brew < ActiveRecord::Base
     in_review
     rejected
     live
+    expired
   )
 
   MASS_UPDATE_ATTRIBUTES = %i(
@@ -103,6 +104,25 @@ class Brew < ActiveRecord::Base
 
   def reject!(reason)
     self.update!(moderation_status: 'rejected', rejection_reason: reason)
+  end
+
+  def expire!
+    self.update!(moderation_status: 'expired')
+  end
+
+  def happening_at
+    hour = self.starts_at.floor.to_i
+    min = ((self.starts_at % hour) * 60).to_i
+
+    host_tz = self.profiles.merge(Brewing.hosts).first.time_zone
+
+    Time.new(self.happening_on.year,
+              self.happening_on.month,
+              self.happening_on.day,
+              hour,
+              min,
+              0,
+              ActiveSupport::TimeZone.new(host_tz).formatted_offset)
   end
 
   private

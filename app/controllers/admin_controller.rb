@@ -8,16 +8,6 @@ class AdminController < ApplicationController
   def dashboard
     session[:redirect_to] = '/dashboard'
 
-    # metrics to track
-    # m/f
-    # dating/rel
-    # age buckets
-    # unmatch reasons
-    # # of convos
-    #
-    #
-    #
-
     @men = Profile.with_gender('male').count
     @women = Profile.with_gender('female').count
     @intent_dating = Profile.with_intent('Dating').count

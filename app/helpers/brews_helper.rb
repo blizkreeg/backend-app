@@ -3,6 +3,7 @@ module BrewsHelper
     !@skip_header
   end
 
+  # FIXME update all instances of Asia/Kolkata to user's time zone
   def post_brew_start_date
     (Time.now.in_time_zone('Asia/Kolkata') + (Brew::POST_BREW_MIN_NUM_DAYS_OUT).days).to_date
   end
@@ -19,7 +20,7 @@ module BrewsHelper
         'Today'
       end
     elsif Time.now.in_time_zone('Asia/Kolkata').to_date == (date - 1)
-      'Tomorrow'
+      "Tomorrow, " + date.strftime("%b ") + date.day.ordinalize
     else
       date.strftime("%A, %b ") + date.day.ordinalize
     end
@@ -54,8 +55,9 @@ module BrewsHelper
 
   def nudges
     [
-      "Make it more fun and invite a friend along to a Brew."
-    ].sample
+      { mdl_icon: 'group', text: "Make it more fun &amp; ask a friend to join!" },
+      { mdl_icon: 'face', text: "Not sure what kind of people will come? Only members verified by us!" }
+    ]
   end
 
   def names_snippet(brew)
@@ -79,9 +81,9 @@ module BrewsHelper
     end
 
     if brew.tipped?
-      going << 'inte.'
+      going << 'going'
     else
-      going << 'interested.' # TODO change to interested when the feature to tip events is implemented
+      going << 'interested'
     end
 
     going.join(' ')
@@ -90,15 +92,18 @@ module BrewsHelper
   def places_remaining(brew)
     num = brew.places_remaining_for_gender(current_profile.gender)
     if num > 1
-      "" # "#{num} places left."
+      nil # "#{num} places left."
     elsif num == 1
       "Almost full, 1 place left."
     else
-      "Oh no, this Brew is full. &#x1f61e;"
+      nil
+      # "Oh no, this Brew is full. &#x1f61e;"
     end
   end
 
   def notice(brew)
     ''
+    # user_time = Time.now.in_time_zone(current_profile.time_zone)
+    # distance_of_time_in_words(user_time, brew.happening_at) + " left"
   end
 end

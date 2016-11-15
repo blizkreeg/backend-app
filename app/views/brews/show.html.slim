@@ -40,19 +40,28 @@ main
               = render partial: 'brews/profile_card', locals: { profile: profile }
 
           #join-cta.text-center
-            - if current_profile.rsvped_to_brew?(@brew)
+            - if current_profile.interested_in_brew?(@brew)
+              h4 You're interested in going.
+            - elsif current_profile.going_to_brew?(@brew)
               h4 You're going to this Brew &#x1F64C;
             - else
               h5 Interested in joining?
               h6 Getting together #{format_date(@brew.happening_on)}
 
       .mdl-layout-spacer
-  - if current_profile.rsvped_to_brew?(@brew)
-    = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "View Details &rarr;", dest: '#' }
+  - if current_profile.interested_in_brew?(@brew)
+    = render partial: 'brews/components/interested_button', locals: { placement: 'fixed', title: "Interested", dest: brew_path(@brew.id) }
+  - elsif current_profile.going_to_brew?(@brew)
+    = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "You're going!", dest: '#' }
   - else
-    - cta_title = @brew.full_for?(current_profile) ? 'Brew full!' : "Join this Brew"
-    - cta_dest = @brew.full_for?(current_profile) ? '#' : brew_register_path(@brew)
-    = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: cta_title, dest: cta_dest }
+    = render partial: 'brews/components/show_interest_button', locals: { placement: 'absolute', title: "I'm interested", dest: brew_show_interest_path(@brew.id) }
+
+  / - if current_profile.rsvped_to_brew?(@brew)
+  /   = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "View Details &rarr;", dest: '#' }
+  / - else
+  /   - cta_title = @brew.full_for?(current_profile) ? 'Brew full!' : "Join this Brew"
+  /   - cta_dest = @brew.full_for?(current_profile) ? '#' : brew_register_path(@brew)
+  /   = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: cta_title, dest: cta_dest }
 
 / TODO move to js file
 javascript:

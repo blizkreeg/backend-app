@@ -34,7 +34,7 @@ class BrewsController < WebController
 
   def create
     @brew = Brew.create!(brew_params)
-    @brew.brewings.build(profile: @current_profile, host: true)
+    @brew.brewings.build(profile: @current_profile, host: true, status: Brewing::INTERESTED)
     @brew.save!
 
     redirect_to action: 'index'
@@ -54,6 +54,14 @@ class BrewsController < WebController
     @brew.profiles << @current_profile
 
     redirect_to action: :show, id: @brew.id
+  end
+
+  def show_interest
+    @brew = Brew.find(params[:brew_id])
+    @brew.brewings.build(profile: @current_profile, host: false, status: Brewing::INTERESTED)
+    @brew.save!
+
+    redirect_to :back
   end
 
   def welcome_ekcoffee_users
