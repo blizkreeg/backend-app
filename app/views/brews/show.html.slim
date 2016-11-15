@@ -63,21 +63,9 @@ main
   /   - cta_dest = @brew.full_for?(current_profile) ? '#' : brew_register_path(@brew)
   /   = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: cta_title, dest: cta_dest }
 
-/ TODO move to js file
 javascript:
-  // Dynamically load profile photo
-  function loadProfilePhotos() {
-    width = $(window).width(); //$('.profile-card').width();
-    height = $(window).height();
-    $('.profile-card-lightbox').each(function() {
-      var $card = $(this);
-      var imageId = $card.find('.profile-card__photo').data('image-id');
-      $card.find('.profile-card__photo img').replaceWith($.cloudinary.image(imageId, { width: width, height: height, crop: 'fill', gravity: 'face' }));
-    });
-  }
-
   $(function() {
-    // this so that on Android, the profile photos load in full device height in the app webview
+    // fire on a delayed timeout so that on Android, the profile photos load in full device height in the app webview
     // window.height returns 0 if this is fired immediately when rest of content is not yet rendered
     window.setTimeout(loadProfilePhotos, 1000);
   });

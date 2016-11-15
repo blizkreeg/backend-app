@@ -16,3 +16,4 @@
 //= require jquery.easypiechart.min
 //= require underscore-min.js
 //= require brew/index.js
+//= require brew/show.js
