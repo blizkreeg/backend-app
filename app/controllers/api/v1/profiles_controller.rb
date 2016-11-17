@@ -301,13 +301,12 @@ class Api::V1::ProfilesController < ApiController
 
     🍸  ☕️  🍳  🎲  🎭  🙌
 
-
     Get Offline. Do Stuff. Socialize.
 eos
 
     if @content_type == 'link'
       @cta_url = "https://brew.ekcoffee.com?uuid=#{@current_profile.uuid}&ekcapp=1"
-      @cta_button_title = @current_profile.phone.nil? ? 'Join Brew' : 'My Brews'
+      @cta_button_title = @current_profile.phone.nil? ? 'BREW' : 'My Brews'
     end
 
     render 'api/v1/shared/home', status: 200

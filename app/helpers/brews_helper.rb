@@ -99,7 +99,7 @@ module BrewsHelper
     if num > 1
       nil # "#{num} places left."
     elsif num == 1
-      "Almost full, 1 place left."
+      '' # "Almost full, 1 place left."
     else
       nil
       # "Oh no, this Brew is full. &#x1f61e;"

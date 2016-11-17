@@ -7,7 +7,7 @@ module ApplicationHelper
     if @current_profile.incomplete
       return 'Complete Basic Details'
     elsif @current_profile.phone.present?
-      return 'Met someone at a Brew?'
+      return 'Go to a Brew'
     else
       return 'BREW'
     end
@@ -45,7 +45,7 @@ module ApplicationHelper
     if @current_profile.incomplete
       return 'Your profile is missing a few things'
     elsif @current_profile.phone.present?
-      return "We'll match you after the Brew"
+      return "Get matched with those you meet!"
     else
       return 'Introducing,'
     end
