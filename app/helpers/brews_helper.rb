@@ -3,6 +3,10 @@ module BrewsHelper
     !@skip_header
   end
 
+  def show_menu?
+    @show_bottom_menu
+  end
+
   # FIXME update all instances of Asia/Kolkata to user's time zone
   def post_brew_start_date
     (Time.now.in_time_zone('Asia/Kolkata') + (Brew::POST_BREW_MIN_NUM_DAYS_OUT).days).to_date
@@ -47,8 +51,9 @@ module BrewsHelper
       # 'Which Brew is your beat?',
       'Which one will you go to?',
       'Which Brew will you be at?',
-      'Feel like meeting new people today?',
-      'Meet new people',
+      'Meet new people today.',
+      'Meet new people.',
+      'Get offline. Do stuff. Socialize.',
       # 'Go forth. Be fearless.'
     ].sample
   end
