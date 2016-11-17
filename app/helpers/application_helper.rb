@@ -4,8 +4,13 @@ module ApplicationHelper
   end
 
   def homescreen_headline
-    return 'Complete Basic Details' if @current_profile.incomplete
-    return 'BREW'
+    if @current_profile.incomplete
+      return 'Complete Basic Details'
+    elsif @current_profile.phone.present?
+      return 'Met someone at a Brew?'
+    else
+      return 'BREW'
+    end
 
     if @current_profile.in_match_waiting_state?
       if @current_profile.matches.undecided.count > 0
@@ -37,8 +42,13 @@ module ApplicationHelper
   end
 
   def homescreen_subheadline
-    return 'Your profile is missing a few things' if @current_profile.incomplete
-    return 'Introducing,'
+    if @current_profile.incomplete
+      return 'Your profile is missing a few things'
+    elsif @current_profile.phone.present?
+      return "We'll match you after the Brew"
+    else
+      return 'Introducing,'
+    end
 
     if @current_profile.in_match_waiting_state?
       if @current_profile.matches.undecided.count > 0
