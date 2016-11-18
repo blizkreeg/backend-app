@@ -61,7 +61,8 @@ module BrewsHelper
   def nudges
     [
       { mdl_icon: 'group', text: "Make it more fun &amp; ask a friend to join!" },
-      { mdl_icon: 'face', text: "Not sure what kind of people will come? Only members verified by us!" }
+      { mdl_icon: 'face', text: "Not sure what kind of people will come? Only members verified by us!" },
+      { mdl_icon: 'group', text: "Shy about meeting strangers in a group? Tell a friend to join you!" }
     ]
   end
 

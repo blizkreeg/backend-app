@@ -8,7 +8,7 @@ main
     = render partial: 'brews/components/flash_message'
     .mdl-grid
       .mdl-layout-spacer
-      .brew-detail-outer.mdl-cell.mdl-cell--4-col-phone.mdl-cell--6-col-tablet.mdl-cell--6-col-desktop
+      .brew-detail-outer.mdl-cell.mdl-cell--4-col-phone.mdl-cell--6-col-tablet.mdl-cell--6-col-desktop.comment
         .brew-detail.activity
           .brew-detail__info
             / .icon
@@ -16,7 +16,11 @@ main
             h4.text-center
               span.brew-detail__info__title
                 = @brew.title
-            div.text-center
+
+            - if @brew.primary_image_cloudinary_id.present?
+              .primary-image data-image-id="#{@brew.primary_image_cloudinary_id}"
+
+            div.text-center style='padding: 8px 0px;'
               = simple_format(@brew.notes)
 
             .details
@@ -68,6 +72,7 @@ javascript:
     // fire on a delayed timeout so that on Android, the profile photos load in full device height in the app webview
     // window.height returns 0 if this is fired immediately when rest of content is not yet rendered
     window.setTimeout(loadProfilePhotos, 1000);
+    loadBrewImages();
   });
 
 /   $(function() {

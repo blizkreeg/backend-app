@@ -12,14 +12,14 @@
       = link_to(brew_path(brew.id), class: 'no-decor') do
         / .icon
         /   i.material-icons.md-36 motorcycle
-        / - if rand(10) % 2 == 0
-        /   .primary-image data-image-id='_MG_0580_uvtgbb'
         - if notice(brew).present?
           .notice
             = notice(brew)
         .title.mdl-card__title
           h4.mdl-typography--text-center.accent-color--title
             = brew.title
+        - if brew.primary_image_cloudinary_id.present?
+          .primary-image data-image-id="#{brew.primary_image_cloudinary_id}"
         - if brew.notes.present?
           .short-desc
             = simple_format(brew.notes)
