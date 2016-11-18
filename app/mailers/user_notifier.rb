@@ -3,8 +3,7 @@ class UserNotifier
 
   WELCOME_MESSAGES = [
     "This is #{Constants::COFOUNDERS.sample}, Co-founder of ekCoffee. Thanks for joining! :)",
-    "We are fairly new on the scene, so bear with us if you get fewer matches initially.",
-    "We're here though at all times if you need to reach us.",
+    "Reach out to us here at any time if you have questions or concerns.",
     "By the way, how did you hear about us?"
   ]
 
