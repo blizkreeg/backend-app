@@ -4,6 +4,7 @@ class BrewsController < WebController
   before_action :authenticated?, except: [:homepage]
   before_action :redirect_app_users, only: [:homepage], if: lambda { from_app? }
   before_action :has_brews_in_review?, only: [:index]
+  before_action :show_bottom_menu, only: [:index], if: lambda { logged_in? && (from_app? || mobile_device?) }
 
   def homepage
     # TODO
@@ -11,18 +12,22 @@ class BrewsController < WebController
   end
 
   def index
-    @brews = @current_profile.staff_or_internal ?
-                Brew
-                  .happening_on_after(Time.now.in_time_zone('Asia/Kolkata').to_date - 1.day)
-                  .with_moderation_status('live') :
-                Brew
-                  .min_desirability_gte((@current_profile.desirability_score || 6) - 1) # show brews just one step down from user
-                  .min_desirability_lte(@current_profile.desirability_score || 6) # but not out of their band
-                  .min_age_lte(@current_profile.age)
-                  .max_age_gte(@current_profile.age)
-                  .happening_on_after(Time.now.in_time_zone(@current_profile.time_zone).to_date - 1.day)
-                  .with_moderation_status('live')
-                  .limit(25)
+    if @current_profile.blacklisted?
+      @brews = []
+    else
+      @brews = @current_profile.staff_or_internal ?
+                  Brew
+                    .happening_on_after(Time.now.in_time_zone('Asia/Kolkata').to_date - 1.day)
+                    .with_moderation_status('live') :
+                  Brew
+                    .min_desirability_gte((@current_profile.desirability_score || 6) - 1) # show brews just one step down from user
+                    .min_desirability_lte(@current_profile.desirability_score || 6) # but not out of their band
+                    .min_age_lte(@current_profile.age)
+                    .max_age_gte(@current_profile.age)
+                    .happening_on_after(Time.now.in_time_zone(@current_profile.time_zone).to_date - 1.day)
+                    .with_moderation_status('live')
+                    .limit(25)
+    end
 
     render 'nobrews' if @brews.blank?
     render 'index' unless performed?
@@ -64,8 +69,10 @@ class BrewsController < WebController
     redirect_to :back
   end
 
-  def welcome_ekcoffee_users
+  def show_user_activity
   end
+
+  def welcome_ekcoffee_users; end
 
   def update_phone
     @current_profile.update!(phone: params[:phone])
@@ -82,7 +89,7 @@ class BrewsController < WebController
 
   def authenticated?
     if @current_profile.blank?
-      raise "You're not logged in!"
+      raise ActionController::RoutingError.new('Not Found')
     end
   end
 
@@ -98,5 +105,9 @@ class BrewsController < WebController
     if @current_profile.brews.merge(Brewing.hosts).with_moderation_status('in_review').count > 0
       flash[:message] = "We are reviewing your Brew. Stay tuned!"
     end
+  end
+
+  def show_bottom_menu
+    @show_bottom_menu = true
   end
 end

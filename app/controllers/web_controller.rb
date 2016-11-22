@@ -15,6 +15,10 @@ class WebController < ApplicationController
     @mobile_device
   end
 
+  def logged_in?
+    @current_profile.present?
+  end
+
   private
 
   # http://detectmobilebrowsers.com/
