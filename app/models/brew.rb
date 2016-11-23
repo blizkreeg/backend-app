@@ -55,8 +55,8 @@ class Brew < ActiveRecord::Base
   before_create :set_create_defaults
 
   def tipped?
-    self.profiles.of_gender('male').count >= self.max_group_size / 4 &&
-    self.profiles.of_gender('female').count >= self.max_group_size / 4
+    self.profiles.merge(Brewing.going).of_gender('male').count >= self.max_group_size / 2 &&
+    self.profiles.merge(Brewing.going).of_gender('female').count >= self.max_group_size / 2
   end
 
   def balanced_mf?
