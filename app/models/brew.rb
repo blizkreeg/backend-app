@@ -3,7 +3,7 @@ class Brew < ActiveRecord::Base
   has_many :profiles, through: :brewings
   # belongs_to :brew_category
 
-  DEFAULT_GROUP_SIZE = 8
+  MIN_GROUP_SIZE = 8
   POST_BREW_MIN_NUM_DAYS_OUT = 2
   POST_BREW_MAX_NUM_DAYS_OUT = 7
 
@@ -36,6 +36,7 @@ class Brew < ActiveRecord::Base
     starts_at: :decimal,
     place: :string,
     address: :string,
+    min_group_size: :integer,
     max_group_size: :integer,
     category: :string,
     min_age: :integer,
@@ -55,8 +56,12 @@ class Brew < ActiveRecord::Base
   before_create :set_create_defaults
 
   def tipped?
-    self.profiles.merge(Brewing.going).of_gender('male').count >= self.max_group_size / 2 &&
-    self.profiles.merge(Brewing.going).of_gender('female').count >= self.max_group_size / 2
+    self.profiles.merge(Brewing.going).of_gender('male').count >= self.min_group_size / 2 &&
+    self.profiles.merge(Brewing.going).of_gender('female').count >= self.min_group_size / 2
+  end
+
+  def hot?
+
   end
 
   def balanced_mf?
@@ -64,7 +69,7 @@ class Brew < ActiveRecord::Base
   end
 
   def places_remaining_for_gender(gender)
-    rsvp_count = self.profiles.with_gender(gender).count
+    rsvp_count = self.profiles.merge(Brewing.going).with_gender(gender).count
 
     if self.balanced_mf?
       self.max_group_size/2 - rsvp_count
@@ -135,6 +140,7 @@ class Brew < ActiveRecord::Base
     self.price ||= nil
     self.group_makeup ||= 0
     self.moderation_status = 'in_review'
-    self.max_group_size ||= DEFAULT_GROUP_SIZE
+    self.min_group_size ||= MIN_GROUP_SIZE
+    self.max_group_size ||= self.min_group_size * 1.5
   end
 end
