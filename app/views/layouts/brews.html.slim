@@ -2,6 +2,7 @@ doctype html
 html
   head
     meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    title BREW
     / = stylesheet_link_tag 'https://fonts.googleapis.com/icon?family=Material+Icons'
     = stylesheet_link_tag 'https://code.getmdl.io/1.2.1/material.blue_grey-amber.min.css'
     = javascript_include_tag 'https://code.getmdl.io/1.2.1/material.min.js', defer: true
@@ -16,10 +17,3 @@ html
 
     / main body
     = yield
-
-    / a bottom anchored menu if mobile device/ekc app webview
-    - if false && mobile_device?
-      .mobile-bottom-menu-holder
-      .mobile-bottom-menu
-        | akjshdfasdf
-        | lahsdfkjds
