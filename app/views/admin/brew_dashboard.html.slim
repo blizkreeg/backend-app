@@ -19,15 +19,21 @@ hr
           - brew.profiles.merge(Brewing.hosts).each do |profile|
             li
               = link_to profile.firstname, admin_show_user_path(profile)
+              | &nbsp;
+              = link_to profile.phone, "tel: +91#{profile.phone}"
 
         h6 Interested
         ul.list--unstyled
           - brew.profiles.merge(Brewing.interested).each do |profile|
             li
               = link_to profile.firstname, admin_show_user_path(profile)
+              | &nbsp;
+              = link_to profile.phone, "tel: +91#{profile.phone}"
 
         h6 Going
         ul.list--unstyled
         - brew.profiles.merge(Brewing.going).each do |profile|
           li
             = link_to profile.firstname, admin_show_user_path(profile)
+            | &nbsp;
+            = link_to profile.phone, "tel: +91#{profile.phone}"
