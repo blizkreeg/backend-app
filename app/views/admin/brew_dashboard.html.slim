@@ -15,13 +15,19 @@ hr
           br
           | #{brew.happening_on.to_s} at #{brew.starts_at} hours
         h6 Host(s)
-        - brew.profiles.merge(Brewing.hosts).each do |profile|
-          = link_to profile.firstname, admin_show_user_path(profile)
+        ul.list--unstyled
+          - brew.profiles.merge(Brewing.hosts).each do |profile|
+            li
+              = link_to profile.firstname, admin_show_user_path(profile)
 
         h6 Interested
-        - brew.profiles.merge(Brewing.interested).each do |profile|
-          = link_to profile.firstname, admin_show_user_path(profile)
+        ul.list--unstyled
+          - brew.profiles.merge(Brewing.interested).each do |profile|
+            li
+              = link_to profile.firstname, admin_show_user_path(profile)
 
         h6 Going
+        ul.list--unstyled
         - brew.profiles.merge(Brewing.going).each do |profile|
-          = link_to profile.firstname, admin_show_user_path(profile)
+          li
+            = link_to profile.firstname, admin_show_user_path(profile)
