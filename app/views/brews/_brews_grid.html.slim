@@ -53,7 +53,10 @@
 
       .cta
         - if current_profile.interested_in_brew?(brew)
-          = render partial: 'brews/components/interested_button', locals: { placement: 'absolute', title: "Interested", dest: brew_path(brew.id) }
+          - if brew.price.nil?
+            = render partial: 'brews/components/interested_button', locals: { placement: 'absolute', title: "Interested", dest: brew_path(brew.id) }
+          - else
+            = render partial: 'brews/components/purchase_button', locals: { placement: 'absolute', title: "Confirm", dest: brew.payment_link, brew: brew }
         - elsif current_profile.going_to_brew?(brew)
           = render partial: 'brews/components/registered_button', locals: { placement: 'absolute', title: "You're going!", dest: brew_path(brew.id) }
         - else

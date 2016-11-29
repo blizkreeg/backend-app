@@ -61,7 +61,8 @@ class Brew < ActiveRecord::Base
   end
 
   def hot?
-
+    self.profiles.merge(Brewing.interested).of_gender('male').count >= self.min_group_size / 2 &&
+    self.profiles.merge(Brewing.interested).of_gender('female').count >= self.min_group_size / 2
   end
 
   def balanced_mf?

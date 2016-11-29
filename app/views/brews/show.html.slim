@@ -54,7 +54,7 @@ main
 
       .mdl-layout-spacer
   - if current_profile.interested_in_brew?(@brew)
-    = render partial: 'brews/components/interested_button', locals: { placement: 'fixed', title: "Interested", dest: brew_path(@brew.id) }
+    = render partial: 'brews/components/purchase_button', locals: { placement: 'fixed', title: "Confirm", dest: @brew.payment_link }
   - elsif current_profile.going_to_brew?(@brew)
     = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "You're going!", dest: '#' }
   - else
