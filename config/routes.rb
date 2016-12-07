@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   # Brew
 
-  resources :brews, only: [:index, :new, :create, :show] do
+  resources :brews, only: [:index, :new, :create, :edit, :update, :show] do
     post '/show-interest', to: 'brews#show_interest', as: :show_interest
     get '/register', to: 'brews#register', as: :register
     get '/registered', to: 'brews#registered', as: :registered
@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get '/homepage', to: 'brews#homepage'
   get '/welcome', to: 'brews#welcome_ekcoffee_users'
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
+  get '/activity', to: 'brews#show_user_activity', as: :brew_show_user_activity
 
   root to: 'brews#homepage'
 
