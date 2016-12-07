@@ -1,0 +1,12 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brew_path(@brew), title: 'Update Brew', submit: true, submit_title: 'Update', default_submit_disabled: true }
+
+main
+  .mobile-action-bar-holder
+  .max960
+    .mdl-grid
+      .mdl-layout-spacer
+      .create-brew-container.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop
+        h6 Update your Brew
+        = render partial: 'brews/form'
+      .mdl-layout-spacer

@@ -47,6 +47,17 @@ class BrewsController < WebController
     redirect_to action: 'index'
   end
 
+  def edit
+    @brew = Brew.find(params[:id])
+  end
+
+  def update
+    @brew = Brew.find(params[:id])
+    @brew.update!(brew_params)
+
+    redirect_to brew_path(@brew)
+  end
+
   def show
     @brew = Brew.find(params[:id])
   end
