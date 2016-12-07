@@ -20,7 +20,7 @@ main
             - if @brew.primary_image_cloudinary_id.present?
               .primary-image data-image-id="#{@brew.primary_image_cloudinary_id}"
 
-            div.text-center style='padding: 8px 0px;'
+            div.notes
               = simple_format(@brew.notes)
 
             .details
@@ -73,6 +73,7 @@ javascript:
     // window.height returns 0 if this is fired immediately when rest of content is not yet rendered
     window.setTimeout(loadProfilePhotos, 1000);
     loadBrewImages();
+    $.cloudinary.responsive();
   });
 
 /   $(function() {

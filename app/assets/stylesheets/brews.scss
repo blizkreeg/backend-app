@@ -1016,3 +1016,52 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   // readability mode
   // SO: http://stackoverflow.com/questions/2999600/how-to-disable-safari-reader-in-a-web-page/15418461#15418461
 }
+
+.images-carousel {
+  height: 160px !important;
+}
+
+.brew-image {
+  width: 100%;
+}
+
+.brew-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.images-carousel .owl-stage {
+  width: 100% !important;
+  height: 160px;
+}
+
+.images-carousel .owl-item {
+  width: 100% !important;
+  height: 160px !important;
+}
+
+.notes {
+  padding: 8px 0px;
+  position: relative;
+  text-align: center;
+}
+
+// .notes--shortened {
+//   max-height: 150px;
+//   position: relative;
+//   overflow: hidden;
+// }
+
+// .read-more {
+//   position: absolute;
+//   bottom: 0px;
+//   left: 0;
+//   width: 100%;
+//   text-align: center;
+//   padding: 1px 0;
+//   font-weight: bold;
+
+//   /* "transparent" only works here because == rgba(0,0,0,0) */
+//   background-image: linear-gradient(to bottom, transparent, #f9de56);
+// }
