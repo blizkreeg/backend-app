@@ -115,7 +115,7 @@ class BrewsController < WebController
   end
 
   def has_brews_in_review?
-    if @current_profile.brews.merge(Brewing.hosts).with_moderation_status('in_review').count > 0
+    if logged_in? && @current_profile.brews.merge(Brewing.hosts).with_moderation_status('in_review').count > 0
       flash[:message] = "We are reviewing your Brew. Stay tuned!"
     end
   end
