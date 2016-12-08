@@ -15,5 +15,6 @@
 //= require jquery.cloudinary
 //= require jquery.easypiechart.min
 //= require underscore-min.js
+//= require unslider
 //= require brew/index.js
 //= require brew/show.js
