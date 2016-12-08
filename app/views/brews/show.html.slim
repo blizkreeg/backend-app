@@ -25,14 +25,17 @@ main
                 = @brew.title
 
             - if @brew.primary_image_cloudinary_id.present?
-              .image-carousel-slider
-                ul
-                  li
-                    .brew-image.primary-image data-image-id="#{@brew.primary_image_cloudinary_id}"
-                  - if @brew.other_images_cloudinary_ids.present?
-                    - @brew.other_images_cloudinary_ids.each do |image_id|
-                      li
-                        .brew-image data-image-id="#{image_id}"
+              - if @brew.other_images_cloudinary_ids.present?
+                .image-carousel-slider
+                  ul
+                    li
+                      .brew-image.primary-image data-image-id="#{@brew.primary_image_cloudinary_id}"
+                    - if @brew.other_images_cloudinary_ids.present?
+                      - @brew.other_images_cloudinary_ids.each do |image_id|
+                        li
+                          .brew-image data-image-id="#{image_id}"
+              - else
+                .brew-image.primary-image data-image-id="#{@brew.primary_image_cloudinary_id}"
 
             div.notes
               = simple_format(@brew.notes)
