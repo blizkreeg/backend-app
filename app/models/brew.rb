@@ -26,12 +26,15 @@ class Brew < ActiveRecord::Base
     starts_at
     place
     notes
+    formatted_details
   )
 
   ATTRIBUTES = {
     primary_image_cloudinary_id: :string,
+    other_images_cloudinary_ids: :string_array,
     title: :string,
     notes: :text,
+    formatted_details: :text,
     happening_on: :date,
     starts_at: :decimal,
     place: :string,

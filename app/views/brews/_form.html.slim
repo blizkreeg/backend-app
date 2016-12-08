@@ -62,6 +62,7 @@
       = f.label :notes, "You may choose to give more details.", class: 'mdl-textfield__label'
       = f.text_area :notes, class: 'mdl-textfield__input'
     .brew-form__field__helper-text
+
   / .brew-form__field
   /   .brew-form__field-title Group's age range
   /   .brew-form__field-title__supporting-text Must be spread at least 5 years.
@@ -76,6 +77,15 @@
   /         .brew-form__select-gender-makeup-options.brew-form__select-tag data-index="#{idx}" data-value="#{str}"
   /           span #{str}
 
+  - if current_profile_is_admin?
+    .brew-form__field
+      .brew-form__field-title Preformatted Details (goes below notes)
+      .brew-form__field-title__supporting-text Optional
+      .mdl-textfield.mdl-js-textfield.mdl-textfield--expandable.full-width
+        = f.label :formatted_details, '', class: 'mdl-textfield__label'
+        = f.text_area :formatted_details, class: 'mdl-textfield__input'
+      .brew-form__field__helper-text.mustard-color
+        | Visible only to staff and internal
 
 javascript:
   $(document).ready(function() {

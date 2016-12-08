@@ -33,10 +33,19 @@ main {
   color: #e35159; // ef5948 too
 }
 
+.mustard-color {
+  color: #f4b50e;
+}
+
 .list--unstyled {
   list-style: none;
   padding: 0;
   margin: 0;
+}
+
+a, a:hover, a:visited {
+  color: #fd5b63;
+  text-decoration: none;
 }
 
 a.no-decor, a.no-decor:visited, a.no-decor:hover {
@@ -661,7 +670,6 @@ a.disabled {
 
 .brew-form__field__helper-text {
   font-size: 16px;
-  color: #595959;
 }
 
 .brew-form .click-activity-title {
@@ -1065,3 +1073,19 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 //   /* "transparent" only works here because == rgba(0,0,0,0) */
 //   background-image: linear-gradient(to bottom, transparent, #f9de56);
 // }
+
+.anonymous-notice {
+  margin-top: 60px;
+  padding: 20px 0px;
+  background-color: #f2ba66;
+  color: white;
+  font-weight: 400;
+  font-size: 18px;
+  text-align: center;
+  font-family: $subheading_font;
+
+  a, a:visited, a:hover {
+    color: white;
+    text-decoration: underline;
+  }
+}

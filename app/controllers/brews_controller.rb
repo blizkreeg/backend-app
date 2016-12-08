@@ -1,7 +1,7 @@
 class BrewsController < WebController
   layout 'brews'
 
-  before_action :authenticated?, except: [:homepage]
+  before_action :authenticated?, except: [:homepage, :index, :show]
   before_action :redirect_app_users, only: [:homepage], if: lambda { from_app? }
   before_action :has_brews_in_review?, only: [:index]
   before_action :show_bottom_menu, only: [:index], if: lambda { logged_in? && (from_app? || mobile_device?) }

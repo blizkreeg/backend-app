@@ -1,10 +1,17 @@
-- if mobile_device?
+- if anonymous?
   .action-bar
-    = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brews_path, title: 'Brew' }
+    = render partial: 'brews/components/actionbar', locals: { title: 'Brew' }
+  .anonymous-notice
+    | To join this Brew and see who else is going, download the&nbsp;
+    = link_to 'ekCoffee app', 'http://goo.gl/JPLpqS'
+- else
+  - if mobile_device?
+    .action-bar
+      = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brews_path, title: 'Brew' }
+    .mobile-action-bar-holder
 
 main
-  .mobile-action-bar-holder
-  .max960
+  .max960.comment
     = render partial: 'brews/components/flash_message'
     .mdl-grid
       .mdl-layout-spacer
@@ -22,6 +29,7 @@ main
 
             div.notes
               = simple_format(@brew.notes)
+              = raw(@brew.formatted_details)
 
             .details
               = render partial: 'brews/components/details', locals: { brew: @brew }
@@ -33,32 +41,43 @@ main
 
           - total_going = @brew.profiles.count
 
-          #preview-faces
-            h6.text-center
-              = names_snippet(@brew)
-              = going_snippet(@brew)
-            = render partial: 'brews/faces', locals: { profiles: @brew.profiles, link_profile: true }
+          - if anonymous?
+            - if @brew.profiles.count > 0
+              h5.text-center #{@brew.profiles.count} interested in going
 
-          #profile-cards
-            - @brew.profiles.each do |profile|
-              = render partial: 'brews/profile_card', locals: { profile: profile }
+          - else
+            #preview-faces
+              h6.text-center
+                = names_snippet(@brew)
+                = going_snippet(@brew)
+              = render partial: 'brews/faces', locals: { profiles: @brew.profiles, link_profile: true }
 
-          #join-cta.text-center
-            - if current_profile.interested_in_brew?(@brew)
-              h4 You're interested in going.
-            - elsif current_profile.going_to_brew?(@brew)
-              h4 You're going to this Brew &#x1F64C;
-            - else
-              h5 Interested in joining?
-              h6 Getting together #{format_date(@brew.happening_on)}
+          - if anonymous?
+          - else
+            #profile-cards
+              - @brew.profiles.each do |profile|
+                = render partial: 'brews/profile_card', locals: { profile: profile }
+
+          - if anonymous?
+          - else
+            #join-cta.text-center
+              - if current_profile.interested_in_brew?(@brew)
+                h4 You're interested in going.
+              - elsif current_profile.going_to_brew?(@brew)
+                h4 You're going to this Brew &#x1F64C;
+              - else
+                h5 Interested in joining?
+                h6 Getting together #{format_date(@brew.happening_on)}
 
       .mdl-layout-spacer
-  - if current_profile.interested_in_brew?(@brew)
-    = render partial: 'brews/components/purchase_button', locals: { placement: 'fixed', title: "Confirm", dest: @brew.payment_link }
-  - elsif current_profile.going_to_brew?(@brew)
-    = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "You're going!", dest: '#' }
+  - if anonymous?
   - else
-    = render partial: 'brews/components/show_interest_button', locals: { placement: 'fixed', title: "I'm interested", dest: brew_show_interest_path(@brew.id) }
+    - if current_profile.interested_in_brew?(@brew)
+      = render partial: 'brews/components/purchase_button', locals: { placement: 'fixed', title: "Confirm", dest: @brew.payment_link }
+    - elsif current_profile.going_to_brew?(@brew)
+      = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "You're going!", dest: '#' }
+    - else
+      = render partial: 'brews/components/show_interest_button', locals: { placement: 'fixed', title: "I'm interested", dest: brew_show_interest_path(@brew.id) }
 
   / - if current_profile.rsvped_to_brew?(@brew)
   /   = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "View Details &rarr;", dest: '#' }

@@ -9,6 +9,8 @@ class WebController < ApplicationController
   EKCOFFEE_APP_HEADER = 'X-EKCOFFEE-APP'
   EKCOFFEE_APP_PROFILE_UUID_HEADER = 'X-EKCOFFEE-PROFILE-UUID'
 
+  helper_method :anonymous?, :current_profile_is_admin?
+
   protected
 
   def mobile_device?
@@ -17,6 +19,14 @@ class WebController < ApplicationController
 
   def logged_in?
     @current_profile.present?
+  end
+
+  def anonymous?
+    @current_profile.blank?
+  end
+
+  def current_profile_is_admin?
+    @current_profile.present? && @current_profile.staff_or_internal
   end
 
   private
