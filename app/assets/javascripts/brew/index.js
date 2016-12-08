@@ -17,6 +17,6 @@ function loadBrewImages() {
     $imageDiv = $(imageDiv);
     var imageId = $imageDiv.data('image-id');
     var divWidth = $imageDiv.width();
-    $imageDiv.prepend($.cloudinary.image(imageId, { width: divWidth, crop: "fill", gravity: "north" }));
+    $imageDiv.prepend($.cloudinary.image(imageId, { height: 180, width: divWidth, crop: "fill", gravity: "north" }));
   });
 }
