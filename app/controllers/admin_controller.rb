@@ -27,7 +27,7 @@ class AdminController < ApplicationController
 
   def all_users
     @page = (params[:page] || 0).to_i
-    @profiles = Profile.order("created_at DESC").offset(@page * 25).limit(25)
+    @profiles = Profile.ordered_by_last_seen.offset(@page * 25).limit(25)
   end
 
   def unmoderated

@@ -37,6 +37,7 @@ class Profile < ActiveRecord::Base
                                         state = 'show_matches_and_waiting_for_response'") }
   scope :within_distance, -> (lat, lng, meters=nil) { where("earth_box(ll_to_earth(?, ?), ?) @> ll_to_earth(profiles.search_lat, profiles.search_lng)", lat, lng, meters || Constants::NEAR_DISTANCE_METERS) }
   scope :ordered_by_distance, -> (lat, lng, dir='ASC') { select("*, earth_distance(ll_to_earth(profiles.search_lat,profiles.search_lng), ll_to_earth(#{lat}, #{lng})) as distance").order("distance #{dir}") }
+  scope :ordered_by_last_seen, { order("(profiles.properties->>'last_seen_at')::timestamp DESC") }
 
   scope :youngest, -> { order("(profiles.properties->>'age')::integer ASC").limit(1).take }
   scope :oldest, -> { order("(profiles.properties->>'age')::integer DESC").limit(1).take }
@@ -156,6 +157,7 @@ class Profile < ActiveRecord::Base
     moderation_status_reason:     :string,
     visible:                      :boolean,
     staff_or_internal:            :boolean,
+    administrator:                :boolean,
     approved_for_stb:             :boolean,
 
     # matching related
