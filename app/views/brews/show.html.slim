@@ -98,8 +98,7 @@ main
 
 javascript:
   $(function() {
-    // fire on a delayed timeout so that on Android, the profile photos load in full device height in the app webview
-    // window.height returns 0 if this is fired immediately when rest of content is not yet rendered
+    // fire on a delayed timeout so that on Android, the profile photos load in full device height in the app webview. window.height returns 0 if this is fired immediately when rest of content is not yet rendered
     window.setTimeout(loadProfilePhotos, 1000);
     loadBrewImages();
     $.cloudinary.responsive();

@@ -33,7 +33,7 @@
 
         - if brew.notes.present?
           .short-desc
-            = simple_format(brew.notes[0..249])
+            = simple_format(truncate(strip_tags(brew.notes), length: 250))
         .details-container
           .details
             = render partial: 'brews/components/details', locals: { brew: brew }
