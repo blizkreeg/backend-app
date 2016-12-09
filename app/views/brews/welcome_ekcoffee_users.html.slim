@@ -21,42 +21,26 @@ main style='background-color: #f7f7f7'
     .mdl-grid
       .mdl-layout-spacer
       .mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop style='justify-content: center;'
-        h6.text-center.mt-0 Introducing,
+        / h6.text-center.mt-0 Introducing,
         h3.text-center.mt-10 BREW
         h4.text-center.mt-10 Meet singles in a group.
-        .brews-enum-container.mdl-grid.mdl-grid--no-spacing
-          .mdl-cell
-            | &#x1f373;
-          .mdl-cell
-            | &#x1f374;
-          .mdl-cell
-            | &#x1f3a5;
-          .mdl-cell
-            | &#x2615;
-          .mdl-cell
-            | &#x1f378;
-        / h5.text-center We'd like to invite you to Brew!
-        / p.text-center A new concept by ekCoffee.
         / .brews-enum-container.mdl-grid.mdl-grid--no-spacing
         /   .mdl-cell
+        /     | &#x1f373;
         /   .mdl-cell
+        /     | &#x1f374;
         /   .mdl-cell
+        /     | &#x1f3a5;
         /   .mdl-cell
+        /     | &#x2615;
         /   .mdl-cell
-        /   .mdl-cell
-        /   .mdl-cell
-        /   .mdl-cell
-        /   .mdl-cell
-        /   .mdl-cell
-        /   .mdl-cell
+        /     | &#x1f378;
         h6.text-center Enter your mobile to join.
-        .phone-input
+        .phone-input style='width:auto;margin:0px auto;'
           = form_tag update_phone_path, method: :post do
             .mdl-grid.mdl-grid--no-spacing style='justify-content:center;flex-flow:row nowrap;align-items:center;'
-              .mdl-cell
               .mdl-cell style='width:auto;'
                 = phone_field_tag :phone, @current_profile.phone, class: 'mdl-textfield__input', maxlength: 10, required: true, placeholder: '9821066894', style: 'width: 200px;height:50px;background-color:white;border:1px solid #ccc;padding: 0px 10px;font-size:26px;text-align:center;font-weight:200;letter-spacing:2.4px;'
-              .mdl-cell
                 .show-interest-button.fixed-bottom style="position: fixed;justify-content:center;align-items:center;"
                   = button_tag(method: :post) do
                     | Join
