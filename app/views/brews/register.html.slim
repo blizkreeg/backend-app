@@ -1,6 +1,6 @@
 - if mobile_device?
   .action-bar
-    = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brew_path(@brew), title: 'Join this Brew' }
+    = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brew_path(@brew.slug), title: 'Join this Brew' }
 
 main
   .mobile-action-bar-holder
@@ -16,7 +16,7 @@ main
         .details
           = render partial: 'brews/components/details', locals: { brew: @brew }
 
-  = render partial: 'brews/components/purchase_button', locals: { title: "Signup for this Brew", dest: @brew.payment_link }
+  = render partial: 'brews/components/purchase_button', locals: { brew: @brew, title: "Signup for this Brew", dest: @brew.payment_link }
 
   .fine-print.text-center
     p

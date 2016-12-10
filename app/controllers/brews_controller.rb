@@ -50,34 +50,40 @@ class BrewsController < WebController
   end
 
   def edit
-    @brew = Brew.find(params[:id])
+    @brew = Brew.with_slug(params[:slug]).take
   end
 
   def update
-    @brew = Brew.find(params[:id])
+    @brew = Brew.with_slug(params[:slug]).take
     @brew.update!(brew_params)
 
-    redirect_to brew_path(@brew)
+    redirect_to brew_path(@brew.slug)
   end
 
   def show
-    @brew = Brew.find(params[:id])
+    @brew = Brew.with_slug(params[:slug]).take
   end
 
   def register
-    @brew = Brew.find(params[:brew_id])
+    @brew = Brew.with_slug(params[:brew_slug]).take
   end
 
   def registered
     flash[:message] = 'You are going to this Brew!'
-    @brew = Brew.find(params[:brew_id])
-    @brew.profiles << @current_profile
+    @brew = Brew.with_slug(params[:brew_slug]).take
+    brewing = @brew.brewings.where(profile_uuid: @current_profile.uuid).take
+    if brewing.present?
+      brewing.update!(status: Brewing::GOING)
+    else
+      @brew.brewings.build(profile: @current_profile, host: false, status: Brewing::GOING)
+      @brew.save
+    end
 
-    redirect_to action: :show, id: @brew.id
+    redirect_to brew_path(@brew.slug)
   end
 
   def show_interest
-    @brew = Brew.find(params[:brew_id])
+    @brew = Brew.with_slug(params[:brew_slug]).take
     @brew.brewings.build(profile: @current_profile, host: false, status: Brewing::INTERESTED)
     @brew.save!
 

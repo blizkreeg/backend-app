@@ -87,7 +87,7 @@ main
     - elsif current_profile.going_to_brew?(@brew)
       = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "You're going!", dest: '#' }
     - else
-      = render partial: 'brews/components/show_interest_button', locals: { placement: 'fixed', title: "I'm interested", dest: brew_show_interest_path(@brew.id) }
+      = render partial: 'brews/components/show_interest_button', locals: { placement: 'fixed', title: "I'm interested", dest: brew_show_interest_path(@brew.slug) }
 
   / - if current_profile.rsvped_to_brew?(@brew)
   /   = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "View Details &rarr;", dest: '#' }

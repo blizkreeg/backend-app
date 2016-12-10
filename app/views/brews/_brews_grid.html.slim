@@ -9,7 +9,7 @@
 
   - brews.each do |brew|
     .mdl-card.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop.activity-preview.activity
-      = link_to(brew_path(brew.id), class: 'no-decor') do
+      = link_to(brew_path(brew.slug), class: 'no-decor') do
         / .icon
         /   i.material-icons.md-36 motorcycle
         - if notice(brew).present?
@@ -65,15 +65,15 @@
       .cta
         - if current_profile.interested_in_brew?(brew)
           - if brew.price.nil?
-            = render partial: 'brews/components/interested_button', locals: { placement: 'absolute', title: "Interested", dest: brew_path(brew.id) }
+            = render partial: 'brews/components/interested_button', locals: { placement: 'absolute', title: "Interested", dest: brew_path(brew.slug) }
           - else
             = render partial: 'brews/components/purchase_button', locals: { placement: 'absolute', title: "Confirm", dest: brew.payment_link, brew: brew }
         - elsif current_profile.going_to_brew?(brew)
-          = render partial: 'brews/components/registered_button', locals: { placement: 'absolute', title: "You're going!", dest: brew_path(brew.id) }
+          = render partial: 'brews/components/registered_button', locals: { placement: 'absolute', title: "You're going!", dest: brew_path(brew.slug) }
         - else
-          = render partial: 'brews/components/show_interest_button', locals: { placement: 'absolute', title: "I'm interested", dest: brew_show_interest_path(brew.id) }
+          = render partial: 'brews/components/show_interest_button', locals: { placement: 'absolute', title: "I'm interested", dest: brew_show_interest_path(brew.slug) }
           / - btn_title = brew.full_for?(current_profile) ? 'FULL' : "I'm interested &rarr;"
-          / = render partial: 'brews/brew_cta_button', locals: { placement: 'absolute', title: btn_title, dest: brew_path(brew.id) }
+          / = render partial: 'brews/brew_cta_button', locals: { placement: 'absolute', title: btn_title, dest: brew_path(brew.slug) }
 
 javascript:
   $(function() {

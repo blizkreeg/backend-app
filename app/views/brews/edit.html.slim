@@ -1,5 +1,5 @@
 - if mobile_device?
-  = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brew_path(@brew), title: 'Update Brew', submit: true, submit_title: 'Update', default_submit_disabled: true }
+  = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brew_path(@brew.slug), title: 'Update Brew', submit: true, submit_title: 'Update', default_submit_disabled: true }
 
 main
   .mobile-action-bar-holder

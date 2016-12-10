@@ -33,6 +33,7 @@ class Brew < ActiveRecord::Base
     primary_image_cloudinary_id: :string,
     other_images_cloudinary_ids: :string_array,
     title: :string,
+    slug: :string,
     notes: :text,
     formatted_details: :text,
     happening_on: :date,
@@ -105,7 +106,7 @@ class Brew < ActiveRecord::Base
 
   def approve!
     # FIXME this should be the real link
-    self.payment_link ||= "/brews/#{self.id}/registered"
+    self.payment_link ||= "/brews/#{self.slug}/registered"
 
     # FIXME this should be changed to primary host
     host = self.profiles.merge(Brewing.hosts).first
@@ -151,6 +152,12 @@ class Brew < ActiveRecord::Base
     self.price.blank?
   end
 
+  def slugify_title
+    self.slug ||= [self.title.parameterize,
+                    self.happening_on.to_s,
+                    6.times.map{ (('a'..'z').to_a + (0..9).to_a).sample }.join].join('-')
+  end
+
   private
 
   def set_create_defaults
@@ -159,5 +166,8 @@ class Brew < ActiveRecord::Base
     self.moderation_status = 'in_review'
     self.min_group_size ||= MIN_GROUP_SIZE
     self.max_group_size ||= self.min_group_size * 1.5
+    self.slugify_title
+
+    true
   end
 end

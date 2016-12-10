@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   # Brew
 
-  resources :brews, only: [:index, :new, :create, :edit, :update, :show] do
+  resources :brews, param: :slug, only: [:index, :new, :create, :edit, :update, :show] do
     post '/show-interest', to: 'brews#show_interest', as: :show_interest
     get '/register', to: 'brews#register', as: :register
     get '/registered', to: 'brews#registered', as: :registered
