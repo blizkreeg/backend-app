@@ -15,7 +15,7 @@ class BrewsController < WebController
     if @current_profile.blacklisted?
       @brews = []
     else
-      @brews = @current_profile.staff_or_internal ?
+      @brews = @current_profile.administrator ?
                   Brew
                     .happening_on_after(Time.now.in_time_zone('Asia/Kolkata').to_date - 1.day)
                     .with_moderation_status('live')
