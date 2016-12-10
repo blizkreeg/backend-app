@@ -44,6 +44,8 @@ class BrewsController < WebController
     @brew.brewings.build(profile: @current_profile, host: true, status: Brewing::INTERESTED)
     @brew.save!
 
+    NotificationsWorker.delay.notify_admins_of_new_brew(@brew.id)
+
     redirect_to action: 'index'
   end
 
@@ -78,6 +80,8 @@ class BrewsController < WebController
     @brew = Brew.find(params[:brew_id])
     @brew.brewings.build(profile: @current_profile, host: false, status: Brewing::INTERESTED)
     @brew.save!
+
+    NotificationsWorker.delay.notify_hosts_of_new_rsvp(@brew.id, @current_profile.uuid)
 
     redirect_to :back
   end

@@ -148,6 +148,8 @@ class AdminController < ApplicationController
     brew = Brew.find(params[:brew_id])
     brew.approve!
 
+    NotificationsWorker.delay.notify_hosts_of_brew_approval(brew_id)
+
     redirect_to :back
   end
 
