@@ -1,42 +1,48 @@
-h2 Brews
-hr
+h3 Brews
+.mdl-grid.mdl-grid--no-spacing
+  - @brews.each do |brew|
+    .mdl-cell style='width:100%'
+      .mdl-chip
+        .mdl-chip__text #{brew.id}
+      .mdl-chip
+        .mdl-chip__text #{brew.moderation_status.upcase}
 
-  .mdl-grid
-    - @brews.each do |brew|
-      .mdl-cell style='width:100%'
-        .mdl-chip
-          .mdl-chip__text #{brew.id}
-        .mdl-chip
-          .mdl-chip__text #{brew.moderation_status}
-        = button_to "Approve", { action: :approve_brew, brew_id: brew.id }, method: :post
-        = button_to "Reject", { action: :reject_brew, brew_id: brew.id }, method: :post
-        h4 #{brew.title}
-        p
-          = brew.notes
-        h5
-          = brew.place
-          br
-          | #{brew.happening_on.to_s} at #{brew.starts_at} hours
-        h6 Host(s)
-        ul.list--unstyled
-          - brew.profiles.merge(Brewing.hosts).each do |profile|
-            li
-              = link_to profile.firstname, admin_show_user_path(profile)
-              | &nbsp;
-              = link_to profile.phone, "tel: +91#{profile.phone}"
+      = button_to "Approve", { action: :approve_brew, brew_id: brew.id }, method: :post, class: 'mdl-button mdl-js-button mdl-button--raised mdl-button--accent'
+      = button_to "Reject", { action: :reject_brew, brew_id: brew.id }, method: :post, class: 'mdl-button mdl-js-button mdl-button--raised'
+      h5 #{brew.title}
+      h6
+        p WHEN: #{brew.happening_on.to_s} @ #{brew.starts_at} hours
+        p WHERE: #{brew.place}
+        p PRICE: #{brew.price || 'FREE'} #{link_to('Payment Link', brew.payment_link) if brew.price.present?}
+      p #{brew.notes}
+      h6 Host(s)
+      PLACE: #{brew.place}
+      table.mdl-data-table.mdl-js-data-table
+        tr
+          th.mdl-data-table__cell--non-numeric HOST(S)
+          th.mdl-data-table__cell--non-numeric GOING
+          th.mdl-data-table__cell--non-numeric INTERESTED
+        tr
+          td.mdl-data-table__cell--non-numeric
+            ul.list--unstyled
+              - brew.profiles.merge(Brewing.hosts).each do |profile|
+                li
+                  = link_to profile.firstname, admin_show_user_path(profile)
+                  | &nbsp;
+                  = link_to profile.phone, "tel: +91#{profile.phone}"
+          td.mdl-data-table__cell--non-numeric
+            ul.list--unstyled
+              - brew.profiles.merge(Brewing.going).each do |profile|
+                li
+                  = link_to profile.firstname, admin_show_user_path(profile)
+                  | &nbsp;
+                  = link_to profile.phone, "tel: +91#{profile.phone}"
+          td.mdl-data-table__cell--non-numeric
+            ul.list--unstyled
+              - brew.profiles.merge(Brewing.interested).each do |profile|
+                li
+                  = link_to profile.firstname, admin_show_user_path(profile)
+                  | &nbsp;
+                  = link_to profile.phone, "tel: +91#{profile.phone}"
 
-        h6 Interested
-        ul.list--unstyled
-          - brew.profiles.merge(Brewing.interested).each do |profile|
-            li
-              = link_to profile.firstname, admin_show_user_path(profile)
-              | &nbsp;
-              = link_to profile.phone, "tel: +91#{profile.phone}"
-
-        h6 Going
-        ul.list--unstyled
-        - brew.profiles.merge(Brewing.going).each do |profile|
-          li
-            = link_to profile.firstname, admin_show_user_path(profile)
-            | &nbsp;
-            = link_to profile.phone, "tel: +91#{profile.phone}"
+      hr

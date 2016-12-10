@@ -1,20 +1,21 @@
-nav.navbar.navbar-inverse.navbar-fixed-top
-  .container-fluid
-    .navbar-header
-      a.navbar-brand href='#' ekC
-    .collapse.navbar-collapse
-      ul.nav.navbar-nav
-        li
-          a href='/dashboard' Dashboard
-        li
-          = link_to 'Brews', brew_dashboard_path
-      = form_tag({ action: :lookup_user }, { class: 'navbar-form navbar-left', role: 'search' })
-        .form-group.has-feedback
-          = text_field_tag :uuid, '', placeholder: 'Find by UUID', class: 'form-control', style: 'width:325px; font-size:13px;'
-          i.fa.fa-arrow-circle-right.form-control-feedback
-      ul.nav.navbar-nav.navbar-right
-        li
-          p.navbar-text
-            = link_to admin_user.firstname, admin_show_user_path(admin_user.uuid)
-        li
-          = link_to 'Logout', admin_logout_path, method: :post
+header.mdl-layout__header
+  .mdl-layout__header-row
+    span.mdl-layout-title EKC
+    .mdl-navigation
+      = link_to 'Dashboard', '/dashboard', class: 'mdl-navigation__link'
+      = link_to 'Brews', brew_dashboard_path, class: 'mdl-navigation__link'
+    .mdl-layout-spacer
+    .mdl-navigation.mdl-layout--large-screen-only
+      = link_to admin_user.firstname, admin_show_user_path(admin_user.uuid), class: 'mdl-navigation__link'
+      = link_to 'Logout', admin_logout_path, method: :post, class: 'mdl-navigation__link'
+
+
+.mdl-layout__drawer
+  span.mdl-layout-title Review
+  nav.mdl-navigation
+    = link_to "All (#{@profiles_cnt})", '/all-users', class: 'mdl-navigation__link'
+    = link_to "New (#{@unmoderated_cnt})", '/unmoderated', class: 'mdl-navigation__link'
+    = link_to "Suspicious (#{@suspicious_cnt})", '/suspicious', class: 'mdl-navigation__link'
+    = link_to "Butler (#{@new_butler_chats_cnt})", '/new-butler-chats', class: 'mdl-navigation__link'
+    = link_to "Deletions (#{@profiles_marked_for_deletion_cnt})", '/profiles-marked-for-deletion', class: 'mdl-navigation__link'
+    = link_to "Photos (#{@unmoderated_photos_cnt})", '/review-photos', class: 'mdl-navigation__link'
