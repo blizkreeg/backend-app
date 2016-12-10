@@ -144,6 +144,14 @@ class AdminController < ApplicationController
     redirect_to :back
   end
 
+  def approve_brew
+
+  end
+
+  def reject_brew
+
+  end
+
   def logout
     reset_session
 

@@ -98,6 +98,8 @@ Rails.application.routes.draw do
     get '/conversations', to: 'admin#show_conversations'
     get '/dates', to: 'admin#show_dates'
     post '/delete-user', to: 'admin#destroy_user', as: 'admin_destroy_user'
+    post '/approve-brew', to: 'admin#approve_brew', as: 'admin_approve_brew'
+    post '/reject-brew', to: 'admin#reject_brew', as: 'admin_reject_brew'
 
     # old admin dashboard - TBD: remove/merge this functionality into above
     get '/login', to: 'accounts#login'

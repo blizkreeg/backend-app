@@ -1,5 +1,6 @@
 h2 Brews
 hr
+
   .mdl-grid
     - @brews.each do |brew|
       .mdl-cell style='width:100%'
@@ -7,6 +8,8 @@ hr
           .mdl-chip__text #{brew.id}
         .mdl-chip
           .mdl-chip__text #{brew.moderation_status}
+        = button_to "Approve", { action: :approve_brew, brew_id: brew.id }, method: :post
+        = button_to "Reject", { action: :approve_brew, brew_id: brew.id }, method: :post
         h4 #{brew.title}
         p
           = brew.notes
