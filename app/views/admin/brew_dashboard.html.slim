@@ -9,7 +9,7 @@ hr
         .mdl-chip
           .mdl-chip__text #{brew.moderation_status}
         = button_to "Approve", { action: :approve_brew, brew_id: brew.id }, method: :post
-        = button_to "Reject", { action: :approve_brew, brew_id: brew.id }, method: :post
+        = button_to "Reject", { action: :reject_brew, brew_id: brew.id }, method: :post
         h4 #{brew.title}
         p
           = brew.notes

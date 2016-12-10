@@ -1,6 +1,4 @@
 class NotificationsWorker
-  include Sidekiq::Worker
-
   ADMIN_EMAILS = %w(vineet@ekcoffee.com anu@ekcoffee.com)
   ADMIN_PHONE_NUMBERS = [
     '+918291407276',
