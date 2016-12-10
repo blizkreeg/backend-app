@@ -27,7 +27,7 @@ class BrewsController < WebController
                     .max_age_gte(@current_profile.age)
                     .happening_on_after(Time.now.in_time_zone(@current_profile.time_zone).to_date - 1.day)
                     .with_moderation_status('live')
-                    .order('updated_at DESC')
+                    .ordered_by_soonest
                     .limit(25)
     end
 
