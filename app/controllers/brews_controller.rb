@@ -41,7 +41,7 @@ class BrewsController < WebController
 
   def create
     @brew = Brew.create!(brew_params)
-    @brew.brewings.build(profile: @current_profile, host: true, status: Brewing::INTERESTED)
+    @brew.brewings.build(profile: @current_profile, host: true, status: Brewing::GOING)
     @brew.save!
 
     NotificationsWorker.delay.notify_admins_of_new_brew(@brew.id)

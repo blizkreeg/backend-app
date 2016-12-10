@@ -43,6 +43,7 @@ gem 'redcarpet'
 gem 'google_drive'
 gem 'highcharts-rails'
 gem 'roadie-rails', '~> 1.0'
+gem 'whenever', require: false
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

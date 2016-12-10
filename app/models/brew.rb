@@ -55,6 +55,7 @@ class Brew < ActiveRecord::Base
   jsonb_accessor :properties, ATTRIBUTES
 
   scope :ordered_by_recency, -> { order("brews.created_at DESC") }
+  scope :live, -> { with_moderation_status('live') }
 
   before_create :set_create_defaults
 
@@ -125,11 +126,17 @@ class Brew < ActiveRecord::Base
     self.update!(moderation_status: 'expired')
   end
 
+  def host_tz
+    self.profiles.merge(Brewing.hosts).first.time_zone
+  end
+
+  def host_time_now
+    Time.now.in_time_zone(self.host_tz)
+  end
+
   def happening_at
     hour = self.starts_at.floor.to_i
     min = ((self.starts_at % hour) * 60).to_i
-
-    host_tz = self.profiles.merge(Brewing.hosts).first.time_zone
 
     Time.new(self.happening_on.year,
               self.happening_on.month,
@@ -137,7 +144,11 @@ class Brew < ActiveRecord::Base
               hour,
               min,
               0,
-              ActiveSupport::TimeZone.new(host_tz).formatted_offset)
+              ActiveSupport::TimeZone.new(self.host_tz).formatted_offset)
+  end
+
+  def free?
+    self.price.blank?
   end
 
   private

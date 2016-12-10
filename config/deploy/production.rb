@@ -24,6 +24,7 @@ server '128.199.234.90', user: 'deploy', roles: %w{migrator}
 
 role :app, %w{deploy@128.199.234.90 deploy@128.199.164.71}#, my_property: :my_value
 role :sidekiq, %w(deploy@128.199.234.90)
+role :master, %w(deploy@128.199.234.90)
 role :firebase, %w(deploy@128.199.164.71)
 role :migrator,  %w{deploy@128.199.234.90}
 
