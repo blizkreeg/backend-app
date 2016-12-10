@@ -33,7 +33,7 @@ class AdminController < ApplicationController
   def unmoderated
     @unmoderated_men_cnt = Profile.with_gender('male').with_moderation_status('unmoderated').count
     @unmoderated_women_cnt = Profile.with_gender('female').with_moderation_status('unmoderated').count
-    @unmoderated = Profile.with_moderation_status('unmoderated').order("created_at ASC").limit(25)
+    @unmoderated = Profile.with_moderation_status('unmoderated').order("created_at DESC").limit(25)
   end
 
   def suspicious
