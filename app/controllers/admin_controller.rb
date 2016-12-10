@@ -145,11 +145,13 @@ class AdminController < ApplicationController
   end
 
   def approve_brew
-
+    brew = Brew.find(params[:brew_id])
+    brew.approve!
   end
 
   def reject_brew
-
+    brew = Brew.find(params[:brew_id])
+    brew.reject!
   end
 
   def logout

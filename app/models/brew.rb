@@ -115,8 +115,10 @@ class Brew < ActiveRecord::Base
     self.save!
   end
 
-  def reject!(reason)
-    self.update!(moderation_status: 'rejected', rejection_reason: reason)
+  def reject!(reason=nil)
+    self.moderation_status = 'rejected'
+    self.rejection_reason = reason
+    self.save!
   end
 
   def expire!
