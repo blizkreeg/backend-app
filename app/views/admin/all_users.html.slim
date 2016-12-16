@@ -1,41 +1,24 @@
-h3 All users
-hr
+h4 Sorted by last seen
 - if @profiles.present?
-  .row style='font-weight:600;margin-bottom:8px;border-bottom:1px solid #eee;padding:4px 0px;'
-    .col-xs-2
-      | NAME
-    .col-xs-2
-      | ASL
-    .col-xs-1
-      | SCORE
-    .col-xs-3
-      | STATE INFO
-    .col-xs-2
-      | LAST SEEN
-  - @profiles.each do |profile|
-    .row style='margin-bottom:8px;border-bottom:1px solid #eee;padding:4px 0px;'
-      .col-xs-2
-        = link_to profile.fullname, admin_show_user_path(profile.uuid)
-      .col-xs-2
-        | #{profile.age} &nbsp; #{profile.gender.first} &nbsp; #{profile.location_city}
-      .col-xs-1
-        - if profile.blacklisted? || profile.staff_or_internal
-          | &mdash;
-        - else
-          = profile.desirability_score || 'TBD'
-      .col-xs-3
-        span style='padding: 0px 4px;' class="#{moderation_status_label(profile.moderation_status)}"
-          = profile.moderation_status.first
-        span style='padding:0px 4px;'
-          - if profile.approved_for_stb
-            i.fa.fa-spoon
-        span style='padding:0px 4px;'
-          = profile.state
-      .col-xs-2
-        i.fa.fa-eye
-        | &nbsp; #{distance_of_time_in_words_to_now(profile.last_seen_at) if profile.last_seen_at.present?}
-      / .col-xs-3
-      /   small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
+  table.mdl-data-table.mdl-js-data-table
+    - @profiles.each do |profile|
+      tr
+        td.mdl-data-table__cell--non-numeric
+          = link_to profile.fullname, admin_show_user_path(profile.uuid)
+        td.mdl-data-table__cell--non-numeric
+          | #{profile.age} &nbsp; #{profile.gender.first} &nbsp; #{profile.location_city}
+        td.mdl-data-table__cell--non-numeric
+          - if profile.blacklisted? || profile.staff_or_internal
+            | &mdash;
+          - else
+            = profile.desirability_score || 'TBD'
+        td.mdl-data-table__cell--non-numeric
+          span
+            - if profile.approved_for_stb
+              i.fa.fa-spoon
+        td.mdl-data-table__cell--non-numeric
+          i.fa.fa-eye
+          | &nbsp; #{distance_of_time_in_words_to_now(profile.last_seen_at) if profile.last_seen_at.present?}
 - else
   h5 No more users
 

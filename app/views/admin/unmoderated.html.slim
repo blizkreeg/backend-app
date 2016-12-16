@@ -1,27 +1,10 @@
-h3 Unmoderated (new) users
-hr
-- male_profiles = @unmoderated.select { |profile| profile.male? }
-- female_profiles = @unmoderated.select { |profile| profile.female? }
-.row
-  .col-xs-6
-    h4 Men
-    - if @unmoderated_men_cnt == 0
-      h5 None
-    - else
-      h5 Showing #{male_profiles.count} of #{@unmoderated_men_cnt}
-      ul
-      - male_profiles.each do |profile|
-        li
-          = link_to profile.fullname, admin_show_user_path(profile.uuid)
-          small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
-  .col-xs-6
-    h4 Women
-    - if @unmoderated_women_cnt == 0
-      h5 None
-    - else
-      h5 Showing #{female_profiles.count} of #{@unmoderated_women_cnt}
-      ul
-      - female_profiles.each do |profile|
-        li
-          = link_to profile.fullname, admin_show_user_path(profile.uuid)
-          small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
+h4 Unmoderated (new) users
+table.mdl-data-table.mdl-js-data-table
+  - @unmoderated.each do |profile|
+    tr
+      td.mdl-data-table__cell--non-numeric
+        = link_to profile.fullname, admin_show_user_path(profile.uuid)
+      td.mdl-data-table__cell--non-numeric
+        = profile.gender
+      td.mdl-data-table__cell--non-numeric
+        | joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
