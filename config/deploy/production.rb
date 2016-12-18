@@ -28,6 +28,19 @@ role :master, %w(deploy@128.199.234.90)
 role :firebase, %w(deploy@128.199.164.71)
 role :migrator,  %w{deploy@128.199.234.90}
 
+namespace :deploy do
+  desc "Update crontab with whenever"
+  task :update_cron do
+    on roles(:master) do
+      within current_path do
+        execute :bundle, :exec, "whenever --update-crontab #{fetch(:application)}"
+      end
+    end
+  end
+
+  after :finishing, 'deploy:update_cron'
+end
+
 # Configuration
 # =============
 # You can set any configuration variable like in config/deploy.rb
