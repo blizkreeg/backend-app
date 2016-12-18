@@ -58,6 +58,7 @@ class Brew < ActiveRecord::Base
   scope :ordered_by_recency, -> { order("brews.created_at DESC") }
   scope :ordered_by_soonest, -> { order("(brews.properties->>'happening_on')::date ASC, (brews.properties->>'starts_at')::decimal ASC") }
   scope :live, -> { with_moderation_status('live') }
+  scope :in_review, -> { with_moderation_status('in_review') }
 
   before_create :set_create_defaults
 

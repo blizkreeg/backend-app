@@ -30,7 +30,12 @@ class AdminController < ApplicationController
   end
 
   def brew_dashboard
-    @brews = Brew.ordered_by_recency
+    ordered_brews = Brew.ordered_by_recency
+    if params[:status]
+      @brews = ordered_brews.with_moderation_status(params[:status])
+    else
+      @brews = ordered_brews.in_review + ordered_brews.live
+    end
 
     @page_title = 'Brews'
   end
