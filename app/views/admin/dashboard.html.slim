@@ -30,6 +30,15 @@
         .panel-body
           .info-box-stats
             p.counter
+              span.label.label-success #{@new_week_ago}
+              | &nbsp;
+              - if @new_in_last_48h > @new_week_ago
+                i.material-icons trending_up
+              - elsif @new_in_last_48h == @new_week_ago
+                i.material-icons trending_flat
+              - else
+                i.material-icons trending_down
+              | &nbsp;
               span.label.label-success #{@new_in_last_48h}
             span.info-box-title New signups in the last 48 hours
           .info-box-icon
@@ -39,6 +48,15 @@
         .panel-body
           .info-box-stats
             p.counter
+              span.label.label-danger #{@deleted_week_ago}
+              | &nbsp;
+              - if @deleted_in_last_48h > @deleted_week_ago
+                i.material-icons trending_up
+              - elsif @deleted_in_last_48h == @deleted_week_ago
+                i.material-icons trending_flat
+              - else
+                i.material-icons trending_down
+              | &nbsp;
               span.label.label-danger #{@deleted_in_last_48h}
             span.info-box-title Deleted in the last 48 hours
           .info-box-icon
