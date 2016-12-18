@@ -4,7 +4,15 @@
       .panel.info-box.panel-white
         .panel-body
           .info-box-stats
-            p.counter #{@seen_yesterday} > #{@seen_today}
+            p.counter
+              | #{@seen_yesterday} &nbsp;
+              - if @seen_today > @seen_yesterday
+                i.material-icons trending_up
+              - elsif @seen_today == @seen_yesterday
+                i.material-icons trending_flat
+              - else
+                i.material-icons trending_down
+              | &nbsp; #{@seen_today}
             span.info-box-title Users seen yesterday & today
           .info-box-icon
             i.material-icons group
