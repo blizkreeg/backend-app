@@ -1,10 +1,24 @@
-h4 Unmoderated (new) users
-table.mdl-data-table.mdl-js-data-table
-  - @unmoderated.each do |profile|
-    tr
-      td.mdl-data-table__cell--non-numeric
-        = link_to profile.fullname, admin_show_user_path(profile.uuid)
-      td.mdl-data-table__cell--non-numeric
-        = profile.gender
-      td.mdl-data-table__cell--non-numeric
-        | joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
+.row
+  .col-md-12
+    .panel.panel-white
+      .panel-heading
+        h4.panel-title Ordered by recently joined
+
+      .panel-body
+        .table-responsive
+          table.table
+            thead
+              tr
+                th Name
+                th Gender
+                th Joined
+
+            tbody
+              - @unmoderated.each do |profile|
+                tr
+                  td
+                    = link_to profile.fullname, admin_show_user_path(profile.uuid)
+                  td
+                    = profile.gender
+                  td
+                    | joined #{distance_of_time_in_words_to_now(profile.created_at)} ago

@@ -1,0 +1,32 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *
+ *= require_self
+ *= require 'normalize'
+ *= require bootstrap.min
+ *= require 'modern-theme/plugins/pace-master/themes/blue/pace-theme-flash'
+ *= require 'modern-theme/plugins/uniform/css/uniform.default.min'
+ *= require 'modern-theme/plugins/fontawesome/css/font-awesome'
+ *= require 'modern-theme/plugins/line-icons/simple-line-icons'
+ *= require 'modern-theme/plugins/offcanvasmenueffects/css/menu_cornerbox'
+ *= require 'modern-theme/plugins/waves/waves.min'
+ *= require 'modern-theme/plugins/switchery/switchery.min'
+ *= require 'modern-theme/plugins/3d-bold-navigation/css/style'
+ *= require 'modern-theme/plugins/slidepushmenus/css/component'
+ *= require 'modern-theme/plugins/weather-icons-master/css/weather-icons.min'
+ *= require 'modern-theme/plugins/metrojs/MetroJs.min'
+ *= require 'modern-theme/plugins/toastr/toastr.min'
+ *= require 'modern-theme/css/modern.min'
+ *= require 'modern-theme/css/themes/green'
+ *= require 'modern-theme/css/custom'
+ */

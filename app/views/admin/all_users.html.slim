@@ -1,24 +1,41 @@
-h4 Sorted by last seen
 - if @profiles.present?
-  table.mdl-data-table.mdl-js-data-table
-    - @profiles.each do |profile|
-      tr
-        td.mdl-data-table__cell--non-numeric
-          = link_to profile.fullname, admin_show_user_path(profile.uuid)
-        td.mdl-data-table__cell--non-numeric
-          | #{profile.age} &nbsp; #{profile.gender.first} &nbsp; #{profile.location_city}
-        td.mdl-data-table__cell--non-numeric
-          - if profile.blacklisted? || profile.staff_or_internal
-            | &mdash;
-          - else
-            = profile.desirability_score || 'TBD'
-        td.mdl-data-table__cell--non-numeric
-          span
-            - if profile.approved_for_stb
-              i.fa.fa-spoon
-        td.mdl-data-table__cell--non-numeric
-          i.fa.fa-eye
-          | &nbsp; #{distance_of_time_in_words_to_now(profile.last_seen_at) if profile.last_seen_at.present?}
+  .row
+    .col-md-12
+      .panel.panel-white
+        .panel-heading
+          h4.panel-title Ordered by last seen
+
+        .panel-body
+          .table-responsive
+            table.table
+              thead
+                tr
+                  th Name
+                  th Details
+                  th Des. Score
+                  th
+                    i.fa.fa-eye
+                    |&nbsp; Last Seen
+
+              tbody
+                - @profiles.each do |profile|
+                  tr
+                    td
+                      = link_to profile.fullname, admin_show_user_path(profile.uuid)
+                    td #{profile.age} &nbsp; #{profile.gender.first} &nbsp; #{profile.location_city}
+                    td
+                      - if profile.blacklisted?
+                        span.label.label-danger BLACKLISTED
+                      - elsif profile.administrator
+                        span.label.label-warning ADMINSTRATOR
+                      - elsif profile.staff_or_internal
+                        span.label.label-default STAFF
+                      - else
+                        span.label.label-primary
+                          = profile.desirability_score || 'UNASSIGNED'
+                    td
+                      | &nbsp; #{distance_of_time_in_words_to_now(profile.last_seen_at) if profile.last_seen_at.present?}
+
 - else
   h5 No more users
 

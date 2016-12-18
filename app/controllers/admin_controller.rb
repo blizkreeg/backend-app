@@ -19,25 +19,35 @@ class AdminController < ApplicationController
     @age_40_plus = Profile.age_gte(40).count
     @total = Profile.count
     @unmatched_reasons = Match::UNMATCH_REASONS.map { |k, v|  [v, Match.is_unmatched.with_unmatched_reason(v).count] }
+
+    @page_title = 'Dashboard'
   end
 
   def brew_dashboard
     @brews = Brew.ordered_by_recency
+
+    @page_title = 'Brews'
   end
 
   def all_users
     @page = (params[:page] || 0).to_i
     @profiles = Profile.ordered_by_last_seen.offset(@page * 25).limit(25)
+
+    @page_title = 'Users'
   end
 
   def unmoderated
     @unmoderated = Profile.with_moderation_status('unmoderated').order("created_at DESC")
+
+    @page_title = 'Unmoderated (new) users'
   end
 
   def suspicious
     @suspicious_men_cnt = Profile.with_gender('male').with_moderation_status('unmoderated').possibly_not_single.count
     @suspicious_women_cnt = Profile.with_gender('female').with_moderation_status('unmoderated').possibly_not_single.count
     @suspicious = Profile.with_moderation_status('unmoderated').possibly_not_single.limit(25)
+
+    @page_title = 'Suspicious users'
   end
 
   def profiles_marked_for_deletion
@@ -66,6 +76,8 @@ class AdminController < ApplicationController
   def assign_desirability_score_user
     p = Profile.find params[:uuid]
     p.desirability_score = params[:score].to_f
+    p.moderation_status = 'approved'
+    p.approved_for_stb = true
     p.save!
 
     redirect_to :back

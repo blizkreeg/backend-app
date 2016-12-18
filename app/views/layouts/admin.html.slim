@@ -3,18 +3,17 @@ html
 head
   title Admin
   meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
-  = stylesheet_link_tag 'https://code.getmdl.io/1.2.1/material.blue_grey-light_blue.min.css'
-  = javascript_include_tag 'https://code.getmdl.io/1.2.1/material.min.js', defer: true
+  / = stylesheet_link_tag 'https://code.getmdl.io/1.2.1/material.blue_grey-light_blue.min.css'
+  / = javascript_include_tag 'https://code.getmdl.io/1.2.1/material.min.js', defer: true
   = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
   = javascript_include_tag 'admin'
   = javascript_include_tag 'https://use.fontawesome.com/ebabc2ab89.js'
   = csrf_meta_tags
-body
-  .mdl-layout.mdl-js-layout.mdl-layout--fixed-header.mdl-layout--fixed-drawer
-    - if admin_user.present?
-      = render partial: 'header'
 
-    main.mdl-layout__content
+body.page-header-fixed
+  .mdl-layout.mdl-js-layout.mdl-layout--fixed-header.mdl-layout--fixed-drawer
+
+    main.page-content.content-wrap
       - if flash[:error]
         .alert.alert-danger.text-center
           = flash[:error]
@@ -23,5 +22,12 @@ body
         .alert.alert-success.text-center
           = flash[:success]
           - flash[:success] = nil
-      .page-content
-        = yield
+      - if admin_user.present?
+        = render partial: 'header'
+
+      .page-inner
+        .page-title
+          h3 #{@page_title}
+
+        #main-wrapper
+          = yield
