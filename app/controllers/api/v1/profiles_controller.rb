@@ -176,7 +176,7 @@ class Api::V1::ProfilesController < ApiController
     # - what if this profile has been delivered as a match?
     # - what if this profile is in the middle of a conversation?
     # - what if this profile is delivered as a mutual match?
-    @current_profile.update!(inactive: true, marked_for_deletion: true)
+    @current_profile.update!(inactive: true, marked_for_deletion: true, marked_for_deletion_at: DateTime.now)
 
     Profile.delay.log_delete_request_data(@current_profile.uuid, params[:data][:reason])
 

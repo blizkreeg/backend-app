@@ -8,17 +8,23 @@ class AdminController < ApplicationController
   def dashboard
     session[:redirect_to] = '/dashboard'
 
+    @seen_yesterday = Profile.where("(properties->>'last_seen_at')::date = '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
+    @seen_today = Profile.where("(properties->>'last_seen_at')::date = '#{Time.now.utc.to_date.to_s}'::date").count
+    @live_brews = Brew.live.count
+    @for_review_brews = Brew.with_moderation_status('in_review').count
+    @new_in_last_48h = Profile.where("(created_at)::date >= '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
+    @deleted_in_last_48h = Profile.where("(properties->>'marked_for_deletion_at')::date >= '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
     @men = Profile.with_gender('male').count
     @women = Profile.with_gender('female').count
-    @intent_dating = Profile.with_intent('Dating').count
-    @intent_relationship = Profile.with_intent('Relationship').count
-    @age_18_25 = Profile.age_gte(18).age_lte(25).count
-    @age_26_30 = Profile.age_gte(26).age_lte(30).count
-    @age_31_35 = Profile.age_gte(31).age_lte(35).count
-    @age_35_40 = Profile.age_gte(35).age_lte(40).count
-    @age_40_plus = Profile.age_gte(40).count
+    # @intent_dating = Profile.with_intent('Dating').count
+    # @intent_relationship = Profile.with_intent('Relationship').count
+    # @age_18_25 = Profile.age_gte(18).age_lte(25).count
+    # @age_26_30 = Profile.age_gte(26).age_lte(30).count
+    # @age_31_35 = Profile.age_gte(31).age_lte(35).count
+    # @age_35_40 = Profile.age_gte(35).age_lte(40).count
+    # @age_40_plus = Profile.age_gte(40).count
+    # @unmatched_reasons = Match::UNMATCH_REASONS.map { |k, v|  [v, Match.is_unmatched.with_unmatched_reason(v).count] }
     @total = Profile.count
-    @unmatched_reasons = Match::UNMATCH_REASONS.map { |k, v|  [v, Match.is_unmatched.with_unmatched_reason(v).count] }
 
     @page_title = 'Dashboard'
   end
@@ -138,6 +144,8 @@ class AdminController < ApplicationController
 
   def show_butler_chat
     @profile = Profile.find params[:profile_uuid]
+
+    @page_title = "Butler Chat"
   end
 
   def update_butler_chat_flag

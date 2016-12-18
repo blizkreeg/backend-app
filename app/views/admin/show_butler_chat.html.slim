@@ -1,27 +1,32 @@
 - firebase_token = Firebase::FirebaseTokenGenerator.new("#{ENV['FIREBASE_SECRET']}").create_token({ uid: @profile.uuid })
-h3 Butler Chat with #{link_to @profile.fullname, admin_show_user_path(@profile.uuid)}
-hr
 .row
-  .col-xs-12.col-sm-4.text-right style='margin-bottom:25px;'
-    ul.unstyled-list
-      li.inline
-        - if @profile.needs_butler_attention
-          = button_to 'Mark as Resolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: true }, class: 'submit btn btn-success', form_class: 'inline'}
-        - else
-          = button_to 'Mark as Unresolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: false }, class: 'submit btn btn-danger', form_class: 'inline'}
-      li.inline
-        = button_to 'Send Notification', admin_send_butler_chat_notification_path, { params: { profile_uuid: @profile.uuid, myname: @profile.firstname }, class: 'submit btn btn-default', form_class: 'inline'}
-        br
-        | - If user is offline <br> - Send only once
-.row
-  .col-xs-12.col-sm-4
-    .connectedness.text-right
-    .conversation
-      .messages
-      .loading
-        | Loading&hellip;
-    .send-message
-      = text_field_tag 'message_to_send', '', placeholder: 'Type message. Enter to send.', class: 'message-box'
+  .col-md-12
+    .btn-group
+      - if @profile.needs_butler_attention
+        = button_to 'Mark as Resolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: true }, class: 'submit btn btn-success'}
+      - else
+        = button_to 'Mark as Unresolved', admin_update_butler_chat_flag_path, { params: { profile_uuid: @profile.uuid, resolved: false }, class: 'submit btn btn-danger'}
+
+      = button_to 'Send Notification', admin_send_butler_chat_notification_path, { params: { profile_uuid: @profile.uuid, myname: @profile.firstname }, class: 'submit btn btn-default'}
+
+      p If user is offline, don't send notification more than once
+
+  .clearfix
+
+  .col-md-4
+    .panel.panel-white
+      .panel-heading
+        h4.panel-title
+          = link_to @profile.fullname, admin_show_user_path(@profile.uuid)
+
+      .panel-body
+        .connectedness.text-right
+        .conversation
+          .messages
+          .loading
+            | Loading&hellip;
+        .send-message
+          = text_field_tag 'message_to_send', '', placeholder: 'Type message. Enter to send.', class: 'message-box'
 
 javascript:
   var profile_uuid = "#{@profile.uuid}";

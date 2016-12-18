@@ -1,5 +1,7 @@
 .row
-  .col-md-12
+  .profile-preview.col-xs-12.visible-xs
+
+  .col-md-5.col-xs-12
     .panel.panel-white
       .panel-heading
         h4.panel-title Ordered by recently joined
@@ -15,10 +17,19 @@
 
             tbody
               - @unmoderated.each do |profile|
-                tr
+                tr.has-profile-preview data-profile-uuid="#{profile.uuid}"
                   td
                     = link_to profile.fullname, admin_show_user_path(profile.uuid)
                   td
                     = profile.gender
                   td
                     | joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
+
+  .col-md-7.hidden-xs
+
+javascript:
+  $(function() {
+    $('tr.has-profile-preview').on('click', function() {
+      alert('hi');
+    })
+  });

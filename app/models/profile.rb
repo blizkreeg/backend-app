@@ -149,6 +149,7 @@ class Profile < ActiveRecord::Base
     substate_endpoint:            :string,
     butler_conversation_uuid:     :string,
     marked_for_deletion:          :boolean,
+    marked_for_deletion_at:       :date_time,
     # TBD: is there a better way to track this?
     sent_matches_notification_at: :date_time,
     has_new_butler_message:       :boolean,

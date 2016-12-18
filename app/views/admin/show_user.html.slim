@@ -1,155 +1,177 @@
-- if @profile.marked_for_deletion
-  = button_to "DELETE", admin_destroy_user_path, {  params: { uuid: @profile.uuid }, class: 'mdl-button mdl-js-button mdl-button--raised', form_class: 'inline', data: { confirm: "Are you sure you want to delete?\n\r#{@profile.firstname} #{@profile.lastname}\r#{@profile.uuid}" } }
+.row
+  .col-md-4
+    .panel.panel-white
+      .panel-body
+        h3
+          | #{@profile.fullname} &nbsp;
+          span.label.label-info style='text-transform:uppercase' #{@profile.moderation_status}
 
-- if @profile.approved?
-  = button_to 'Flag', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'mdl-button mdl-js-button mdl-button--raised btn-danger', form_class: 'inline' }
-- else
-  = button_to 'Approve', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'mdl-button mdl-js-button mdl-button--raised btn-success', form_class: 'inline' }
+        p
+          | #{@profile.location_city}, #{@profile.gender}, #{@profile.age}
 
-- if @profile.blacklisted?
-  = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'mdl-button mdl-js-button mdl-button--raised btn-default', form_class: 'inline' }
-- else
-  = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'mdl-button mdl-js-button mdl-button--raised', form_class: 'inline' }
+        ul.list-unstyled.weather-info
+          li
+            | Email
+            span.pull-right style='font-weight: 600;' #{link_to @profile.email, "mailto:#{@profile.email}"}
+          li
+            | Phone
+            span.pull-right style='font-weight: 600;' #{@profile.phone}
 
-- if @profile.approved_for_stb
-  = button_to 'Remove from STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: false }, class: 'mdl-button mdl-js-button mdl-button--raised btn-default', form_class: 'inline' }
-- else
-  = button_to 'Approve for STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: true }, class: 'mdl-button mdl-js-button mdl-button--raised btn-info', form_class: 'inline' }
+          li
+            | Last Seen
+            span.pull-right style='font-weight: 600;' #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)}
 
+          li
+            | Complete?
+            span.pull-right style='font-weight: 600;' #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
 
+        p
+          = link_to admin_show_butler_chat_path(@profile.uuid), class: 'btn btn-info button_to' do
+            i.fa.fa-comments
 
-h6
-  .mdl-chip
-    .mdl-chip__text #{@profile.moderation_status}
+  .col-md-6
+    .panel.panel-white
+      .panel-heading
+        h4.panel-title Moderate
+      .panel-body
+        .btn-group
+          - if @profile.marked_for_deletion
+            = button_to "Delete Profile", admin_destroy_user_path, {  params: { uuid: @profile.uuid }, class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete?\n\r#{@profile.firstname} #{@profile.lastname}\r#{@profile.uuid}" } }
 
-h4
-  | #{@profile.fullname}
-  span style='text-transform:uppercase'
-    | &nbsp; (#{@profile.moderation_status})
-
-  = link_to admin_show_butler_chat_path(@profile.uuid), class: 'btn btn-info' do
-    i.fa.fa-comments
-
-div style='width: 100%; display: block;'
-  div style='display: inline;float: left; margin-right: 6px;'
-    .mdl-chip
-      .mdl-chip__text #{@profile.desirability_score}
-  = button_to '1', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 1 }, class: 'round-btn' }
-  = button_to '2', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 2 }, class: 'round-btn' }
-  = button_to '3', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 3 }, class: 'round-btn' }
-  = button_to '4', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 4 }, class: 'round-btn' }
-  = button_to '5', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 5 }, class: 'round-btn' }
-  = button_to '6', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 6 }, class: 'round-btn' }
-  = button_to '7', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 7 }, class: 'round-btn' }
-  = button_to '8', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 8 }, class: 'round-btn' }
-  = button_to '9', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 9 }, class: 'round-btn' }
-  = button_to '10', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 10 }, class: 'round-btn' }
-
-div.clearfix
-
-p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
-
-markdown:
-  UUID: `#{@profile.uuid}`
-
-  Chat UUID: `#{@profile.butler_conversation_uuid}`
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong FB
-  .mdl-cell
-    = link_to "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}"
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong Intent
-  .mdl-cell
-    = @profile.intent || 'n/a'
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong FB Relationship Status:
-  .mdl-cell
-    = @profile.possible_relationship_status || 'n/a'
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong Height
-  .mdl-cell
-    = @profile.height
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong Profession
-  .mdl-cell
-    = @profile.profession
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong Schools
-  .mdl-cell
-    ul
-    - @profile.schools_attended.each do |school|
-      li #{school}
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong Faith
-  .mdl-cell
-    = @profile.faith
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong Degrees
-  .mdl-cell
-    = @profile.earned_degrees.join(', ')
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong Highest Degree
-  .mdl-cell
-    = @profile.highest_degree
-
-.mdl-grid.mdl-grid--no-spacing style='flex-flow: row wrap;'
-  .mdl-cell
-    strong Blurbs
-  .mdl-cell
-    - @profile.about_me_order.each do |blurb_property|
-      br #{@profile.send("#{blurb_property}_label".to_sym)} &mdash; #{@profile.send(blurb_property.to_sym)}
-
-h5 Seeking
-p
-  | Age:
-  = @profile.seeking_minimum_age
-  | &nbsp; to &nbsp;
-  = @profile.seeking_maximum_age
-
-p
-  | Height:
-  | #{@profile.seeking_minimum_height} (#{@profile.seeking_minimum_height_in} in)
-  | &nbsp; to &nbsp;
-  | #{@profile.seeking_maximum_height} (#{@profile.seeking_maximum_height_in} in)
-
-p
-  | Faith:
-  = @profile.seeking_faith.join(', ')
-
-h5 PHOTOS
-
-.mdl-grid.mdl-grid--no-spacing
-  - @profile.photos.ordered.each do |photo|
-      .mdl-cell style='position:relative;width:250px;height:250px;float:left;margin:2px;'
-        = cl_image_tag "#{photo.public_id}.jpg", style: 'width:250px;height:250px;'
-        - if photo.reviewed
-          - if photo.approved
-            = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'mdl-button mdl-js-button btn-danger', style: 'position:absolute;top:0;right:0'
+          - if @profile.approved?
+            = button_to 'Flag', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'btn btn-default' }
           - else
-            = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'mdl-button mdl-js-button btn-success', style: 'position:absolute;top:0;left:0'
-          span style='position:absolute;bottom:0;left:45%;color:black;background-color:white;padding: 1px 2px;' #{photo.approved ? 'APPROVED' : 'REJECTED'}
-          - if photo.primary
-            span style='position:absolute;top:0;left:50%;color:white;background-color:black;padding: 1px 4px;font-weight:600;font-size:16px;' P
-        - else
-          - if photo.approved
-            = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'mdl-button mdl-js-button btn-danger', style: 'position:absolute;top:0;right:0'
+            = button_to 'Approve', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
+
+          - if @profile.blacklisted?
+            = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
           - else
-            = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'mdl-button mdl-js-button btn-success', style: 'position:absolute;top:0;left:0'
+            = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'btn btn-default' }
+
+          - if @profile.approved_for_stb
+            = button_to 'Remove from STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: false }, class: 'btn btn-default' }
+          - else
+            = button_to 'Approve for STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: true }, class: 'btn btn-default' }
+
+  .col-md-6
+    .panel.panel-white
+      .panel-heading
+        h4.panel-title
+          | Assign Desirability &nbsp;
+          span.label.label-info #{@profile.desirability_score || 'Unassigned'}
+      .panel-body
+        .btn-group
+          = button_to '1', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 1 }, class: 'btn btn-primary' }
+          = button_to '2', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 2 }, class: 'btn btn-primary' }
+          = button_to '3', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 3 }, class: 'btn btn-primary' }
+          = button_to '4', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 4 }, class: 'btn btn-primary' }
+          = button_to '5', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 5 }, class: 'btn btn-primary' }
+          = button_to '6', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 6 }, class: 'btn btn-primary' }
+          = button_to '7', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 7 }, class: 'btn btn-primary' }
+          = button_to '8', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 8 }, class: 'btn btn-primary' }
+          = button_to '9', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 9 }, class: 'btn btn-primary' }
+          = button_to '10', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 10 }, class: 'btn btn-primary' }
+
+  .clearfix
+
+  .col-md-6
+    .panel.panel-white
+      .panel-heading
+        h4.panel-title Photos
+      .panel-body
+        - @profile.photos.ordered.each do |photo|
+            div style='position:relative;width: 160px;height: 160px;float:left;margin:2px;'
+              = cl_image_tag "#{photo.public_id}.jpg", style: 'width: 160px;height: 160px;'
+              - if photo.reviewed
+                - if photo.approved
+                  = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'btn btn-danger', style: 'position:absolute;top:0;right:0'
+                - else
+                  = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'btn btn-success', style: 'position:absolute;top:0;left:0'
+                span style='position:absolute;bottom:0;left:45%;color:black;background-color:white;padding: 1px 2px;' #{photo.approved ? 'APPROVED' : 'REJECTED'}
+                - if photo.primary
+                  span style='position:absolute;top:0;left:50%;color:white;background-color:black;padding: 1px 4px;font-weight:600;font-size:16px;' P
+              - else
+                - if photo.approved
+                  = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'btn btn-danger', style: 'position:absolute;top:0;right:0'
+                - else
+                  = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'btn btn-success', style: 'position:absolute;top:0;left:0'
+
+  .clearfix
+
+  .col-md-4
+    .panel.panel-white
+      .panel-body
+        ul.list-unstyled.weather-info
+          li
+            | UUID
+            span.pull-right style='font-weight: 600;' #{@profile.uuid}
+
+          li
+            | Chat UUID
+            span.pull-right style='font-weight: 600;' #{@profile.butler_conversation_uuid}
+
+          li
+            | FB
+            span.pull-right style='font-weight: 600;'
+              = link_to "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}"
+
+          li
+            | Intent
+            span.pull-right style='font-weight: 600;' #{@profile.intent}
+
+          li
+            | FB Rel. Status
+            span.pull-right style='font-weight: 600;' #{@profile.possible_relationship_status}
+
+          li
+            | Height
+            span.pull-right style='font-weight: 600;'  #{@profile.height}
+
+          li
+            | Profession
+            p style='font-weight: 600;'  #{@profile.profession}
+
+          li
+            | Schools
+            p style='font-weight: 600;' #{raw(@profile.schools_attended.join('<br>'))}
+
+          li
+            | Faith
+            span.pull-right style='font-weight: 600;' #{@profile.faith}
+
+          li
+            | Highest Degree
+            span.pull-right style='font-weight: 600;' #{@profile.highest_degree}
+
+          li
+            | Height
+            span.pull-right style='font-weight: 600;'  #{@profile.height}
+
+
+        - @profile.about_me_order.each do |blurb_property|
+          p
+            | #{@profile.send("#{blurb_property}_label".to_sym).capitalize}
+            | &nbsp; #{@profile.send(blurb_property.to_sym)}
+
+        h4 Match Preference
+
+        ul.list-unstyled.weather-info
+          li
+            | Age
+            span.pull-right style='font-weight: 600;'
+              = @profile.seeking_minimum_age
+              | &nbsp; to &nbsp;
+              = @profile.seeking_maximum_age
+
+          li
+            | Height
+            span.pull-right style='font-weight: 600;'
+              | #{@profile.seeking_minimum_height} (#{@profile.seeking_minimum_height_in} in)
+              | &nbsp; to &nbsp;
+              | #{@profile.seeking_maximum_height} (#{@profile.seeking_maximum_height_in} in)
+
+          li
+            | Faith
+            p style='font-weight: 600;' #{@profile.seeking_faith.join(', ')}
+
+

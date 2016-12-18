@@ -1,6 +1,6 @@
 - if @profiles.present?
   .row
-    .col-md-12
+    .col-md-8.col-xs-12
       .panel.panel-white
         .panel-heading
           h4.panel-title Ordered by last seen
@@ -29,7 +29,7 @@
                       - elsif profile.administrator
                         span.label.label-warning ADMINSTRATOR
                       - elsif profile.staff_or_internal
-                        span.label.label-default STAFF
+                        span.label.label-info STAFF
                       - else
                         span.label.label-primary
                           = profile.desirability_score || 'UNASSIGNED'

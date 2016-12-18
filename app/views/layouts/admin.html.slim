@@ -27,7 +27,7 @@ body.page-header-fixed
 
       .page-inner
         .page-title
-          h3 #{@page_title}
+          h3 #{raw(@page_title)}
 
         #main-wrapper
           = yield

@@ -1,38 +1,77 @@
 - if admin_user.present?
   .row
-    #mfratio.col-xs-3.text-center
-    #intentions.col-xs-3.text-center
-      h3 Intentions
-      hr
-      h4
-        | Dating #{percent_val(@intent_dating, (@intent_dating + @intent_relationship))}&#37;
-        br
-        | Relationship #{percent_val(@intent_relationship, (@intent_dating + @intent_relationship))}&#37;
-    #agebreakdown.col-xs-3.text-center
-      h2 Age Breakdown
-      h3
-        p 18-25: #{percent_val(@age_18_25, @total)}&#37;
-        p 26-30: #{percent_val(@age_26_30, @total)}&#37;
-        p 31-35: #{percent_val(@age_31_35, @total)}&#37;
-        p 36-40: #{percent_val(@age_36_40, @total)}&#37;
-        p 40 over: #{percent_val(@age_40_plus, @total)}&#37;
-  .row
-    .col-xs-4
-      h3 Unmatched Reasons
-      hr
-      - @unmatched_reasons.each do |k, v|
-        | #{k} : #{v}
-        br
+    .col-md-3.col-xs-4
+      .panel.info-box.panel-white
+        .panel-body
+          .info-box-stats
+            p.counter #{@seen_yesterday} > #{@seen_today}
+            span.info-box-title Users seen yesterday & today
+          .info-box-icon
+            i.icon-users
+    .col-md-3.col-xs-4
+      .panel.info-box.panel-white
+        .panel-body
+          .info-box-stats
+            p.counter
+              | #{@live_brews} (#{@for_review_brews})
+            span.info-box-title Live and (For Review) Brews
+          .info-box-icon
+            i.icon-cup
+    .col-md-3.col-xs-4
+      .panel.info-box.panel-white
+        .panel-body
+          .info-box-stats
+            p.counter
+              span.label.label-success #{@new_in_last_48h}
+            span.info-box-title New signups in the last 48 hours
+          .info-box-icon
+            i.icon-users
+    .col-md-3.col-xs-4
+      .panel.info-box.panel-white
+        .panel-body
+          .info-box-stats
+            p.counter
+              span.label.label-danger #{@deleted_in_last_48h}
+            span.info-box-title Deleted in the last 48 hours
+          .info-box-icon
+            i.icon-trash
+    .col-md-3.col-xs-4
+      .panel.info-box.panel-white
+        .panel-body
+          .info-box-stats
+            p.counter #{@men} m, #{@women} f
+            span.info-box-title Number of men and women
+          .info-box-icon
+            i.icon-users
+    .col-md-3.col-xs-4
+    .col-md-3.col-xs-4
+  / .row
+  /   #mfratio.col-xs-3.text-center
+  /   #intentions.col-xs-3.text-center
+  /     h3 Intentions
+  /     hr
+  /     h4
+  /       | Dating #{percent_val(@intent_dating, (@intent_dating + @intent_relationship))}&#37;
+  /       br
+  /       | Relationship #{percent_val(@intent_relationship, (@intent_dating + @intent_relationship))}&#37;
+  /   #agebreakdown.col-xs-3.text-center
+  /     h2 Age Breakdown
+  /     h3
+  /       p 18-25: #{percent_val(@age_18_25, @total)}&#37;
+  /       p 26-30: #{percent_val(@age_26_30, @total)}&#37;
+  /       p 31-35: #{percent_val(@age_31_35, @total)}&#37;
+  /       p 36-40: #{percent_val(@age_36_40, @total)}&#37;
+  /       p 40 over: #{percent_val(@age_40_plus, @total)}&#37;
 
 - else
-  .row style='margin-bottom:25px;'
-    .col-xs-12.text-center
+  .row style='margin:25px;'
+    .col-xs-12
       a.btn.btn.btn-primary href='/auth/facebook'
         i.fa.fa-facebook
         | &nbsp; Login
 
 javascript:
-  $(function () {
+  /*$(function () {
     $('#mfratio').highcharts({
       chart: {
         type: 'column'
@@ -57,9 +96,9 @@ javascript:
         data: [#{percent_val(@women, @men+@women)}]
       }]
     });
-  });
+  });*/
 
-  $(function () {
+  /*$(function () {
     $('#agebreakdown').highcharts({
       chart: {
         type: 'bar'
@@ -99,4 +138,4 @@ javascript:
         data: [0, 0, 0, 0, #{percent_val(@age_40_plus, @total)}]
       }]
     });
-  });
+  });*/
