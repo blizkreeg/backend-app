@@ -95,10 +95,10 @@
                   - if brewing.host
                     | &nbsp;<span class='label label-info'>hosting</span>&nbsp;
                   - elsif brewing.interested?
-                    | &nbsp;<span class='label label-warning'>interested in</span>&nbsp;
+                    | &nbsp;<span class='label label-default'>interested in</span>&nbsp;
                   - elsif brewing.going?
                     | &nbsp;<span class='label label-success'>going to</span>&nbsp;
-                  = link_to brewing.brew.title, "/brew-dashboard#brew-#{brewing.brew.id}"
+                  = link_to brewing.brew.title, "/brew-dashboard#brew-#{brewing.brew.id}?status=#{brewing.brew.moderation_status}"
                   br
                   small.pull-left #{distance_of_time_in_words_to_now(brewing.created_at)} ago
 
