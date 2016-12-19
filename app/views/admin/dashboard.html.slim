@@ -79,6 +79,27 @@
             i.material-icons face
     .col-md-3.col-xs-4
     .col-md-3.col-xs-4
+
+    .clearfix
+
+    .col-md-4
+      .panel.panel-white
+        .panel-heading
+          h4.panel-title Recent Brew activity
+        .panel-body
+          ul.list-unstyled
+            - @latest_brewings.each do |brewing|
+              li
+                p
+                  = link_to brewing.profile.fullname, admin_show_user_path(brewing.profile.uuid)
+                  - if brewing.host
+                    | &nbsp;is hosting&nbsp;
+                  - elsif brewing.interested?
+                    | &nbsp;interested in&nbsp;
+                  - elsif brewing.going?
+                    | &nbsp;going to&nbsp;
+                  = link_to brewing.brew.title, "/brew-dashboard#brew-#{brewing.brew.id}"
+
   / .row
   /   #mfratio.col-xs-3.text-center
   /   #intentions.col-xs-3.text-center

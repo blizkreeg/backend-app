@@ -19,4 +19,13 @@ class Brewing < ActiveRecord::Base
   scope :hosts, -> { is_host }
   scope :interested, -> { with_status('interested') }
   scope :going, -> { with_status('going') }
+  scope :ordered_by_recency, -> { order("brewings.created_at DESC") }
+
+  def interested?
+    self.status == INTERESTED
+  end
+
+  def going?
+    self.status == GOING
+  end
 end

@@ -36,6 +36,7 @@ class AdminController < ApplicationController
                               .where("((properties->>'last_seen_at')::date >= '#{(Time.now - 7.days).utc.to_date.to_s}'::date) AND
                                       ((properties->>'last_seen_at')::date <= '#{Time.now.utc.to_date.to_s}'::date)")
                               .count
+    @latest_brewings = Brewing.ordered_by_recency.limit(10)
 
     # @intent_dating = Profile.with_intent('Dating').count
     # @intent_relationship = Profile.with_intent('Relationship').count
