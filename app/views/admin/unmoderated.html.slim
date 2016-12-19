@@ -14,22 +14,31 @@
                 th Name
                 th Gender
                 th Joined
+                th
 
             tbody
               - @unmoderated.each do |profile|
-                tr.has-profile-preview data-profile-uuid="#{profile.uuid}"
+                tr.has-profile-preview data-profile-uuid="#{profile.uuid}" style='position:relative;'
                   td
                     = link_to profile.fullname, admin_show_user_path(profile.uuid)
                   td
                     = profile.gender
                   td
                     | joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
+                  td.profile-pointer style='visibility:hidden;'
+                    i.material-icons navigate_next
 
-  .col-md-7.hidden-xs
+  .col-md-7.hidden-xs.profile-preview
 
 javascript:
   $(function() {
     $('tr.has-profile-preview').on('click', function() {
-      alert('hi');
+      var uuid = $(this).data('profile-uuid');
+      $.get("/show-user/" + uuid, function(data) {
+        $('.profile-preview').html($(data).find('#main-wrapper').html());
+      });
+
+      $('td.profile-pointer').css('visibility', 'hidden');
+      $(this).find('td.profile-pointer').css('visibility', 'visible');
     })
   });
