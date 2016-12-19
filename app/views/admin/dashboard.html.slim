@@ -93,12 +93,17 @@
                 p
                   = link_to brewing.profile.fullname, admin_show_user_path(brewing.profile.uuid)
                   - if brewing.host
-                    | &nbsp;is hosting&nbsp;
+                    | &nbsp;<span class='label label-info'>hosting</span>&nbsp;
                   - elsif brewing.interested?
-                    | &nbsp;interested in&nbsp;
+                    | &nbsp;<span class='label label-warning'>interested in</span>&nbsp;
                   - elsif brewing.going?
-                    | &nbsp;going to&nbsp;
+                    | &nbsp;<span class='label label-success'>going to</span>&nbsp;
                   = link_to brewing.brew.title, "/brew-dashboard#brew-#{brewing.brew.id}"
+                  br
+                  small.pull-left #{distance_of_time_in_words_to_now(brewing.created_at)} ago
+
+                  .clearfix
+
 
   / .row
   /   #mfratio.col-xs-3.text-center
