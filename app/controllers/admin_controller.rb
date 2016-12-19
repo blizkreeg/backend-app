@@ -18,11 +18,24 @@ class AdminController < ApplicationController
     @women = Profile.with_gender('female').count
 
     @new_week_ago = Profile
-                    .where("((created_at)::date >= '#{(Time.now - 8.days).utc.to_date.to_s}'::date) AND
-                            ((created_at)::date <= '#{(Time.now - 7.days).utc.to_date.to_s}'::date)").count
+                      .where("((created_at)::date >= '#{(Time.now - 8.days).utc.to_date.to_s}'::date) AND
+                            ((created_at)::date <= '#{(Time.now - 7.days).utc.to_date.to_s}'::date)")
+                      .count
     @deleted_week_ago = Profile
-                    .where("((properties->>'marked_for_deletion_at')::date >= '#{(Time.now - 8.days).utc.to_date.to_s}'::date) AND
-                            ((properties->>'marked_for_deletion_at')::date <= '#{(Time.now - 7.days).utc.to_date.to_s}'::date)").count
+                        .where("((properties->>'marked_for_deletion_at')::date >= '#{(Time.now - 8.days).utc.to_date.to_s}'::date) AND
+                            ((properties->>'marked_for_deletion_at')::date <= '#{(Time.now - 7.days).utc.to_date.to_s}'::date)")
+                        .count
+
+    @men_seen_in_last_1w = Profile
+                            .with_gender('male')
+                            .where("((properties->>'last_seen_at')::date >= '#{(Time.now - 7.days).utc.to_date.to_s}'::date) AND
+                                    ((properties->>'last_seen_at')::date <= '#{Time.now.utc.to_date.to_s}'::date)")
+                            .count
+    @women_seen_in_last_1w = Profile
+                              .with_gender('female')
+                              .where("((properties->>'last_seen_at')::date >= '#{(Time.now - 7.days).utc.to_date.to_s}'::date) AND
+                                      ((properties->>'last_seen_at')::date <= '#{Time.now.utc.to_date.to_s}'::date)")
+                              .count
 
     # @intent_dating = Profile.with_intent('Dating').count
     # @intent_relationship = Profile.with_intent('Relationship').count

@@ -66,7 +66,15 @@
         .panel-body
           .info-box-stats
             p.counter #{@men} m, #{@women} f
-            span.info-box-title Number of men and women
+            span.info-box-title Total men and women
+          .info-box-icon
+            i.material-icons face
+    .col-md-3.col-xs-4
+      .panel.info-box.panel-white
+        .panel-body
+          .info-box-stats
+            p.counter #{@men_seen_in_last_1w} m, #{@women_seen_in_last_1w} f
+            span.info-box-title Seen in the last 1 week
           .info-box-icon
             i.material-icons face
     .col-md-3.col-xs-4
