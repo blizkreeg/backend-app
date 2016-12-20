@@ -154,11 +154,11 @@ class AdminController < ApplicationController
     end
 
     # here a butler chat should be sent to user
-    affected_profiles.each do |uuid, profile|
-      if !profile.blacklisted? # don't notify if profile was blacklisted
-        PushNotifier.delay.record_event(uuid, 'profile_photo_rejected', myname: profile.firstname)
-      end
-    end
+    # affected_profiles.each do |uuid, profile|
+    #   if !profile.blacklisted? # don't notify if profile was blacklisted
+    #     PushNotifier.delay.record_event(uuid, 'profile_photo_rejected', myname: profile.firstname)
+    #   end
+    # end
 
     redirect_to :back
   end
