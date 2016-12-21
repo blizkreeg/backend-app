@@ -14,5 +14,4 @@
 //= require jquery_ujs
 //= require clipboard.min
 //= require firebase
-//= require highcharts
 //= require bootstrap.min

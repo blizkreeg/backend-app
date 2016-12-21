@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+    meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    title Brew
+    = stylesheet_link_tag 'https://fonts.googleapis.com/icon?family=Material+Icons'
+    = stylesheet_link_tag 'https://code.getmdl.io/1.2.1/material.blue_grey-amber.min.css'
+    = javascript_include_tag 'https://code.getmdl.io/1.2.1/material.min.js', defer: true
+    = stylesheet_link_tag 'web', media: 'all'
+    = javascript_include_tag 'application'
+    = csrf_meta_tags
+
+    javascript:
+      $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
+  body.homepage
+    = render partial: 'shared/brew_google_analytics'
+
+    / main body
+    = yield

@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     get '/registered', to: 'brews#registered', as: :registered
   end
 
-  get '/homepage', to: 'brews#homepage'
+  post '/add-to-invite-list', to: 'brews#add_to_invite_list'
   get '/welcome', to: 'brews#welcome_ekcoffee_users'
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
   get '/activity', to: 'brews#show_user_activity', as: :brew_show_user_activity

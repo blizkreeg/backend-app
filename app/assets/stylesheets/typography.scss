@@ -37,21 +37,29 @@ $body_font: -apple-system, '.SFNSText-Regular', Lato, proxima-nova, BlinkMacSyst
 $heading_font: -apple-system-headline, 'SFNSDisplay-Medium', Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', 'Roboto', sans-serif;
 $subheading_font: -apple-system-subheadline, 'SFNSDisplay-Regular', Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', Roboto, sans-serif, 'Bariol';
 $brew_color: #fd6b72;
+$heading_color: #4f5057;
+$subheading_color: #4f5057;
 
 h1, h2, h3 {
   font-family: $heading_font;
+  color: $heading_color;
   font-weight: 400;
 }
 
 h4, h5, h6 {
   font-family: $subheading_font;
+  color: $subheading_color;
 }
 
 h4 {
   font-weight: 400;
 }
 
-h5, h6 {
+h5 {
+  font-weight: 400;
+}
+
+h6 {
   font-weight: 300;
 }
 

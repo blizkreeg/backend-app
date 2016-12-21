@@ -12,8 +12,14 @@ html
 
     javascript:
       $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
-  body
+  body.brews
     = render partial: 'shared/brew_google_analytics'
 
     / main body
     = yield
+
+    / a bottom anchored menu if logged in and mobile device/ekc app webview
+    - if show_menu? && false
+      .mobile-bottom-menu-holder
+      .mobile-bottom-menu
+        = render partial: 'brews/components/bottom_menu'

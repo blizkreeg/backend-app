@@ -1,14 +1,24 @@
 class BrewsController < WebController
-  layout 'brews'
+  layout 'brews', except: [:homepage]
 
-  before_action :authenticated?, except: [:homepage, :show]
+  before_action :authenticated?, except: [:homepage, :add_to_invite_list, :show]
   before_action :redirect_app_users, only: [:homepage], if: lambda { from_app? }
   before_action :has_brews_in_review?, only: [:index]
   before_action :show_bottom_menu, only: [:index], if: lambda { logged_in? && (from_app? || mobile_device?) }
 
   def homepage
-    # TODO
-    head 404
+    if request.host == 'joinbrew.com'
+      render layout: 'homepage'
+      return
+    else
+      head 404
+    end
+  end
+
+  def add_to_invite_list
+    NotificationsMailer.delay.new_brew_invite_signup(params[:invite_to])
+
+    render text: 'OK'
   end
 
   def index

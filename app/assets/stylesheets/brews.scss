@@ -6,81 +6,8 @@
 
 @import 'typography';
 @import 'colors';
-
-html, body {
-  font-family: $body_font;
-  margin-bottom: 50px;
-  font-size: 16px;
-  line-height: 22px;
-  font-weight: 400;
-  background-color: #f6f6f5;
-  color: #484848;
-}
-
-main {
-  z-index: 1;
-}
-
-.accent-color {
-  color: #f37070;
-}
-
-.accent-color--title {
-  color: #fd5b63;
-}
-
-.accent-color--dark {
-  color: #e35159; // ef5948 too
-}
-
-.mustard-color {
-  color: #f4b50e;
-}
-
-.list--unstyled {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-a, a:hover, a:visited {
-  color: #fd5b63;
-  text-decoration: none;
-}
-
-a.no-decor, a.no-decor:visited, a.no-decor:hover {
-  text-decoration: none !important;
-  color: inherit !important;
-}
-
-a.disabled {
-  color: #888 !important;
-}
-
-.text--light {
-  font-weight: 100;
-}
-
-.full-width {
-  width: 100%;
-}
-
-.mt-0 {
-  margin-top: 0px;
-}
-
-.mt-10 {
-  margin-top: 10px;
-}
-
-// hide scrollbars
-::-webkit-scrollbar {
-    display: none;
-}
-
-.cover-image {
-  background-size: cover;
-}
+@import 'common';
+@import 'homepage';
 
 .make-brew {
 }
@@ -99,16 +26,6 @@ a.disabled {
   height: 60px;
 }
 
-.homepage-cover {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  background-image: image-url('brew-cover-2.png');
-  background-position: 0 -150px;
-  height: 600px;
-}
-
 .welcome-cover {
   display: flex;
   flex-flow: column nowrap;
@@ -119,64 +36,6 @@ a.disabled {
   background-repeat: no-repeat;
   height: 250px;
   color: white;
-}
-
-@media only screen and (max-width: 799px) {
-  .homepage-cover {
-    height: 300px;
-    background-position: 0 0;
-  }
-}
-
-.brews-enum-container {
-  padding: 5px 0;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.brews-enum-container > .mdl-cell {
-  align-self: center;
-  width: auto;
-  padding: 0px 10px;
-}
-
-.explain-brew {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: flex-end;
-  height: 300px;
-  width: inherit;
-  // background: rgba(242,186,102, 0.33);
-}
-
-.explain-brew__container {
-  text-align: center;
-  color: #ffffff;
-}
-
-.no-padding {
-  padding: 0
-}
-
-.padding-20 {
-  padding: 20px;
-}
-
-.pull-left {
-  float: left;
-}
-
-.pull-right {
-  float: right;
-}
-
-.max960 {
-  max-width: 960px;
-  margin: 0px auto;
-  padding: 0;
-  position: relative;
 }
 
 .header {

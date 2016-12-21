@@ -1,0 +1,10 @@
+= form_tag '#', authenticity_token: true, class: 'notify-signup__invite-form' do
+  p
+    | We're close.
+    br
+    | May we reach out to you when we're ready?
+  .notify-signup__input-container
+    = text_field_tag :invite_to, '', class: 'invite-input large-input large-input__email', placeholder: 'sure, email or text me @'
+    = submit_tag 'OK', class: 'notify-signup__submit'
+    .notify-signup__input-container__submit-icon
+      i.material-icons arrow_forward

@@ -22,4 +22,26 @@ class NotificationsMailer < ApplicationMailer
       body: "https://admin.ekcoffee.com/brew-dashboard"
     )
   end
+
+  def new_brew_invite_signup(invite_to)
+    sendgrid_header_params =
+                      {
+                        filters: {
+                          templates: {
+                            settings: { enable: 1,
+                                        template_id: "51938a18-15c8-46a1-b19d-2a1dc0a7927d"
+                            }
+                          }
+                        },
+                        sub: {
+                        }
+                      }
+    headers['X-SMTPAPI'] = sendgrid_header_params.to_json
+
+    mail(
+      to: 'hello@ekcoffee.com',
+      subject: "Brew Invitation Signup",
+      body: "New Invite - #{invite_to}"
+    )
+  end
 end
