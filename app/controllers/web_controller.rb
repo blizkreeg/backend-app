@@ -1,6 +1,7 @@
 class WebController < ApplicationController
   protect_from_forgery with: :exception
 
+  before_action :set_domain
   before_action :check_for_mobile_device
   before_action :check_if_request_from_app
   before_action :load_ekcoffee_profile, if: lambda { from_app? }
@@ -9,9 +10,17 @@ class WebController < ApplicationController
   EKCOFFEE_APP_HEADER = 'X-EKCOFFEE-APP'
   EKCOFFEE_APP_PROFILE_UUID_HEADER = 'X-EKCOFFEE-PROFILE-UUID'
 
-  helper_method :anonymous?, :current_profile_is_admin?
+  helper_method :anonymous?, :current_profile_is_admin?, :is_joinbrew?, :is_ekcbrew?
 
   protected
+
+  def is_joinbrew?
+    @domain == 'joinbrew.com'
+  end
+
+  def is_ekcbrew?
+    @domain == 'brew.ekcoffee.com'
+  end
 
   def mobile_device?
     @mobile_device
@@ -30,6 +39,10 @@ class WebController < ApplicationController
   end
 
   private
+
+  def set_domain
+    @domain = request.host
+  end
 
   # http://detectmobilebrowsers.com/
   def check_for_mobile_device
