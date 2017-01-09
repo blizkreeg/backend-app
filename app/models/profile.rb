@@ -709,6 +709,8 @@ class Profile < ActiveRecord::Base
   end
 
   def validate_date_preferences
+    return if self.date_preferences.nil?
+
     unless self.date_preferences.is_a? Array
       errors.add(:date_preferences, "Date preferences should be a list") and return
     end
