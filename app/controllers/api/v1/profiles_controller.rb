@@ -57,7 +57,7 @@ class Api::V1::ProfilesController < ApiController
 
     render status: 201
   rescue ActiveRecord::RecordNotUnique => e
-    respond_with_error('Profile already exists', 400, 'none')
+    respond_with_error('Profile already exists', 400, 'email_already_exists')
   end
 
   def sign_in
