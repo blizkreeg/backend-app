@@ -207,7 +207,7 @@ class Profile < ActiveRecord::Base
   # attribute :age, Type::Integer.new
 
   # required properties
-  validates :latitude, :longitude, :intent, presence: true
+  # validates :latitude, :longitude, presence: true
   validates :email, jsonb_uniqueness: true
   validates :born_on_year, numericality: { only_integer: true, less_than_or_equal_to: Date.today.year-Constants::MIN_AGE }, allow_nil: true
   validates :born_on_month, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 12 }, allow_nil: true
@@ -215,7 +215,7 @@ class Profile < ActiveRecord::Base
   validates :gender, inclusion: { in: %w(male female) }, allow_nil: true
   validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
   validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
-  validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }
+  validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }, allow_nil: true
 
   # optional properties
   validates :faith, inclusion: { in: Constants::FAITHS }, allow_blank: true

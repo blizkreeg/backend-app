@@ -51,33 +51,10 @@ paths:
                 type: object
                 required:
                   - facebook_auth_hash
-                  - intent
-                  - date_preferences
-                  - longitude
-                  - latitude
                 properties:
                   facebook_auth_hash:
                     description: full response object from auth provider
                     type: object
-                  intent:
-                    description: dating intention
-                    type: string
-                    enum:
-                      - Dating
-                      - Relationship
-                  date_preferences:
-                    description: first date preferences
-                    type: array
-                    items:
-                      type: string
-                  latitude:
-                    description: latitude as on profile
-                    type: number
-                    format: double
-                  longitude:
-                    description: longitude as on profile
-                    type: number
-                    format: double
       responses:
         201:
           description: Profile created
