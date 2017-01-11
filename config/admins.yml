@@ -2,6 +2,7 @@ test: &test
   fb_oauth_uids:
     - '605136095' # vineet
     - '535286657' # anushri
+    - '447396965449312' # jenny
     - '100002161759990' #prashant
     - '100001685107753' # siddharth
     - '100000927870413' # neha
