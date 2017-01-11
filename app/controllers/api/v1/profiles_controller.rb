@@ -47,8 +47,6 @@ class Api::V1::ProfilesController < ApiController
 
     @profile.save!
 
-    @profile.create_initial_matches if @profile.gender.present?
-
     # since loading FB albums/photo is time-consuming, precache this
     Profile.delay.precache_facebook_albums(@profile.uuid)
 
@@ -324,6 +322,10 @@ eos
       attributes.delete(attr_name.to_sym) if type == :array
       attributes += [{ attr_name.to_sym => [] }]
     end
+
+    # if data is empty, .permit(...) on it throws an error
+    return if params[:data].blank?
+
     params.require(:data).permit(*attributes)
   end
 

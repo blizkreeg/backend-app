@@ -213,8 +213,8 @@ class Profile < ActiveRecord::Base
   validates :born_on_month, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 12 }, allow_nil: true
   validates :born_on_day, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 31 }, allow_nil: true
   validates :gender, inclusion: { in: %w(male female) }, allow_nil: true
-  validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
-  validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
+  validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }, allow_nil: true
+  validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }, allow_nil: true
   validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }, allow_nil: true
 
   # optional properties
@@ -241,8 +241,8 @@ class Profile < ActiveRecord::Base
 
   after_commit :upload_facebook_profile_photos, on: :create
   after_commit :update_clevertap, on: :create
-  after_validation :reverse_geocode, if: ->(profile){ profile.location_changed? && profile.latitude.present? && profile.longitude.present? }
-  before_save :set_search_latlng, if: Proc.new { |profile| profile.location_changed? }
+  after_validation :reverse_geocode, if: ->(profile){ profile.latitude.present? && profile.longitude.present? && profile.location_changed? }
+  before_save :set_search_latlng, if: Proc.new { |profile| profile.latitude.present? && profile.longitude.present? && profile.location_changed? }
   before_save :set_tz, if: Proc.new { |profile| profile.location_changed? }
   before_save :set_age, if: Proc.new { |profile| profile.dob_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
@@ -688,6 +688,8 @@ class Profile < ActiveRecord::Base
   end
 
   def set_tz
+    return if self.latitude.blank? || self.longitude.blank?
+
     timezone = Timezone::Zone.new :latlon => [self.latitude, self.longitude]
     self.time_zone = timezone.zone if ActiveSupport::TimeZone::MAPPING.values.include?(timezone.zone)
     true
@@ -709,7 +711,7 @@ class Profile < ActiveRecord::Base
   end
 
   def validate_date_preferences
-    return if self.date_preferences.nil?
+    return if self.date_preferences.blank?
 
     unless self.date_preferences.is_a? Array
       errors.add(:date_preferences, "Date preferences should be a list") and return
