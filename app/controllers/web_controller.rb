@@ -65,7 +65,7 @@ class WebController < ApplicationController
   end
 
   def load_ekcoffee_profile
-    uuid = session[:uuid] || request_uuid
+    uuid = request_uuid || session[:uuid]
 
     raise "You're not logged in" if uuid.blank?
 
