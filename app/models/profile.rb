@@ -179,7 +179,6 @@ class Profile < ActiveRecord::Base
 
   BASIC_FIELDS = %i(
     height
-    faith
     highest_degree
     profession
     gender
