@@ -47,8 +47,6 @@ class Api::V1::ProfilesController < ApiController
 
     @profile.save!
 
-    @profile.create_initial_matches if @profile.gender.present?
-
     # since loading FB albums/photo is time-consuming, precache this
     Profile.delay.precache_facebook_albums(@profile.uuid)
 
@@ -57,7 +55,7 @@ class Api::V1::ProfilesController < ApiController
 
     render status: 201
   rescue ActiveRecord::RecordNotUnique => e
-    respond_with_error('Profile already exists', 400, 'none')
+    respond_with_error('Profile already exists', 400, 'email_already_exists')
   end
 
   def sign_in
@@ -324,6 +322,10 @@ eos
       attributes.delete(attr_name.to_sym) if type == :array
       attributes += [{ attr_name.to_sym => [] }]
     end
+
+    # if data is empty, .permit(...) on it throws an error
+    return if params[:data].blank?
+
     params.require(:data).permit(*attributes)
   end
 
