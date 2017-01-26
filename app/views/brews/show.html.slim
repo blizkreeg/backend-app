@@ -42,7 +42,7 @@ main
               = raw(@brew.formatted_details)
 
             .details
-              = render partial: 'brews/components/details', locals: { brew: @brew }
+              = render partial: 'brews/components/details', locals: { brew: @brew, show_address: true }
 
           - if @brew.profiles.count > 0
             #group-dynamics

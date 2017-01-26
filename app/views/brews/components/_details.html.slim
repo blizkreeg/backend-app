@@ -3,8 +3,11 @@
     .price
       = render partial: 'brews/components/price', locals: { brew: brew }
   .date
-    i.material-icons.md-18 schedule
+    h6.mt-0.mb-0 WHEN?
     | #{format_date(brew.happening_on)} at #{format_time(brew.starts_at)}
   .place
-    i.material-icons.md-18 place
+    h6.mt-0.mb-0 WHERE?
     = brew.place
+    - if defined?(show_address) && show_address
+      br
+      small #{brew.address}
