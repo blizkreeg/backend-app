@@ -107,12 +107,16 @@ class Brew < ActiveRecord::Base
     self.profiles.oldest
   end
 
+  def host
+    self.profiles.merge(Brewing.hosts).first
+  end
+
   def approve!
     # FIXME this should be the real link
     self.payment_link ||= "/brews/#{self.slug}/registered"
 
     # FIXME this should be changed to primary host
-    host = self.profiles.merge(Brewing.hosts).first
+    host = self.host
     self.min_age ||= host.male? ? (host.age - 5) : (host.age - 1)
     self.max_age ||= host.male? ? (host.age + 1) : (host.age + 5)
     self.min_desirability ||= host.try(:desirability_score) || 7 # default
@@ -131,7 +135,7 @@ class Brew < ActiveRecord::Base
   end
 
   def host_tz
-    self.profiles.merge(Brewing.hosts).first.time_zone
+    self.host.time_zone
   end
 
   def host_time_now

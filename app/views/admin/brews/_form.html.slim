@@ -46,7 +46,7 @@
   .form-group
     .col-xs-12.col-md-2
       = label_tag :host_uuid, 'Host UUID'
-      = text_field :brew, :host_uuid, class: 'form-control'
+      = text_field_tag :"brew[host_uuid]", @brew.host.try(:uuid), class: 'form-control'
       span.help-block UUID of the Brew member hosting this
 
   .form-group

@@ -235,6 +235,7 @@ class AdminController < ApplicationController
   end
 
   def edit_brew
+    @brew = Brew.find(params[:brew_id])
 
     render 'admin/brews/edit'
   end

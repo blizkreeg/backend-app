@@ -7,27 +7,24 @@
           h4.panel-title #{brew.id} | #{brew.moderation_status.upcase}
         .panel-body
           .row
-            .col-md-2
-              = button_to "Approve", { action: :approve_brew, brew_id: brew.id }, method: :post, class: 'btn btn-sm btn-primary'
-              | &nbsp;
-            .col-md-2
-              = button_to "Reject", { action: :reject_brew, brew_id: brew.id }, method: :post, class: 'btn btn-sm btn-danger'
+            .col-md-12.flex.flex-row
+              div
+                = button_to "approve", { action: :approve_brew, brew_id: brew.id }, method: :post, class: 'btn btn-sm btn-success'
+              div
+                = button_to "reject", { action: :reject_brew, brew_id: brew.id }, method: :post, class: 'btn btn-sm btn-danger'
+              div
+                = button_to "edit", { action: :edit_brew, brew_id: brew.id }, method: :get, class: 'btn btn-sm btn-info'
             .col-md-12
               .weather-top
                 .weather-current.pull-left
-                  p
-                    span style='font-size:24px;' #{brew.title}
-
-                .weather-day.pull-right style='font-size: 18px;'
-                  h3 #{brew.happening_on.to_s} @ #{brew.starts_at} hours
-                  h4 #{brew.place}
+                  h4 #{brew.title}
+                  h5 #{brew.happening_on.to_s} @ #{brew.starts_at} hours
+                  h5 #{brew.place}
                   h5 #{brew.price || 'FREE'} #{link_to('Payment Link', brew.payment_link) if brew.price.present?}
 
-            - if brew.notes
-              .col-md-12
-                h4 About
-                p
-                  = brew.notes
+            .col-md-12
+              p
+                = brew.notes
 
             .col-md-4
               ul.list-unstyled.weather-info
@@ -55,16 +52,17 @@
             .clearfix
 
             .col-md-6
-              h4 People
-              ul.list-unstyled
+              table.table
                 - brew.profiles.each do |profile|
-                  li
-                    = link_to profile.firstname, admin_show_user_path(profile)
-                    |&nbsp; (#{profile.phone})
-                    / = link_to profile.phone, "tel: +91#{profile.phone}"
-                    .pull-right
+                  tr
+                    td
+                      = link_to profile.firstname, admin_show_user_path(profile)
+                    td
+                      = link_to profile.phone, "tel: +91#{profile.phone}"
+                    td
                       - brewing = brew.brewings.where(profile_uuid: profile.uuid).take
                       - if brewing.host
                         | HOST
                       - else
                         = brewing.status.upcase
+

@@ -51,7 +51,7 @@ main
           - else
             #profile-tiles
               h6.text-center
-                | WHO'S GOING?
+                | WHO'S GOING SO FAR?
               - @brew.profiles.each_with_index do |profile, idx|
                 = render partial: 'brews/components/profile_tile', locals: { idx: idx, profile: profile, link_profile: true, brew: @brew }
 
