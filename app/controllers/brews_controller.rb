@@ -1,14 +1,19 @@
 class BrewsController < WebController
   layout 'brews', except: [:homepage]
 
-  before_action :authenticated?, except: [:homepage, :add_to_invite_list, :show]
+  before_action :authenticated?, except: [:homepage, :add_to_invite_list, :show, :partnerships, :membership]
   before_action :redirect_app_users, only: [:homepage], if: lambda { from_app? }
   before_action :has_brews_in_review?, only: [:index]
   before_action :show_bottom_menu, only: [:index], if: lambda { logged_in? && (from_app? || mobile_device?) }
 
   def homepage
-    if request.host == 'joinbrew.com'
-      render layout: 'homepage'
+    unless Rails.env.production?
+      render 'pages/homepage', layout: 'homepage'
+      return
+    end
+
+    if request.host == 'ekcoffee.com'
+      render 'pages/homepage', layout: 'homepage'
       return
     else
       head 404
@@ -22,23 +27,19 @@ class BrewsController < WebController
   end
 
   def index
-    if @current_profile.blacklisted?
-      @brews = []
-    else
-      @brews = @current_profile.administrator ?
-                  Brew
-                    .happening_on_after(Time.now.in_time_zone('Asia/Kolkata').to_date - 1.day)
-                    .with_moderation_status('live')
-                    .order('updated_at DESC') :
-                  Brew
-                    .min_desirability_gte((@current_profile.desirability_score || 6) - 1) # show brews just one step down from user
-                    .min_desirability_lte(@current_profile.desirability_score || 6) # but not out of their band
-                    .min_age_lte(@current_profile.age)
-                    .max_age_gte(@current_profile.age)
-                    .happening_on_after(Time.now.in_time_zone(@current_profile.time_zone).to_date - 1.day)
-                    .with_moderation_status('live')
-                    .ordered_by_soonest
-                    .limit(25)
+    @brews = []
+
+    unless @current_profile.blacklisted?
+      default_brews = Brew
+                        .min_desirability_gte((@current_profile.desirability_score || 6) - 1) # show brews just one step down from user
+                        .min_desirability_lte(@current_profile.desirability_score || 6) # but not out of their band
+                        .min_age_lte(@current_profile.age)
+                        .max_age_gte(@current_profile.age)
+                        .happening_on_after(Time.now.in_time_zone(@current_profile.time_zone).to_date - 1.day)
+                        .with_moderation_status('live')
+
+      @brews += default_brews.is_hosted_by_ekcoffee.ordered_by_soonest
+      @brews += default_brews.not_hosted_by_ekcoffee.ordered_by_soonest
     end
 
     render 'nobrews' if @brews.blank?
@@ -50,6 +51,7 @@ class BrewsController < WebController
   end
 
   def create
+    brew_params[:hosted_by_ekcoffee] = false
     @brew = Brew.create!(brew_params)
     @brew.brewings.build(profile: @current_profile, host: true, status: Brewing::GOING)
     @brew.save!

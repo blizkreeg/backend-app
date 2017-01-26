@@ -17,7 +17,7 @@
 
   .brew-form__field
     .brew-form__field-title What day?
-    .brew-form__field-title__supporting-text The day you want to meet.
+    .brew-form__field-title__supporting-text The day you want to meet. To have a better chance of meeting, Fridays and weekends are preferred.
     .brew-form__select-datetime
       .brew-form__select-date
         / TBD - make a JS component out of this
@@ -27,10 +27,11 @@
           div class="brew-form__select-date-options brew-form__select-tag #{'brew-form__select-tag--chosen' if date == value} " data-index="#{idx}" data-value="#{date.to_s}"
             span #{format_date(date)}
     .brew-form__field__helper-text
+      | Must be at least 5 days from now, so that enough people get a chance to join. We are still a small community :)
 
   .brew-form__field
     .brew-form__field-title When?
-    .brew-form__field-title__supporting-text Pick a time to meet
+    .brew-form__field-title__supporting-text Pick a time to meet.
     .brew-form__select-datetime
       .brew-form__select-time
         span.pull-left 9am
@@ -47,12 +48,12 @@
 
   .brew-form__field
     .brew-form__field-title Where?
-    .brew-form__field-title__supporting-text The meeting point
+    .brew-form__field-title__supporting-text The meeting place
     .mdl-textfield.mdl-textfield--expandable.full-width
       / = f.label :title, "Enter something that interests you", class: 'mdl-textfield__label'
       = f.text_field :place, class: 'mdl-textfield__input'
     .brew-form__field__helper-text
-      | Enter the name of the restaurant, cafe, or place where you're deciding to meet.
+      | Enter where you want the group to meet. Please be as specific as possible. For instance, 'Cafe Zoe' - yes,  <strike>'any cafe in Colaba'</strike> - no.
 
 
   .brew-form__field

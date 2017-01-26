@@ -5,11 +5,16 @@
     .index-nudges
       - show_nudge = nudges.sample
       i.material-icons #{show_nudge[:mdl_icon]}
-      | &nbsp; #{raw(show_nudge[:text])}
+      | &nbsp;
+      | #{raw(show_nudge[:text])}
 
   - brews.each do |brew|
     .mdl-card.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop.activity-preview.activity
       = link_to(brew_path(brew.slug), class: 'no-decor') do
+        - if brew.hosted_by_ekcoffee
+          = render partial: 'brews/components/hosted_by_ekcoffee_banner'
+        - else
+          = render partial: 'brews/components/hosted_by_member'
         / .icon
         /   i.material-icons.md-36 motorcycle
         - if notice(brew).present?
@@ -60,9 +65,9 @@
 
         / dummy div to prevent the CTA button from overlapping content
         / show only if there's a cta button below
-        .fixed-bottom
+        / .fixed-bottom
 
-      .cta
+      .cta.hidden
         - if current_profile.interested_in_brew?(brew)
           - if brew.price.nil?
             = render partial: 'brews/components/interested_button', locals: { placement: 'absolute', title: "Interested", dest: brew_path(brew.slug) }
