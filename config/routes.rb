@@ -129,7 +129,7 @@ Rails.application.routes.draw do
 
     # crud brews
     get '/manage/brews/new', to: 'admin#new_brew', as: :admin_new_brew
-    get '/manage/brews/edit', to: 'admin#edit_brew', as: :admin_edit_brew
+    get '/manage/brews/edit/:brew_id', to: 'admin#edit_brew', as: :admin_edit_brew
     post '/manage/brews/create', to: 'admin#create_brew', as: :admin_create_brew
     put '/manage/brews/update', to: 'admin#update_brew', as: :admin_update_brew
   end
