@@ -13,7 +13,8 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.cloudinary
-//= require jquery.easypiechart.min
+// require jquery.easypiechart.min
+//= require fastclick
 //= require underscore-min.js
 //= require unslider
 //= require brew/index.js
