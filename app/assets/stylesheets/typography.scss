@@ -45,8 +45,8 @@ $body_font: Lato, proxima-nova, BlinkMacSystemFont, Roboto, sans-serif !importan
 $heading_font: Muli, Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', 'Roboto', sans-serif;
 $subheading_font: Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', Roboto, sans-serif, 'Bariol';
 $brew_color: #fd6b72;
-$heading_color: #4f5057;
-$subheading_color: #4f5057;
+$heading_color: #262626; // 4f5057
+$subheading_color: #262626; //4f5057
 
 h1, h2, h3 {
   font-family: $heading_font;
