@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require cloudinary
 //= require clipboard.min
 //= require firebase
 //= require bootstrap.min

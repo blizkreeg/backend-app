@@ -26,7 +26,7 @@ module BrewsHelper
     elsif Time.now.in_time_zone('Asia/Kolkata').to_date == (date - 1)
       "Tomorrow, " + date.strftime("%b ") + date.day.ordinalize
     else
-      date.strftime("%A, %b ") + date.day.ordinalize
+      date.strftime("%a, %b ") + date.day.ordinalize
     end
   end
 

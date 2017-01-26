@@ -224,7 +224,40 @@ class AdminController < ApplicationController
     redirect_to :back
   end
 
+  def new_brew
+    render 'admin/brews/new'
+  end
+
+  def create_brew
+    @brew = Brew.create!(brew_params)
+
+    redirect_to :brew_dashboard
+  end
+
+  def edit_brew
+
+    render 'admin/brews/edit'
+  end
+
+  def update_brew
+
+    redirect_to :brew_dashboard
+  end
+
   private
+
+  def brew_params
+    params.require(:brew).permit(:title,
+                                  :notes,
+                                  :happening_on,
+                                  :starts_at,
+                                  :place,
+                                  :address,
+                                  :min_age,
+                                  :max_age,
+                                  :hosted_by_ekcoffee,
+                                  :primary_image_cloudinary_id)
+  end
 
   def load_admin_user
     @admin_user = Profile.find(session[:profile_uuid]) if session[:profile_uuid].present?

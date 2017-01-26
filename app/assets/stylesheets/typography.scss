@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400|Muli:300,400');
+
 @font-face {
   font-family: 'Material Icons';
   font-style: normal;
@@ -6,6 +8,12 @@
   src: font-url('MaterialIcons-Regular.woff2') format('woff2'),
        font-url('MaterialIcons-Regular.woff') format('woff'),
        font-url('MaterialIcons-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Brusher';
+  font-weight: normal;
+  src: font-url('Brusher.ttf') format('truetype');
 }
 
 .material-icons {
@@ -33,9 +41,9 @@
   font-feature-settings: 'liga';
 }
 
-$body_font: -apple-system, '.SFNSText-Regular', Lato, proxima-nova, BlinkMacSystemFont, Roboto, sans-serif !important;
-$heading_font: -apple-system-headline, 'SFNSDisplay-Medium', Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', 'Roboto', sans-serif;
-$subheading_font: -apple-system-subheadline, 'SFNSDisplay-Regular', Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', Roboto, sans-serif, 'Bariol';
+$body_font: Lato, proxima-nova, BlinkMacSystemFont, Roboto, sans-serif !important;
+$heading_font: Muli, Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', 'Roboto', sans-serif;
+$subheading_font: Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', Roboto, sans-serif, 'Bariol';
 $brew_color: #fd6b72;
 $heading_color: #4f5057;
 $subheading_color: #4f5057;
@@ -52,15 +60,19 @@ h4, h5, h6 {
 }
 
 h4 {
-  font-weight: 400;
+  font-weight: 300;
 }
 
 h5 {
-  font-weight: 400;
+  font-weight: 300;
 }
 
 h6 {
   font-weight: 300;
+}
+
+.logo-font {
+  font-family: Brusher, Lato, proxima-nova, BlinkMacSystemFont, Roboto, sans-serif !important;
 }
 
 // p {

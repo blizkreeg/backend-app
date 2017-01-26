@@ -1,24 +1,29 @@
-main style='background-color: #f7f7f7'
-  .full-width.welcome-cover.cover-image
+main
+  .full-width.cover-image
     .mdl-grid.mdl-grid--no-spacing
 
   .max960
     .mdl-grid
       .mdl-layout-spacer
-      .mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop style='justify-content: center;'
-        / h6.text-center.mt-0 Introducing,
-        h3.text-center.mt-10 BREW
-        h4.text-center.mt-10 Meet singles in a group.
-        h6.text-center Enter your mobile to join.
+      .mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop.text-center style='justify-content: center; flex-flow: column nowrap;'
+        h2.mt-0.mb-10.logo-font.accent-color--title ekCoffee
+        h6.mt-10.mb-10 presents
+        h4.mt-10.mb-0 BREW
+        h6.mt-0.mb-10.accent-color
+          | /broo/
+        h6.mt-10 An exclusive community of singles.
+        hr style='border-top: 1px solid #eee;'
+
+        h6 ekCoffee Brews are a new way of meeting interesting &amp; <span class='underline'>educated singles</span> in your city, be part of a growing, <span class='underline'>exclusive</span> social circle, and enjoy new and fun <span class='underline'>experiences</span>.
+        p.mt-10 style='font-size: 14px;' Enter your cell to continue.
         .phone-input style='width:auto;margin:0px auto;'
           = form_tag update_phone_path, method: :post do
             .mdl-grid.mdl-grid--no-spacing style='justify-content:center;flex-flow:row nowrap;align-items:center;'
               .mdl-cell style='width:auto;'
                 = phone_field_tag :phone, @current_profile.phone, class: 'mdl-textfield__input', maxlength: 10, required: true, placeholder: '9821066894', style: 'width: 200px;height:50px;background-color:white;border:1px solid #ccc;padding: 0px 10px;font-size:26px;text-align:center;font-weight:200;letter-spacing:2.4px;'
-                .show-interest-button.fixed-bottom style="position: fixed;justify-content:center;align-items:center;"
+                .brew-optin-button.fixed-bottom style="position: fixed;justify-content:center;align-items:center;"
                   = button_tag(method: :post) do
                     | Join
-
       .mdl-layout-spacer
 
 javascript:

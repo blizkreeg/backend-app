@@ -1,22 +1,64 @@
+@import 'typography';
+@import 'colors';
+@import 'common';
+
 body.homepage {
   font-size: 16px;
-  color: #595959;
-  background-color: #fff;
+  color: #262626;
+  font-weight: 300;
+  height: 100%;
 }
 
 p {
   font-size: 16px;
+  font-weight: 300;
+}
+
+ul li {
+  font-size: 16px;
+  font-weight: 300;
 }
 
 .homepage-header {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   justify-content: center;
+  align-items: center;
   padding: 15px 0px;
+  margin: 25px auto;
 }
 
 .homepage-header__logo {
-  height: 60px;
+  font-family: Brusher;
+  font-size: 60px;
+  height: 70px;
+  color: #ea5b5b;
+}
+
+.homepage-header__tagline {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.homepage-header__tabs {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  a, a:visited, a:hover {
+    color: #262626;
+    font-weight: 300;
+    font-size: 16px;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid #e8e8e8;
+  }
+}
+
+.homepage-header__tab {
+  padding: 4px 15px;
 }
 
 .homepage-cover {

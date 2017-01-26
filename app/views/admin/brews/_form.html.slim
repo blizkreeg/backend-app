@@ -1,0 +1,86 @@
+- brew = @brew || Brew.new
+= form_for brew, url: :admin_create_brew,  html: { class: 'form-horizontal'} do |f|
+  .form-group
+    .col-xs-12.col-md-4
+      = f.label :title
+      = f.text_field :title, class: 'form-control', required: true
+
+  .form-group
+    .col-xs-12.col-md-4
+      = f.label :notes
+      = f.text_area :notes, class: 'form-control', rows: 4
+
+
+  .form-group
+    .col-xs-6.col-md-2
+      = f.label :happening_on
+      = f.text_field :happening_on, class: 'form-control'
+      span.help-block YYYY-MM-DD format (2017-01-26)
+
+    .col-xs-6.col-md-2
+      = f.label :starts_at
+      = f.text_field :starts_at, class: 'form-control'
+      span.help-block 24hour format. 18.5 is 6:30pm etc
+
+  .form-group
+    .col-xs-6.col-md-1
+      = f.label :min_age, 'Min. age'
+      = f.text_field :min_age, class: 'form-control'
+
+    .col-xs-6.col-md-1
+      = f.label :min_age, 'Max. age'
+      = f.text_field :max_age, class: 'form-control'
+
+  .form-group
+    .col-xs-12.col-md-2
+      = f.label :place
+      = f.text_field :place, class: 'form-control'
+      span.help-block Name of the place
+
+  .form-group
+    .col-xs-12.col-md-4
+      = f.label :address
+      = f.text_field :address, class: 'form-control'
+      span.help-block Full address (optional)
+
+  .form-group
+    .col-xs-12.col-md-2
+      = label_tag :host_uuid, 'Host UUID'
+      = text_field :brew, :host_uuid, class: 'form-control'
+      span.help-block UUID of the Brew member hosting this
+
+  .form-group
+    .col-xs-12.col-md-2
+      = f.label :hosted_by_ekcoffee do
+        = f.check_box :hosted_by_ekcoffee, { }, true, false
+        | &nbsp; Hosted by ekCoffee?
+
+  .form-group
+    .col-xs-12.col-md-12
+      = label_tag :"brew[primary_image_cloudinary_id]", "Upload Brew cover photo"
+      span.help-block Optional
+      = cl_image_upload_tag :"brew[primary_image_cloudinary_id]", class: 'image_public_id'
+    .col-xs-12.col-md-12.brew-primary-image-preview
+      - if brew.primary_image_cloudinary_id.present?
+        = cl_image_tag brew.primary_image_cloudinary_id, width: 200, height: 200
+      - else
+        .hidden
+          = image_tag 'walking.gif', width: 100, height: 100
+
+  .form-group
+    .col-xs-12.col-md-4
+      = f.submit "Create", class: 'btn btn-primary'
+
+javascript:
+  $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
+    $('.brew-primary-image-preview').html(
+      $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version, crop: 'fill', width: 200, height: 200 })
+    );
+    $('input[name="brew[primary_image_cloudinary_id]"]').val(data.result.public_id);
+
+    return true;
+  });
+
+  $('.cloudinary-fileupload').bind('fileuploadprogress', function(e, data) {
+    $('.brew-primary-image-preview').find('.hidden').removeClass('hidden');
+  });

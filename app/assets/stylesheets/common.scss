@@ -4,7 +4,8 @@ html, body {
   line-height: 22px;
   font-weight: 400;
   background-color: #f6f6f5;
-  color: #484848;
+  color: #262626;
+  height: 100%;
 }
 
 body.brews {
@@ -20,7 +21,7 @@ main {
 }
 
 .accent-color--title {
-  color: #fd5b63;
+  color: #ea5b5b;
 }
 
 .accent-color--dark {
@@ -29,6 +30,10 @@ main {
 
 .mustard-color {
   color: #f4b50e;
+}
+
+.underline {
+  text-decoration: underline;
 }
 
 .list--unstyled {
@@ -52,7 +57,7 @@ a.disabled {
 }
 
 .text--light {
-  font-weight: 100;
+  font-weight: 200;
 }
 
 .full-width {

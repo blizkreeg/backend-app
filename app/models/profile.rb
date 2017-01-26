@@ -160,6 +160,10 @@ class Profile < ActiveRecord::Base
     staff_or_internal:            :boolean,
     administrator:                :boolean,
     approved_for_stb:             :boolean,
+    can_post_brew:                :boolean,
+
+    # membership related
+    member:                       :boolean,
 
     # matching related
     desirability_score:           :decimal # overall desirability - appearance + accomplishments + ...

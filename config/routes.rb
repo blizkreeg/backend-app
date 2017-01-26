@@ -16,6 +16,11 @@ Rails.application.routes.draw do
 
   root to: 'brews#homepage'
 
+  get '/membership', to: 'pages#membership'
+  get '/partnerships', to: 'pages#partnerships'
+  get '/who-why-join-ekcoffee', to: 'pages#whyjoin'
+  get '/faqs', to: 'pages#faqs'
+
   # ekCoffee app API
 
   constraints SubdomainConstraint.new('app-api') do
@@ -121,6 +126,12 @@ Rails.application.routes.draw do
 
     # stb dashboard
     get '/brew-dashboard', to: 'admin#brew_dashboard', as: :brew_dashboard
+
+    # crud brews
+    get '/manage/brews/new', to: 'admin#new_brew', as: :admin_new_brew
+    get '/manage/brews/edit', to: 'admin#edit_brew', as: :admin_edit_brew
+    post '/manage/brews/create', to: 'admin#create_brew', as: :admin_create_brew
+    put '/manage/brews/update', to: 'admin#update_brew', as: :admin_update_brew
   end
 
   # TODO remove this

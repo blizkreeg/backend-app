@@ -4,8 +4,8 @@ class Brew < ActiveRecord::Base
   # belongs_to :brew_category
 
   MIN_GROUP_SIZE = 8
-  POST_BREW_MIN_NUM_DAYS_OUT = 2
-  POST_BREW_MAX_NUM_DAYS_OUT = 7
+  POST_BREW_MIN_NUM_DAYS_OUT = 5
+  POST_BREW_MAX_NUM_DAYS_OUT = 10
 
   GROUP_MAKEUPS = {
     'Balanced (men & women)' => 0,
@@ -50,7 +50,8 @@ class Brew < ActiveRecord::Base
     price: :integer,
     min_desirability: :integer,
     moderation_status: :string,
-    rejection_reason: :string
+    rejection_reason: :string,
+    hosted_by_ekcoffee: :boolean
   }
 
   jsonb_accessor :properties, ATTRIBUTES
