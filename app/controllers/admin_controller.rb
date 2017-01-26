@@ -241,6 +241,8 @@ class AdminController < ApplicationController
   end
 
   def update_brew
+    @brew = Brew.find(params[:brew][:id])
+    @brew.update!(brew_params)
 
     redirect_to :brew_dashboard
   end
