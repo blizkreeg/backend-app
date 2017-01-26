@@ -3,23 +3,64 @@ html
   head
     meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no"
     title BREW
+
+    css:
+      #loader { display: block;
+                z-index: 99999;
+                width: 100%;
+                height: 100%;
+              }
+
+      .loader-gif {
+        position: absolute;
+        top: calc(50% - 45px);
+        left: calc(50% - 45px);
+        text-align: center;
+      }
+
+      .loader-text {
+        position: absolute;
+        width: 60px;
+        top: calc(50% + 25px);
+        left: calc(50% - 30px);
+        text-align: center;
+        letter-spacing: 0.3px;
+      }
+
+      #restofbody {
+        visibility: hidden;
+      }
+
     / = stylesheet_link_tag 'https://fonts.googleapis.com/icon?family=Material+Icons'
     = stylesheet_link_tag 'https://code.getmdl.io/1.2.1/material.blue_grey-amber.min.css'
     = javascript_include_tag 'https://code.getmdl.io/1.2.1/material.min.js', defer: true
-    = stylesheet_link_tag 'web', media: 'all'
+    = stylesheet_link_tag 'web'
     = javascript_include_tag 'brew'
     = csrf_meta_tags
 
     javascript:
       $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
   body.brews
+    #loader
+      .loader-gif
+        = image_tag 'loader.gif', width: 90, height: 90
+      .loader-text
+        small LOADING
+
     = render partial: 'shared/brew_google_analytics'
 
-    / main body
-    = yield
+    #restofbody
+      / main body
+      = yield
 
-    / a bottom anchored menu if logged in and mobile device/ekc app webview
-    - if show_menu? && false
-      .mobile-bottom-menu-holder
-      .mobile-bottom-menu
-        = render partial: 'brews/components/bottom_menu'
+      / a bottom anchored menu if logged in and mobile device/ekc app webview
+      / - if show_menu?
+      /   .mobile-bottom-menu-holder
+      /   .mobile-bottom-menu
+      /     = render partial: 'brews/components/bottom_menu'
+
+    javascript:
+      $(window).load(function() {
+        $("#loader").css('display', 'none');
+        $('#restofbody').css('visibility', 'visible');
+      })
