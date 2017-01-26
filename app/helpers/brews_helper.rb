@@ -46,18 +46,6 @@ module BrewsHelper
     hour.to_s + ':' + ('%02d' % min) + ' ' + suffix
   end
 
-  def index_page_heading
-    [
-      # 'Which Brew is your beat?',
-      'Which one will you go to?',
-      'Which Brew will you be at?',
-      'Meet new people today.',
-      'Meet new people.',
-      'Get offline. Do stuff. Socialize.',
-      # 'Go forth. Be fearless.'
-    ].sample
-  end
-
   def nudges
     [
       { mdl_icon: 'group', text: "Make it more fun &amp; ask a friend to join!" },

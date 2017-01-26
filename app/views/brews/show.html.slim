@@ -44,23 +44,16 @@ main
             .details
               = render partial: 'brews/components/details', locals: { brew: @brew, show_address: true }
 
-          - if @brew.profiles.count > 0
-            #group-dynamics
-              h6.text-center Know The Group
-              = render partial: 'brews/components/group_makeup', locals: { brew: @brew }
-
-          - total_going = @brew.profiles.count
-
           - if anonymous?
             - if @brew.profiles.count > 0
               h5.text-center #{@brew.profiles.count} interested in going
 
           - else
-            #preview-faces
+            #profile-tiles
               h6.text-center
-                = names_snippet(@brew)
-                = going_snippet(@brew)
-              = render partial: 'brews/faces', locals: { profiles: @brew.profiles, link_profile: true }
+                | WHO'S GOING?
+              - @brew.profiles.each_with_index do |profile, idx|
+                = render partial: 'brews/components/profile_tile', locals: { idx: idx, profile: profile, link_profile: true, brew: @brew }
 
           - if anonymous?
           - else

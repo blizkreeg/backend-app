@@ -1,0 +1,18 @@
+= link_to("#profile-#{profile.uuid}", class: 'no-decor', onclick: "sendProfileViewedEvent({uuid: '#{profile.uuid}', gender: '#{profile.gender}'})") do
+  .profile-tile
+    .profile-tile__face
+      = render partial: 'brews/face', locals: { idx: idx, profile: profile }
+    .profile-tile__info
+      .name
+        = profile.firstname
+        / - brewing = Brewing.where(profile_uuid: profile.uuid, brew_id: brew.id).take
+        / - if brewing.present? && brewing.host
+        /   small &nbsp; (HOST)
+      .text--light #{profile.age}, #{profile.profession}
+      - if profile.about_me_i_love.present?
+        .about
+          | loves to&nbsp;
+          span.text--light #{profile.about_me_i_love}
+
+
+

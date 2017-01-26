@@ -16,14 +16,15 @@
             span.profile-card__supporting-text has a
             span &nbsp;
             span #{profile.highest_degree}
+            span.text--light&nbsp;degree
           .profile-card__education__schools
             span.profile-card__supporting-text went to
             span &nbsp;
             span #{profile.schools_attended.join(', ')}
-        .profile-card__height.separator
-          span.profile-card__supporting-text height
-          span &nbsp;
-          span #{profile.height}
+        / .profile-card__height.separator
+        /   span.profile-card__supporting-text height
+        /   span &nbsp;
+        /   span #{profile.height}
         / .profile-card__interests.separator
         /   span.profile-card__supporting-text interests
         /   br
