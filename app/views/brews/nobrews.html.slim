@@ -1,5 +1,5 @@
 - if mobile_device?
-  = render partial: 'brews/components/actionbar', locals: { title: 'Brews', submit: true, submit_icon: 'add_circle_outline', submit_url: new_brew_path }
+  = render partial: 'brews/components/actionbar', locals: { title: 'Brews', submit: false, submit_icon: 'add_circle_outline', submit_url: new_brew_path }
 
 main
   .mobile-action-bar-holder
@@ -8,8 +8,15 @@ main
     .mdl-grid
       .mdl-layout-spacer
       .mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--8-col-desktop
-        h4.text-center Feel like meeting new people?
-        h5.text-center Post an activity and get singles near you to join!
-        .make-brew.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop
+        h4.text-center Oh no!
+        h5.text-center There are no upcoming Brews happening near you.
+        p.text-center
+          = image_tag 'stick-man.png'
+        / p.text-center
+        /   | When we have activities and socials catered for you, we'll show them here.
+        p.text-center We are working hard to bring more events &amp; activities to you.
+        p.text-center If you would like to volunteer in hosting a singles event, email us at hello@ekcoffee.com with what you have in mind.
+        p.text-center.logo-font &mdash; Team ekCoffee
+        .make-brew.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop.hidden
           = render partial: 'brews/brew_cta_button', locals: { placement: 'relative', title: "<i class='material-icons'>lightbulb_outline</i> Post a Brew", dest: new_brew_path }
       .mdl-layout-spacer
