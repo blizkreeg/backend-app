@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   end
 
   post '/add-to-invite-list', to: 'brews#add_to_invite_list'
-  get '/welcome', to: 'brews#welcome_ekcoffee_users'
+  get '/join-waitlist', to: 'brews#add_to_waitlist'
+  get '/show-waitlist', to: 'brews#show_on_waitlist'
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
   get '/activity', to: 'brews#show_user_activity', as: :brew_show_user_activity
 

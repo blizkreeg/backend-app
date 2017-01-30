@@ -10,12 +10,13 @@ main
         h4.mt-10.mb-0 BREW
         h6.mt-0.mb-10.accent-color
           | /broo/
-        h6.mt-10 An exclusive community of singles.
+        h6.mt-0.mb-0 is
+        h5.mt-10 An Exclusive Community of Singles
         hr style='border-top: 1px solid #eee;'
 
-        h6 Welcome to ekCoffee Brew!
-        h6 Brews are a new way of meeting interesting &amp; <span class='underline'>educated singles</span> in your city, be part of a growing, <span class='underline'>exclusive</span> social circle, and enjoy new and fun <span class='underline'>experiences</span>.
-        p.mt-10 style='font-size: 14px;' Enter your cell to continue.
+        / h6 Welcome to ekCoffee Brew!
+        h6 We are a new way of meeting interesting &amp; <span class='underline'>educated singles</span> in your city, be part of a growing, <span class='underline'>exclusive</span> social circle, and enjoy new and fun <span class='underline'>experiences</span>.
+        p We are accepting a limited number of people on a rolling basis. If you're interested, enter your cellphone.
         .phone-input style='width:auto;margin:0px auto;'
           = form_tag update_phone_path, method: :post do
             .mdl-grid.mdl-grid--no-spacing style='justify-content:center;flex-flow:row nowrap;align-items:center;'
@@ -23,7 +24,7 @@ main
                 = phone_field_tag :phone, @current_profile.phone, class: 'mdl-textfield__input', maxlength: 10, required: true, placeholder: '9821066894', style: 'width: 200px;height:50px;background-color:white;border:1px solid #ccc;padding: 0px 10px;font-size:26px;text-align:center;font-weight:200;letter-spacing:2.4px;'
                 .brew-optin-button.fixed-bottom style="position: fixed;justify-content:center;align-items:center;"
                   = button_tag(method: :post) do
-                    | Join Brew
+                    | ADD ME TO THE WAITLIST
       .mdl-layout-spacer
 
 javascript:

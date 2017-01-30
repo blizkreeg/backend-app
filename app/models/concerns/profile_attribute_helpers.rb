@@ -3,6 +3,7 @@ module ProfileAttributeHelpers
 
   GENDER_MALE = 'male'
   GENDER_FEMALE = 'female'
+  LOW_DESIRABILITY = 6
 
   def male?
     self.gender == GENDER_MALE
@@ -57,13 +58,16 @@ module ProfileAttributeHelpers
     self.moderation_status == 'approved'
   end
 
+  # not approved could mean unmoderated (new) or any other state that is not an approved state
   def not_approved?
     self.moderation_status != 'approved'
   end
 
   def low_desirability?
-    self.desirability_score <= 4
-  rescue
-    true
+    self.desirability_score.present? && (self.desirability_score <= LOW_DESIRABILITY)
+  end
+
+  def not_approved_or_low_dscore?
+    self.not_approved? || self.desirability_score.blank? || self.low_desirability?
   end
 end

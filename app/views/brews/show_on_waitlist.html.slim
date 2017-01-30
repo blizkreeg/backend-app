@@ -1,0 +1,58 @@
+main
+  .full-width
+    = render partial: 'brews/components/flash_message'
+
+  .max960
+    .mdl-grid
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop.text-center style='justify-content: center; flex-flow: column nowrap;'
+        h2.mt-0.mb-10.logo-font.accent-color--title ekCoffee
+        h4.mt-10.mb-0 BREW
+        h6.mt-0.mb-10.accent-color
+
+        h6.bold
+          | YOU'RE IN LINE.
+          br
+          | WE'LL BE IN TOUCH SHORTLY.
+
+        - if @total_on_list.present?
+          h4.mt-10.mb-10.mustard-color #{@total_on_list}
+          h6.mt-0
+            | people are on
+            br
+            | the waitlist currently.
+        - else
+          p
+            small
+              | (make sure app notifications are turned on)
+
+
+
+        hr style='border-top: 1px solid #eee;'
+
+        h6.bold What should I expect on ekCoffee?
+        p ekCoffee is an exclusive, real-life, members-only community of singles. Here you'll meet single people at group activities and events.
+
+        h6.bold Why is there a waitlist?
+        p We do this to maintain a balanced community and so that we deliver a good experience for everyone.
+
+        - unless @total_on_list.present?
+          h6.bold How long is the wait?
+          p We'll notify you as soon as you're accepted. Please don't turn off your notifications or delete the app, else we will have no way to reach out to you.
+
+        h6.bold Is this a dating app?
+        p ekCoffee is not a dating app like Tinder and many others.
+        p Members join ekCoffee to meet new people, form new friendships, grow their social circle, and of course, because everyone is also single, you may end up meeting someone you like :)
+
+        h6.bold Will I get matches here?
+        p Sorry, there are no matches on ekCoffee.
+
+        h6.bold How will I meet people?
+        p You'll meet new and interesting singles at real-life events and socials and get to know a diverse group of people. This will become your new social circle. We're confident of that!
+
+      .mdl-layout-spacer
+
+javascript:
+  //$(function() {
+  //  $('.welcome-cover').css('height', $(window).height()/2);
+  //});

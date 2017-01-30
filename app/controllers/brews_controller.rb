@@ -1,8 +1,10 @@
 class BrewsController < WebController
   layout 'brews', except: [:homepage]
 
+  WAITLIST_LAUNCH_DATE = Date.new(2017, 1, 30)
+
   before_action :authenticated?, except: [:homepage, :add_to_invite_list, :show, :partnerships, :membership]
-  before_action :redirect_app_users, only: [:homepage], if: lambda { from_app? }
+  before_action :redirect_app_users, except: [:add_to_waitlist, :show_on_waitlist, :update_phone], if: lambda { from_app? }
   before_action :has_brews_in_review?, only: [:index]
   before_action :show_bottom_menu, only: [:index], if: lambda { logged_in? && (from_app? || mobile_device?) }
 
@@ -27,7 +29,7 @@ class BrewsController < WebController
   end
 
   def index
-    if @current_profile.blacklisted?
+    if @current_profile.not_approved_or_low_dscore?
       render 'nobrews'
       return
     end
@@ -115,12 +117,28 @@ class BrewsController < WebController
   def show_user_activity
   end
 
-  def welcome_ekcoffee_users; end
+  def add_to_waitlist; end
+
+  def show_on_waitlist
+    # these are users who had been on the app and
+    # if we are showing them a waitlist, it means they are either not approved
+    # or have a low desirability score (see redirect_app_users)
+    # if @current_profile.created_at <= WAITLIST_LAUNCH_DATE
+    #   flash[:message] = "#{@current_profile.firstname}, we are making some changes to \
+    #                     ekCoffee in 2017. We are rolling out these changes in a gradual fashion. We \
+    #                     have added you to our waitlist. Please bear with us while we roll this out."
+    # end
+
+    # we've assigned this person a score and it's low so we don't want to admit them
+    if @current_profile.desirability_score.present? && (@current_profile.desirability_score <= 6)
+      @total_on_list = Profile.desirability_score_lte(6).count
+    end
+  end
 
   def update_phone
     @current_profile.update!(phone: params[:phone])
 
-    redirect_to action: :index
+    redirect_app_users
   end
 
   private
@@ -137,10 +155,15 @@ class BrewsController < WebController
   end
 
   def redirect_app_users
+    # TBD - if not launched in their city, show screen
     if @current_profile.phone.present?
-      redirect_to action: :index and return
+      if @current_profile.created_at >= WAITLIST_LAUNCH_DATE && @current_profile.not_approved_or_low_dscore?
+        redirect_to action: :show_on_waitlist and return
+      else
+        redirect_to action: :index and return
+      end
     else
-      redirect_to action: :welcome_ekcoffee_users and return
+      redirect_to action: :add_to_waitlist and return
     end
   end
 
