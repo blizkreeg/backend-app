@@ -5,20 +5,19 @@ class BrewsController < WebController
 
   before_action :authenticated?, except: [:homepage, :add_to_invite_list, :show, :partnerships, :membership]
   before_action :redirect_app_users, except: [:add_to_waitlist, :show_on_waitlist, :update_phone], if: lambda { from_app? }
-  before_action :has_brews_in_review?, only: [:index]
   before_action :show_bottom_menu, only: [:index], if: lambda { logged_in? && (from_app? || mobile_device?) }
 
   def homepage
-    unless Rails.env.production?
-      render 'pages/homepage', layout: 'homepage'
-      return
-    end
+    # if !Rails.env.production?
+    #   render 'pages/homepage', layout: 'homepage'
+    #   return
+    # end
 
     if request.host == 'ekcoffee.com'
       render 'pages/homepage', layout: 'homepage'
       return
     else
-      head 404
+      redirect_to action: :index
     end
   end
 
@@ -138,7 +137,7 @@ class BrewsController < WebController
   def update_phone
     @current_profile.update!(phone: params[:phone])
 
-    redirect_app_users
+    redirect_to action: :show_on_waitlist and return
   end
 
   private
@@ -160,7 +159,7 @@ class BrewsController < WebController
       if @current_profile.created_at >= WAITLIST_LAUNCH_DATE && @current_profile.not_approved_or_low_dscore?
         redirect_to action: :show_on_waitlist and return
       else
-        redirect_to action: :index and return
+        return
       end
     else
       redirect_to action: :add_to_waitlist and return
