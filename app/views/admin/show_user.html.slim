@@ -48,11 +48,6 @@
           - else
             = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'btn btn-default' }
 
-          - if @profile.approved_for_stb
-            = button_to 'Remove from STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: false }, class: 'btn btn-default' }
-          - else
-            = button_to 'Approve for STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: true }, class: 'btn btn-default' }
-
   .col-md-6
     .panel.panel-white
       .panel-heading

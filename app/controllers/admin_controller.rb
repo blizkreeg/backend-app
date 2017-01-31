@@ -108,17 +108,11 @@ class AdminController < ApplicationController
 
   def assign_desirability_score_user
     p = Profile.find params[:uuid]
-    p.desirability_score = params[:score].to_f
-    p.moderation_status = 'approved'
-    p.approved_for_stb = true
-    p.save!
-
-    redirect_to :back
-  end
-
-  def moderate_user_stb
-    p = Profile.find(params[:uuid])
-    p.approved_for_stb = (params[:approved_for_stb] == 'true')
+    if Ekc.launched_in?(p.latitude, p.longitude) && (params[:score].to_f > Profile::LOW_DESIRABILITY)
+      p.moderation_status = 'approved'
+    else
+      p.moderation_status = 'flagged'
+    end
     p.save!
 
     redirect_to :back

@@ -1,38 +1,25 @@
 class BrewsController < WebController
-  layout 'brews', except: [:homepage]
+  layout 'brews'
+
+  helper_method :live_in_user_location?
 
   WAITLIST_LAUNCH_DATE = Date.new(2017, 1, 30)
+  PUBLIC_EXCEPTION_METHODS = [:show]
+  WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
+  NAV_TABS_ONLY_METHODS = [:index]
 
-  before_action :authenticated?, except: [:homepage, :add_to_invite_list, :show, :partnerships, :membership]
-  before_action :redirect_app_users, except: [:add_to_waitlist, :show_on_waitlist, :update_phone], if: lambda { from_app? }
-  before_action :show_bottom_menu, only: [:index], if: lambda { logged_in? && (from_app? || mobile_device?) }
+  # except for the public pages and (potentially) SEO-able page for brew details,
+  # all access should be gated
+  before_action :authenticated?, except: PUBLIC_EXCEPTION_METHODS
 
-  def homepage
-    # if !Rails.env.production?
-    #   render 'pages/homepage', layout: 'homepage'
-    #   return
-    # end
+  # if the user is from the mobile app OR they're an existing user but don't meet the criteria for Brew membership
+  # then, show them the "you're on a waitlist" screen
+  before_action :show_waitlist_screen?, except: WAITLIST_EXCEPTION_METHODS, if: lambda { user_not_admitted? }
 
-    if request.host == 'ekcoffee.com'
-      render 'pages/homepage', layout: 'homepage'
-      return
-    else
-      redirect_to action: :index
-    end
-  end
-
-  def add_to_invite_list
-    NotificationsMailer.delay.new_brew_invite_signup(params[:invite_to])
-
-    render text: 'OK'
-  end
+  # mobile nav tabs
+  before_action :show_bottom_menu, only: NAV_TABS_ONLY_METHODS, if: lambda { logged_in? && (from_app? || mobile_device?) }
 
   def index
-    if @current_profile.not_approved_or_low_dscore?
-      render 'nobrews'
-      return
-    end
-
     if @current_profile.administrator
       default_brews = Brew
                       .happening_on_after(Time.now.in_time_zone('Asia/Kolkata').to_date - 1.day)
@@ -121,7 +108,7 @@ class BrewsController < WebController
   def show_on_waitlist
     # these are users who had been on the app and
     # if we are showing them a waitlist, it means they are either not approved
-    # or have a low desirability score (see redirect_app_users)
+    # or have a low desirability score (see show_waitlist_screen?)
     # if @current_profile.created_at <= WAITLIST_LAUNCH_DATE
     #   flash[:message] = "#{@current_profile.firstname}, we are making some changes to \
     #                     ekCoffee in 2017. We are rolling out these changes in a gradual fashion. We \
@@ -129,9 +116,8 @@ class BrewsController < WebController
     # end
 
     # we've assigned this person a score and it's low so we don't want to admit them
-    if @current_profile.desirability_score.present? && (@current_profile.desirability_score <= 6)
-      @total_on_list = Profile.desirability_score_lte(6).count
-    end
+    # show them the total waitlist size
+    @waitlist_size = Profile.desirability_score_lte(6).count if @current_profile.low_desirability?
   end
 
   def update_phone
@@ -153,16 +139,23 @@ class BrewsController < WebController
     end
   end
 
-  def redirect_app_users
-    # TBD - if not launched in their city, show screen
+  def show_waitlist_screen?
     if @current_profile.phone.present?
-      if @current_profile.created_at >= WAITLIST_LAUNCH_DATE && @current_profile.not_approved_or_low_dscore?
+      if @current_profile.created_at >= WAITLIST_LAUNCH_DATE
         redirect_to action: :show_on_waitlist and return
       else
         return
       end
     else
       redirect_to action: :add_to_waitlist and return
+    end
+  end
+
+  def live_in_user_location?
+    if Ekc.launched_in?(@current_profile.latitude, @current_profile.longitude)
+      true
+    else
+      false
     end
   end
 
@@ -174,5 +167,9 @@ class BrewsController < WebController
 
   def show_bottom_menu
     @show_bottom_menu = true
+  end
+
+  def user_not_admitted?
+    @current_profile.present? && @current_profile.not_approved_or_low_dscore?
   end
 end

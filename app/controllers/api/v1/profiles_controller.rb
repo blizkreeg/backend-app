@@ -100,7 +100,7 @@ class Api::V1::ProfilesController < ApiController
     @city = Geocoder.search("#{params[:latitude]}, #{params[:longitude]}").first.city
 
     found_city = nil
-    LIVE_CITIES.each do |city|
+    Rails.application.config.live_in_cities.each do |city|
       if Geocoder::Calculations.distance_between([params[:latitude], params[:longitude]], [city[:lat], city[:lng]]) * 1_000 <= city[:radius].to_f
         found_city = city
         break
@@ -285,7 +285,7 @@ class Api::V1::ProfilesController < ApiController
     ios_request = (request.user_agent =~ /\AekCoffee.*CFNetwork.*Darwin\/[\d\.]+\z/i).present?
 
     if Rails.env.production?
-      if @current_profile.not_approved? || @current_profile.low_desirability?
+      if @current_profile.not_approved_or_low_dscore?
         @content_type = 'none'
       else
         @content_type = ios_request ? 'link' : 'text'

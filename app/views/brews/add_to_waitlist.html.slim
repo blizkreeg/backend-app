@@ -16,7 +16,13 @@ main
 
         / h6 Welcome to ekCoffee Brew!
         h6 We are a new way of meeting interesting &amp; <span class='underline'>educated singles</span> in your city, be part of a growing, <span class='underline'>exclusive</span> social circle, and enjoy new and fun <span class='underline'>experiences</span>.
-        p We are accepting a limited number of people on a rolling basis. If you're interested, enter your cellphone.
+
+        - if live_in_user_location?
+          p We are accepting a limited number of people on a rolling basis. If you're interested, enter your cellphone.
+        - else
+          p.bold We have not launched in your city yet.
+          p Enter your cell number if you're interested in knowing when we come to your city.
+
         .phone-input style='width:auto;margin:0px auto;'
           = form_tag update_phone_path, method: :post do
             .mdl-grid.mdl-grid--no-spacing style='justify-content:center;flex-flow:row nowrap;align-items:center;'

@@ -159,7 +159,7 @@ class Profile < ActiveRecord::Base
     visible:                      :boolean,
     staff_or_internal:            :boolean,
     administrator:                :boolean,
-    approved_for_stb:             :boolean,
+    approved_for_stb:             :boolean, # NOT IN USE
     can_post_brew:                :boolean,
 
     # membership related

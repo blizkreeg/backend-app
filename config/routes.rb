@@ -9,13 +9,12 @@ Rails.application.routes.draw do
     get '/registered', to: 'brews#registered', as: :registered
   end
 
-  post '/add-to-invite-list', to: 'brews#add_to_invite_list'
   get '/join-waitlist', to: 'brews#add_to_waitlist'
   get '/show-waitlist', to: 'brews#show_on_waitlist'
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
   get '/activity', to: 'brews#show_user_activity', as: :brew_show_user_activity
 
-  root to: 'brews#homepage'
+  root to: 'pages#homepage'
 
   get '/membership', to: 'pages#membership'
   get '/partnerships', to: 'pages#partnerships'
@@ -99,7 +98,6 @@ Rails.application.routes.draw do
     post '/send-butler-chat-notification', to: 'admin#send_butler_chat_notification', as: 'admin_send_butler_chat_notification'
     post '/logout', to: 'admin#logout', as: 'admin_logout'
     get '/profiles-marked-for-deletion', to: 'admin#profiles_marked_for_deletion', as: 'admin_profiles_marked_for_deletion'
-    post '/moderate-user-stb', to: 'admin#moderate_user_stb', as: 'admin_moderate_user_stb'
     post '/assign-desirability-score', to: 'admin#assign_desirability_score_user', as: 'admin_assign_desirability_score_user'
     get '/conversations', to: 'admin#show_conversations'
     get '/dates', to: 'admin#show_dates'

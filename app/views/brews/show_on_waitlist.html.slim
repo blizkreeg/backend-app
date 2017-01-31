@@ -10,23 +10,24 @@ main
         h4.mt-10.mb-0 BREW
         h6.mt-0.mb-10.accent-color
 
-        h6.bold
-          | YOU'RE IN LINE.
-          br
-          | WE'LL BE IN TOUCH SHORTLY.
-
-        - if @total_on_list.present?
-          h4.mt-10.mb-10.mustard-color #{@total_on_list}
-          h6.mt-0
-            | people are on
+        - if live_in_user_location?
+          h6.bold
+            | YOU'RE IN LINE.
             br
-            | the waitlist currently.
+            | WE'LL BE IN TOUCH SHORTLY.
+
+          - if @waitlist_size.present?
+            h4.mt-10.mb-10.mustard-color #{@total_on_list}
+            h6.mt-0
+              | people are on
+              br
+              | the waitlist currently.
+          - else
+            p
+              small
+                | (make sure app notifications are turned on)
         - else
-          p
-            small
-              | (make sure app notifications are turned on)
-
-
+          h6.bold WE'LL LET YOU KNOW WHEN WE LAUNCH IN YOUR CITY!
 
         hr style='border-top: 1px solid #eee;'
 
