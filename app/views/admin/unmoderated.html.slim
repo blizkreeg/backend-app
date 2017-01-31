@@ -13,6 +13,7 @@
               tr
                 th Name
                 th Gender
+                th City
                 th Joined
                 th
 
@@ -24,7 +25,9 @@
                   td
                     = profile.gender
                   td
-                    | joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
+                    = profile.location_city
+                  td
+                    | #{distance_of_time_in_words_to_now(profile.created_at)} ago
                   td.profile-pointer style='visibility:hidden;'
                     i.material-icons navigate_next
 
