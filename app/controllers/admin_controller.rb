@@ -113,6 +113,7 @@ class AdminController < ApplicationController
     else
       p.moderation_status = 'flagged'
     end
+    p.desirability_score = params[:score].to_f
     p.save!
 
     redirect_to :back
