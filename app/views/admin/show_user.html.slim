@@ -1,40 +1,14 @@
 .row
-  .col-md-4
+  .col-md-12
     .panel.panel-white
-      .panel-body
-        h3
-          | #{@profile.fullname} &nbsp;
-          span.label.label-info style='text-transform:uppercase' #{@profile.moderation_status}
-
-        p
-          | #{@profile.location_city}, #{@profile.gender}, #{@profile.age}
-
-        ul.list-unstyled.weather-info
-          li
-            | Email
-            span.pull-right style='font-weight: 600;' #{link_to @profile.email, "mailto:#{@profile.email}"}
-          li
-            | Phone
-            span.pull-right style='font-weight: 600;' #{@profile.phone}
-
-          li
-            | Last Seen
-            span.pull-right style='font-weight: 600;' #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)}
-
-          li
-            | Complete?
-            span.pull-right style='font-weight: 600;' #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
-
-        p
-          = link_to admin_show_butler_chat_path(@profile.uuid), class: 'btn btn-info button_to' do
-            i.fa.fa-comments
-
-  .col-md-6
-    .panel.panel-white
-      .panel-heading
-        h4.panel-title Moderate
+      / .panel-heading
+        / h4.panel-title Moderate
       .panel-body
         .btn-group
+          = link_to admin_show_butler_chat_path(@profile.uuid), class: 'btn btn-info button_to' do
+            i.fa.fa-comments>
+            | Chat
+
           - if @profile.marked_for_deletion
             = button_to "Delete Profile", admin_destroy_user_path, {  params: { uuid: @profile.uuid }, class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete?\n\r#{@profile.firstname} #{@profile.lastname}\r#{@profile.uuid}" } }
 
@@ -48,13 +22,9 @@
           - else
             = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'btn btn-default' }
 
-  .col-md-6
-    .panel.panel-white
-      .panel-heading
-        h4.panel-title
-          | Assign Desirability &nbsp;
-          span.label.label-info #{@profile.desirability_score || 'Unassigned'}
-      .panel-body
+        hr
+
+        p Desirability Score: <strong>#{@profile.desirability_score || 'Not Assigned'}</strong>
         .btn-group
           = button_to '1', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 1 }, class: 'btn btn-primary' }
           = button_to '2', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 2 }, class: 'btn btn-primary' }
@@ -67,15 +37,33 @@
           = button_to '9', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 9 }, class: 'btn btn-primary' }
           = button_to '10', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 10 }, class: 'btn btn-primary' }
 
-  .clearfix
-
-  .col-md-6
+  .col-md-12
     .panel.panel-white
-      .panel-heading
-        h4.panel-title Photos
       .panel-body
+        h3
+          | #{@profile.fullname} &nbsp;
+          span.label.label-info style='text-transform:uppercase' #{@profile.moderation_status}
+
+        p
+          | #{@profile.location_city}, #{@profile.gender}, #{@profile.age}
+
+        ul.list-unstyled.weather-info
+          li
+            | Email
+            p style='font-weight: 600;' #{link_to @profile.email, "mailto:#{@profile.email}"}
+          li
+            | Phone
+            p style='font-weight: 600;' #{@profile.phone}
+
+          li
+            | Last Seen
+            p style='font-weight: 600;' #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)}
+
+        p
+
+
         - @profile.photos.ordered.each do |photo|
-            div style='position:relative;width: 160px;height: 160px;float:left;margin:2px;'
+            div.user-photo data-public-id=photo.public_id style='position:relative;width: 160px;height: 160px;float:left;margin:2px;'
               = cl_image_tag "#{photo.public_id}.jpg", style: 'width: 160px;height: 160px;'
               - if photo.reviewed
                 - if photo.approved
@@ -91,36 +79,34 @@
                 - else
                   = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'btn btn-success', style: 'position:absolute;top:0;left:0'
 
-  .clearfix
-
-  .col-md-4
+  .col-md-12
     .panel.panel-white
       .panel-body
         ul.list-unstyled.weather-info
           li
             | UUID
-            span.pull-right style='font-weight: 600;' #{@profile.uuid}
+            p style='font-weight: 600;' #{@profile.uuid}
 
           li
             | Chat UUID
-            span.pull-right style='font-weight: 600;' #{@profile.butler_conversation_uuid}
+            p style='font-weight: 600;' #{@profile.butler_conversation_uuid}
 
           li
             | FB
-            span.pull-right style='font-weight: 600;'
+            p style='font-weight: 600;'
               = link_to "https://www.facebook.com/#{@profile.try(:facebook_authentication).try(:oauth_uid)}", "https://www.facebook.com/#{@profile.try(:facebook_authentication).try(:oauth_uid)}"
 
           li
             | Intent
-            span.pull-right style='font-weight: 600;' #{@profile.intent}
+            p style='font-weight: 600;' #{@profile.intent}
 
           li
             | FB Rel. Status
-            span.pull-right style='font-weight: 600;' #{@profile.possible_relationship_status}
+            p style='font-weight: 600;' #{@profile.possible_relationship_status}
 
           li
             | Height
-            span.pull-right style='font-weight: 600;'  #{@profile.height}
+            p style='font-weight: 600;'  #{@profile.height}
 
           li
             | Profession
@@ -132,15 +118,19 @@
 
           li
             | Faith
-            span.pull-right style='font-weight: 600;' #{@profile.faith}
+            p style='font-weight: 600;' #{@profile.faith}
 
           li
             | Highest Degree
-            span.pull-right style='font-weight: 600;' #{@profile.highest_degree}
+            p style='font-weight: 600;' #{@profile.highest_degree}
 
           li
             | Height
-            span.pull-right style='font-weight: 600;'  #{@profile.height}
+            p style='font-weight: 600;'  #{@profile.height}
+
+          li
+            | Complete?
+            p style='font-weight: 600;' #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
 
 
         - @profile.about_me_order.each do |blurb_property|
@@ -153,14 +143,14 @@
         ul.list-unstyled.weather-info
           li
             | Age
-            span.pull-right style='font-weight: 600;'
+            p style='font-weight: 600;'
               = @profile.seeking_minimum_age
               | &nbsp; to &nbsp;
               = @profile.seeking_maximum_age
 
           li
             | Height
-            span.pull-right style='font-weight: 600;'
+            p style='font-weight: 600;'
               | #{@profile.seeking_minimum_height} (#{@profile.seeking_minimum_height_in} in)
               | &nbsp; to &nbsp;
               | #{@profile.seeking_maximum_height} (#{@profile.seeking_maximum_height_in} in)
@@ -169,4 +159,22 @@
             | Faith
             p style='font-weight: 600;' #{@profile.seeking_faith.join(', ')}
 
+  .col-md-12
+    .panel.panel-white
+      .panel-body
+        h5 Home Screen View - what is the user seeing?
+        - url = Rails.env.development? ? 'http://localhost:3000' : 'https://brew.ekcoffee.com'
+        iframe src="#{url}?ekcapp=1&uuid=#{@profile.uuid}" frameborder=0 height=667 width=375
 
+javascript:
+  function zoomPhoto() {
+    $('div.user-photo').each(function() {
+      $(this).zoom({
+        url: $.cloudinary.image($(this).data('public-id')).attr('src')
+      });
+    });
+  }
+
+  $(function() {
+    zoomPhoto();
+  });

@@ -16,3 +16,4 @@
 //= require clipboard.min
 //= require firebase
 //= require bootstrap.min
+//= require jquery.zoom.min
