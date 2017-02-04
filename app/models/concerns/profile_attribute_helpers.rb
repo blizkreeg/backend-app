@@ -64,7 +64,7 @@ module ProfileAttributeHelpers
   end
 
   def low_desirability?
-    self.desirability_score.present? && (self.desirability_score <= LOW_DESIRABILITY)
+    self.blacklisted? || (self.desirability_score.present? && (self.desirability_score <= LOW_DESIRABILITY))
   end
 
   def not_approved_or_low_dscore?
