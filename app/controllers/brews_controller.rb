@@ -141,11 +141,7 @@ class BrewsController < WebController
 
   def show_waitlist_screen?
     if @current_profile.phone.present?
-      if @current_profile.created_at >= WAITLIST_LAUNCH_DATE
-        redirect_to action: :show_on_waitlist and return
-      else
-        return
-      end
+      redirect_to action: :show_on_waitlist and return
     else
       redirect_to action: :add_to_waitlist and return
     end
