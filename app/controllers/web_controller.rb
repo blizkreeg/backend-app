@@ -6,6 +6,8 @@ class WebController < ApplicationController
   before_action :check_if_request_from_app
   before_action :load_ekcoffee_profile, if: lambda { from_app? }
 
+  after_action :set_response_headers
+
   # headers passed on the web view request
   EKCOFFEE_APP_HEADER = 'X-EKCOFFEE-APP'
   EKCOFFEE_APP_PROFILE_UUID_HEADER = 'X-EKCOFFEE-PROFILE-UUID'
@@ -85,5 +87,16 @@ class WebController < ApplicationController
   def request_uuid
     request.headers[EKCOFFEE_APP_PROFILE_UUID_HEADER] ||
     params[:uuid] # #NotProudOfThis #HackSoWeCanTestInBrowser #AlsoNeededForEarlierAppVersions
+  end
+
+  def set_response_headers
+    case Rails.env
+    when 'development'
+        response.headers['X-Frame-Options'] = "ALLOW-FROM http://localhost:3000/"
+    when 'test'
+      response.headers['X-Frame-Options'] = "ALLOW-FROM https://test-app.ekcoffee.com/"
+    when 'production'
+      response.headers['X-Frame-Options'] = "ALLOW-FROM https://admin.ekcoffee.com/"
+    end
   end
 end
