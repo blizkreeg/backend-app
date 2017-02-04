@@ -11,23 +11,20 @@ main
         h6.mt-0.mb-10.accent-color
 
         - if live_in_user_location?
-          h6.bold
-            | YOU'RE IN LINE.
-            br
-            | WE'LL BE IN TOUCH SHORTLY.
-
-          - if @waitlist_size.present?
-            h4.mt-10.mb-10.mustard-color #{@total_on_list}
-            h6.mt-0
-              | people are on
-              br
-              | the waitlist currently.
+          / when we've reviewed the user's profile and given a low score
+          - if @current_profile.low_desirability?
+            h4.mb-10
+              span.mustard-color #{@low_score_waitlist_size}
+            h6.mt-0 people are on the waitlist currently.
           - else
+            / this should only be the case for a brief period of time
+            / when the profile has not yet been reviewed
+            h6.mb-0.bold WE'LL BE IN TOUCH SHORTLY.
             p
               small
-                | (make sure app notifications are turned on)
+                | (make sure your app notifications are turned on)
         - else
-          h6.bold WE'LL LET YOU KNOW WHEN WE LAUNCH IN YOUR CITY!
+          h6.bold WE'LL BE IN TOUCH AS SOON AS WE LAUNCH IN YOUR CITY!
 
         hr style='border-top: 1px solid #eee;'
 
@@ -37,19 +34,20 @@ main
         h6.bold Why is there a waitlist?
         p We do this to maintain a balanced community and so that we deliver a good experience for everyone.
 
-        - unless @total_on_list.present?
-          h6.bold How long is the wait?
-          p We'll notify you as soon as you're accepted. Please don't turn off your notifications or delete the app, else we will have no way to reach out to you.
+        - if !live_in_user_location?
+          h6.bold When will you launch in my city?
+          p We are working hard to come to new cities but it's hard to say. We hope soon!
 
         h6.bold Is this a dating app?
-        p ekCoffee is not a dating app like Tinder and many others.
-        p Members join ekCoffee to meet new people, form new friendships, grow their social circle, and of course, because everyone is also single, you may end up meeting someone you like :)
+        p ekCoffee is for single people but it is not a dating app like others.
+        p Join ekCoffee to meet amazing people, form friendships, do new activities, and grow your social circle.
+        p Of course, because everyone else will also be single, you may end up meeting someone you like :)
 
         h6.bold Will I get matches here?
-        p Sorry, there are no matches on ekCoffee.
+        p Sorry, there are no &ldquo;matches&rdquo; on ekCoffee. But you'll meet people at our events that you may hit it off with!
 
         h6.bold How will I meet people?
-        p You'll meet new and interesting singles at real-life events and socials and get to know a diverse group of people. This will become your new social circle. We're confident of that!
+        p You'll meet new and interesting singles at events and socials on the ekCoffee platform and get to know a diverse group of people. This will become your new social circle. We're confident of that!
 
       .mdl-layout-spacer
 

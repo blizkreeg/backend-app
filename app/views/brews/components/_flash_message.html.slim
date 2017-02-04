@@ -1,3 +1,4 @@
 - if flash[:message].present?
   .flash-message
     = flash[:message]
+  - flash[:message] = nil
