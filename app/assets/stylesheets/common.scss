@@ -6,7 +6,7 @@ html, body {
   font-family: $body_font;
   font-size: 16px;
   line-height: 22px;
-  font-weight: 400;
+  font-weight: 300;
   background-color: #f6f6f5;
   color: #262626;
   height: 100%;
@@ -128,4 +128,8 @@ a.disabled {
 
 .text-white {
   color: white;
+}
+
+a {
+  font-weight: 300;
 }
