@@ -107,14 +107,26 @@ class AdminController < ApplicationController
   end
 
   def assign_desirability_score_user
+    notify_user = false
     p = Profile.find params[:uuid]
     if Ekc.launched_in?(p.latitude, p.longitude) && (params[:score].to_f > Profile::LOW_DESIRABILITY)
       p.moderation_status = 'approved'
+      notify_user = true
     else
       p.moderation_status = 'flagged'
     end
     p.desirability_score = params[:score].to_f
     p.save!
+
+    if notify_user
+      # send email
+      UserMailer.delay.welcome_email(p.uuid)
+
+      # send push notification
+      PushNotifier.delay.send_transactional_push([p.uuid],
+                                                  'general_announcement',
+                                                  body: "Woohoo #{p.firstname}! You're now part of the ekCoffee community. Welcome!")
+    end
 
     redirect_to :back
   end
