@@ -11,7 +11,7 @@
       .text--light #{profile.age}, #{profile.profession}
       - if profile.about_me_i_love.present?
         .about
-          | #{raw(truncate(profile.about_me_i_love, length: 50))}
+          small #{raw(truncate(profile.about_me_i_love, length: 75))}
 
 
 
