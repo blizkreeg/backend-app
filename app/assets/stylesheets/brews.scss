@@ -1084,6 +1084,9 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     border-radius: 5px;
     vertical-align: center;
     font-size: 16px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
   }
 }
 
