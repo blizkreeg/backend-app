@@ -14,7 +14,6 @@
 //= require jquery_ujs
 //= require firebase
 //= require jquery.cloudinary
-//= require fastclick
 //= require underscore-min.js
 //= require unslider
 //= require brew/index.js

@@ -59,7 +59,6 @@ javascript:
       }
 
       //window.scrollTo(0, document.body.scrollHeight);
-      console.log(document.body.scrollHeight - document.body.clientHeight);
       document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
     });
 
@@ -72,8 +71,4 @@ javascript:
                                 processed: true });
         $(this).val('');
       }
-    });
-
-    $('.message-box').on('click touchend', function(e) {
-      $('#message').focus();
     });
