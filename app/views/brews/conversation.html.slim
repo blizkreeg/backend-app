@@ -73,3 +73,7 @@ javascript:
         $(this).val('');
       }
     });
+
+    $('.message-box').on('click touchend', function(e) {
+      $('#message').focus();
+    });
