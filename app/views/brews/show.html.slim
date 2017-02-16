@@ -20,6 +20,8 @@ main
           .brew-detail__info
             / .icon
             /   i.material-icons.md-36 motorcycle
+            - if current_profile.staff_or_internal
+              = link_to 'chat', brew_conversation_path(@brew.slug)
             h4.text-center
               span.brew-detail__info__title
                 = @brew.title
@@ -76,7 +78,8 @@ main
   - if anonymous?
   - else
     - if current_profile.interested_in_brew?(@brew)
-      = render partial: 'brews/components/purchase_button', locals: { placement: 'fixed', title: "Confirm", dest: @brew.payment_link }
+      = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "You're going!", dest: '#' }
+      / = render partial: 'brews/components/purchase_button', locals: { placement: 'fixed', title: "Confirm", dest: @brew.payment_link }
     - elsif current_profile.going_to_brew?(@brew)
       = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "You're going!", dest: '#' }
     - else
@@ -91,7 +94,8 @@ main
 
 javascript:
   $(function() {
-    // fire on a delayed timeout so that on Android, the profile photos load in full device height in the app webview. window.height returns 0 if this is fired immediately when rest of content is not yet rendered
+    // fire loadProfilePhotos on a delayed timeout so that on Android, the profile photos load in full device height in the app webview.
+    // window.height returns 0 if this is fired immediately when rest of content is not yet rendered
     window.setTimeout(loadProfilePhotos, 1000);
     loadBrewImages();
     $.cloudinary.responsive();

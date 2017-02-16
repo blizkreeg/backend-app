@@ -12,8 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require firebase
 //= require jquery.cloudinary
-// require jquery.easypiechart.min
 //= require fastclick
 //= require underscore-min.js
 //= require unslider

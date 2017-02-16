@@ -100,6 +100,15 @@ class BrewsController < WebController
     redirect_to :back
   end
 
+  def conversation
+    @brew = Brew.with_slug(params[:brew_slug]).take
+
+    redirect_to action: 'index' unless @current_profile.interested_in_brew?(@brew) || @current_profile.going_to_brew?(@brew)
+
+    @photo_ids_hash = @brew.profiles.inject({}) { |hash, profile| hash[profile.uuid] = profile.photos.primary.take.try(:public_id); hash }
+    @names_hash = @brew.profiles.inject({}) { |hash, profile| hash[profile.uuid] = profile.firstname; hash }
+  end
+
   def show_user_activity
   end
 

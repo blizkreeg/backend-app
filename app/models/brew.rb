@@ -51,7 +51,8 @@ class Brew < ActiveRecord::Base
     min_desirability: :integer,
     moderation_status: :string,
     rejection_reason: :string,
-    hosted_by_ekcoffee: :boolean
+    hosted_by_ekcoffee: :boolean,
+    conversation_uuid: :string
   }
 
   jsonb_accessor :properties, ATTRIBUTES

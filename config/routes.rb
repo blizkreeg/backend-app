@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     post '/show-interest', to: 'brews#show_interest', as: :show_interest
     get '/register', to: 'brews#register', as: :register
     get '/registered', to: 'brews#registered', as: :registered
+    get '/conversation', to: 'brews#conversation', as: :conversation
   end
 
   get '/join-waitlist', to: 'brews#add_to_waitlist'

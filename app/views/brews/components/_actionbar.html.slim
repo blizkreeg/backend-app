@@ -10,7 +10,7 @@
         i.material-icons clear
   .mdl-layout-spacer
   .action-bar__title
-    = title
+    = raw(title)
   .mdl-layout-spacer
 
   - submit_status = defined?(default_submit_disabled) && default_submit_disabled
