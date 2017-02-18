@@ -1,0 +1,14 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { title: 'Community', submit: false, submit_icon: 'add_circle_outline', submit_url: new_brew_path }
+
+main
+  .mobile-action-bar-holder
+  .max960
+    = render partial: 'brews/components/flash_message'
+    .mdl-grid.mdl-grid--no-spacing
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--8-col-desktop
+        h6.text-center.mb-0 GET TO KNOW NEW PEOPLE
+        p.mt-0.small.text-center You may choose to ask for an introduction to any of them. If they feel similarly about you, we'll connect you two.
+        = render partial: 'brews/components/member_grid', locals: { profiles: @profiles }
+      .mdl-layout-spacer

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get '/show-waitlist', to: 'brews#show_on_waitlist'
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
   get '/activity', to: 'brews#show_user_activity', as: :brew_show_user_activity
+  get '/community', to: 'brews#community', as: :community
 
   root to: 'pages#homepage'
 

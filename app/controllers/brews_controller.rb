@@ -6,7 +6,7 @@ class BrewsController < WebController
   WAITLIST_LAUNCH_DATE = Date.new(2017, 1, 31)
   PUBLIC_EXCEPTION_METHODS = [:show]
   WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
-  NAV_TABS_ONLY_METHODS = [:index]
+  NAV_TABS_ONLY_METHODS = [:index, :community]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -131,6 +131,12 @@ class BrewsController < WebController
     @current_profile.update!(phone: params[:phone])
 
     redirect_to action: :show_on_waitlist and return
+  end
+
+  def community
+    @profiles = Rails.env.production? ?
+                  Profile.visible.not_staff.desirability_score_gte(Profile::HIGH_DESIRABILITY).limit(9) :
+                  Profile.visible.limit(9)
   end
 
   private

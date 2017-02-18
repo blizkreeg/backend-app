@@ -4,6 +4,7 @@ module ProfileAttributeHelpers
   GENDER_MALE = 'male'
   GENDER_FEMALE = 'female'
   LOW_DESIRABILITY = 6
+  HIGH_DESIRABILITY = 7
 
   def male?
     self.gender == GENDER_MALE
