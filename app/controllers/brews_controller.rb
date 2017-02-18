@@ -135,7 +135,13 @@ class BrewsController < WebController
 
   def community
     @profiles = Rails.env.production? ?
-                  Profile.visible.not_staff.desirability_score_gte(Profile::HIGH_DESIRABILITY).limit(9) :
+                  Profile
+                    .visible
+                    .not_staff
+                    .desirability_score_gte(Profile::HIGH_DESIRABILITY)
+                    .age_gte(@current_profile.age - 5)
+                    .age_lte(@current_profile.age + 5)
+                    .limit(9) :
                   Profile.visible.limit(9)
   end
 
