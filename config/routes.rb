@@ -106,6 +106,7 @@ Rails.application.routes.draw do
     post '/delete-user', to: 'admin#destroy_user', as: 'admin_destroy_user'
     post '/approve-brew', to: 'admin#approve_brew', as: 'admin_approve_brew'
     post '/reject-brew', to: 'admin#reject_brew', as: 'admin_reject_brew'
+    get '/search', to: 'admin#search', as: 'admin_search_users'
 
     # old admin dashboard - TBD: remove/merge this functionality into above
     get '/login', to: 'accounts#login'

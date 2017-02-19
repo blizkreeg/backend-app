@@ -51,6 +51,26 @@ class AdminController < ApplicationController
     @page_title = 'Dashboard'
   end
 
+  def search
+    @profiles = Profile.where(nil)
+
+    case params[:search][:type]
+    when 'email'
+      @profiles = @profiles.with_email(params[:search][:key])
+    when 'firstname'
+      @profiles = @profiles.with_firstname(params[:search][:key].capitalize)
+    when 'lastname'
+      @profiles = @profiles.with_lastname(params[:search][:key].capitalize)
+    when 'fullname'
+      first, last = params[:search][:key].split(' ')
+      @profiles = @profiles.with_firstname(first.capitalize).with_lastname(last.capitalize)
+    end
+
+    @page_title = 'Users'
+
+    render 'all_users'
+  end
+
   def brew_dashboard
     ordered_brews = Brew.ordered_by_recency
     if params[:status]
