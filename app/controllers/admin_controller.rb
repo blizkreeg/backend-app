@@ -274,6 +274,29 @@ class AdminController < ApplicationController
     redirect_to :brew_dashboard
   end
 
+  def content
+    @posts = Post.ordered_by_recent
+  end
+
+  def create_content
+    if params[:post][:posted_on].to_i == 0
+      params[:post][:posted_on] = Time.now.utc
+      push_delay = 0.hours
+    else
+      params[:post][:posted_on] = Time.now.utc + params[:post][:posted_on].to_i.hours
+      push_delay = params[:post][:posted_on]
+    end
+
+    Post.create!(post_params)
+
+    flash[:success] = 'Successfully posted/scheduled new content'
+
+    # TBD
+    # PushNotifier.send_transactional_push()
+
+    redirect_to :back
+  end
+
   private
 
   def brew_params
@@ -287,6 +310,16 @@ class AdminController < ApplicationController
                                   :max_age,
                                   :hosted_by_ekcoffee,
                                   :primary_image_cloudinary_id)
+  end
+
+  def post_params
+    params.require(:post).permit(:title,
+                                  :post_type,
+                                  :posted_on,
+                                  :excerpt,
+                                  :image_public_id,
+                                  :video_url,
+                                  :link_to_url)
   end
 
   def load_admin_user

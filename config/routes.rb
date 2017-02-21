@@ -107,6 +107,8 @@ Rails.application.routes.draw do
     post '/approve-brew', to: 'admin#approve_brew', as: 'admin_approve_brew'
     post '/reject-brew', to: 'admin#reject_brew', as: 'admin_reject_brew'
     get '/search', to: 'admin#search', as: 'admin_search_users'
+    get '/content', to: 'admin#content', as: 'admin_content'
+    post '/create-content', to: 'admin#create_content', as: 'admin_create_content'
 
     # old admin dashboard - TBD: remove/merge this functionality into above
     get '/login', to: 'accounts#login'

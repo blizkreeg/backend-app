@@ -1,0 +1,91 @@
+h3 Magazine Posts
+.row
+  .col-md-6
+    - @posts.each do |post|
+      .panel.panel-white
+        .panel-body
+          p #{post.posted_on.strftime("%B %d, %Y")}
+          strong.upcase #{post.post_type}
+          h5 #{post.title}
+          p #{post.excerpt}
+          - if post.image?
+            = cl_image_tag post.image_public_id, width: 200, height: 200, crop: :fill
+          - elsif post.article?
+            - if post.image_public_id
+              = cl_image_tag post.image_public_id, width: 200, height: 200, crop: :fill
+            p
+              = link_to post.link_to_url, post.link_to_url, target: '_blank'
+          - elsif post.video?
+            - if post.image_public_id
+              = cl_image_tag post.image_public_id, width: 200, height: 200, crop: :fill
+            p
+              = link_to post.video_url, post.video_url, target: '_blank'
+
+  .col-md-6
+    h4 Schedule New
+    p Push Notification will automatically be sent to all 7+ members in the cities we're live in
+    = form_tag admin_create_content_path, method: :post, class: 'form-horizontal' do
+      .form-group
+        .col-md-2
+          = label :post, :post_type, 'Post Type'
+        .col-md-10
+          = select :post, :post_type, [[Post::IMAGE_TYPE.capitalize, Post::IMAGE_TYPE],
+                                       [Post::ARTICLE_TYPE.capitalize, Post::ARTICLE_TYPE],
+                                       [Post::VIDEO_TYPE.capitalize, Post::VIDEO_TYPE]], required: true
+      .form-group
+        .col-md-2
+          = label :post, :title, 'Post Title'
+        .col-md-10
+          = text_field :post, :title, class: 'form-control', required: true
+
+      .form-group
+        .col-md-2
+          = label :post, :excerpt, 'Post Excerpt'
+        .col-md-10
+          = text_area :post, :excerpt, class: 'form-control', rows: 3
+
+      .form-group
+        .col-md-2
+          = label :post, :image_public_id
+        .col-md-10
+          = cl_image_upload_tag :"post[image_public_id]", class: 'image_public_id', required: true
+          p.post-image-preview
+
+      .form-group
+        .col-md-2
+          = label :post, :video_url, 'Video URL'
+        .col-md-10
+          = text_field :post, :video_url, class: 'form-control'
+          h5 For Video posts ONLY
+
+      .form-group
+        .col-md-2
+          = label :post, :link_to_url, 'Article URL'
+        .col-md-10
+          = text_field :post, :link_to_url, class: 'form-control'
+          h5 For Article posts ONLY
+
+      .form-group
+        .col-md-2
+          = label :post, :posted_on, 'Schedule'
+        .col-md-10
+          = text_field :post, :posted_on, placeholder: 'in X hours', class: 'form-control col-md-2'
+          p.help-block Enter 0 to post immediately
+
+      .form-group
+        .col-md-12
+          = submit_tag 'POST', class: 'btn btn-info'
+
+javascript:
+  $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
+    $('.post-image-preview').html(
+      $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version, crop: 'fill', width: 200, height: 200 })
+    );
+    $('input[name="post[image_public_id]"]').val(data.result.public_id);
+
+    return true;
+  });
+
+  $('.cloudinary-fileupload').bind('fileuploadprogress', function(e, data) {
+    $('.post-image-preview').html('<h5>uploading..</h5>');
+  });
