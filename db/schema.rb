@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161018160925) do
+ActiveRecord::Schema.define(version: 20170219011555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,6 +101,12 @@ ActiveRecord::Schema.define(version: 20161018160925) do
     t.datetime "updated_at",              null: false
   end
 
+  create_table "interests", force: :cascade do |t|
+    t.jsonb    "properties", default: {}, null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
   create_table "matches", id: :bigserial, force: :cascade do |t|
     t.uuid     "for_profile_uuid",                  null: false
     t.uuid     "matched_profile_uuid",              null: false
@@ -150,6 +156,16 @@ ActiveRecord::Schema.define(version: 20161018160925) do
 
   add_index "profile_event_logs", ["event_name"], name: "index_profile_event_logs_on_event_name", using: :btree
   add_index "profile_event_logs", ["profile_uuid"], name: "index_profile_event_logs_on_profile_uuid", using: :btree
+
+  create_table "profile_interests", force: :cascade do |t|
+    t.uuid     "profile_uuid", null: false
+    t.integer  "interest_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "profile_interests", ["interest_id"], name: "index_profile_interests_on_interest_id", using: :btree
+  add_index "profile_interests", ["profile_uuid"], name: "index_profile_interests_on_profile_uuid", using: :btree
 
   create_table "profiles", primary_key: "uuid", force: :cascade do |t|
     t.jsonb    "properties",                               default: {}, null: false
@@ -207,6 +223,8 @@ ActiveRecord::Schema.define(version: 20161018160925) do
   add_foreign_key "messages", "profiles", column: "sender_uuid", primary_key: "uuid"
   add_foreign_key "photos", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "profile_event_logs", "profiles", column: "profile_uuid", primary_key: "uuid"
+  add_foreign_key "profile_interests", "interests"
+  add_foreign_key "profile_interests", "profiles", column: "profile_uuid", primary_key: "uuid"
   add_foreign_key "real_dates", "conversations"
   add_foreign_key "real_dates", "date_places"
   add_foreign_key "real_dates", "profiles", column: "profile_uuid", primary_key: "uuid"

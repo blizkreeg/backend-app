@@ -41,7 +41,7 @@ html
 
     javascript:
       $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
-  body.brews
+  body class="brews #{@section}"
     #loader
       .loader-gif
         = image_tag 'loader.gif', width: 90, height: 90

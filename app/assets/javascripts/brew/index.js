@@ -10,14 +10,14 @@ function loadTimeCharts() {
   });
 }
 
-function loadBrewImages() {
+function loadBrewImages(height = 180) {
   var w = $(window).width();
   var $imageDivs = $('.brew-image');
   _.each($imageDivs, function(imageDiv) {
     $imageDiv = $(imageDiv);
     var imageId = $imageDiv.data('image-id');
     var divWidth = $imageDiv.width();
-    $imageDiv.prepend($.cloudinary.image(imageId, { height: 180, width: divWidth, crop: "fill", gravity: "north" }));
+    $imageDiv.prepend($.cloudinary.image(imageId, { height: height, width: divWidth, crop: "fill", gravity: "north" }));
   });
 
   $('.image-carousel-slider').unslider({

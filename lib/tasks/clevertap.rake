@@ -64,4 +64,27 @@ namespace :clevertap do
       puts "uploaded '#{notification_default_params[:event_name]}' event"
     end
   end
+
+  task :download_user_profiles_by_event => :environment do
+    ARGV.each { |a| task a.to_sym do ; end }
+
+    payload = { event_name: ARGV[1], from: ARGV[2].to_i, to: ARGV[3].to_i }.to_json
+    response = Clevertap.post_json("/1/profiles.json?batch_size=2000", payload)
+
+    cursor =  JSON.parse(response.body)["cursor"]
+    while cursor.present? do
+      response = Clevertap.get("/1/profiles.json?cursor=#{cursor}")
+      data = JSON.parse(response.body)
+
+      if data["records"].present?
+        mumbai_users =  data["records"].select { |hash| hash["profileData"].present? }.select { |hash| ['Mumbai', 'Thane', 'Navi Mumbai'].include? hash["profileData"]["location_city"] }
+        mumbai_users.map {|h| { fname: h["name"], email: h["email"] } }.each { |h|
+          puts h[:email]
+          UserMailer.delay.send_email("4ea51c77-4583-433e-84d5-458d40833a61", h[:email], "The new ekCoffee is here, #{h[:fname]}", { "-fname-" => [h[:fname]]})
+        }
+      end
+
+      cursor = data["next_cursor"]
+    end
+  end
 end

@@ -55,13 +55,42 @@ namespace :events do
     end
   end
 
-  task :notify => :environment do
-    @profiles = Profile.visible.awaiting_matches.desirability_score_gte(7).within_distance(18.98, 72.83)
+  task :send_mailer => :environment do
+    @profiles = Profile.visible.desirability_score_gte(7).within_distance(18.98, 72.83)
     @profiles.each do |profile|
-      PushNotifier.delay.record_event(profile.uuid, 'general_announcement', body: "#{profile.firstname}, we are excited to announce our fourth Singles That Brunch in Mumbai! This time, it's at The Bombay Canteen. RSVP in the app and join us :-)")
-      puts "notified #{profile.firstname}"
+      skip_emails = %w(
+        rahul.dsouza@gmail.com
+        ameet.gaitonde@bba02.mccombs.utexas.edu
+        alaokika@yahoo.com
+        punitgor@yahoo.com
+        sajili.shirodkar@gmail.com
+        shailesh24@gmail.com
+        mohitis@gmail.com
+        pawanrai91@gmail.com
+        mrinali89@gmail.com
+        devasis1985@gmail.com
+        guhaaditi@gmail.com
+        smritijaiswal123@gmail.com
+        rahul.si@gmail.com
+        saurabh.t85@rediffmail.com
+        anupam.kgp@gmail.com
+        nagesh.raii@gmail.com
+        nikhiljain_99@yahoo.com
+        bhulbhaal@gmail.com
+        chantelle.dq@gmail.com
+        anant.jhawar@gmail.com
+        prateek.mota@gmail.com
+        supreet.kunte@gmail.com
+        sweetlilbee@hotmail.com
+        sinhaar.rodrigues@gmail.com
+        rehanrox@hotmail.com
+      )
+      next if profile.email.blank?
+      next if profile.firstname.blank?
+      next if skip_emails.include?(profile.email)
+      # PushNotifier.delay.record_event(profile.uuid, 'general_announcement', body: "#{profile.firstname}, we are excited to announce our fourth Singles That Brunch in Mumbai! This time, it's at The Bombay Canteen. RSVP in the app and join us :-)")
+      UserMailer.send_email("2a791920-b620-4678-8f87-d5c8a3f85924", profile.email, nil, { "-fname-" => [profile.firstname]}).deliver_later
+      puts "emailed #{profile.firstname}"
     end
-    puts ''
-    puts "-- notified #{@profiles.count}"
   end
 end

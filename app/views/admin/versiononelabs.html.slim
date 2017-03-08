@@ -1,14 +1,21 @@
 doctype html
 html
 head
-  title VersionOne Labs - helping startups and people with ideas launch their products.
-  = stylesheet_link_tag 'http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'
+  title VersionOne Labs - helping you turn ideas into products.
+  link href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css' rel='stylesheet'
   css:
-    /* If you got here and are wondering why we have inline style embeds, you will know why we call ourselves Version One :-)
+    /* If you got here and are wondering why we have a simple inline style embed, you will know why we call ourselves Version One :-)
+
     prototype > perfection */
 
     body {
       padding-top: 14px;
+      font-family: -apple-system, '.SFNSText-Regular', Lato, proxima-nova, BlinkMacSystemFont, Roboto, sans-serif !important;
+    }
+
+    .page-header {
+      padding: 20px 0px;
+      background-color: #04b4ed;
     }
 
     .logo, .logo:hover {
@@ -30,24 +37,25 @@ body
   .container
     .row
       .col-xs-3
-        = link_to 'versiononelabs', 'http://versionsonelabs.com', class: 'logo'
+        a class='logo' href='http://versionsonelabs.com' versiononelabs
       .col-xs-9.text-right
-        = link_to 'What We Do', '#whatwedo', style: 'margin-right: 20px;'
-        = link_to 'About Us', '#aboutus', style: 'margin-right: 20px;'
-        = link_to 'Caliber', '#caliber', style: 'margin-right: 20px;'
-        = link_to 'Ping Us', '#ping'
+        a style='margin-right: 20px;' href="#whatwedo" What We Do
+        a style='margin-right: 20px;' href="#aboutus" About Us
+        a style='margin-right: 20px;' href="#caliber" Caliber
+        a style='margin-right: 20px;' href="#ping" Ping Us
     .row
-      .col-xs-12.text-center
+      .col-md-12.text-center
         .page-header
           h1
             | We will help you get to v1.0
             span.small &hellip;fast
-    .row
-      .col-xs-12
+
+      .col-md-12.text-center
         h3
           a name='whatwedo'
             | Raison d'etre / What We Do
-
+    .row
+      .col-md-12
         p We help people with ideas develop their Version 1.0 a.k.a Minimum Viable Product. Our purpose is simple and straightforward — if you have an idea for a product, we will develop its first version/prototype.
 
         p.bg-warning.text-center style='padding: 8px 0px' We specialize in building database-backed applications, mobile APIs, and static websites.
@@ -115,7 +123,7 @@ body
         h3
           a name='ping'
             | See a fit?
-        h5 Send us a note &mdash; #{link_to 'vineet@versiononelabs.com', "mailto:vineet@versiononelabs.com?subject=v1.0 Project" }
+
     .row style='margin-top:40px;'
       .col-xs-12
         hr

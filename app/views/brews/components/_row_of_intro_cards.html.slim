@@ -1,0 +1,42 @@
+.intro-row
+  - profiles.each do |profile|
+    span.intro-row__profile
+      - image_id = profile.photos.primary.take.try(:public_id)
+      .picture.brew-image data-image-id="#{image_id}"
+        .name
+          = profile.firstname
+      .details
+        .block
+          span> #{profile.age},
+          span
+            = profile.profession
+        .block
+          = profile.location_city
+        .block.schools
+          span.profile-card__supporting-text went to
+          span &nbsp;
+          span #{profile.schools_attended.join(', ')}
+        - if profile.about_me_i_love
+          .block.blurb
+            span.profile-card__supporting-text loves
+            span &nbsp;
+            span #{profile.about_me_i_love[0..99]}
+      .intro-request-button
+        = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
+          | Introduce us
+      .intro-request-success
+        | alsdjf
+
+
+    / = render partial: 'brews/profile_card', locals: { profile: profile }
+
+
+javascript:
+  $(function() {
+    loadBrewImages(300);
+
+    $('.intro-request-button').on('click touchend', function(e) {
+      $(this).find('form').submit();
+      $(this).hide();
+    })
+  });

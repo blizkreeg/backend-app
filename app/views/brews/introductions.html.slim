@@ -1,0 +1,14 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { title: 'Introductions' }
+
+main
+  .mobile-action-bar-holder
+  .max960
+    = render partial: 'brews/components/flash_message'
+    .mdl-grid.mdl-grid--no-spacing
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--8-col-desktop
+        / h6.text-center.mb-0 GET TO KNOW NEW PEOPLE
+        / p.mt-0.small.text-center You may choose to ask for an introduction to any of them. If they feel similarly about you, we'll connect you two.
+        = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }
+      .mdl-layout-spacer

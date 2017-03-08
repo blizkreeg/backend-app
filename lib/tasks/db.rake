@@ -27,8 +27,8 @@
 # NUM_PLACES = 25
 # NUM_PHOTOS = 6
 
-# namespace :db do
-#   namespace :seed do
+namespace :db do
+  namespace :seed do
 #     task :users => :environment do
 #       CSV.open(File.join('/tmp', 'import_users.csv'), "wb") do |csv|
 #         NUM_USERS.times do |idx|
@@ -189,35 +189,35 @@
 #       end
 #     end
 
-#     task :posts => :environment do
-#       ActiveRecord::Base.connection.execute("TRUNCATE posts") unless Rails.env.production?
+    task :posts => :environment do
+      ActiveRecord::Base.connection.execute("TRUNCATE posts") unless Rails.env.production?
 
-#       100.times do
-#         post = Post.new
-#         post.post_type = [Post::IMAGE_TYPE, Post::VIDEO_TYPE, Post::ARTICLE_TYPE].sample
-#         post.title = Forgery(:lorem_ipsum).words(5 + rand(10))
-#         post.posted_on = Time.now + ((-50..50).to_a.sample).days
-#         if post.image?
-#           post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
-#           post.image_public_id = 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r'
-#         end
-#         if post.video?
-#           post.image_public_id = '_MG_0580_uvtgbb'
-#           post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
-#           post.video_url = 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4'
-#         end
-#         if post.article?
-#           post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
-#           post.image_public_id = rand % 2 == 0 ? 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r' : nil
-#           post.link_to_url = 'http://nautil.us/issue/41/selection/the-problem-with-modern-romance-is-too-much-choice'
-#         end
-#         post.share_text = post.default_share_text
-#         post.share_link = 'https://magazine.ekcoffee.com'
-#         post.save!
-#       end
+      100.times do
+        post = Post.new
+        post.post_type = [Post::IMAGE_TYPE, Post::VIDEO_TYPE, Post::ARTICLE_TYPE].sample
+        post.title = Forgery(:lorem_ipsum).words(5 + rand(10))
+        post.posted_on = Time.now + ((-50..50).to_a.sample).days
+        if post.image?
+          post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
+          post.image_public_id = 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r'
+        end
+        if post.video?
+          post.image_public_id = '_MG_0580_uvtgbb'
+          post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
+          post.video_url = 'http://clips.vorwaerts-gmbh.de/VfE_html5.mp4'
+        end
+        if post.article?
+          post.excerpt = rand(10) % 2 == 0 ? Forgery(:lorem_ipsum).words(10 + rand(50)) : nil
+          post.image_public_id = rand % 2 == 0 ? 'MEN_it_s_time_to_up_ou_da_vinci_1_ssz21r' : nil
+          post.link_to_url = 'http://nautil.us/issue/41/selection/the-problem-with-modern-romance-is-too-much-choice'
+        end
+        post.share_text = post.default_share_text
+        post.share_link = 'https://magazine.ekcoffee.com'
+        post.save!
+      end
 
-#       puts "seeded with 100 posts"
-#     end
+      puts "seeded with 100 posts"
+    end
 
 #     task :brews => :environment do
 #       ActiveRecord::Base.connection.execute("TRUNCATE brews CASCADE") unless Rails.env.production?
@@ -244,5 +244,5 @@
 
 #        puts "seeded with 100 brews"
 #     end
-#   end
-# end
+  end
+end

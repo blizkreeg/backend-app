@@ -1,3 +1,6 @@
+@import 'typography';
+@import 'colors';
+
 html {
   touch-action: manipulation;
 }
@@ -21,11 +24,11 @@ main {
 }
 
 .accent-color {
-  color: #f37070;
+  color: $accent_color;
 }
 
 .accent-color--title {
-  color: #ea5b5b;
+  color: $accent_color_title;
 }
 
 .accent-color--dark {

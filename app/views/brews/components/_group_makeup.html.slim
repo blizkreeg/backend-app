@@ -6,22 +6,26 @@
   /     | #{brew.male_signups.count} men, #{brew.female_signups.count} women
   .group-stats__stat
     .group-stats__stat__supporting-text
-      i.material-icons style='color:#666;'
-        | person
-      p.text-center Ages
+      / i.material-icons style='color:#666;'
+      /   | person
+      | Singles
     .group-stats__stat__number
-      | #{brew.youngest_person.age} - #{brew.oldest_person.age}
+      - if brew.youngest_person.age == brew.oldest_person.age
+        | around #{brew.youngest_person.age} yrs old
+      - else
+        | between #{brew.youngest_person.age} and #{brew.oldest_person.age} yrs old
   .group-stats__stat
     .group-stats__stat__supporting-text
-      i.material-icons style='color:#f2ba66;'
-        | school
-      p.text-center Schools They Went To
-    .group-stats__stat__number
-      = brew.profiles.map(&:schools_attended).flatten.first(8).uniq.join(', ')
-  .group-stats__stat
-    .group-stats__stat__supporting-text
-      i.material-icons style='color:#31acfa;'
-        | work
-      p.text-center What They Do
+      / i.material-icons style='color:#31acfa;'
+      /   | work
+      | They Do
     .group-stats__stat__number
       = brew.profiles.map(&:profession).flatten.uniq.join(', ')
+  .group-stats__stat
+    .group-stats__stat__supporting-text
+      / i.material-icons style='color:#f2ba66;'
+      /   | school
+      | &amp; Studied At
+    .group-stats__stat__number
+      = brew.profiles.map(&:schools_attended).flatten.first(8).uniq.join(', ')
+

@@ -1,11 +1,14 @@
 .members-grid
   - profiles.each do |profile|
     .members-grid__profile
-      = link_to('#', class: 'no-decor') do
+      = link_to("#profile-#{profile.uuid}", class: 'no-decor') do
         .picture
           = cl_image_tag profile.photos.primary.take.try(:public_id), width: 90, height: 90, radius: :max, crop: :fill
         .name
           = profile.firstname
+
+    = render partial: 'brews/profile_card', locals: { profile: profile }
+
 
 javascript:
   $(function() {

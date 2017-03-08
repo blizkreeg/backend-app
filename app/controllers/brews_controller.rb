@@ -6,7 +6,7 @@ class BrewsController < WebController
   WAITLIST_LAUNCH_DATE = Date.new(2017, 1, 31)
   PUBLIC_EXCEPTION_METHODS = [:show]
   WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
-  NAV_TABS_ONLY_METHODS = [:index, :community]
+  NAV_TABS_ONLY_METHODS = [:index, :community, :introductions]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -133,7 +133,9 @@ class BrewsController < WebController
     redirect_to action: :show_on_waitlist and return
   end
 
-  def community
+  def introductions
+    @section = 'introductions'
+
     @profiles = Rails.env.production? ?
                   Profile
                     .visible
@@ -141,8 +143,31 @@ class BrewsController < WebController
                     .desirability_score_gte(Profile::HIGH_DESIRABILITY)
                     .age_gte(@current_profile.age - 5)
                     .age_lte(@current_profile.age + 5)
+                    .ordered_by_last_seen
                     .limit(9) :
                   Profile.visible.limit(9)
+  end
+
+  def request_introduction
+    # TBD register this
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
+  end
+
+  def community
+    @interests = Interest.all
+
+    unless @current_profile.interests.exists?
+      @interests = Interest.all
+    else
+      render 'edit_interests'
+      return
+    end
+  end
+
+  def edit_interests
   end
 
   private

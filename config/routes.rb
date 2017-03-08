@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
   get '/activity', to: 'brews#show_user_activity', as: :brew_show_user_activity
   get '/community', to: 'brews#community', as: :community
+  get '/introductions', to: 'brews#introductions', as: :introductions
+  post '/request-introduction', to: 'brews#request_introduction', as: :request_introduction
 
   root to: 'pages#homepage'
 

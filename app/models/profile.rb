@@ -54,7 +54,9 @@ class Profile < ActiveRecord::Base
   has_many :event_logs, class_name: 'ProfileEventLog', primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
   has_many :event_rsvps, primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
   has_many :brewings, primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
-  has_many :brews, through: :brewings
+  has_many :brews, through: :brewings, dependent: :restrict_with_exception
+  has_many :profile_interests, foreign_key: "profile_uuid", dependent: :destroy
+  has_many :interests, through: :profile_interests, dependent: :restrict_with_exception
 
   # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
   # set property tracking flags to 'flags'

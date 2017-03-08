@@ -8,18 +8,11 @@ main
     .mdl-grid.mdl-grid--no-spacing
       .mdl-layout-spacer
       .mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--8-col-desktop.interests-list
-        / h6.text-center.mb-0 GET TO KNOW NEW PEOPLE
-        / p.mt-0.small.text-center You may choose to ask for an introduction to any of them. If they feel similarly about you, we'll connect you two.
+        h6.text-center.mb-0 What are your interests?
+        p.mt-0.small.text-center You may choose to ask for an introduction to any of them. If they feel similarly about you, we'll connect you two.
         - @interests.each do |interest|
           .interests-list__interest
             .name #{interest.name}
             .description #{interest.description}
-            .people-snapshots
-              - interest.profiles.ordered_by_last_seen.limit(4).each do |profile|
-                .item
-                  = cl_image_tag profile.photos.primary.take.try(:public_id), width: 30, height: 30, radius: :max
-              - if interest.profiles.count > 4
-                .item
-                  | &amp; #{interest.profiles.count - 4} more
 
       .mdl-layout-spacer

@@ -52,6 +52,8 @@ javascript:
     } else {
       $('.messages').append('<div class="received">' + data.content  + '</div>');
     }
+
+    $('.conversation').scrollTop($('.conversation')[0].scrollHeight);
   });
 
   $('#message_to_send').on('keypress', function(e) {
