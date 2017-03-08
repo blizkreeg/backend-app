@@ -15,5 +15,5 @@
 //= require cloudinary
 //= require clipboard.min
 //= require firebase
-//= require bootstrap.min
+//= require bootstrap
 //= require jquery.zoom.min

@@ -10,7 +10,11 @@ function loadTimeCharts() {
   });
 }
 
-function loadBrewImages(height = 180) {
+function loadBrewImages(height) {
+  if (typeof height == 'undefined') {
+    height = 180;
+  }
+
   var w = $(window).width();
   var $imageDivs = $('.brew-image');
   _.each($imageDivs, function(imageDiv) {

@@ -13,7 +13,7 @@
  *
  *= require_self
  *= require 'normalize'
- *= require bootstrap.min
+ *= require bootstrap
  *= require 'modern-theme/plugins/pace-master/themes/blue/pace-theme-flash'
  *= require 'modern-theme/plugins/uniform/css/uniform.default.min'
  *= require 'modern-theme/plugins/fontawesome/css/font-awesome'
