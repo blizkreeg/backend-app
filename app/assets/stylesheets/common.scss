@@ -56,11 +56,13 @@ main {
 a, a:hover, a:visited {
   color: #fd5b63;
   text-decoration: none;
+  touch-action: manipulation;
 }
 
 a.no-decor, a.no-decor:visited, a.no-decor:hover {
   text-decoration: none !important;
   color: inherit !important;
+  touch-action: manipulation;
 }
 
 a.disabled {
