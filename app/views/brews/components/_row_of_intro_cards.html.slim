@@ -16,15 +16,15 @@
             = profile.profession
         .block
           = profile.location_city
-        .block.schools
-          span.profile-card__supporting-text went to
-          span &nbsp;
-          span #{profile.schools_attended.join(', ')}
+        / .block.schools
+        /  span.profile-card__supporting-text went to
+        /  span &nbsp;
+        /  span #{profile.schools_attended.join(', ')}
         - if profile.about_me_i_love
           .block.blurb
             span.profile-card__supporting-text loves
             span &nbsp;
-            span #{profile.about_me_i_love[0..919]}
+            span #{profile.about_me_i_love[0..199]}
 
     / = render partial: 'brews/profile_card', locals: { profile: profile }
 
