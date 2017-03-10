@@ -64,9 +64,9 @@ html
       $(window).load(function() {
         $("#loader").css('display', 'none');
         $('#restofbody').css('visibility', 'visible');
-      })
+      });
 
       // This messes up tapping on text input elements
-      // $(function() {
-          // FastClick.attach(document.body);
-      // });
+      $(function() {
+        FastClick.attach(document.body);
+      });

@@ -46,7 +46,7 @@ body.introductions {
   width: auto;
   height: auto;
   overflow-x: auto;
-  // -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;
 
   .intro-row__profile {
     width: 90%;
@@ -66,15 +66,12 @@ body.introductions {
 
     .name {
       position: absolute;
-      bottom: 25px;
-      left: 25px;
+      bottom: 10px;
+      right: 10px;
       color: white;
       font-size: 28px;
-      font-weight: 400;
       letter-spacing: 0.6px;
-      background-color: #4f4f4f;
       padding: 4px;
-      border-radius: 2px;
     }
 
     .details {
@@ -97,13 +94,13 @@ body.introductions {
       background-color: $accent_color; /* ffcd6e #ffac0c;*/
       width: 100%;
       left: 0;
-      bottom: 0;
+      top: 0;
       width: 100%;
       height: 48px;
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 5;
+      z-index: 0;
 
       button, button:active, button:target, a, a:visited, a:hover {
         color: white;
