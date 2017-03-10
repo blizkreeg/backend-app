@@ -58,7 +58,7 @@ html
       - if show_menu? && current_profile.staff_or_internal
         .mobile-bottom-menu-holder
         .mobile-bottom-menu
-          = render partial: 'brews/components/bottom_menu'
+          = render partial: 'brews/components/bottom_menu', locals: { active: @section }
 
     javascript:
       $(window).load(function() {

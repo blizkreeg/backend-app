@@ -810,6 +810,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   z-index: 2;
   justify-content: space-between;
   align-items: center;
+
+  .name.active, i.active {
+    color: $accent_color;
+  }
 }
 
 .mobile-bottom-menu > .mdl-cell {

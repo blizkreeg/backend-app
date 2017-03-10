@@ -3,6 +3,8 @@
 
 html {
   touch-action: manipulation;
+  overflow: hidden; // prevents overscrolling
+  height: 100%; // prevents overscrolling
 }
 
 html, body {
@@ -17,6 +19,8 @@ html, body {
 
 body.brews {
   margin-bottom: 50px;
+  height: 100%; // prevents overscrolling
+  overflow: auto; // prevents overscrolling
 }
 
 main {

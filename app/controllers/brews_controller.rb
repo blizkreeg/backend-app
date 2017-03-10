@@ -20,6 +20,8 @@ class BrewsController < WebController
   before_action :show_bottom_menu, only: NAV_TABS_ONLY_METHODS, if: lambda { logged_in? && (from_app? || mobile_device?) }
 
   def index
+    @section = 'brews'
+
     if @current_profile.administrator
       default_brews = Brew
                       .happening_on_after(Time.now.in_time_zone('Asia/Kolkata').to_date - 1.day)
@@ -157,6 +159,8 @@ class BrewsController < WebController
   end
 
   def community
+    @section = 'community'
+
     @interests = Interest.all
 
     unless @current_profile.interests.exists?

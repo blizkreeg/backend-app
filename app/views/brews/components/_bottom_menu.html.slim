@@ -1,16 +1,16 @@
 .mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
   .mdl-cell
     = link_to(introductions_path) do
-      i.material-icons group
-      div.name Introductions
+      i class="material-icons #{'active' if active == 'introductions'}" group
+      div class="name #{'active' if active == 'introductions'}" Introductions
   .mdl-cell
     = link_to(brews_path) do
-      i.material-icons local_cafe
-      div.name Brews
+      i class="material-icons #{'active' if active == 'brews'}" local_cafe
+      div class="name #{'active' if active == 'brews'}" Brews
   .mdl-cell
     = link_to(community_path) do
-      i.material-icons whatshot
-      div.name Community
+      i class="material-icons #{'active' if active == 'community'}" whatshot
+      div class="name #{'active' if active == 'community'}" Community
   / .mdl-cell
   /   i.material-icons star
   / .mdl-cell
