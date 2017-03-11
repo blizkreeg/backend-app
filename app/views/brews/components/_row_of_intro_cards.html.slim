@@ -3,8 +3,8 @@
 
     - primary_image_id = profile.photos.profile.try(:public_id)
     - other_image_ids = profile.photos.others.map(&:public_id)
-    = link_to '#', class: 'no-decor intro-row__profile needsclick', :"data-idx" => idx do
-      / span. data-idx="#{idx}"
+
+    span.intro-row__profile data-idx="#{idx}"
       .brew-image.tap-card.tap-card-visible data-image-id="#{primary_image_id}"
         .name
           span> #{profile.firstname}
