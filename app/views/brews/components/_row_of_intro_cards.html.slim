@@ -65,7 +65,7 @@ javascript:
       $(this).hide();
     });
 
-    $('.tap-card').on('touchstart', function(e) {
+    $('.tap-card').on('click', function(e) {
       var $profile = $(this).closest('.intro-row__profile');
       var $profileCards = $profile.children('.tap-card');
       var $lastCard = $profile.children('.tap-card:last-child');
