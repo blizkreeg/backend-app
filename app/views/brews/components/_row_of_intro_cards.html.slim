@@ -3,15 +3,15 @@
 
     - primary_image_id = profile.photos.profile.try(:public_id)
     - other_image_ids = profile.photos.others.map(&:public_id)
-
-    span.intro-row__profile data-idx="#{idx}"
-      .brew-image.tap-card.tap-card-visible.needsclick data-image-id="#{primary_image_id}"
+    = link_to '#', class: 'no-decor intro-row__profile needsclick', :"data-idx" => idx do
+      / span. data-idx="#{idx}"
+      .brew-image.tap-card.tap-card-visible data-image-id="#{primary_image_id}"
         .name
           span> #{profile.firstname}
           span.age #{profile.age}
 
       .brew-image.tap-card data-image-id="#{primary_image_id}"
-        .professional.text-card.needsclick
+        .professional.text-card
           .block
             span.profile-card__supporting-text lives in &nbsp;
             span #{profile.location_city}
@@ -30,11 +30,11 @@
 
       - image_id = other_image_ids.shift
       - if image_id
-        .tap-card.brew-image.needsclick data-image-id="#{image_id}"
+        .tap-card.brew-image data-image-id="#{image_id}"
 
       - if profile.about_me_i_love
         .brew-image.tap-card data-image-id="#{primary_image_id}"
-          .blurb.text-card.needsclick
+          .blurb.text-card
             .block
               .blurb
                 span.profile-card__supporting-text loves &nbsp;
@@ -46,15 +46,15 @@
 
       - image_id = other_image_ids.shift
       - if image_id
-        .tap-card.brew-image.needsclick data-image-id="#{image_id}"
+        .tap-card.brew-image data-image-id="#{image_id}"
 
       - image_id = other_image_ids.shift
       - if image_id
-        .tap-card.brew-image.needsclick data-image-id="#{image_id}"
+        .tap-card.brew-image data-image-id="#{image_id}"
 
       - image_id = other_image_ids.shift
       - if image_id
-        .tap-card.brew-image.needsclick data-image-id="#{image_id}"
+        .tap-card.brew-image data-image-id="#{image_id}"
 
 javascript:
   $(function() {
