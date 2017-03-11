@@ -1,17 +1,18 @@
-.action-bar.mdl-grid.mdl-grid--no-spacing
-  .action-bar__cancel
-    - if defined?(back)
-      = link_to back_url, class: 'no-decor' do
-        i.material-icons #{back_icon}
-    - elsif defined?(close)
-      - if close == 'text'
-        = close_text
-      - else
-        i.material-icons clear
-  .mdl-layout-spacer
+.action-bar class="mdl-grid mdl-grid--no-spacing #{@section}"
+  - if defined?(back) || defined?(close)
+    .action-bar__cancel
+      - if defined?(back)
+        = link_to back_url, class: 'no-decor' do
+          i.material-icons #{back_icon}
+      - elsif defined?(close)
+        - if close == 'text'
+          = close_text
+        - else
+          i.material-icons clear
+  / .mdl-layout-spacer
   div class="action-bar__title #{@section}"
     = raw(title)
-  .mdl-layout-spacer
+  / .mdl-layout-spacer
 
   - submit_status = defined?(default_submit_disabled) && default_submit_disabled
 
