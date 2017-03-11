@@ -1,6 +1,6 @@
 body.introductions {
-  // background-color: #fff;
-  background: linear-gradient(to bottom, $accent_color, white);
+  background-color: #fff;
+  // background: linear-gradient(to bottom, $accent_color, white);
 }
 
 .action-bar.introductions {
@@ -9,7 +9,7 @@ body.introductions {
 }
 
 .action-bar__title.introductions {
-  color: white;
+  color: $accent_color;
 }
 
 // grid of faces
@@ -57,7 +57,8 @@ body.introductions {
 
   .intro-row__profile {
     width: 90%;
-    min-height: 300px;
+    max-height: 100vh;
+    overflow-y: scroll;
     flex-grow: 0;
     flex-shrink: 0;
     flex-basis: auto;
@@ -65,7 +66,8 @@ body.introductions {
     position: relative;
     background-color: white;
     border-radius: 6px;
-    overflow: scroll;
+    overflow: auto;
+    border: 1px solid #ededed;
 
     .picture {
       position: relative;
