@@ -48,11 +48,10 @@ body.introductions {
   flex-flow: row nowrap;
   flex-wrap: nowrap;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   width: auto;
   height: auto;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 
   .intro-row__profile {
     width: 90%;
