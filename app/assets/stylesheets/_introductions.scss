@@ -53,17 +53,19 @@ body.introductions {
   height: auto;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  overflow: scroll;
 
   .intro-row__profile {
     width: 90%;
-    flex-grow: 1;
-    flex-shrink: 1;
+    min-height: 300px;
+    flex-grow: 0;
+    flex-shrink: 0;
     flex-basis: auto;
     margin: 0 2% 0 3%;
     position: relative;
     background-color: white;
     border-radius: 6px;
-    overflow-y: scroll;
+    overflow: scroll;
 
     .picture {
       position: relative;
