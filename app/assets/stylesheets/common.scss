@@ -28,8 +28,12 @@ html, body {
   line-height: 22px;
   font-weight: 300;
   // background-color: #f6f6f5;
-  color: #262626;
+  color: #1d1d1d;
   height: 100%;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
 }
 
 body.brews {
