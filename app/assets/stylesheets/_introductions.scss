@@ -52,11 +52,12 @@ body.introductions {
   width: auto;
   height: auto;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 
   .intro-row__profile {
     width: 90%;
-    flex-grow: 0;
-    flex-shrink: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
     flex-basis: auto;
     margin: 0 2% 0 3%;
     position: relative;
