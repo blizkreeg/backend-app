@@ -1,38 +1,60 @@
 .intro-row
   - profiles.each_with_index do |profile, idx|
-    - primary_image_id = profile.photos.primary.take.try(:public_id)
+
+    - primary_image_id = profile.photos.profile.try(:public_id)
+    - other_image_ids = profile.photos.others.map(&:public_id)
+
     span.intro-row__profile data-idx="#{idx}"
-      / .more
-      /   | tap for more
-      / div style='position: relative; height: 48px; width: 100%;'
-      .brew-image.tap-card.tap-card-visible data-image-id="#{primary_image_id}"
+      .brew-image.tap-card.tap-card-visible.needsclick data-image-id="#{primary_image_id}"
         .name
           span> #{profile.firstname}
           span.age #{profile.age}
-      / .intro-request-button
-      /   = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
-      /     | Introduce us
-      / .details.tap-card
-      .tap-card.professional.text-card
-        .block
-          = cl_image_tag primary_image_id, crop: :fill, gravity: :face, width: 64, height: 64, radius: :max
-        .block
-          = profile.profession
-        .block.schools
-          span.profile-card__supporting-text went to
-          span &nbsp;
-          span #{profile.schools_attended.join(', ')}
-      .tap-card.city.text-card
-        .block
-          = cl_image_tag primary_image_id, crop: :fill, gravity: :face, width: 64, height: 64, radius: :max
-          = profile.location_city
-      - if profile.about_me_i_love
-        .tap-card.blurb.text-card
+
+      .brew-image.tap-card data-image-id="#{primary_image_id}"
+        .professional.text-card.needsclick
           .block
-            .blurb
-              span.profile-card__supporting-text loves
-              span &nbsp;
-              span #{profile.about_me_i_love[0..499]}
+            span.profile-card__supporting-text lives in &nbsp;
+            span #{profile.location_city}
+
+          .block
+            span.profile-card__supporting-text #{gender_pronoun_plural(profile)} a &nbsp;
+            = profile.profession
+
+          .block
+            span.profile-card__supporting-text has a &nbsp;
+            = raw(profile.highest_degree || '&mdash;')
+
+          .block.schools
+            span.profile-card__supporting-text went to &nbsp;
+            span #{profile.schools_attended.join(', ')}
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.needsclick data-image-id="#{image_id}"
+
+      - if profile.about_me_i_love
+        .brew-image.tap-card data-image-id="#{primary_image_id}"
+          .blurb.text-card.needsclick
+            .block
+              .blurb
+                span.profile-card__supporting-text loves &nbsp;
+                span #{profile.about_me_i_love[0..299]}
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image data-image-id="#{image_id}"
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.needsclick data-image-id="#{image_id}"
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.needsclick data-image-id="#{image_id}"
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.needsclick data-image-id="#{image_id}"
 
 javascript:
   $(function() {
@@ -59,3 +81,9 @@ javascript:
       $($topCard).addClass('tap-card-visible');
     })
   });
+
+
+/ .intro-request-button
+      /   = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
+      /     | Introduce us
+      / .details.tap-card

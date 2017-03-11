@@ -100,4 +100,8 @@ module BrewsHelper
     # user_time = Time.now.in_time_zone(current_profile.time_zone)
     # distance_of_time_in_words(user_time, brew.happening_at) + " left"
   end
+
+  def gender_pronoun_plural(profile)
+    profile.male? ? "he's" : "she's"
+  end
 end

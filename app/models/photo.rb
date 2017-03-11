@@ -12,8 +12,10 @@ class Photo < ActiveRecord::Base
 
   # scope :valid, -> { where("(properties->>'marked_for_deletion')::boolean = false").order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc") }
   scope :approved, -> { with_approved(true) }
-  scope :ordered, -> { order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc").order("updated_at DESC") }
-  scope :primary, -> { where("(properties->>'primary')::boolean = true").order("updated_at DESC") }
+  scope :ordered,  -> { order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc").order("updated_at DESC") }
+  scope :profile,  -> { primary.take }
+  scope :primary,  -> { where("(properties->>'primary')::boolean = true").order("updated_at DESC") }
+  scope :others,   -> { where("(properties->>'primary')::boolean = false").order("updated_at DESC") }
 
   MASS_UPDATE_ATTRIBUTES = %i(
     primary
