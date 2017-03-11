@@ -1,5 +1,5 @@
 body.introductions {
-  background-color: #fff;
+  background-color: #43abc9;
   // background: linear-gradient(to bottom, $accent_color, white);
 }
 
@@ -9,7 +9,7 @@ body.introductions {
 }
 
 .action-bar__title.introductions {
-  color: $accent_color;
+  color: white;
 }
 
 // grid of faces
@@ -48,29 +48,64 @@ body.introductions {
   flex-flow: row nowrap;
   flex-wrap: nowrap;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   width: auto;
-  height: auto;
+  height: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   overflow: scroll;
 
   .intro-row__profile {
-    width: 90%;
-    max-height: 100vh;
+    width: calc(100% - 25px);
     overflow-y: scroll;
     flex-grow: 0;
     flex-shrink: 0;
     flex-basis: auto;
-    margin: 0 2% 0 3%;
+    margin: 0 10px 0 0;
     position: relative;
-    background-color: white;
-    border-radius: 6px;
     overflow: auto;
-    border: 1px solid #ededed;
+
+    .more {
+      font-size: 14px;
+      font-weight: 300;
+      color: white;
+      position: absolute;
+      left: 5px;
+      bottom: 5px;
+      z-index: 2;
+    }
+
+    .tap-card {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 300px;
+      z-index: 0;
+
+      .block {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .tap-card.text-card {
+      background-color: white;
+      padding: 20px;
+      overflow: auto;
+      width: 100%;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+
+    .tap-card-visible {
+      display: block;
+      z-index: 1;
+    }
 
     .picture {
-      position: relative;
+      // position: relative;
     }
 
     .name {
@@ -81,6 +116,13 @@ body.introductions {
       font-size: 28px;
       letter-spacing: 0.6px;
       padding: 4px;
+      font-weight: 400;
+      text-transform: uppercase;
+
+      span.age {
+        font-weight: 300;
+        font-size: 20px;
+      }
     }
 
     .details {

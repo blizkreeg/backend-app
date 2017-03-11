@@ -1,30 +1,38 @@
 .intro-row
-  - profiles.each do |profile|
-    span.intro-row__profile
+  - profiles.each_with_index do |profile, idx|
+    - primary_image_id = profile.photos.primary.take.try(:public_id)
+    span.intro-row__profile data-idx="#{idx}"
+      / .more
+      /   | tap for more
       / div style='position: relative; height: 48px; width: 100%;'
-      - image_id = profile.photos.primary.take.try(:public_id)
-      .picture.brew-image data-image-id="#{image_id}"
+      .brew-image.tap-card.tap-card-visible data-image-id="#{primary_image_id}"
         .name
-          = profile.firstname
-      .intro-request-button
-        = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
-          | Introduce us
-      .details
+          span> #{profile.firstname}
+          span.age #{profile.age}
+      / .intro-request-button
+      /   = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
+      /     | Introduce us
+      / .details.tap-card
+      .tap-card.professional.text-card
         .block
-          span> #{profile.age},
-          span
-            = profile.profession
+          = cl_image_tag primary_image_id, crop: :fill, gravity: :face, width: 64, height: 64, radius: :max
         .block
+          = profile.profession
+        .block.schools
+          span.profile-card__supporting-text went to
+          span &nbsp;
+          span #{profile.schools_attended.join(', ')}
+      .tap-card.city.text-card
+        .block
+          = cl_image_tag primary_image_id, crop: :fill, gravity: :face, width: 64, height: 64, radius: :max
           = profile.location_city
-        / .block.schools
-        /  span.profile-card__supporting-text went to
-        /  span &nbsp;
-        /  span #{profile.schools_attended.join(', ')}
-        - if profile.about_me_i_love
-          .block.blurb
-            span.profile-card__supporting-text loves
-            span &nbsp;
-            span #{profile.about_me_i_love[0..199]}
+      - if profile.about_me_i_love
+        .tap-card.blurb.text-card
+          .block
+            .blurb
+              span.profile-card__supporting-text loves
+              span &nbsp;
+              span #{profile.about_me_i_love[0..499]}
 
 javascript:
   $(function() {
@@ -33,5 +41,21 @@ javascript:
     $('.intro-request-button').on('click touchend', function(e) {
       $(this).find('form').submit();
       $(this).hide();
+    });
+
+    $('.tap-card').on('touchstart', function(e) {
+      var $profile = $(this).closest('.intro-row__profile');
+      var $profileCards = $profile.children('.tap-card');
+      var $lastCard = $profile.children('.tap-card:last-child');
+
+      // hide this card and move it to the "bottom of the deck"
+      $(this).hide();
+      $(this).removeClass('tap-card-visible');
+      $(this).insertAfter($lastCard);
+
+      // show the card on "top of the deck"
+      var $topCard = $profile.children('.tap-card:first-child');
+      $($topCard).show();
+      $($topCard).addClass('tap-card-visible');
     })
   });

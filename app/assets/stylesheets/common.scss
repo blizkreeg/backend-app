@@ -44,6 +44,7 @@ body.brews {
 
 main {
   z-index: 1;
+  height: calc(100vh - 60px);
 }
 
 .accent-color {
@@ -151,6 +152,7 @@ a.disabled {
 @media only screen and (max-width: 799px) {
   .max960 {
     padding: 0px 12px;
+    height: calc(100vh - 60px - 48px);
   }
 }
 
