@@ -87,6 +87,9 @@
                   = image_tag 'chat.png', width: 16, height: 16
                   | &nbsp; Introduce us
 
+            .intro-waiting
+              span Got it! We'll let you know when #{profile.firstname} responds.
+
 javascript:
   $(function() {
     loadBrewImages(300);
@@ -96,6 +99,7 @@ javascript:
 
       $(this).find('form').submit();
       $(this).hide();
+      $(this).siblings('.intro-waiting').show();
     });
 
     $('.tap-card').on('click', function(e) {
