@@ -1,5 +1,5 @@
 body.introductions {
-  // background-color: #43abc9;
+  background-color: #43abc9;
   background: linear-gradient(to bottom, #107896, #43abcf);
 }
 
@@ -9,7 +9,7 @@ body.introductions {
 }
 
 .action-bar__title.introductions {
-  color: white;
+  color: white; //#e46f57;
 }
 
 // grid of faces
@@ -143,6 +143,7 @@ body.introductions {
       letter-spacing: 0.6px;
       padding: 4px;
       text-transform: uppercase;
+      font-weight: 400;
 
       span.age {
         font-weight: 300;
