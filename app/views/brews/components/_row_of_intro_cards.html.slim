@@ -44,9 +44,25 @@
       - if image_id
         .tap-card.brew-image.picture data-image-id="#{image_id}"
 
+      - if profile.about_me_ideal_weekend
+        .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+          .blurb.text-card
+            .block
+              .blurb
+                span.profile-card__supporting-text my ideal weekend &nbsp;
+                span #{profile.about_me_ideal_weekend[0..299]}
+
       - image_id = other_image_ids.shift
       - if image_id
         .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+      - if profile.about_me_bucket_list
+        .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+          .blurb.text-card
+            .block
+              .blurb
+                span.profile-card__supporting-text on my bucket list &nbsp;
+                span #{profile.about_me_bucket_list[0..299]}
 
       - image_id = other_image_ids.shift
       - if image_id
