@@ -5,13 +5,13 @@
     - other_image_ids = profile.photos.others.map(&:public_id)
 
     span.intro-row__profile data-idx="#{idx}"
-      .brew-image.tap-card.tap-card-visible data-image-id="#{primary_image_id}"
+      .brew-image.picture.tap-card.tap-card-visible data-image-id="#{primary_image_id}"
         .name
           span> #{profile.firstname}
           span.age #{profile.age}
 
-      .brew-image.tap-card data-image-id="#{primary_image_id}"
-        .professional.text-card
+      .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+        .text-card
           .block
             span.profile-card__supporting-text lives in &nbsp;
             span #{profile.location_city}
@@ -30,10 +30,10 @@
 
       - image_id = other_image_ids.shift
       - if image_id
-        .tap-card.brew-image data-image-id="#{image_id}"
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
 
       - if profile.about_me_i_love
-        .brew-image.tap-card data-image-id="#{primary_image_id}"
+        .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
           .blurb.text-card
             .block
               .blurb
@@ -42,48 +42,55 @@
 
       - image_id = other_image_ids.shift
       - if image_id
-        .tap-card.brew-image data-image-id="#{image_id}"
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
 
       - image_id = other_image_ids.shift
       - if image_id
-        .tap-card.brew-image data-image-id="#{image_id}"
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
 
       - image_id = other_image_ids.shift
       - if image_id
-        .tap-card.brew-image data-image-id="#{image_id}"
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
 
       - image_id = other_image_ids.shift
       - if image_id
-        .tap-card.brew-image data-image-id="#{image_id}"
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+      .tap-card
+        .submit-card
+          .block
+            = cl_image_tag primary_image_id, width: 96, height: 96, radius: :max, gravity: :face, crop: :fill
+          .block
+            .intro-request-button
+              = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
+                .block
+                  = image_tag 'chat.png', width: 16, height: 16
+                  | &nbsp; Introduce Us
 
 javascript:
   $(function() {
     loadBrewImages(300);
 
-    $('.intro-request-button').on('click touchend', function(e) {
+    $('.tap-card .intro-request-button').on('click', function(e) {
+      e.stopPropagation();
+
       $(this).find('form').submit();
       $(this).hide();
     });
 
     $('.tap-card').on('click', function(e) {
-      var $profile = $(this).closest('.intro-row__profile');
-      var $profileCards = $profile.children('.tap-card');
-      var $lastCard = $profile.children('.tap-card:last-child');
+      var $thisProfile = $(this).closest('.intro-row__profile');
+      var $thisProfileCards = $thisProfile.children('.tap-card');
+      var $bottomCard = $thisProfile.children('.tap-card:last-child');
 
       // hide this card and move it to the "bottom of the deck"
       $(this).hide();
       $(this).removeClass('tap-card-visible');
-      $(this).insertAfter($lastCard);
+      $(this).insertAfter($bottomCard);
 
       // show the card on "top of the deck"
-      var $topCard = $profile.children('.tap-card:first-child');
+      var $topCard = $thisProfile.children('.tap-card:first-child');
       $($topCard).show();
       $($topCard).addClass('tap-card-visible');
     })
   });
-
-
-/ .intro-request-button
-      /   = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
-      /     | Introduce us
-      / .details.tap-card

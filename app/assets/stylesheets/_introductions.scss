@@ -1,6 +1,6 @@
 body.introductions {
-  background-color: #43abc9;
-  // background: linear-gradient(to bottom, $accent_color, white);
+  // background-color: #43abc9;
+  background: linear-gradient(to bottom, #107896, #43abcf);
 }
 
 .action-bar.introductions {
@@ -101,14 +101,38 @@ body.introductions {
       }
     }
 
+    .submit-card {
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+
+      .block {
+        padding: 10px 0px;
+      }
+    }
+
     .tap-card-visible {
       display: block;
       z-index: 1;
     }
 
-    .picture {
-      // position: relative;
-    }
+    // .picture {
+    //   max-height: 300px;
+    // }
+
+    // .picture.tap-card-visible {
+    //   display: flex !important;
+    //   justify-content: center;
+    //   align-items: center;
+    //   img {
+    //     max-height: 300px;
+    //     width: auto;
+    //   }
+    // }
 
     .name {
       position: absolute;
@@ -141,23 +165,22 @@ body.introductions {
     }
 
     .intro-request-button {
-      // position: absolute;
       text-align: center;
-      background-color: $accent_color; /* ffcd6e #ffac0c;*/
+      border: 2px solid #373d3f;
+      border-radius: 18px;
       width: 100%;
       left: 0;
       top: 0;
-      height: 48px;
+      height: 32px;
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 0;
 
       button, button:active, button:target, a, a:visited, a:hover {
-        color: white;
+        color: #373d3f;
         text-decoration: none;
-        font-size: 18px;
-        line-height: 24px;
+        font-size: 16px;
         display: inline-flex;
         vertical-align: middle;
         background-color: inherit !important;
