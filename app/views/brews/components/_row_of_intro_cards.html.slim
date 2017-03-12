@@ -28,11 +28,15 @@
             span.profile-card__supporting-text went to &nbsp;
             span #{profile.schools_attended.join(', ')}
 
+          .block
+            span.profile-card__supporting-text is &nbsp;
+            span #{profile.height}
+
       - image_id = other_image_ids.shift
       - if image_id
         .tap-card.brew-image.picture data-image-id="#{image_id}"
 
-      - if profile.about_me_i_love
+      - if profile.about_me_i_love.present?
         .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
           .blurb.text-card
             .block
@@ -44,7 +48,7 @@
       - if image_id
         .tap-card.brew-image.picture data-image-id="#{image_id}"
 
-      - if profile.about_me_ideal_weekend
+      - if profile.about_me_ideal_weekend.present?
         .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
           .blurb.text-card
             .block
@@ -56,7 +60,7 @@
       - if image_id
         .tap-card.brew-image.picture data-image-id="#{image_id}"
 
-      - if profile.about_me_bucket_list
+      - if profile.about_me_bucket_list.present?
         .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
           .blurb.text-card
             .block
@@ -81,7 +85,7 @@
               = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
                 .block
                   = image_tag 'chat.png', width: 16, height: 16
-                  | &nbsp; Introduce Us
+                  | &nbsp; Introduce us!
 
 javascript:
   $(function() {
