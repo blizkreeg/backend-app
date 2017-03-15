@@ -51,16 +51,11 @@ $subheading_color: #262626; //4f5057
 h1, h2, h3 {
   font-family: $heading_font;
   color: $heading_color;
-  font-weight: 400;
 }
 
 h4, h5, h6 {
   font-family: $subheading_font;
   color: $subheading_color;
-}
-
-h6 {
-  font-size: 14px;
 }
 
 .logo-font {
