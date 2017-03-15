@@ -26,7 +26,6 @@ html, body {
   font-family: $body_font;
   font-size: 16px;
   line-height: 22px;
-  font-weight: 300;
   background-color: white;
   color: #1d1d1d;
   height: 100%;
@@ -151,7 +150,7 @@ a.disabled {
 
 @media only screen and (max-width: 799px) {
   .max960 {
-    padding: 0px 12px;
+    padding: 0px 10px;
     height: calc(100vh - 60px - 48px);
   }
 }
@@ -160,6 +159,3 @@ a.disabled {
   color: white;
 }
 
-a {
-  font-weight: 300;
-}
