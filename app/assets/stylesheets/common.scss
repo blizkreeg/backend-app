@@ -2,7 +2,8 @@
 @import 'colors';
 
 // https://maxogden.com/fast-webview-applications.html
-* {
+// http://stackoverflow.com/questions/10819565/user-selectnone-causes-input-field-to-be-inaccessible-on-safari
+*:not(input):not(textarea) {
   /* prevent callout when holding tap on links (the native dialog that comes up) */
   -webkit-touch-callout: none;
 

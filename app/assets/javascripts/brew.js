@@ -12,10 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
-// require fastclick
+//= require fastclick
 //= require firebase
 //= require jquery.cloudinary
-//= require underscore-min.js
+//= require underscore-min
 //= require unslider
-//= require brew/index.js
-//= require brew/show.js
+//= require brew/index
+//= require brew/show
