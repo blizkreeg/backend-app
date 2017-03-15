@@ -17,6 +17,20 @@ body.introductions {
   justify-content: flex-start;
   align-items: center;
   height: 100%;
+
+  .title {
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+    padding: 15px 0px;
+  }
+
+  .description {
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+    padding-bottom: 15px;
+  }
 }
 
 // grid of faces
