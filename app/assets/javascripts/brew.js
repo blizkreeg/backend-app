@@ -12,7 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require fastclick
+// require fastclick
 //= require firebase
 //= require jquery.cloudinary
 //= require underscore-min.js

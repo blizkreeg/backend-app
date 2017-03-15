@@ -7,7 +7,7 @@
 @import 'typography';
 @import 'colors';
 @import 'common';
-@import 'homepage';
+// @import 'homepage';
 @import 'introductions';
 
 .make-brew {
@@ -921,7 +921,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 .brew-image img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
 }
 
 .images-carousel .owl-stage {
