@@ -4,6 +4,10 @@
       i class="material-icons #{'active' if active == 'introductions'}" group
       div class="name #{'active' if active == 'introductions'}" Introductions
   .mdl-cell
+    = link_to(conversations_path) do
+      i class="material-icons #{'active' if active == 'community'}" chat
+      div class="name #{'active' if active == 'community'}" Conversations
+  .mdl-cell
     = link_to(brews_path) do
       i class="material-icons #{'active' if active == 'brews'}" local_cafe
       div class="name #{'active' if active == 'brews'}" Brews

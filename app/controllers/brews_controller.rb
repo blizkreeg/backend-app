@@ -174,7 +174,9 @@ class BrewsController < WebController
   end
 
   def accept_introduction
-    IntroductionRequest.find(params[:id]).update!(mutual: true)
+    intro = IntroductionRequest.find(params[:id])
+    intro.update!(mutual: true)
+    Conversation.create!(participant_uuids: [@current_profile.uuid, intro.by.uuid])
 
     respond_to do |format|
       format.json { render json: { success: true } }
@@ -183,6 +185,12 @@ class BrewsController < WebController
     respond_to do |format|
       format.json { render json: { success: false } }
     end
+  end
+
+  def conversations
+    @section = 'conversations'
+
+    @conversations = Conversation.all
   end
 
   def community

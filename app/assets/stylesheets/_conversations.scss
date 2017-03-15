@@ -1,0 +1,44 @@
+body.conversations {
+  .max960 {
+    height: calc(100vh - 60px - 48px);
+  }
+}
+
+.conversations-container {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.conversation-row {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding: 6px 0px;
+  border-bottom: 1px solid #ededed;
+
+  .picture {
+    width: 70px;
+    height: 70px;
+    box-sizing: border-box;
+    padding: 5px 5px;
+  }
+
+  .preview {
+    box-sizing: border-box;
+    padding: 5px 5px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    .name {
+    }
+
+    .message {
+    }
+  }
+}

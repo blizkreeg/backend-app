@@ -5,6 +5,7 @@ main
   / .mobile-action-bar-holder
   .max960
     .introductions-container
-      h4.text-center Introductions
-      h6.text-center Get introduced to interesting people, become activity partners, business connections, friends, dating or networking!
+      .heading
+        .title Introductions
+        .description Get introduced to interesting people, activity partners, business connections, friends, dating or networking!
       = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }

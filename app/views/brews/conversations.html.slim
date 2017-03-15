@@ -1,0 +1,18 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { title: 'Conversations' }
+
+main
+  .mobile-action-bar-holder
+  .max960
+    .conversations-container
+      - @conversations.each do |conversation|
+        = link_to '#', class: 'no-decor' do
+          - profile = conversation.the_other_who_is_not(current_profile.uuid)
+          .conversation-row
+            .picture
+              = cl_image_tag profile.photos.profile.public_id, width: 60, height: 60, crop: :fill, radius: :max, gravity: :face
+            .preview
+              .name.bold
+                = profile.firstname
+              .message
+                | test
