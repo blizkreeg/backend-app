@@ -3,34 +3,40 @@
 
     - primary_image_id = profile.photos.profile.try(:public_id)
     - other_image_ids = profile.photos.others.map(&:public_id)
+    - requested_intro = IntroductionRequest.where(by: profile, to: current_profile).take
 
     span.intro-row__profile data-idx="#{idx}"
+      / primary photo + initial top card
       .brew-image.picture.tap-card.tap-card-visible data-image-id="#{primary_image_id}"
         .name
           span> #{profile.firstname}
           span.age #{profile.age}
 
+      / basic info card
       .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
         .text-card
           .block
-            span.profile-card__supporting-text lives in &nbsp;
-            span #{profile.location_city}
+            span.info-label &nbsp;
+            span.info-value.bold #{profile.firstname}, #{profile.age}
+          .block
+            span.info-label lives in &nbsp;
+            span.info-value #{profile.location_city}
 
           .block
-            span.profile-card__supporting-text #{gender_pronoun_plural(profile)} a &nbsp;
-            = profile.profession
+            span.info-label #{gender_pronoun_plural(profile)} a &nbsp;
+            span.info-value #{profile.profession}
 
           .block
-            span.profile-card__supporting-text has a &nbsp;
-            = raw(profile.highest_degree || '&mdash;')
+            span.info-label has a &nbsp;
+            span.info-value #{raw(profile.highest_degree || '&mdash;')}
 
           .block.schools
-            span.profile-card__supporting-text went to &nbsp;
-            span #{profile.schools_attended.join(', ')}
+            span.info-label went to &nbsp;
+            span.info-value #{profile.schools_attended.join(', ')}
 
           .block
-            span.profile-card__supporting-text is &nbsp;
-            span #{profile.height}
+            span.info-label is &nbsp;
+            span.info-value #{profile.height}
 
       - image_id = other_image_ids.shift
       - if image_id
@@ -41,8 +47,8 @@
           .blurb.text-card
             .block
               .blurb
-                span.profile-card__supporting-text loves &nbsp;
-                span #{profile.about_me_i_love[0..299]}
+                h6.text-center loves &nbsp;
+                p.text-center #{profile.about_me_i_love[0..299]}
 
       - image_id = other_image_ids.shift
       - if image_id
@@ -53,8 +59,8 @@
           .blurb.text-card
             .block
               .blurb
-                span.profile-card__supporting-text my ideal weekend &nbsp;
-                span #{profile.about_me_ideal_weekend[0..299]}
+                h6.text-center my ideal weekend &nbsp;
+                p.text-center #{profile.about_me_ideal_weekend[0..299]}
 
       - image_id = other_image_ids.shift
       - if image_id
@@ -65,8 +71,8 @@
           .blurb.text-card
             .block
               .blurb
-                span.profile-card__supporting-text on my bucket list &nbsp;
-                span #{profile.about_me_bucket_list[0..299]}
+                h6.text-center on my bucket list &nbsp;
+                p.text-center #{profile.about_me_bucket_list[0..299]}
 
       - image_id = other_image_ids.shift
       - if image_id
@@ -76,36 +82,92 @@
       - if image_id
         .tap-card.brew-image.picture data-image-id="#{image_id}"
 
-      .tap-card
-        .submit-card
-          .block
-            = cl_image_tag primary_image_id, width: 96, height: 96, radius: :max, gravity: :face, crop: :fill
-          .block
-            .intro-request-button
-              = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
-                .block
-                  = image_tag 'chat.png', width: 16, height: 16
-                  | &nbsp; Introduce us
+      / .tap-card
+      /   .submit-card
+      /     .block
+      /       = cl_image_tag primary_image_id, width: 96, height: 96, radius: :max, gravity: :face, crop: :fill
+      /     .block
+      /       - if requested_intro.present?
+      /         .intro-response-button
+      /           = button_to(respond_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { id: requested_intro.id }) do
+      /             .block
+      /               = image_tag 'chat.png', width: 16, height: 16
+      /               | &nbsp; Accept
 
-            .intro-waiting
-              span Got it! We'll let you know when #{profile.firstname} responds.
+      /         .intro-confirmed
+      /           span A conversation is now opened between you and #{profile.firstname} now!
+      /       - else
+      /         .intro-request-button
+      /           = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
+      /             .block
+      /               = image_tag 'chat.png', width: 16, height: 16
+      /               | &nbsp; Introduce us
+
+      /         .intro-waiting
+      /           span Got it! We'll let you know when #{profile.firstname} responds.
+
+      .bottom-pane
+        .snippet
+          span.text--light #{gender_pronoun_plural(profile)} #{%w(a e i o u).include?(profile.profession.first.downcase) ? 'an' : 'a'}&nbsp;
+          | #{profile.profession}
+        - if requested_intro.present?
+          .intro-response.intro-button
+            = button_to(accept_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { id: requested_intro.id }) do
+              i.material-icons drafts
+              | &nbsp; Accept Introduction
+          .intro-confirmed
+            i.material-icons done
+            span &nbsp; We've introduced you both!
+        - else
+          .intro-request.intro-button
+            = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
+              i.material-icons mail
+              | &nbsp; Introduce us
+          .intro-waiting
+            span Got it! We'll introduce you both when #{profile.firstname} responds.
+
+      - if requested_intro.present?
+        .intro-request-overlay
+          span.text #{profile.firstname} would like an intro to you!
 
 javascript:
   $(function() {
-    loadBrewImages(300);
+    var numCards = _.map($('.intro-row__profile'), function(card) { return $(card).find('.tap-card').length });
+    var cardTapCount = _.map($('.intro-row__profile'), function(card) { return 0 });
+    var tappedAllCards = _.map($('.intro-row__profile'), function(card) { return false });
+    var profileCardWidth = $('.max960').width();
+    loadBrewImages(profileCardWidth, 300);
 
-    $('.tap-card .intro-request-button').on('click', function(e) {
+    $('.bottom-pane .intro-request').on('click', function(e) {
       e.stopPropagation();
+      e.preventDefault();
 
       $(this).find('form').submit();
       $(this).hide();
-      $(this).siblings('.intro-waiting').show();
+      $(this).siblings('.intro-waiting').css('display', 'flex');
+    });
+
+    $('.bottom-pane .intro-response').on('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      $(this).find('form').submit();
+      $(this).hide();
+      $(this).siblings('.intro-confirmed').css('display', 'flex');
     });
 
     $('.tap-card').on('click', function(e) {
       var $thisProfile = $(this).closest('.intro-row__profile');
       var $thisProfileCards = $thisProfile.children('.tap-card');
-      var $bottomCard = $thisProfile.children('.tap-card:last-child');
+      var $bottomCard = $thisProfile.children('.tap-card:last');
+      var profileCardIndex = $thisProfile.data('idx');
+
+      cardTapCount[profileCardIndex]++;
+      if((cardTapCount[profileCardIndex] >= numCards[profileCardIndex]) && !tappedAllCards[profileCardIndex]) {
+        tappedAllCards[profileCardIndex] = true;
+        $thisProfile.find('.bottom-pane .snippet').hide();
+        $thisProfile.find('.bottom-pane .intro-button').css('display', 'flex');
+      }
 
       // hide this card and move it to the "bottom of the deck"
       $(this).hide();
@@ -113,7 +175,7 @@ javascript:
       $(this).insertAfter($bottomCard);
 
       // show the card on "top of the deck"
-      var $topCard = $thisProfile.children('.tap-card:first-child');
+      var $topCard = $thisProfile.children('.tap-card:first');
       $($topCard).show();
       $($topCard).addClass('tap-card-visible');
     })

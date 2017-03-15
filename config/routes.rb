@@ -16,7 +16,9 @@ Rails.application.routes.draw do
   get '/activity', to: 'brews#show_user_activity', as: :brew_show_user_activity
   get '/community', to: 'brews#community', as: :community
   get '/introductions', to: 'brews#introductions', as: :introductions
+  get '/conversations', to: 'brews#conversations', as: :conversations
   post '/request-introduction', to: 'brews#request_introduction', as: :request_introduction
+  post '/accept-introduction', to: 'brews#accept_introduction', as: :accept_introduction
 
   root to: 'pages#homepage'
 

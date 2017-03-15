@@ -138,23 +138,50 @@ class BrewsController < WebController
   def introductions
     @section = 'introductions'
 
+    asked_for_intros_sql = @current_profile.asked_for_intros.to_sql
+    got_intro_requests_sql = @current_profile.got_intro_requests.to_sql
+
     @profiles = Rails.env.production? ?
                   Profile
                     .visible
+                    .where.not(uuid: @current_profile.uuid)
                     .not_staff
                     .desirability_score_gte(Profile::HIGH_DESIRABILITY)
                     .age_gte(@current_profile.age - 5)
                     .age_lte(@current_profile.age + 5)
+                    .where.not(uuid: @current_profile.asked_for_intros.pluck(:to_profile_uuid)) # don't show people i've already asked an intro to
+                    .where.not(uuid: @current_profile.got_intro_requests.where("properties->>'mutual' is not NULL").pluck(:by_profile_uuid)) # don't show people who's intro request i've rejected or accepted (mutual NULL)
                     .ordered_by_last_seen
                     .limit(9) :
-                  Profile.visible.limit(9)
+                  Profile
+                    .visible
+                    .where.not(uuid: @current_profile.uuid)
+                    .where.not(uuid: @current_profile.asked_for_intros.pluck(:to_profile_uuid))
+                    .where.not(uuid: @current_profile.got_intro_requests.where("properties->>'mutual' is not NULL").pluck(:by_profile_uuid))
+                    .limit(9)
   end
 
   def request_introduction
-    # TBD register this
+    IntroductionRequest.create!(by: @current_profile, to: Profile.find(params[:to]), made_on: DateTime.now.utc)
 
     respond_to do |format|
       format.json { render json: { success: true } }
+    end
+  rescue => e
+    respond_to do |format|
+      format.json { render json: { success: false } }
+    end
+  end
+
+  def accept_introduction
+    IntroductionRequest.find(params[:id]).update!(mutual: true)
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
+  rescue => e
+    respond_to do |format|
+      format.json { render json: { success: false } }
     end
   end
 

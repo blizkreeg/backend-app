@@ -10,18 +10,19 @@ function loadTimeCharts() {
   });
 }
 
-function loadBrewImages(height) {
+function loadBrewImages(width, height) {
   if (typeof height == 'undefined') {
     height = 180;
   }
 
-  var w = $(window).width();
   var $imageDivs = $('.brew-image');
   _.each($imageDivs, function(imageDiv) {
     $imageDiv = $(imageDiv);
     var imageId = $imageDiv.data('image-id');
-    var divWidth = $imageDiv.width();
-    $imageDiv.prepend($.cloudinary.image(imageId, { height: height, width: divWidth, crop: "fill", gravity: "north" }));
+    if(typeof width == 'undefined') {
+      width = $imageDiv.width();
+    }
+    $imageDiv.prepend($.cloudinary.image(imageId, { height: height, width: width, crop: "fill", gravity: "north" }));
   });
 
   $('.image-carousel-slider').unslider({

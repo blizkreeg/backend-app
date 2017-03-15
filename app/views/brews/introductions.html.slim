@@ -1,7 +1,10 @@
-- if mobile_device?
-  = render partial: 'brews/components/actionbar', locals: { title: 'Who can we introduce you to?' }
+/ - if mobile_device?
+/   = render partial: 'brews/components/actionbar', locals: { title: 'Who can we introduce you to?' }
 
 main
-  .mobile-action-bar-holder
+  / .mobile-action-bar-holder
   .max960
-    = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }
+    .introductions-container
+      h4.text-center Introductions
+      h6.text-center Get introduced to interesting people, become activity partners, business connections, friends, dating or networking!
+      = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }
