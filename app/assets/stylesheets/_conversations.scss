@@ -42,3 +42,78 @@ body.conversations {
     }
   }
 }
+
+.conversation__container {
+  height: auto;
+  overflow: auto;
+  min-height: 500px;
+  position: relative;
+
+  .messages {
+    clear: both;
+    overflow: auto;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+
+    .sent {
+      clear: both;
+      float: right;
+      color: #2d2d2d;
+      text-align: right;
+      max-width: 70%;
+    }
+
+    .received {
+      clear: both;
+      float: left;
+      color: black;
+      text-align: left;
+      max-width: 70%;
+    }
+  }
+
+  .loading {
+    position: absolute;
+    top: 45%;
+    left: 40%;
+    color: black;
+    font-size: 16px;
+  }
+}
+
+.conversation__send-message {
+  background-color: #eee;
+  margin: 0px auto;
+  padding: 5px 5px;
+  height: 50px;
+
+  .message-box {
+    margin: 0px auto;
+    width: calc(100% - 26px);
+    padding: 8px 8px;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    vertical-align: center;
+    font-size: 16px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+.conversation__chat-bubble {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  padding: 6px 0px;
+
+  .avatar {
+    padding: 2px 4px;
+  }
+
+  .text {
+    padding: 2px 4px;
+  }
+}

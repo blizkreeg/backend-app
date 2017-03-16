@@ -1,0 +1,64 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { title: "#{@profile.firstname}" }
+
+- firebase_token = Firebase::FirebaseTokenGenerator.new("#{ENV['FIREBASE_SECRET']}").create_token({ uid: current_profile.uuid })
+
+main
+  .mobile-action-bar-holder
+  .max960
+    .conversation__container
+      .messages
+    .conversation__send-message
+      = text_field_tag 'message', '', placeholder: 'Your message to the group', class: 'mdl-textfield__input message-box'
+
+  javascript:
+    javascript:
+      var current_profile_uuid = "#{current_profile.uuid}";
+      var photo_ids = JSON.parse('#{@photo_ids_hash.to_json.to_s.html_safe}')
+      var names = JSON.parse('#{@names_hash.to_json.to_s.html_safe}')
+
+      var ref = new Firebase("#{Rails.application.config.firebase_db_url}");
+      ref.authWithCustomToken("#{firebase_token}", function(error, authData) {
+        if (error) {
+          console.log("Login Failed!", error);
+        } else {
+          console.log("Login Succeeded!", authData);
+        }
+      });
+
+      var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}conversations/#{@conversation.uuid}/messages");
+
+      var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(25);
+
+      firstQuery.on('child_added', function(snapshot) {
+        var data = snapshot.val();
+        if(data.sender_uuid === current_profile_uuid) {
+          $('.messages').append('<div class="conversation__chat-bubble sent">' +
+                                  '<div class="text">' + '<span class="accent-color--title bold">' + names[data.sender_uuid] + '</span>'  + '<br>' + data.content + '</div>' +
+                                  '<div class="avatar"><image src="' +
+                                    $.cloudinary.url(photo_ids[data.sender_uuid], { width: 48, height: 48, crop: 'fill', gravity: 'face', radius: 'max' })  +
+                                  '"/></div>' +
+                                '</div>');
+        } else {
+          $('.messages').append('<div class="conversation__chat-bubble received">' +
+                                  '<div class="avatar"><image src="' +
+                                    $.cloudinary.url(photo_ids[data.sender_uuid], { width: 48, height: 48, crop: 'fill', gravity: 'face', radius: 'max' })  +
+                                  '"/></div>' +
+                                  '<div class="text">' + '<span class="accent-color--title bold">' + names[data.sender_uuid] + '</span>'  + '<br>' + data.content + '</div>' +
+                                '</div>');
+        }
+
+        //window.scrollTo(0, document.body.scrollHeight);
+        document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
+      });
+
+      $('#message').on('keypress', function(e) {
+        if(e.which == 13) {
+          conversationRef.push({ content: $(this).val(),
+                                  sender_uuid: current_profile_uuid,
+                                  recipient_uuid: null,
+                                  sent_at: Date.now(),
+                                  processed: true });
+          $(this).val('');
+        }
+      });

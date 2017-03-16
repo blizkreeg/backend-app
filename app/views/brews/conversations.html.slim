@@ -6,8 +6,8 @@ main
   .max960
     .conversations-container
       - @conversations.each do |conversation|
-        = link_to '#', class: 'no-decor' do
-          - profile = conversation.the_other_who_is_not(current_profile.uuid)
+        - profile = conversation.the_other_who_is_not(current_profile.uuid)
+        = link_to conversation_with_path(profile.uuid), class: 'no-decor' do
           .conversation-row
             .picture
               = cl_image_tag profile.photos.profile.public_id, width: 60, height: 60, crop: :fill, radius: :max, gravity: :face

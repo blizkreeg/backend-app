@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get '/community', to: 'brews#community', as: :community
   get '/introductions', to: 'brews#introductions', as: :introductions
   get '/conversations', to: 'brews#conversations', as: :conversations
+  get '/conversation-with/:profile_uuid', to: 'brews#conversation_with', as: :conversation_with
   post '/request-introduction', to: 'brews#request_introduction', as: :request_introduction
   post '/accept-introduction', to: 'brews#accept_introduction', as: :accept_introduction
 
