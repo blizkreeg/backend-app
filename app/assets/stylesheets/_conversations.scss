@@ -21,6 +21,7 @@ body.conversation {
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
+  -webkit-overflow-scrolling: touch;
 
   .link-conversation {
     width: 100%;

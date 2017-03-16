@@ -7,7 +7,8 @@ main
     .conversations-container
       - @conversations.each do |conversation|
         - profile = conversation.the_other_who_is_not(current_profile.uuid)
-        = link_to conversation_with_path(profile.uuid), class: 'no-decor link-conversation' do
+        - test_profile = Profile.find('b896c3fb-f433-4ff3-9d54-5709bb01c504')
+        = link_to conversation_with_path(test_profile.uuid), class: 'no-decor link-conversation' do
           .conversation-row
             .picture
               = cl_image_tag profile.photos.profile.public_id, width: 60, height: 60, crop: :fill, radius: :max, gravity: :face
