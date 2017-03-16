@@ -1,4 +1,4 @@
-.action-bar class="mdl-grid mdl-grid--no-spacing #{@section}"
+.action-bar
   - if defined?(back) || defined?(close)
     .action-bar__cancel
       - if defined?(back)
@@ -9,10 +9,8 @@
           = close_text
         - else
           i.material-icons clear
-  / .mdl-layout-spacer
   div class="action-bar__title #{@section}"
     = raw(title)
-  / .mdl-layout-spacer
 
   - submit_status = defined?(default_submit_disabled) && default_submit_disabled
 

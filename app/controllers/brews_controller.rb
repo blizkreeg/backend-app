@@ -194,6 +194,8 @@ class BrewsController < WebController
   end
 
   def conversation_with
+    @section = 'conversation'
+
     @conversation = Conversation.with_participant_uuids([@current_profile.uuid, params[:profile_uuid]]).take
     @profile = Profile.find(params[:profile_uuid])
     @photo_ids_hash = [@current_profile, @profile].inject({}) { |hash, profile| hash[profile.uuid] = profile.photos.profile.public_id; hash }
