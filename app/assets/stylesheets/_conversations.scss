@@ -66,6 +66,7 @@ body.conversation {
   height: calc(100vh - 120px);
   position: relative;
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 
   .messages {
     clear: both;
@@ -117,7 +118,7 @@ body.conversation {
 
   .message-box {
     margin: 0 0;
-    padding: 2px 4px;
+    padding: 2px 4px 2px 8px;
     border: none;
     background-color: white;
     vertical-align: center;
