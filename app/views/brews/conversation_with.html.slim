@@ -81,8 +81,14 @@ main
       $('#message').val('');
     });
 
-    $('#message').on('focus', function () {
-      $(this).css('position', 'relative');
+    $('#message').on('focus', function() {
+      $(this).is(':focus') {
+        return;
+      }
+
+      $(this).css({ 'position': 'relative', "margin-top": -25 });
+      $('.conversation__container .messages').css({ "margin-top": -25 });
+
       setTimeout(function () {
           window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
       }, 0);
