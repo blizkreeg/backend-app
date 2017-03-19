@@ -96,6 +96,15 @@ main
       }, 0);
     });
 
+    $('#message').on('blur', function() {
+      $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
+      $('.conversation__container .messages').css({ "margin-top": 0 });
+
+      setTimeout(function () {
+          window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+      }, 0);
+    }
+
     $(document).on('touchstart', 'input, textarea', function () {
         setTimeout(function () {
             window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
