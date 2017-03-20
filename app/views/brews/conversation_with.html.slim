@@ -91,11 +91,10 @@ main
     $('#message').on('focus', function() {
       messageSendOpen = true;
 
-      $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -50 });
-      $('.conversation__container .messages').css({ "margin-top": -50 });
-
       setTimeout(function () {
           window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+          $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -30 });
+          $('.conversation__container .messages').css({ "margin-top": -30 });
       }, 0);
     });
 
@@ -103,11 +102,10 @@ main
       if(messageSendOpen) {
         messageSendOpen = false;
 
-        $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
-        $('.conversation__container .messages').css({ "margin-top": 0 });
-
         setTimeout(function () {
-            window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+          $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
+          $('.conversation__container .messages').css({ "margin-top": 0 });
+          window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
         }, 0);
       }
     });
