@@ -93,8 +93,8 @@ main
 
       setTimeout(function () {
           window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-          $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -30 });
-          $('.conversation__container .messages').css({ "margin-top": -30 });
+          $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -25 });
+          $('.conversation__container .messages').css({ "margin-top": -25 });
       }, 0);
     });
 
@@ -103,11 +103,15 @@ main
         messageSendOpen = false;
 
         setTimeout(function () {
+          window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
           $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
           $('.conversation__container .messages').css({ "margin-top": 0 });
-          window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
         }, 0);
       }
+    });
+
+    $('.send-message').on('click', function() {
+      $('#message').focus();
     });
 
     $(document).on('touchstart', 'input, textarea', function () {
