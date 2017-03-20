@@ -16,6 +16,7 @@ main
     var current_profile_uuid = "#{current_profile.uuid}";
     var photo_ids = JSON.parse('#{@photo_ids_hash.to_json.to_s.html_safe}');
     var names = JSON.parse('#{@names_hash.to_json.to_s.html_safe}');
+    var messageSendOpen = false;
 
     var ref = new Firebase("#{Rails.application.config.firebase_db_url}");
     ref.authWithCustomToken("#{firebase_token}", function(error, authData) {
@@ -88,6 +89,8 @@ main
     });
 
     $('#message').on('focus', function() {
+      messageSendOpen = true;
+
       $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -25 });
       $('.conversation__container .messages').css({ "margin-top": -25 });
 
@@ -96,13 +99,17 @@ main
       }, 0);
     });
 
-    $('#message').on('blur', function() {
-      $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
-      $('.conversation__container .messages').css({ "margin-top": 0 });
+    $('.conversation__container').on('click', function() {
+      if(messageSendOpen) {
+        messageSendOpen = false;
 
-      setTimeout(function () {
-          window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-      }, 0);
+        $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
+        $('.conversation__container .messages').css({ "margin-top": 0 });
+
+        setTimeout(function () {
+            window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+        }, 0);
+      }
     });
 
     $(document).on('touchstart', 'input, textarea', function () {
