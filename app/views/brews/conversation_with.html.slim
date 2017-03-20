@@ -89,12 +89,14 @@ main
     });
 
     $('#message').on('focus', function() {
-      messageSendOpen = true;
-
       setTimeout(function () {
+        if(messageSendOpen != true) {
           window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
           $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -25 });
           $('.conversation__container .messages').css({ "margin-top": -25 });
+
+          messageSendOpen = true;
+        }
       }, 0);
     });
 

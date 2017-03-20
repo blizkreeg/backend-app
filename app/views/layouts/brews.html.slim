@@ -69,4 +69,8 @@ html
       // This messes up tapping on text input elements
       $(function() {
         FastClick.attach(document.body);
+
+        $('a').on('touch', function() {
+          $(this).addClass('clicked');
+        });
       });
