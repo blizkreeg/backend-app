@@ -70,7 +70,7 @@ html
       $(function() {
         FastClick.attach(document.body);
 
-        $('a').tap(function() {
+        $('a').on('touchstart', function() {
           $(this).addClass('clicked');
         });
       });
