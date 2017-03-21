@@ -744,11 +744,20 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   a {
     text-align: center;
     padding: 0 8px;
+    position: relative;
     // width: calc(100%/3)
   }
 
   .name.active, i.active {
     color: #e46f57;
+  }
+
+  .bubble {
+    color: #fe6363;
+
+    i {
+      font-size: 18px;
+    }
   }
 }
 

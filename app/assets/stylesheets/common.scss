@@ -1,6 +1,8 @@
 @import 'typography';
 @import 'colors';
 
+$bottom_menu_height: 50px;
+
 // https://maxogden.com/fast-webview-applications.html
 // http://stackoverflow.com/questions/10819565/user-selectnone-causes-input-field-to-be-inaccessible-on-safari
 *:not(input):not(textarea) {
@@ -44,7 +46,7 @@ body.brews {
 
 main {
   z-index: 1;
-  height: calc(100vh - 60px);
+  height: calc(100vh - #{$bottom_menu_height});
 }
 
 .accent-color {
@@ -88,6 +90,7 @@ a.no-decor, a.no-decor:visited, a.no-decor:hover {
   color: inherit !important;
   touch-action: manipulation;
   font-weight: normal;
+  display: inline-block;
 }
 
 a.disabled {
@@ -162,8 +165,8 @@ a.disabled {
 
 @media only screen and (max-width: 799px) {
   .max960 {
-    padding: 0px 10px;
-    // height: calc(100vh - 60px - 48px);
+    // padding: 0px 10px;
+    // height: calc(100vh - #{$bottom_menu_height} - 48px);
   }
 }
 
@@ -171,3 +174,6 @@ a.disabled {
   color: white;
 }
 
+p {
+  font-size: 16px;
+}

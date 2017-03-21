@@ -12,36 +12,6 @@
           span> #{profile.firstname}
           span.age #{profile.age}
 
-      / basic info card
-      .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
-        .text-card
-          .block
-            span.info-label &nbsp;
-            span.info-value.bold #{profile.firstname}, #{profile.age}
-          .block
-            span.info-label lives in &nbsp;
-            span.info-value #{profile.location_city}
-
-          .block
-            span.info-label #{gender_pronoun_plural(profile)} a &nbsp;
-            span.info-value #{profile.profession}
-
-          .block
-            span.info-label has a &nbsp;
-            span.info-value #{raw(profile.highest_degree || '&mdash;')}
-
-          .block.schools
-            span.info-label went to &nbsp;
-            span.info-value #{profile.schools_attended.join(', ')}
-
-          .block
-            span.info-label is &nbsp;
-            span.info-value #{profile.height}
-
-      - image_id = other_image_ids.shift
-      - if image_id
-        .tap-card.brew-image.picture data-image-id="#{image_id}"
-
       - if profile.about_me_i_love.present?
         .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
           .blurb.text-card
@@ -49,6 +19,10 @@
               .blurb
                 h6.text-center loves &nbsp;
                 p.text-center #{profile.about_me_i_love[0..299]}
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
 
       - image_id = other_image_ids.shift
       - if image_id
@@ -81,6 +55,32 @@
       - image_id = other_image_ids.shift
       - if image_id
         .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+      / basic info card
+      .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+        .text-card
+          .block
+            span.info-label &nbsp;
+            span.info-value.bold #{profile.firstname}, #{profile.age}
+          .block
+            span.info-label lives in &nbsp;
+            span.info-value #{profile.location_city}
+
+          .block
+            span.info-label #{gender_pronoun_plural(profile)} a &nbsp;
+            span.info-value #{profile.profession}
+
+          .block
+            span.info-label has a &nbsp;
+            span.info-value #{raw(profile.highest_degree || '&mdash;')}
+
+          .block.schools
+            span.info-label went to &nbsp;
+            span.info-value #{profile.schools_attended.join(', ')}
+
+          .block
+            span.info-label is &nbsp;
+            span.info-value #{profile.height}
 
       / .tap-card
       /   .submit-card
@@ -153,6 +153,7 @@ javascript:
       $(this).find('form').submit();
       $(this).hide();
       $(this).siblings('.intro-confirmed').css('display', 'flex');
+      $('.mobile-bottom-menu .conversations-menu .bubble').show();
     });
 
     $('.tap-card').on('click', function(e) {

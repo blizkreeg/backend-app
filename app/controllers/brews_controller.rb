@@ -6,7 +6,7 @@ class BrewsController < WebController
   WAITLIST_LAUNCH_DATE = Date.new(2017, 1, 31)
   PUBLIC_EXCEPTION_METHODS = [:show]
   WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
-  NAV_TABS_ONLY_METHODS = [:index, :community, :introductions]
+  NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -144,6 +144,7 @@ class BrewsController < WebController
     @profiles = Rails.env.production? ?
                   Profile
                     .visible
+                    .of_gender(@current_profile.seeking_gender)
                     .where.not(uuid: @current_profile.uuid)
                     .not_staff
                     .desirability_score_gte(Profile::HIGH_DESIRABILITY)
@@ -155,6 +156,7 @@ class BrewsController < WebController
                     .limit(9) :
                   Profile
                     .visible
+                    .of_gender(@current_profile.seeking_gender)
                     .where.not(uuid: @current_profile.uuid)
                     .where.not(uuid: @current_profile.asked_for_intros.pluck(:to_profile_uuid))
                     .where.not(uuid: @current_profile.got_intro_requests.where("properties->>'mutual' is not NULL").pluck(:by_profile_uuid))

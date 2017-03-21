@@ -1,18 +1,24 @@
 .mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
-  = link_to(introductions_path, class: 'no-decor') do
+  = link_to(introductions_path, class: 'no-decor introductions-menu') do
     .mdl-cell
       i class="material-icons #{'active' if active == 'introductions'}" group
       / div class="name #{'active' if active == 'introductions'}" Introductions
+    .bubble style='display: none; position: absolute; top: 0; right: 0;'
+      i.material-icons fiber_manual_record
 
-  = link_to(conversations_path, class: 'no-decor') do
+  = link_to(conversations_path, class: 'no-decor conversations-menu') do
     .mdl-cell
-      i class="material-icons #{'active' if active == 'community'}" chat
+      i class="material-icons #{'active' if active == 'conversations'}" chat
       / div class="name #{'active' if active == 'community'}" Conversations
+    .bubble style='display: none; position: absolute; top: 0; right: 0;'
+      i.material-icons fiber_manual_record
 
-  = link_to(brews_path, class: 'no-decor') do
+  = link_to(brews_path, class: 'no-decor brews-menu') do
     .mdl-cell
       i class="material-icons #{'active' if active == 'brews'}" local_cafe
       / div class="name #{'active' if active == 'brews'}" Brews
+    .bubble style='display: none; position: absolute; top: 0; right: 0;'
+      i.material-icons fiber_manual_record
   / .mdl-cell
   /   = link_to(community_path) do
   /     i class="material-icons #{'active' if active == 'community'}" whatshot

@@ -2,7 +2,7 @@ body.introductions {
   background-color: white;
 
   .max960 {
-    height: calc(100vh - 60px);
+    height: calc(100vh - #{$bottom_menu_height});
   }
 }
 
@@ -82,6 +82,7 @@ body.introductions {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   overflow: scroll;
+  margin: 0 10px;
 
   .intro-row__profile {
     width: calc(100% - 25px - 10px);

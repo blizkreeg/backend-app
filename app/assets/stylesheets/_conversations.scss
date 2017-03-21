@@ -1,6 +1,9 @@
 body.conversations {
   .max960 {
-    height: calc(100vh - 60px);
+    // height: calc(100vh - 60px);
+  }
+  main {
+    height: 100%;
   }
 }
 
@@ -21,10 +24,25 @@ body.conversation {
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: flex-start;
-  -webkit-overflow-scrolling: touch;
+  height: 100%;
 
   .link-conversation {
     width: 100%;
+    padding: 0 5px;
+  }
+
+  .no-conversations {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .conversations-river {
+    -webkit-overflow-scrolling: touch;
   }
 }
 
@@ -74,7 +92,8 @@ body.conversation {
     width: 100%;
     position: relative;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 20px;
+    padding: 0 10px 20px 10px;
+    box-sizing: border-box;
 
     .sent {
       clear: both;

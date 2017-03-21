@@ -1,5 +1,5 @@
 - if mobile_device?
-  = render partial: 'brews/components/actionbar', locals: { title: "#{@profile.firstname}", back: true, back_icon: 'keyboard_arrow_left', back_url: conversations_path }
+  = render partial: 'brews/components/actionbar', locals: { title: "#{@profile.firstname}", back: true, back_icon: 'chat', back_url: conversations_path }
 
 - firebase_token = Firebase::FirebaseTokenGenerator.new("#{ENV['FIREBASE_SECRET']}").create_token({ uid: current_profile.uuid })
 
