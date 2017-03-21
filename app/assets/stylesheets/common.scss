@@ -94,8 +94,14 @@ a.disabled {
   color: #888 !important;
 }
 
+@keyframes pulsate
+{
+  50%  {background: #dedede;}
+}
+
 .clicked {
   background-color: #dedede !important;
+  animation: pulsate 1s infinite;
 }
 
 .text--light {
