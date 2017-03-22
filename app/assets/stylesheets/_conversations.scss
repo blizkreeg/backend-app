@@ -44,7 +44,13 @@ body.conversation {
 
   .conversations-river {
     -webkit-overflow-scrolling: touch;
-    overflow-y: scroll;
+    overflow: scroll;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 }
 
