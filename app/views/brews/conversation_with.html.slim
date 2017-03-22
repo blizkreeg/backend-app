@@ -10,7 +10,7 @@ main
     .conversation__send-message
       = text_field_tag 'message', '', placeholder: 'Your message to the group', class: 'mdl-textfield__input message-box'
       .send-message
-        i.material-icons send
+        | SEND
 
   javascript:
     var current_profile_uuid = "#{current_profile.uuid}";
@@ -75,7 +75,7 @@ main
       }
     });
 
-    $('.send-message').on('click', function(e) {
+    $('.conversation__send-message > .send-message').on('click', function(e) {
       e.preventDefault();
 
       if($('#message').val() == "") return;
@@ -86,6 +86,7 @@ main
                               sent_at: Date.now(),
                               processed: true });
       $('#message').val('');
+      $('#message').focus();
     });
 
     $('#message').on('focus', function() {
@@ -110,10 +111,6 @@ main
           $('.conversation__container .messages').css({ "margin-top": 0 });
         }, 0);
       }
-    });
-
-    $('.send-message').on('click', function() {
-      $('#message').focus();
     });
 
     $(document).on('touchstart', 'input, textarea', function () {

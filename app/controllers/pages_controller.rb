@@ -3,7 +3,11 @@ class PagesController < WebController
 
   def homepage
     if @current_profile.present?
-      redirect_to controller: :brews, action: :index
+      if @current_profile.mobile_goto_uri.present?
+        redirect_to @current_profile.mobile_goto_uri
+      else
+        redirect_to controller: :brews, action: :index
+      end
       return
     end
 

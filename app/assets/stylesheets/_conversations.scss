@@ -132,9 +132,8 @@ body.conversation {
 }
 
 .conversation__send-message {
-  border-top: 1px solid #eeeeee;
+  border-top: 1px solid #ccc;
   margin: 0px auto;
-  padding: 10px 0px;
   position: fixed;
   left: 0;
   bottom: 0;
@@ -147,7 +146,7 @@ body.conversation {
 
   .message-box {
     margin: 0 0;
-    padding: 2px 4px 2px 8px;
+    padding: 2px 6px 2px 8px;
     border: none;
     background-color: white;
     vertical-align: center;
@@ -156,15 +155,21 @@ body.conversation {
     // -moz-user-select: none;
     // -webkit-user-select: none;
     box-sizing: border-box;
-    height: 30px;
+    height: 49px;
     padding-right: 4px;
   }
 
   .send-message {
     color: $accent_blue;
-    padding-left: 6px;
-    border-left: 1px solid #ededed;
-    align-self: center;
+    border-left: 1px solid #ddd;
+    display: flex;
+    flex-flow: column nowrap;
+    font-size: 16px;
+    height: 49px;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+    font-size: 16px;
   }
 }
 

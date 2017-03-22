@@ -7,6 +7,7 @@ class BrewsController < WebController
   PUBLIC_EXCEPTION_METHODS = [:show]
   WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
   NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations]
+  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -15,6 +16,9 @@ class BrewsController < WebController
   # if the user is from the mobile app OR they're an existing user but don't meet the criteria for Brew membership
   # then, show them the "you're on a waitlist" screen
   before_action :show_waitlist_screen?, except: WAITLIST_EXCEPTION_METHODS, if: lambda { user_not_admitted? }
+
+  # store the path where the user last left off
+  before_action :set_goto_uri, only: TRACK_URI_GET_METHODS
 
   # mobile nav tabs
   before_action :show_bottom_menu, only: NAV_TABS_ONLY_METHODS, if: lambda { logged_in? && (from_app? || mobile_device?) }
@@ -70,6 +74,7 @@ class BrewsController < WebController
     redirect_to brew_path(@brew.slug)
   end
 
+  # brew details
   def show
     @brew = Brew.with_slug(params[:slug]).take
   end
@@ -192,7 +197,7 @@ class BrewsController < WebController
   def conversations
     @section = 'conversations'
 
-    @conversations = Conversation.all
+    @conversations = Conversation.participant_uuids_contains(@current_profile.uuid)
   end
 
   def conversation_with
@@ -221,6 +226,10 @@ class BrewsController < WebController
   end
 
   private
+
+  def set_goto_uri
+    @current_profile.update(mobile_goto_uri: request.path)
+  end
 
   def brew_params
     attributes = Brew::MASS_UPDATE_ATTRIBUTES
