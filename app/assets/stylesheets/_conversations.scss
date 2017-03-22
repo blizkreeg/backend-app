@@ -1,6 +1,6 @@
 body.conversations {
   .max960 {
-    height: calc(100vh - 60px);
+    height: calc(100vh - 110px);
   }
   main {
     height: 100%;
@@ -26,6 +26,7 @@ body.conversation {
   align-items: flex-start;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
+  height: 100%;
 
   .link-conversation {
     width: 100%;
