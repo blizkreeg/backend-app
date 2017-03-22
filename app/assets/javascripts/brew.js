@@ -17,6 +17,6 @@
 //= require jquery.cloudinary
 //= require underscore-min
 //= require unslider
-//= require zepto.min
+// require zepto.min
 //= require brew/index
 //= require brew/show
