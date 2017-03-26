@@ -536,6 +536,10 @@ class Profile < ActiveRecord::Base
     end
   end
 
+  def set_mobile_goto!(uri)
+    self.update!(mobile_goto_uri: uri)
+  end
+
   def active_mutual_match
     self.matches.active.take
   end

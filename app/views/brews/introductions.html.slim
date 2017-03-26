@@ -7,5 +7,9 @@ main
     .introductions-container
       .heading
         .title Introductions
-        .description Get introduced to interesting people, activity partners, business connections, friends, dating or networking!
+        .description Find your next new friend, activity buddy, business connection, or date!
       = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }
+      .footer
+        | Members are recently active.
+        br
+        | Next set of introductions in #{distance_of_time_in_words_to_now(@refresh_time)}

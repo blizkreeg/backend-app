@@ -3,14 +3,13 @@
 
     - primary_image_id = profile.photos.profile.try(:public_id)
     - other_image_ids = profile.photos.others.map(&:public_id)
-    - requested_intro = IntroductionRequest.where(by: profile, to: current_profile).take
+    - requested_intro = IntroductionRequest.where(by: current_profile, to: profile).take
+    - incoming_intro = IntroductionRequest.where(by: profile, to: current_profile).take
+    - intro = IntroductionRequest.find_between(profile.uuid, current_profile.uuid)
 
     span.intro-row__profile data-idx="#{idx}"
       / primary photo + initial top card
-      .brew-image.picture.tap-card.tap-card-visible data-image-id="#{primary_image_id}"
-        .name
-          span> #{profile.firstname}
-          span.age #{profile.age}
+      = render partial: 'brews/components/introductions/primary_photo_card', locals: { profile: profile, primary_image_id: primary_image_id }
 
       - if profile.about_me_i_love.present?
         .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
@@ -82,42 +81,35 @@
             span.info-label is &nbsp;
             span.info-value #{profile.height}
 
-      / .tap-card
-      /   .submit-card
-      /     .block
-      /       = cl_image_tag primary_image_id, width: 96, height: 96, radius: :max, gravity: :face, crop: :fill
-      /     .block
-      /       - if requested_intro.present?
-      /         .intro-response-button
-      /           = button_to(respond_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { id: requested_intro.id }) do
-      /             .block
-      /               = image_tag 'chat.png', width: 16, height: 16
-      /               | &nbsp; Accept
-
-      /         .intro-confirmed
-      /           span A conversation is now opened between you and #{profile.firstname} now!
-      /       - else
-      /         .intro-request-button
-      /           = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
-      /             .block
-      /               = image_tag 'chat.png', width: 16, height: 16
-      /               | &nbsp; Introduce us
-
-      /         .intro-waiting
-      /           span Got it! We'll let you know when #{profile.firstname} responds.
-
       .bottom-pane
-        .snippet
-          | #{gender_pronoun_plural(profile)} #{%w(a e i o u).include?(profile.profession.first.downcase) ? 'an' : 'a'} #{profile.profession}
-        - if requested_intro.present?
-          .intro-response.intro-button
-            = button_to(accept_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { id: requested_intro.id }) do
-              i.material-icons drafts
-              | &nbsp; Accept Introduction
-          .intro-confirmed
-            i.material-icons done
-            span &nbsp; We've introduced you both!
+        - if intro.present?
+
+          / mutual interest
+          - if intro.mutual
+            .intro-confirmed style='display: flex'
+              i.material-icons done
+              span &nbsp; We've introduced you both!
+
+          / i'm waiting for a response to my intro request
+          - elsif intro.from?(@current_profile.uuid)
+            .intro-waiting style='display: flex'
+              span We'll introduce you when #{profile.firstname} responds.
+
+          / i got an intro reequest that i haven't accepted
+          - else
+            = render partial: 'brews/components/introductions/profile_snippet', locals: { profile: profile }
+
+            .intro-response.intro-button
+              = button_to(accept_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { id: incoming_intro.id }) do
+                i.material-icons drafts
+                | &nbsp; Accept Introduction
+            .intro-confirmed
+              i.material-icons done
+              span &nbsp; We've introduced you both!
+
         - else
+          = render partial: 'brews/components/introductions/profile_snippet', locals: { profile: profile }
+
           .intro-request.intro-button
             = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
               i.material-icons mail
@@ -125,7 +117,8 @@
           .intro-waiting
             span Got it! We'll introduce you both when #{profile.firstname} responds.
 
-      - if requested_intro.present?
+      / i got an intro reequest that i haven't accepted
+      - if intro && !intro.mutual && intro.to?(@current_profile.uuid)
         .intro-request-overlay
           span.text #{profile.firstname} would like an intro to you!
 

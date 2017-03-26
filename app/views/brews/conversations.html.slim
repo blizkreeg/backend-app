@@ -20,4 +20,7 @@ main
                   .name.bold
                     = profile.firstname
                   .message
-                    | test
+                    / TBD: optimize!!
+                    - messages_hash = $firebase_conversations.get(conversation.firebase_messages_endpoint, "orderBy": '"$key"', limitToLast: 1).body
+                    - if messages_hash.present?
+                      = messages_hash.values.first["content"]

@@ -27,16 +27,24 @@ body.introductions {
     line-height: 32px;
     font-weight: 400;
     text-align: center;
-    padding: 2px 0px 5px 0px;
+    padding: 5px 5px;
     margin: 0 0 0 0;
+    box-sizing: border-box;
   }
 
   .heading .description {
     font-size: 16px;
     line-height: 22px;
     text-align: center;
-    padding: 0px 0px 15px 0px;
+    padding: 5px 5px 25px 5px;
     margin: 0 0 0 0;
+  }
+
+  .footer {
+    padding-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #555555;
   }
 }
 
@@ -232,7 +240,7 @@ body.introductions {
       padding: 4px 4px;
       box-sizing: border-box;
       text-align: center;
-      background-color: rgba(238, 211, 105, 0.7);
+      background-color: rgba(238, 211, 105, 0.9);
       z-index: 1;
 
       span.text {
