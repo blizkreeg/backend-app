@@ -33,7 +33,7 @@ class IntroductionRequest < ActiveRecord::Base
   end
 
   def self.accept(id)
-    intro = self.find(id)
+    intro = IntroductionRequest.find(id)
     intro.update!(mutual: true)
 
     message = IntroductionRequest::ACCEPTED_MESSAGE.gsub("%name", intro.by.firstname)

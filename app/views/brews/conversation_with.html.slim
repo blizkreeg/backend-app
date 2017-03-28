@@ -36,8 +36,7 @@ main
       var oldHeight = $('.messages').height();
       var data = snapshot.val();
 
-      // if(data.sender_uuid === current_profile_uuid) {
-      if(Math.random() > 0.5) {
+      if(data.sender_uuid === current_profile_uuid) {
         $elem = $('<div class="conversation__chat-bubble sent">' +
                                 '<div class="text">' + '<span class="accent-color--title bold">' + names[data.sender_uuid] + '</span>'  + '<br>' + data.content + '</div>' +
                                 '<div class="avatar"><image src="' +
