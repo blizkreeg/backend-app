@@ -34,7 +34,6 @@ module Matchmaker
     profiles = Profile
                   .visible
                   .where.not(uuid: profile.uuid)
-                  .not_staff
                   .desirability_score_gte(Profile::HIGH_DESIRABILITY)
                   .where.not(uuid: passed_uuids)
                   .where.not(uuid: interested_profiles.map(&:uuid))

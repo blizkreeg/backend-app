@@ -85,6 +85,7 @@ javascript:
     setTimeout(function () {
       if(messageSendOpen !== true) {
         //$('.conversation__send-message').css({ 'position': 'relative' });
+        // android soft keyboard issue
         if(navigator.userAgent.indexOf('Android') > -1) {
           $('.conversation__send-message').css({ 'position': 'absolute', top: 10, left: 0, height: 50 });
         }
@@ -127,6 +128,7 @@ javascript:
     messageSendOpen = false;
 
     setTimeout(function () {
+      // android soft keyboard issue
       if(navigator.userAgent.indexOf('Android') > -1) {
         $('.conversation__send-message').css({ 'position': 'relative', height: 50, top: 0 });
       }
