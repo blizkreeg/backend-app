@@ -8,7 +8,7 @@ main
     .conversation__container
       .messages
     .conversation__send-message
-      = text_field_tag 'message', '', placeholder: 'Your message to the group', class: 'mdl-textfield__input message-box'
+      = text_field_tag 'message', '', placeholder: 'your message', class: 'mdl-textfield__input message-box'
       .send-message
         | SEND
 
@@ -92,8 +92,8 @@ main
       setTimeout(function () {
         if(messageSendOpen !== true) {
           window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-          $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -25 });
-          $('.conversation__container .messages').css({ "margin-top": -25 });
+          // $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -25 });
+          $('.conversation__container .messages').css({ "margin-top": -15 });
 
           messageSendOpen = true;
         }
@@ -106,7 +106,7 @@ main
 
         setTimeout(function () {
           window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-          $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
+          //$('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
           $('.conversation__container .messages').css({ "margin-top": 0 });
         }, 0);
       }
