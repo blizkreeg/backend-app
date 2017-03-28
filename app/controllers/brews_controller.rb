@@ -184,7 +184,7 @@ class BrewsController < WebController
   end
 
   def request_introduction
-    IntroductionRequest.where(by: @current_profile, to: Profile.find(params[:to]).first_or_create!(made_on: DateTime.now.utc)
+    IntroductionRequest.where(by: @current_profile, to: Profile.find(params[:to])).first_or_create!(made_on: DateTime.now.utc)
 
     respond_to do |format|
       format.json { render json: { success: true } }
