@@ -37,7 +37,7 @@ class IntroductionRequest < ActiveRecord::Base
     intro.update!(mutual: true)
 
     message = IntroductionRequest::ACCEPTED_MESSAGE.gsub("%name", intro.by.firstname)
-    PushNotifier.delay.record_event([intro.by.uuid], 'conv_open', body: message)
+    PushNotifier.delay.record_event(intro.by.uuid, 'conv_open', body: message)
     intro.by.set_mobile_goto!(Rails.application.routes.url_helpers.conversations_path)
   end
 end
