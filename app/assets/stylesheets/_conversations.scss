@@ -111,6 +111,7 @@ body.conversation {
       color: #2d2d2d;
       text-align: right;
       max-width: 70%;
+      box-sizing: border-box;
     }
 
     .received {
@@ -119,6 +120,7 @@ body.conversation {
       color: black;
       text-align: left;
       max-width: 70%;
+      box-sizing: border-box;
     }
   }
 
@@ -134,7 +136,8 @@ body.conversation {
 .conversation__send-message {
   border-top: 1px solid #ccc;
   margin: 0px auto;
-  position: fixed;
+  // position: fixed;
+  position: relative;
   left: 0;
   bottom: 0;
   width: 100%;
