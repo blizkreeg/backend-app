@@ -20,6 +20,7 @@ main
     var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}conversations/#{@conversation.uuid}/messages");
     var disconnectedRef = new Firebase("#{Rails.application.config.firebase_db_url}users/#{current_profile.uuid}/disconnectedAt");
     var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(50);
+    var recipient_uuid = "#{@profile.uuid}";
 
     var ref = new Firebase("#{Rails.application.config.firebase_db_url}");
     ref.authWithCustomToken("#{firebase_token}", function(error, authData) {
@@ -114,7 +115,7 @@ main
 
       conversationRef.push({ content: $messageInput.val(),
                               sender_uuid: current_profile_uuid,
-                              recipient_uuid: null,
+                              recipient_uuid: recipient_uuid,
                               sent_at: Date.now(),
                               processed: true });
       $messageInput.val('');
