@@ -76,7 +76,7 @@ main
     $('#message').on('focus', function() {
       setTimeout(function () {
         if(messageSendOpen !== true) {
-          $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -25 });
+          $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -25, "margin-bottom": 25 });
           window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
 
           messageSendOpen = true;
@@ -117,7 +117,7 @@ main
 
       setTimeout(function () {
         window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-        $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
+        $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0, "margin-bottom": 0 });
       }, 0);
     }
 
