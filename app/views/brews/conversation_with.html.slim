@@ -18,6 +18,7 @@ main
     var names = JSON.parse('#{@names_hash.to_json.to_s.html_safe}');
     var messageSendOpen = false;
     var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}conversations/#{@conversation.uuid}/messages");
+    var disconnectedRef = new Firebase("#{Rails.application.config.firebase_db_url}users/#{current_profile.uuid}/disconnectedAt");
     var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(50);
 
     var ref = new Firebase("#{Rails.application.config.firebase_db_url}");
@@ -28,6 +29,14 @@ main
         console.log("Login Succeeded!", authData);
       }
     });
+
+    function setConnectTime() {
+      // lags behind by 2s
+      disconnectedRef.set(Date.now());
+      setTimeout(setConnectTime, 2000);
+    }
+
+    setTimeout(setConnectTime, 2000);
 
     firstQuery.on('child_added', function(snapshot) {
       var $elem;

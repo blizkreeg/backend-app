@@ -146,7 +146,7 @@ class Conversation < ActiveRecord::Base
     #                                   Rails.application.routes.url_helpers.v1_profile_match_path(profile_uuid, match.id))
     # end
 
-    initialize_firebase
+    self.initialize_firebase
     $firebase_conversations.push(self.firebase_messages_endpoint, self.notice_message_hash(OPENING_MESSAGE))
 
     # -- not in use: old stuff when conversation was kept moving --
