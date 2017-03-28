@@ -184,8 +184,7 @@ class BrewsController < WebController
   end
 
   def request_introduction
-    IntroductionRequest.find_between(@current_profile.uuid, params[:to]) ||
-    IntroductionRequest.find_or_create_by!(by: @current_profile, to: Profile.find(params[:to]), made_on: DateTime.now.utc)
+    IntroductionRequest.where(by: @current_profile, to: Profile.find(params[:to]).first_or_create!(made_on: DateTime.now.utc)
 
     respond_to do |format|
       format.json { render json: { success: true } }
@@ -200,7 +199,7 @@ class BrewsController < WebController
     intro = IntroductionRequest.find(params[:id])
 
     # create a conversation between them
-    Conversation.find_or_create_by!(participant_uuids: [@current_profile.uuid, intro.by.uuid])
+    Conversation.find_or_create_by_participants!([@current_profile.uuid, intro.by.uuid])
 
     # notify the requestor and other bookkeeping
     IntroductionRequest.delay.accept(params[:id])
