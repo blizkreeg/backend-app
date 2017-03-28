@@ -20,7 +20,7 @@ body.introductions {
   flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: center;
-  height: 100%;
+  min-height: 100%;
 
   .heading .title {
     font-size: 24px;
@@ -89,7 +89,7 @@ body.introductions {
   height: 350px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  overflow: scroll;
+  overflow: auto;
   margin: 0 10px;
 
   .intro-row__profile {
