@@ -17,6 +17,8 @@ main
     var photo_ids = JSON.parse('#{@photo_ids_hash.to_json.to_s.html_safe}');
     var names = JSON.parse('#{@names_hash.to_json.to_s.html_safe}');
     var messageSendOpen = false;
+    var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}conversations/#{@conversation.uuid}/messages");
+    var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(50);
 
     var ref = new Firebase("#{Rails.application.config.firebase_db_url}");
     ref.authWithCustomToken("#{firebase_token}", function(error, authData) {
@@ -26,10 +28,6 @@ main
         console.log("Login Succeeded!", authData);
       }
     });
-
-    var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}conversations/#{@conversation.uuid}/messages");
-
-    var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(25);
 
     firstQuery.on('child_added', function(snapshot) {
       var $elem;
@@ -54,66 +52,92 @@ main
         $('.messages').append($elem);
       }
 
-      //$('.messages').height(oldHeight + );
-
-      //window.scrollTo(0, document.body.scrollHeight);
-      //document.body.scrollTop = document.body.scrollHeight - document.body.clientHeight;
       $(".conversation__container").scrollTop($(".conversation__container .messages")[0].scrollHeight);
     });
 
     $('#message').on('keypress', function(e) {
-      if($('#message').val() == "") return;
+      if(isMessageEmpty()) return;
 
       if(e.which == 13) {
-        conversationRef.push({ content: $(this).val(),
-                                sender_uuid: current_profile_uuid,
-                                recipient_uuid: null,
-                                sent_at: Date.now(),
-                                processed: true });
-        $(this).val('');
+        pushMessageToFirebase();
       }
     });
 
     $('.conversation__send-message > .send-message').on('click', function(e) {
       e.preventDefault();
+      if(isMessageEmpty()) return;
 
-      if($('#message').val() == "") return;
+      pushMessageToFirebase();
 
-      conversationRef.push({ content: $('#message').val(),
-                              sender_uuid: current_profile_uuid,
-                              recipient_uuid: null,
-                              sent_at: Date.now(),
-                              processed: true });
-      $('#message').val('');
-      $('#message').focus();
+      // input loses focus when click/tap on the "SEND" button -- keep it in focus
+      focusOnInput();
     });
 
     $('#message').on('focus', function() {
       setTimeout(function () {
         if(messageSendOpen !== true) {
-          window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
           $('.conversation__send-message').css({ 'position': 'relative', "margin-top": -25 });
-          //$('.conversation__container .messages').css({ "margin-top": -25 });
+          window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
 
           messageSendOpen = true;
         }
       }, 0);
+
+      setTimeout(checkFocus, 1000);
     });
 
     $('.conversation__container .messages').on('click', function() {
       if(messageSendOpen) {
-        messageSendOpen = false;
-
-        setTimeout(function () {
-          window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-          $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
-          //$('.conversation__container .messages').css({ "margin-top": 0 });
-        }, 0);
+        snapInputBack();
       }
     });
 
+    function isMessageEmpty() {
+      return ($('#message').val() == "");
+    }
+
+    function focusOnInput() {
+      $('#message').focus();
+    }
+
+    function pushMessageToFirebase() {
+      var $messageInput = $('#message');
+
+      conversationRef.push({ content: $messageInput.val(),
+                              sender_uuid: current_profile_uuid,
+                              recipient_uuid: null,
+                              sent_at: Date.now(),
+                              processed: true });
+      $messageInput.val('');
+    }
+
+    // the keyboard is closed -- snap the message input back to its original place
+    function snapInputBack() {
+      messageSendOpen = false;
+
+      setTimeout(function () {
+        window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+        $('.conversation__send-message').css({ 'position': 'fixed', "margin-top": 0 });
+      }, 0);
+    }
+
+    function checkFocus() {
+      console.log("checking if in focus...");
+      // was the message input open previously?
+      if(messageSendOpen) {
+        // is it now out of focus?
+        if(!$('#message').is(":focus")) {
+          // if so, push it back into place
+          snapInputBack();
+        } else {
+          // still in focus, check again in 2s
+          setTimeout(checkFocus, 1000);
+        }
+      }
+    }
+
     $(document).on('touchstart', 'input, textarea', function () {
-        setTimeout(function () {
-            window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-        }, 0);
+      setTimeout(function () {
+          window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
+      }, 0);
     });
