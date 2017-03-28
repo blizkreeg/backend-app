@@ -199,7 +199,9 @@ class BrewsController < WebController
     intro = IntroductionRequest.find(params[:id])
 
     # create a conversation between them
-    Conversation.find_or_create_by_participants!([@current_profile.uuid, intro.by.uuid])
+    conversation = Conversation.find_or_create_by_participants!([@current_profile.uuid, intro.by.uuid])
+    conversation.update!(introduction_id: intro.id)
+    conversation.open!
 
     # notify the requestor and other bookkeeping
     IntroductionRequest.delay.accept(params[:id])
