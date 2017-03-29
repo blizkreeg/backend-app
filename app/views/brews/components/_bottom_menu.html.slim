@@ -10,7 +10,8 @@
     .mdl-cell
       i class="material-icons #{'active' if active == 'conversations'}" chat
       / div class="name #{'active' if active == 'community'}" Conversations
-    .bubble style='display: none; position: absolute; top: 0; right: 0;'
+    - display = current_profile.has_messages_waiting ? 'block' : 'none'
+    .bubble style="display: #{display}; position: absolute; top: 0; right: 0;"
       i.material-icons fiber_manual_record
 
   = link_to(brews_path, class: 'no-decor brews-menu') do

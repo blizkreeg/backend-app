@@ -131,6 +131,7 @@ class Profile < ActiveRecord::Base
     disable_notifications_setting: :boolean,
     force_device_update:          :boolean,
     mobile_goto_uri:              :string,    # acts as a "state" tracker for where to take the user when they come back to the app
+    has_messages_waiting:         :boolean,
 
     # match preferences
     seeking_minimum_age:          :integer,
