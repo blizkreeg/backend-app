@@ -32,7 +32,9 @@ module Matchmaker
     #   - exclude myself, staff, those i've passed on, those i've already asked for an intro to, and mutually interested
     #   - desirability score >= HIGH_DESIRABILITY (7)
     profiles = Profile
+                  .active
                   .visible
+                  .not_staff
                   .where.not(uuid: profile.uuid)
                   .desirability_score_gte(Profile::HIGH_DESIRABILITY)
                   .where.not(uuid: passed_uuids)

@@ -6,7 +6,7 @@ class PagesController < WebController
       if @current_profile.mobile_goto_uri.present?
         redirect_to @current_profile.mobile_goto_uri
       else
-        redirect_to controller: :brews, action: :index
+        redirect_to controller: :brews, action: :introductions
       end
       return
     end

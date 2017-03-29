@@ -55,7 +55,7 @@ html
       = yield
 
       / a bottom anchored menu if logged in and mobile device/ekc app webview
-      - if show_menu? && current_profile.staff_or_internal
+      - if show_menu?
         .mobile-bottom-menu-holder
         .mobile-bottom-menu
           = render partial: 'brews/components/bottom_menu', locals: { active: @section }

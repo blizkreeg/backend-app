@@ -219,7 +219,7 @@ class BrewsController < WebController
 
     Profile.delay_for(2.seconds).update(@current_profile.uuid, has_messages_waiting: false) if @current_profile.has_messages_waiting
 
-    @conversations = Conversation.participant_uuids_contains(@current_profile.uuid).order("updated_at DESC")
+    @conversations = Conversation.with_open(true).participant_uuids_contains(@current_profile.uuid).order("updated_at DESC")
   end
 
   def conversation_with
