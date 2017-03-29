@@ -24,3 +24,6 @@ main
                     - messages_hash = $firebase_conversations.get(conversation.firebase_messages_endpoint, "orderBy": '"$key"', limitToLast: 1).body
                     - if messages_hash.present?
                       = messages_hash.values.first["content"]
+                - if conversation.has_message_waiting_for?(current_profile.uuid)
+                  .new-message-bubble
+                    i.material-icons fiber_manual_record

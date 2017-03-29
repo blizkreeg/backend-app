@@ -229,6 +229,10 @@ class BrewsController < WebController
     @profile = Profile.find(params[:profile_uuid])
     @photo_ids_hash = [@current_profile, @profile].inject({}) { |hash, profile| hash[profile.uuid] = profile.photos.profile.public_id; hash }
     @names_hash = [@current_profile, @profile].inject({}) { |hash, profile| hash[profile.uuid] = profile.firstname; hash }
+    if @conversation.has_message_waiting_for?(@current_profile.uuid)
+      @conversation.message_waiting_for_uuids.delete(@current_profile.uuid)
+      Conversation.delay.update(@conversation.id, message_waiting_for_uuids: @conversation.message_waiting_for_uuids)
+    end
   end
 
   def community

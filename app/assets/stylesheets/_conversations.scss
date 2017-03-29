@@ -64,6 +64,7 @@ body.conversation {
   width: 100%;
   padding: 6px 0px;
   border-bottom: 1px solid #ededed;
+  position: relative;
 
   .picture {
     width: 70px;
@@ -84,6 +85,17 @@ body.conversation {
     }
 
     .message {
+    }
+  }
+
+  .new-message-bubble {
+    display: block;
+    position: absolute;
+    top: 45%;
+    right: 10px;
+    color: $accent_blue;
+    i {
+      font-size: 18px;
     }
   }
 }

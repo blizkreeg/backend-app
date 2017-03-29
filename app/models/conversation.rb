@@ -46,6 +46,7 @@ class Conversation < ActiveRecord::Base
     closed_reason: :string,
     closed_by_uuid: :string,
     closed_at: :date_time,
+    message_waiting_for_uuids: :string_array,
     introduction_id: :integer # FIXME this should become a foreign key
   }
 
@@ -61,6 +62,17 @@ class Conversation < ActiveRecord::Base
 
   def self.find_or_create_by_participants!(between_uuids, create_options={})
     with_participant_uuids(between_uuids).take || create!({ participant_uuids: between_uuids }.merge(create_options))
+  end
+
+  def self.set_message_waiting(uuid, for_profile_uuid)
+    conversation = Conversation.where(uuid: uuid).take
+    uuids = conversation.message_waiting_for_uuids
+    uuids += for_profile_uuid
+    conversation.update!(message_waiting_for_uuids: uuids.uniq)
+  end
+
+  def has_message_waiting_for?(profile_uuid)
+    self.message_waiting_for_uuids.present? && self.message_waiting_for_uuids.include?(profile_uuid)
   end
 
   # -- not in use --
