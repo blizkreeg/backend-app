@@ -67,7 +67,7 @@ class Conversation < ActiveRecord::Base
   def self.set_message_waiting(uuid, for_profile_uuid)
     conversation = Conversation.where(uuid: uuid).take
     uuids = conversation.message_waiting_for_uuids || []
-    uuids += for_profile_uuid
+    uuids << for_profile_uuid
     conversation.update!(message_waiting_for_uuids: uuids.uniq)
   end
 
