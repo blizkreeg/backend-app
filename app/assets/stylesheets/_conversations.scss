@@ -122,6 +122,20 @@ body.conversation {
       max-width: 70%;
       box-sizing: border-box;
     }
+
+    .system {
+      border: 2px solid rgba(238, 211, 105, 1);
+      margin: 0px auto;
+      width: 60%;
+      padding: 2px 4px;
+      box-sizing: border-box;
+      border-radius: 18px;
+
+      span.text {
+        text-align: center;
+        width: 100%;
+      }
+    }
   }
 
   .loading {

@@ -1,5 +1,5 @@
 - if mobile_device?
-  = render partial: 'brews/components/actionbar', locals: { title: "#{@profile.firstname}", back: true, back_icon: 'chat', back_url: conversations_path }
+  = render partial: 'brews/components/actionbar', locals: { title: "#{@profile.firstname}", back: true, back_icon: 'keyboard_arrow_left', back_url: conversations_path }
 
 - firebase_token = Firebase::FirebaseTokenGenerator.new("#{ENV['FIREBASE_SECRET']}").create_token({ uid: current_profile.uuid })
 
@@ -32,9 +32,7 @@ javascript:
   });
 
   var setConnectTime = function() {
-    // lags behind by 2s
     disconnectedRef.set(Date.now());
-    setTimeout(setConnectTime, 3000);
   }
 
   firstQuery.on('child_added', function(snapshot) {
@@ -42,25 +40,32 @@ javascript:
     var oldHeight = $('.messages').height();
     var data = snapshot.val();
 
-    if(data.sender_uuid === current_profile_uuid) {
-      $elem = $('<div class="conversation__chat-bubble sent">' +
-                              '<div class="text">' + '<span class="accent-color--title bold">' + names[data.sender_uuid] + '</span>'  + '<br>' + data.content + '</div>' +
-                              '<div class="avatar"><image src="' +
-                                $.cloudinary.url(photo_ids[data.sender_uuid], { width: 48, height: 48, crop: 'fill', gravity: 'face', radius: 'max' })  +
-                              '"/></div>' +
-                            '</div>');
+    if((data.sender_uuid === undefined) || (data.recipient_uuid === undefined)) {
+      $elem = $('<div class="conversation__chat-bubble system">' + '<span class="text">' + data.content + '</span>' + '</div>');
       $('.messages').append($elem);
     } else {
-      $elem = $('<div class="conversation__chat-bubble received">' +
-                              '<div class="avatar"><image src="' +
-                                $.cloudinary.url(photo_ids[data.sender_uuid], { width: 48, height: 48, crop: 'fill', gravity: 'face', radius: 'max' })  +
-                              '"/></div>' +
-                              '<div class="text">' + '<span class="accent-color--title bold">' + names[data.sender_uuid] + '</span>'  + '<br>' + data.content + '</div>' +
-                            '</div>');
-      $('.messages').append($elem);
+      if(data.sender_uuid === current_profile_uuid) {
+        $elem = $('<div class="conversation__chat-bubble sent">' +
+                                '<div class="text">' + '<span class="accent-color--title bold">' + names[data.sender_uuid] + '</span>'  + '<br>' + data.content + '</div>' +
+                                '<div class="avatar"><image src="' +
+                                  $.cloudinary.url(photo_ids[data.sender_uuid], { width: 48, height: 48, crop: 'fill', gravity: 'face', radius: 'max' })  +
+                                '"/></div>' +
+                              '</div>');
+        $('.messages').append($elem);
+      } else {
+        $elem = $('<div class="conversation__chat-bubble received">' +
+                                '<div class="avatar"><image src="' +
+                                  $.cloudinary.url(photo_ids[data.sender_uuid], { width: 48, height: 48, crop: 'fill', gravity: 'face', radius: 'max' })  +
+                                '"/></div>' +
+                                '<div class="text">' + '<span class="accent-color--title bold">' + names[data.sender_uuid] + '</span>'  + '<br>' + data.content + '</div>' +
+                              '</div>');
+        $('.messages').append($elem);
+      }
     }
 
     $(".conversation__container").scrollTop($(".conversation__container .messages")[0].scrollHeight);
+
+    setConnectTime();
   });
 
   $('#message').on('keypress', function(e) {
@@ -145,7 +150,7 @@ javascript:
         // if so, push it back into place
         snapInputBack();
       } else {
-        // still in focus, check again in 2s
+        // still in focus, check again in 1s
         setTimeout(checkFocus, 1000);
       }
     }

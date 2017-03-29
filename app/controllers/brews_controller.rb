@@ -177,7 +177,7 @@ class BrewsController < WebController
       $redis.set("generated_intros_ts:#{@current_profile.uuid}", Time.now.utc.to_i)
       $redis.set("generated_intro_profiles:#{@current_profile.uuid}", @profiles.map(&:uuid).to_json)
     else
-      @profiles = Profile.where(uuid: generated_profile_uuids)
+      @profiles = generated_profile_uuids.map { |uuid| Profile.find(uuid) rescue nil }.compact
     end
 
     @refresh_time = generated_intros_at > 0 ? [Time.at(expire_intros_at), (Time.now + 24.hours)].min : (Time.now + 24.hours)
@@ -199,8 +199,7 @@ class BrewsController < WebController
     intro = IntroductionRequest.find(params[:id])
 
     # create a conversation between them
-    conversation = Conversation.find_or_create_by_participants!([@current_profile.uuid, intro.by.uuid])
-    conversation.update!(introduction_id: intro.id)
+    conversation = Conversation.find_or_create_by_participants!([@current_profile.uuid, intro.by.uuid], { introduction_id: intro.id })
     conversation.open!
 
     # notify the requestor and other bookkeeping

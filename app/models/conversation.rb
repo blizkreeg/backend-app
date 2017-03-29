@@ -32,7 +32,7 @@ class Conversation < ActiveRecord::Base
   CLOSE_NOTICE_FROM_OPEN = 144.hours
   CLOSE_TIME = 168.hours # 7.days
 
-  OPENING_MESSAGE = "Say hello :-)"
+  OPENING_MESSAGE = "We’re happy to introduce you both! Say hello and ask something interesting :-)"
   CLOSING_MESSAGE = "We hope you have both exchanged numbers. This chat will close in 24 hours."
   CLOSED_BECAUSE_EXPIRED = 'Expired'
   CLOSED_BECAUSE_UNMATCHED = 'Unmatched'
@@ -56,8 +56,11 @@ class Conversation < ActiveRecord::Base
   validates_length_of :conversation_healths, maximum: MAX_PARTICIPANTS
   validates_length_of :real_dates, maximum: MAX_PARTICIPANTS
 
-  def self.find_or_create_by_participants!(between_uuids)
-    with_participant_uuids(between_uuids).take || create!(participant_uuids: between_uuids)
+  # UUID is generated post creation at the db level
+  after_create :refresh
+
+  def self.find_or_create_by_participants!(between_uuids, create_options={})
+    with_participant_uuids(between_uuids).take || create!({ participant_uuids: between_uuids }.merge(create_options))
   end
 
   # -- not in use --
@@ -211,5 +214,11 @@ class Conversation < ActiveRecord::Base
       sent_at: (Time.now.to_f * 1_000).to_i,
       ack: nil
     }
+  end
+
+  private
+
+  def refresh
+    self.reload
   end
 end

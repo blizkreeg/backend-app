@@ -272,7 +272,6 @@ class AccountsController < ApplicationController
     @profile = Profile.find(params[:uuid])
 
     if @profile.real_dates.blank?
-      # byebug
       if @profile.matches.blank?
         opposite_gender = @profile.male? ? 'female' : 'male'
         matched_profiles = Profile.with_gender(opposite_gender).limit(1).reorder("RANDOM()")
