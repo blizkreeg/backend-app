@@ -103,7 +103,7 @@ Rails.application.routes.draw do
     get '/show-butler-chat/:profile_uuid', to: 'admin#show_butler_chat', as: 'admin_show_butler_chat'
     post '/update-butler-chat-flag', to: 'admin#update_butler_chat_flag', as: 'admin_update_butler_chat_flag'
     post '/send-butler-chat-notification', to: 'admin#send_butler_chat_notification', as: 'admin_send_butler_chat_notification'
-    post '/logout', to: 'admin#logout', as: 'admin_logout'
+    get '/logout', to: 'admin#logout', as: 'admin_logout'
     get '/profiles-marked-for-deletion', to: 'admin#profiles_marked_for_deletion', as: 'admin_profiles_marked_for_deletion'
     post '/assign-desirability-score', to: 'admin#assign_desirability_score_user', as: 'admin_assign_desirability_score_user'
     get '/conversations', to: 'admin#show_conversations'
