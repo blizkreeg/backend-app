@@ -45,7 +45,7 @@ class Photo < ActiveRecord::Base
   # validates :public_id, presence: true, unless: lambda { |record| record.properties["facebook_photo_id"].present? }
 
   before_create :set_defaults
-  after_destroy :delete_from_cloudinary
+  before_destroy :delete_from_cloudinary
 
   def self.upload_remote_photo_to_cloudinary(url, options = {})
     xid = SecureRandom.hex(Photo::PUBLIC_ID_LENGTH)
