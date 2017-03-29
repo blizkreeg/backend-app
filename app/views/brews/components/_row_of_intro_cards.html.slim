@@ -128,7 +128,11 @@ javascript:
     var cardTapCount = _.map($('.intro-row__profile'), function(card) { return 0 });
     var tappedAllCards = _.map($('.intro-row__profile'), function(card) { return false });
     var profileCardWidth = $('.max960').width();
-    loadBrewImages(profileCardWidth, 300);
+    if($('body').innerHeight() > 600) {
+      loadBrewImages(profileCardWidth, 300);
+    } else {
+      loadBrewImages(profileCardWidth, 250);
+    }
 
     $('.bottom-pane .intro-request').on('click', function(e) {
       e.stopPropagation();
