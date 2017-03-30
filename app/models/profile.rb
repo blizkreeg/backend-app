@@ -3,6 +3,7 @@ class Profile < ActiveRecord::Base
   include ProfileAttributeHelpers
   include ProfileStateMachine
   include ProfileBrewHelper
+  include ProfileIntroductionsHelper
 
   # https://libraries.io/rubygems/ar_doc_store/0.0.4
   # since we don't have a serial id column
@@ -485,6 +486,7 @@ class Profile < ActiveRecord::Base
     Profile.delay.seed_photos_from_facebook(self.uuid)
   end
 
+  # -- NOT IN USE --
   def create_initial_matches
     Matchmaker.create_first_matches(self.uuid)
     # Matchmaker.generate_new_matches_for(self.uuid, onesided: true)

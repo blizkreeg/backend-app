@@ -143,44 +143,18 @@ class BrewsController < WebController
   def introductions
     @section = 'introductions'
 
-    generated_intros_at = $redis.get("generated_intros_ts:#{@current_profile.uuid}").to_i
-    expire_intros_at = generated_intros_at + 24.hours
-    last_visited_intro = $redis.get("visited_intros_ts:#{@current_profile.uuid}").to_i
-    current_visit_ts = Time.now.utc.to_i
-    generated_profile_uuids = JSON.parse($redis.get("generated_intro_profiles:#{@current_profile.uuid}"))
+    @current_profile.checked_intros_at = Time.now.utc
 
-    # generate new intros only if previously generated intros have expired
-    generate_new_intros = (generated_intros_at > 0) ? !(current_visit_ts < expire_intros_at) : true
-
-    $redis.set("visited_intros_ts:#{@current_profile.uuid}", Time.now.utc.to_i)
-
-    if generate_new_intros || generated_profile_uuids.blank?
-      if generated_profile_uuids.present?
-        generated_profile_uuids.each do |uuid|
-          request = IntroductionRequest.find_between(@current_profile.uuid, uuid)
-          create = false
-          if request.blank?
-            create = true
-          else
-            unless request.mutual
-              create = true
-            end
-          end
-          if create
-            SkippedProfile.find_or_create_by!(by_profile_uuid: @current_profile.uuid, skipped_profile_uuid: uuid)
-          end
-        end
-      end
+    if @current_profile.needs_intros?
+      @current_profile.skip_stale_intros
 
       @profiles = Matchmaker.introduction_suggestions_for(@current_profile)
 
-      $redis.set("generated_intros_ts:#{@current_profile.uuid}", Time.now.utc.to_i)
-      $redis.set("generated_intro_profiles:#{@current_profile.uuid}", @profiles.map(&:uuid).to_json)
+      @current_profile.intros_generated_at = Time.now.utc
+      @current_profile.current_intros_profiles = @profiles
     else
-      @profiles = generated_profile_uuids.map { |uuid| Profile.find(uuid) rescue nil }.compact
+      @profiles = @current_profile.current_intros_profiles
     end
-
-    @refresh_time = generated_intros_at > 0 ? [Time.at(expire_intros_at), (Time.now + 24.hours)].min : (Time.now + 24.hours)
   end
 
   def request_introduction
