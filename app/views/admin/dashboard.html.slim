@@ -94,6 +94,14 @@
           .info-box-icon
             i.material-icons free_breakfast
     .col-md-3.col-xs-4
+      .panel.info-box.panel-white
+        .panel-body
+          .info-box-stats
+            p.counter
+              | #{Post.count}
+            span.info-box-title Magazine Posts
+          .info-box-icon
+            i.material-icons bookmark
 
     .clearfix
 
@@ -118,6 +126,18 @@
                   small.pull-left #{distance_of_time_in_words_to_now(brewing.created_at)} ago
 
                   .clearfix
+
+    .col-md-4
+      .panel.panel-white
+        .panel-heading
+          h4.panel-title GOALS
+        .panel-body
+          h5 April
+          p #{raw("\u2610")} Get Daily Active User count for Mumbai up to 50
+          p #{raw("\u2610")} Increase daily signups to at least 5
+          p #{raw("\u2610")} Figure out and beta launch a daily engagement feature
+          p #{raw("\u2610")} Publish at least 5 magazine posts
+          p #{raw("\u2610")} Plan and announce 1 Brew for end of month or early May
 
 
   / .row
