@@ -38,6 +38,9 @@ class AdminController < ApplicationController
                               .count
     @latest_brewings = Brewing.ordered_by_recency.limit(10)
 
+    @usersthatmatter_yesterday = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).where("(properties->>'last_seen_at')::date = '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
+    @usersthatmatter_today = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).where("(properties->>'last_seen_at')::date = '#{Time.now.utc.to_date.to_s}'::date").count
+
     # @intent_dating = Profile.with_intent('Dating').count
     # @intent_relationship = Profile.with_intent('Relationship').count
     # @age_18_25 = Profile.age_gte(18).age_lte(25).count

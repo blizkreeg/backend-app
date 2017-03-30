@@ -13,7 +13,7 @@
               - else
                 i.material-icons trending_down
               | &nbsp; #{@seen_today}
-            span.info-box-title Users seen yesterday & today
+            span.info-box-title Total users seen yesterday & today
           .info-box-icon
             i.material-icons group
     .col-md-3.col-xs-12
@@ -21,10 +21,17 @@
         .panel-body
           .info-box-stats
             p.counter
-              | #{@live_brews} (#{@for_review_brews})
-            span.info-box-title Live and (For Review) Brews
+              | #{@usersthatmatter_yesterday} &nbsp;
+              - if @usersthatmatter_today > @usersthatmatter_yesterday
+                i.material-icons trending_up
+              - elsif @usersthatmatter_today == @usersthatmatter_yesterday
+                i.material-icons trending_flat
+              - else
+                i.material-icons trending_down
+              | &nbsp; #{@usersthatmatter_today}
+            span.info-box-title Mumbai users with score >= 7
           .info-box-icon
-            i.material-icons free_breakfast
+            i.material-icons group
     .col-md-3.col-xs-12
       .panel.info-box.panel-white
         .panel-body
@@ -77,7 +84,15 @@
             span.info-box-title Seen in the last 1 week
           .info-box-icon
             i.material-icons face
-    .col-md-3.col-xs-4
+    .col-md-3.col-xs-12
+      .panel.info-box.panel-white
+        .panel-body
+          .info-box-stats
+            p.counter
+              | #{@live_brews} (#{@for_review_brews})
+            span.info-box-title Live and (For Review) Brews
+          .info-box-icon
+            i.material-icons free_breakfast
     .col-md-3.col-xs-4
 
     .clearfix
