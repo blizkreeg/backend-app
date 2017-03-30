@@ -1,21 +1,41 @@
 namespace :introductions do
-  task :generate => :environment do
-    Profile.active.not_staff.visible.desirability_score_gte(Profile::HIGH_DESIRABILITY).within_distance(18.98, 72.83).each do |profile|
-      puts "-- for #{profile.firstname}, #{profile.gender}, #{profile.age} --"
 
-      introduce_to_profiles = Matchmaker.introduction_suggestions_for(profile)
-      introduce_to_profiles.each do |p|
-        puts "      : #{p.firstname}, #{p.age}, #{p.gender}"
+  task :schedule_reminder => :environment do
+    Profile.active.not_staff.visible.desirability_score_gte(Profile::HIGH_DESIRABILITY).within_distance(18.98, 72.83).each do |profile|
+      message = [
+                  "We have new introductions for you, #{profile.firstname}!",
+                  "Have you checked out today's introductions, #{profile.firstname}?"
+                ].sample
+
+      puts "#{profile.uuid}, #{profile.age}, #{profile.gender}, #{profile.firstname}"
+
+      if !profile.has_current_intros?
+        if profile.has_more_intros?
+          puts "HAS new intros"
+
+          schedule_notification(profile, Time.now.utc, message)
+        else
+          puts "NO new intros"
+        end
+      elsif profile.has_more_intros?
+        puts "HAS more intros, scheduling reminder at #{Time.at(profile.intros_expire_at)}"
+
+        schedule_notification(profile, Time.at(profile.intros_expire_at), message)
       end
 
-      if introduce_to_profiles.present?
-        message = "Hey #{profile.firstname}! We've launched ekCoffee Introductions beginning today! Tap here to get introduced to interesting singles and grow your connections!"
+      puts "--"
+    end
+  end
+
+  def schedule_notification(profile, time, message)
+    if profile.needs_reminder?
+      if time > Time.now.utc
+        PushNotifier.delay_until(time).send_transactional_push([profile.uuid], 'general_announcement', body: message)
+      else
         PushNotifier.delay.send_transactional_push([profile.uuid], 'general_announcement', body: message)
       end
-
-      $redis.set("generated_intros_ts:#{profile.uuid}", Time.now.utc.to_i)
-      $redis.set("generated_intro_profiles:#{profile.uuid}", introduce_to_profiles.map(&:uuid).to_json)
+      profile.sent_reminder_at = time
     end
-
   end
+
 end

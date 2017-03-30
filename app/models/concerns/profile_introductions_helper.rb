@@ -16,14 +16,14 @@ module ProfileIntroductionsHelper
     self.intros_generated_at + REFRESH_INTRODUCTIONS_IN
   end
 
-  def has_intros?
+  def has_current_intros?
     (self.intros_generated_at > 0) && self.current_intros_profile_uuids.present?
   end
 
   # Do we need to generate new intros for this profile?
   def needs_intros?
     # time to generate new intros
-    if self.has_intros?
+    if self.has_current_intros?
       Time.now.utc.to_i >= self.intros_expire_at
     else
       # no current intros
@@ -48,7 +48,7 @@ module ProfileIntroductionsHelper
   end
 
   def current_intros_profile_uuids
-    JSON.parse($redis.get("generated_intro_profiles:#{self.uuid}"))
+    JSON.parse($redis.get("generated_intro_profiles:#{self.uuid}")) || []
   end
 
   def current_intros_profile_uuids=(uuids)
@@ -65,6 +65,26 @@ module ProfileIntroductionsHelper
     self.current_intros_profile_uuids.each do |uuid|
       SkippedProfile.find_or_create_by!(by_profile_uuid: self.uuid, skipped_profile_uuid: uuid)
     end
+  end
+
+  def has_more_intros?
+    skip_uuids_in_matching = self.current_intros_profile_uuids
+
+    Matchmaker.introduction_suggestions_for(self, skip_uuids_in_matching).present?
+  end
+
+  def sent_reminder_at
+    t = $redis.get("intros_reminder_at:#{self.uuid}")
+    t.nil? ? nil : Time.at(t.to_i)
+  end
+
+  def sent_reminder_at=(time)
+    $redis.set("intros_reminder_at:#{self.uuid}", time.to_i)
+  end
+
+  def needs_reminder?
+    self.sent_reminder_at.blank? ||
+    (Time.now.utc >= (self.sent_reminder_at + 24.hours))
   end
 
 end

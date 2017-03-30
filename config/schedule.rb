@@ -16,3 +16,7 @@ end
 every 5.minutes, roles: [:master] do
   rake "brew:expire_past_ones"
 end
+
+every :day, at: "4:30am", roles: [:master] do
+  rake "introductions:schedule_reminder"
+end

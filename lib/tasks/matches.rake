@@ -30,6 +30,7 @@ namespace :matches do
     end
   end
 
+  # -- NOT IN USE --
   def generate_new_matches
     return # disabling matchmaking
 

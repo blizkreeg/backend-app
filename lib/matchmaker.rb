@@ -20,9 +20,10 @@ module Matchmaker
 
   module_function
 
-  def introduction_suggestions_for(profile)
-    # who did i already pass on?
-    passed_uuids = SkippedProfile.where(by: profile).pluck(:skipped_profile_uuid)
+  def introduction_suggestions_for(profile, skip_uuids=[])
+    # who should I skip in finding new introductions?
+    skip_uuids = [] if skip_uuids.nil?
+    passed_uuids = skip_uuids + SkippedProfile.where(by: profile).pluck(:skipped_profile_uuid)
 
     # new requests first
     interested_profiles = Profile.where.not(uuid: passed_uuids).where(uuid: profile.got_intro_requests.pluck(:by_profile_uuid))
