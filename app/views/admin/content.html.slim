@@ -1,4 +1,4 @@
-h3 Magazine Posts
+h3 Magazine Content
 .row
   .col-md-6
     - @posts.each do |post|
@@ -22,59 +22,66 @@ h3 Magazine Posts
               = link_to post.video_url, post.video_url, target: '_blank'
 
   .col-md-6
-    h4 Schedule New
-    p Push Notification will automatically be sent to all 7+ members in the cities we're live in
-    = form_tag admin_create_content_path, method: :post, class: 'form-horizontal' do
-      .form-group
-        .col-md-2
-          = label :post, :post_type, 'Post Type'
-        .col-md-10
-          = select :post, :post_type, [[Post::IMAGE_TYPE.capitalize, Post::IMAGE_TYPE],
-                                       [Post::ARTICLE_TYPE.capitalize, Post::ARTICLE_TYPE],
-                                       [Post::VIDEO_TYPE.capitalize, Post::VIDEO_TYPE]], required: true
-      .form-group
-        .col-md-2
-          = label :post, :title, 'Post Title'
-        .col-md-10
-          = text_field :post, :title, class: 'form-control', required: true
+    .panel.panel-white
+      .panel-body
+        h3 Schedule New Post
+        hr
+        / p Push Notification will automatically be sent to all 7+ members in the cities we're live in
+        = form_tag admin_create_content_path, method: :post, class: 'form-horizontal' do
+          .form-group
+            .col-md-2
+              = label :post, :post_type, 'Post Type'
+            .col-md-10
+              = select :post, :post_type, [[Post::IMAGE_TYPE.capitalize, Post::IMAGE_TYPE],
+                                           [Post::ARTICLE_TYPE.capitalize, Post::ARTICLE_TYPE],
+                                           [Post::VIDEO_TYPE.capitalize, Post::VIDEO_TYPE]], required: true
+          .form-group
+            .col-md-2
+              = label :post, :title, 'Post Title'
+            .col-md-10
+              = text_field :post, :title, placeholder: 'The Headline', class: 'form-control', required: true
 
-      .form-group
-        .col-md-2
-          = label :post, :excerpt, 'Post Excerpt'
-        .col-md-10
-          = text_area :post, :excerpt, class: 'form-control', rows: 3
+          .form-group
+            .col-md-2
+              = label :post, :excerpt, 'Post Excerpt'
+            .col-md-10
+              = text_area :post, :excerpt, placeholder: 'Use this for Article posts - a short summary before user clicks on the article link', class: 'form-control', rows: 3
 
-      .form-group
-        .col-md-2
-          = label :post, :image_public_id
-        .col-md-10
-          = cl_image_upload_tag :"post[image_public_id]", class: 'image_public_id', required: true
-          p.post-image-preview
+          .form-group
+            .col-md-2
+              = label :post, :image_public_id, 'Featured Image'
+            .col-md-10
+              = cl_image_upload_tag :"post[image_public_id]", class: 'image_public_id', required: true
+              p.post-image-preview
+              h5 Required for all types of posts
 
-      .form-group
-        .col-md-2
-          = label :post, :video_url, 'Video URL'
-        .col-md-10
-          = text_field :post, :video_url, class: 'form-control'
-          h5 For Video posts ONLY
+          .form-group
+            .col-md-2
+              = label :post, :video_url, 'Video URL'
+            .col-md-10
+              = text_field :post, :video_url, placeholder: 'For Video posts ONLY', class: 'form-control'
 
-      .form-group
-        .col-md-2
-          = label :post, :link_to_url, 'Article URL'
-        .col-md-10
-          = text_field :post, :link_to_url, class: 'form-control'
-          h5 For Article posts ONLY
+          .form-group
+            .col-md-2
+              = label :post, :link_to_url, 'Article URL'
+            .col-md-10
+              = text_field :post, :link_to_url, placeholder: 'For Article posts ONLY', class: 'form-control'
 
-      .form-group
-        .col-md-2
-          = label :post, :posted_on, 'Schedule'
-        .col-md-10
-          = text_field :post, :posted_on, placeholder: 'in X hours', class: 'form-control col-md-2'
-          p.help-block Enter 0 to post immediately
+          / .form-group
+          /   .col-md-2
+          /     = label :post, :posted_on, 'Schedule'
+          /   .col-md-10
+          /     = text_field :post, :posted_on, placeholder: 'in hours, e.g., 4', class: 'form-control col-md-2'
+          /     p.help-block
+          /       | 0 - post immediately
+          /       br
+          /       | N - post in N hours (N is a number)
 
-      .form-group
-        .col-md-12
-          = submit_tag 'POST', class: 'btn btn-info'
+          .form-group
+            .col-md-12
+              = submit_tag 'PUBLISH', class: 'btn btn-info'
+
+    / h5 IMAGE
 
 javascript:
   $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {

@@ -104,6 +104,7 @@ class AdminController < ApplicationController
   end
 
   def profiles_marked_for_deletion
+    # USE : Profile.is_marked_for_deletion.with_gender('male').group("properties->>'location_city'").select("count(uuid)")
     @profiles_marked_for_deletion_m = Profile.is_marked_for_deletion.with_gender('male')
     @profiles_marked_for_deletion_w = Profile.is_marked_for_deletion.with_gender('female')
   end
@@ -279,20 +280,13 @@ class AdminController < ApplicationController
   end
 
   def create_content
-    if params[:post][:posted_on].to_i == 0
-      params[:post][:posted_on] = Time.now.utc
-      push_delay = 0.hours
-    else
-      params[:post][:posted_on] = Time.now.utc + params[:post][:posted_on].to_i.hours
-      push_delay = params[:post][:posted_on]
-    end
+    # post_in = (params[:post][:posted_on] || 0).to_i.hours
+
+    params[:post][:posted_on] = Time.now.utc# + post_in
 
     Post.create!(post_params)
 
-    flash[:success] = 'Successfully posted/scheduled new content'
-
-    # TBD
-    # PushNotifier.send_transactional_push()
+    flash[:success] = "Successfully scheduled new content to be published"
 
     redirect_to :back
   end
