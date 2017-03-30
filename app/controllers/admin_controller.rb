@@ -12,11 +12,11 @@ class AdminController < ApplicationController
     @seen_today = Profile.where("(properties->>'last_seen_at')::date = '#{Time.now.utc.to_date.to_s}'::date").count
     @live_brews = Brew.live.count
     @for_review_brews = Brew.with_moderation_status('in_review').count
-    @new_in_last_48h = Profile.where("(created_at)::date >= '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
     @deleted_in_last_48h = Profile.where("(properties->>'marked_for_deletion_at')::date >= '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
     @men = Profile.with_gender('male').count
     @women = Profile.with_gender('female').count
 
+    @new_in_last_48h = Profile.where("(created_at)::date >= '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
     @new_week_ago = Profile
                       .where("((created_at)::date >= '#{(Time.now - 8.days).utc.to_date.to_s}'::date) AND
                             ((created_at)::date <= '#{(Time.now - 7.days).utc.to_date.to_s}'::date)")
@@ -40,6 +40,9 @@ class AdminController < ApplicationController
 
     @usersthatmatter_yesterday = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).where("(properties->>'last_seen_at')::date = '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
     @usersthatmatter_today = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).where("(properties->>'last_seen_at')::date = '#{Time.now.utc.to_date.to_s}'::date").count
+    @usersthatmatter_total = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).count
+    @usersthatmatter_men = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).with_gender('male').count
+    @usersthatmatter_women = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).with_gender('female').count
 
     # @intent_dating = Profile.with_intent('Dating').count
     # @intent_relationship = Profile.with_intent('Relationship').count

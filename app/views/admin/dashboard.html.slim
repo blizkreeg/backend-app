@@ -1,21 +1,15 @@
 - if admin_user.present?
   .row
-    .col-md-3.col-xs-12
+    .col-md-3.col-xs-4
       .panel.info-box.panel-white
         .panel-body
           .info-box-stats
             p.counter
-              | #{@seen_yesterday} &nbsp;
-              - if @seen_today > @seen_yesterday
-                i.material-icons trending_up
-              - elsif @seen_today == @seen_yesterday
-                i.material-icons trending_flat
-              - else
-                i.material-icons trending_down
-              | &nbsp; #{@seen_today}
-            span.info-box-title Total users seen yesterday & today
+              | #{@usersthatmatter_total}
+            span.info-box-title Users from Mumbai
           .info-box-icon
-            i.material-icons group
+            i.material-icons bookmark
+
     .col-md-3.col-xs-12
       .panel.info-box.panel-white
         .panel-body
@@ -29,9 +23,19 @@
               - else
                 i.material-icons trending_down
               | &nbsp; #{@usersthatmatter_today}
-            span.info-box-title Mumbai users with score >= 7
+            span.info-box-title Users from Mumbai, yesterday &amp; today
           .info-box-icon
             i.material-icons group
+
+    .col-md-3.col-xs-12
+      .panel.info-box.panel-white
+        .panel-body
+          .info-box-stats
+            p.counter #{@usersthatmatter_men} m, #{@usersthatmatter_women} f
+            span.info-box-title Mumbai men and women
+          .info-box-icon
+            i.material-icons face
+
     .col-md-3.col-xs-12
       .panel.info-box.panel-white
         .panel-body
@@ -76,14 +80,33 @@
             span.info-box-title Total men and women
           .info-box-icon
             i.material-icons face
-    .col-md-3.col-xs-12
-      .panel.info-box.panel-white
-        .panel-body
-          .info-box-stats
-            p.counter #{@men_seen_in_last_1w} m, #{@women_seen_in_last_1w} f
-            span.info-box-title Seen in the last 1 week
-          .info-box-icon
-            i.material-icons face
+
+    / .col-md-3.col-xs-12
+    /   .panel.info-box.panel-white
+    /     .panel-body
+    /       .info-box-stats
+    /         p.counter
+    /           | #{@seen_yesterday} &nbsp;
+    /           - if @seen_today > @seen_yesterday
+    /             i.material-icons trending_up
+    /           - elsif @seen_today == @seen_yesterday
+    /             i.material-icons trending_flat
+    /           - else
+    /             i.material-icons trending_down
+    /           | &nbsp; #{@seen_today}
+    /         span.info-box-title Total users seen yesterday & today
+    /       .info-box-icon
+    /         i.material-icons group
+
+    / .col-md-3.col-xs-12
+    /   .panel.info-box.panel-white
+    /     .panel-body
+    /       .info-box-stats
+    /         p.counter #{@men_seen_in_last_1w} m, #{@women_seen_in_last_1w} f
+    /         span.info-box-title Seen in the last 1 week
+    /       .info-box-icon
+    /         i.material-icons face
+
     .col-md-3.col-xs-12
       .panel.info-box.panel-white
         .panel-body
@@ -133,8 +156,8 @@
           h4.panel-title GOALS
         .panel-body
           h5 April
-          p #{raw("\u2610")} Get Daily Active User count for Mumbai up to 50
-          p #{raw("\u2610")} Increase daily signups to at least 5
+          p #{raw("\u2610")} Get Daily Active User count from Mumbai up to 50
+          p #{raw("\u2610")} Add at least 100 new users from Mumbai
           p #{raw("\u2610")} Figure out and beta launch a daily engagement feature
           p #{raw("\u2610")} Publish at least 5 magazine posts
           p #{raw("\u2610")} Plan and announce 1 Brew for end of month or early May
