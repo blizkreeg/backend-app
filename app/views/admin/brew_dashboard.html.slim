@@ -1,0 +1,68 @@
+- @brews.each do |brew|
+  .row
+    div id="brew-#{brew.id}" style='display:block;position:relative;top:-60px;visibility:hidden;'
+    .col-md-6
+      .panel.panel-white
+        .panel-heading
+          h4.panel-title #{brew.id} | #{brew.moderation_status.upcase}
+        .panel-body
+          .row
+            .col-md-12.flex.flex-row
+              div
+                = button_to "approve", { action: :approve_brew, brew_id: brew.id }, method: :post, class: 'btn btn-sm btn-success'
+              div
+                = button_to "reject", { action: :reject_brew, brew_id: brew.id }, method: :post, class: 'btn btn-sm btn-danger'
+              div
+                = button_to "edit", { action: :edit_brew, brew_id: brew.id }, method: :get, class: 'btn btn-sm btn-info'
+            .col-md-12
+              .weather-top
+                .weather-current.pull-left
+                  h4 #{brew.title}
+                  h5 #{brew.happening_on.to_s} @ #{brew.starts_at} hours
+                  h5 #{brew.place}
+                  h5 #{brew.price || 'FREE'} #{link_to('Payment Link', brew.payment_link) if brew.price.present?}
+
+            .col-md-12
+              p
+                = brew.notes
+
+            .col-md-4
+              ul.list-unstyled.weather-info
+                li
+                  | Age Range
+                  span.pull-right style='font-weight: 600;' #{brew.min_age || 0} - #{brew.max_age || 0}
+                li
+                  | Group Size
+                  span.pull-right style='font-weight: 600;' #{brew.min_group_size} - #{brew.max_group_size}
+
+                li
+                  | Min. Desirability
+                  span.pull-right style='font-weight: 600;' #{brew.min_desirability || '-'}
+
+                li
+                  | Cost
+                  span.pull-right style='font-weight: 600;' #{brew.price || '-'}
+
+            .col-md-4
+              ul.list-unstyled.weather-info
+                li
+                  | Posted
+                  span.pull-right style='font-weight: 600;' #{distance_of_time_in_words_to_now(brew.created_at)} ago
+
+            .clearfix
+
+            .col-md-6
+              table.table
+                - brew.profiles.each do |profile|
+                  tr
+                    td
+                      = link_to profile.firstname, admin_show_user_path(profile)
+                    td
+                      = link_to profile.phone, "tel: +91#{profile.phone}"
+                    td
+                      - brewing = brew.brewings.where(profile_uuid: profile.uuid).take
+                      - if brewing.host
+                        | HOST
+                      - else
+                        = brewing.status.upcase
+

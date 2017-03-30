@@ -12,8 +12,10 @@ class Photo < ActiveRecord::Base
 
   # scope :valid, -> { where("(properties->>'marked_for_deletion')::boolean = false").order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc") }
   scope :approved, -> { with_approved(true) }
-  scope :ordered, -> { order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc").order("updated_at DESC") }
-  scope :primary, -> { where("(properties->>'primary')::boolean = true").order("updated_at DESC") }
+  scope :ordered,  -> { order("(case when (properties->>'primary')::boolean = true then '1' else '0' end) desc").order("updated_at DESC") }
+  scope :profile,  -> { primary.take }
+  scope :primary,  -> { where("(properties->>'primary')::boolean = true").order("updated_at DESC") }
+  scope :others,   -> { where("(properties->>'primary')::boolean = false").order("updated_at DESC") }
 
   MASS_UPDATE_ATTRIBUTES = %i(
     primary
@@ -43,7 +45,7 @@ class Photo < ActiveRecord::Base
   # validates :public_id, presence: true, unless: lambda { |record| record.properties["facebook_photo_id"].present? }
 
   before_create :set_defaults
-  after_destroy :delete_from_cloudinary
+  before_destroy :delete_from_cloudinary
 
   def self.upload_remote_photo_to_cloudinary(url, options = {})
     xid = SecureRandom.hex(Photo::PUBLIC_ID_LENGTH)

@@ -1,20 +1,43 @@
-nav.navbar.navbar-inverse.navbar-fixed-top
-  .container-fluid
-    .navbar-header
-      a.navbar-brand href='#' ekC
-    .collapse.navbar-collapse
-      ul.nav.navbar-nav
-        li
-          a href='/dashboard' Dashboard
-        li
-          a href='/stb-dashboard' Singles That Brunch
-      = form_tag({ action: :lookup_user }, { class: 'navbar-form navbar-left', role: 'search' })
-        .form-group.has-feedback
-          = text_field_tag :uuid, '', placeholder: 'Find by UUID', class: 'form-control', style: 'width:325px; font-size:13px;'
-          i.fa.fa-arrow-circle-right.form-control-feedback
-      ul.nav.navbar-nav.navbar-right
-        li
-          p.navbar-text
-            = link_to admin_user.firstname, admin_show_user_path(admin_user.uuid)
-        li
-          = link_to 'Logout', admin_logout_path, method: :post
+.navbar
+  .navbar-inner
+    .logo-box
+      = link_to '/dashboard', class: 'logo-text' do
+        span ekc
+
+.page-sidebar.sidebar
+  .page-sidebar-inner
+    .sidebar-header
+      .sidebar-profile
+
+    .sidebar-section-heading
+      span DASHBOARDS
+    ul.menu.accordion-menu
+      li
+        = link_to 'Dashboard', '/dashboard'
+      li
+        = link_to 'Brews', brew_dashboard_path
+      li
+        = link_to "Users (#{@profiles_cnt})", '/all-users'
+
+    .sidebar-section-heading
+      span MODERATION
+    ul.menu.accordion-menu
+      li
+        = link_to "New (#{@unmoderated_cnt})", '/unmoderated'
+      li
+        = link_to "Suspicious (#{@suspicious_cnt})", '/suspicious'
+      li
+        = link_to "Butler (#{@new_butler_chats_cnt})", '/new-butler-chats'
+      li
+        = link_to "Deletions (#{@profiles_marked_for_deletion_cnt})", '/profiles-marked-for-deletion'
+      li
+        = link_to "Photos (#{@unmoderated_photos_cnt})", '/review-photos'
+
+    .sidebar-section-heading
+      span ENGAGEMENT
+    ul.menu.accordion-menu
+      li
+        = link_to 'Push Notifications', '#'
+      li
+        = link_to 'Content', admin_content_path
+

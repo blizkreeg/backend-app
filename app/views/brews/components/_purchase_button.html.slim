@@ -1,0 +1,13 @@
+/ - if brew.price.present?
+/   = render partial: 'brews/components/payment_checkout', locals: { event_id: brew.payment_link, button_text: 'Pay for Brew' }
+/ - else
+/   .purchase-button
+/     = link_to(dest) do
+/       = raw(title)
+/       | &nbsp; &rsaquo;
+
+.purchase-button.fixed-bottom style="position: #{placement};justify-content:center;align-items:center;"
+  = link_to(dest) do
+    i.material-icons credit_card
+    | &nbsp;
+    = raw(title)

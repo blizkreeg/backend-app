@@ -1,0 +1,13 @@
+.mdl-grid.mdl-grid--no-spacing style='display:flex;flex-flow:column nowrap;justify-content:center;align-items:center;width:100%;'
+  - if brew.price.present?
+    .price
+      = render partial: 'brews/components/price', locals: { brew: brew }
+  .date
+    h6.mt-0.mb-0 WHEN?
+    | #{format_date(brew.happening_on)} at #{format_time(brew.starts_at)}
+  .place
+    h6.mt-0.mb-0 WHERE?
+    = brew.place
+    - if defined?(show_address) && show_address
+      br
+      small #{brew.address}

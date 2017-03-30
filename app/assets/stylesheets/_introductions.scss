@@ -1,0 +1,391 @@
+body.introductions {
+  background-color: white;
+
+  .max960 {
+    height: calc(100vh - #{$bottom_menu_height});
+  }
+}
+
+.action-bar.introductions {
+  background: none;
+  border: none;
+}
+
+.action-bar__title.introductions {
+  color: white; //#e46f57;
+}
+
+.introductions-container {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100%;
+
+  .heading .title {
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 400;
+    text-align: center;
+    padding: 5px 5px;
+    margin: 0 0 0 0;
+    box-sizing: border-box;
+  }
+
+  .heading .description {
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+    padding: 5px 5px 25px 5px;
+    margin: 0px auto;
+    width: 80%;
+  }
+
+  .footer {
+    padding-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #555555;
+  }
+}
+
+// grid of faces
+.members-grid {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+
+.members-grid__profile {
+  width: auto;
+  height: auto;
+  padding: 10px 5px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+
+  .picture {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 6px;
+  }
+
+  .name {
+    text-align: center;
+    font-size: 14px;
+  }
+}
+
+// horizontally scrolling cards
+.intro-row {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
+  margin: 0 10px;
+
+  @media only screen and (min-height: 600px) {
+    $intro_card_height: 300px;
+    height: calc(#{$intro_card_height} + 50px);
+  }
+
+  @media only screen and (max-height: 600px) {
+    $intro_card_height: 250px;
+    height: calc(#{$intro_card_height} + 50px);
+  }
+
+  .intro-row__profile {
+    width: calc(100% - 25px - 10px);
+    overflow-y: scroll;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: auto;
+    margin: 0 10px 0 0;
+    position: relative;
+    overflow: auto;
+
+    @media only screen and (min-height: 600px) {
+      $intro_card_height: 300px;
+      height: calc(#{$intro_card_height} + 50px);
+    }
+
+    @media only screen and (max-height: 600px) {
+      $intro_card_height: 250px;
+      height: calc(#{$intro_card_height} + 50px);
+    }
+
+    // test
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    .bottom-pane {
+      width: 100%;
+      position: absolute;
+      height: 50px;
+      bottom: 0;
+      text-align: center;
+      box-sizing: border-box;
+      background-color: white;
+      z-index: 1;
+      color: white;
+      border-radius: 4px;
+      font-size: 16px;
+
+      .snippet {
+        width: inherit;
+        background-color: #f58d8d;
+        height: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .intro-request, .intro-waiting, .intro-response, .intro-confirmed {
+        text-align: center;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background-color: #f4c352;
+        height: 100%;
+        // border-radius: 6px;
+        width: 100%;
+      }
+
+      .intro-request, .intro-response {
+        button, button:active, button:target, a, a:visited, a:hover {
+          color: white;
+          text-decoration: none;
+          font-size: 16px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background-color: inherit !important;
+          border: none !important;
+        }
+      }
+    }
+
+    .tap-card {
+      display: none;
+      position: relative;
+      width: 100%;
+      z-index: 0;
+
+      @media only screen and (min-height: 600px) {
+        $intro_card_height: 300px;
+        height: $intro_card_height;
+      }
+
+      @media only screen and (max-height: 600px) {
+        $intro_card_height: 250px;
+        height: $intro_card_height;
+      }
+    }
+
+    .text-card {
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: white;
+      opacity: 0.85;
+      padding: 10px;
+      width: 100%;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+      overflow: scroll;
+      font-weight: 400;
+
+      @media only screen and (min-height: 600px) {
+        $intro_card_height: 300px;
+        height: $intro_card_height;
+      }
+
+      @media only screen and (max-height: 600px) {
+        $intro_card_height: 250px;
+        height: $intro_card_height;
+      }
+
+      .block {
+        // display: flex;
+        // flex-flow: row wrap;
+        // justify-content: flex-start;
+        // align-items: center;
+        color: #1d1d1d;
+        padding: 3px 0px;
+        width: 100%;
+        box-sizing: border-box;
+
+        span.info-label {
+          float: left;
+          width: 30%;
+          text-align: right;
+          padding-right: 8px;
+          box-sizing: border-box;
+          font-size: 14px;
+        }
+
+        span.info-value {
+          float: left;
+          width: 70%;
+          text-align: left;
+          padding-left: 8px;
+          box-sizing: border-box;
+        }
+      }
+    }
+
+    .submit-card {
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+
+      .block {
+        padding: 10px 0px;
+      }
+    }
+
+    .tap-card-visible {
+      display: block;
+      z-index: 1;
+    }
+
+    .intro-request-overlay {
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+      width: 100%;
+      font-weight: 400;
+      padding: 4px 4px;
+      box-sizing: border-box;
+      text-align: center;
+      background-color: rgba(238, 211, 105, 0.9);
+      z-index: 1;
+
+      span.text {
+        color: #373d3f;
+      }
+    }
+
+    .name {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      color: white;
+      font-size: 24px;
+      letter-spacing: 0.6px;
+      font-weight: 400;
+      padding: 4px 8px;
+      text-transform: uppercase;
+      background-color: #3a3c3d;
+      border-radius: 2px;
+
+      span.age {
+        font-weight: 300;
+        font-size: 20px;
+      }
+    }
+
+    .details {
+      display: flex;
+      flex-flow: column nowrap;
+      padding: 10px;
+      width: auto;
+      text-align: left;
+      font-size: 16px;
+
+      .schools, .blurb {
+        padding: 2px;
+        font-size: 15px;
+      }
+    }
+
+    .intro-request-button {
+      text-align: center;
+      border: 2px solid #373d3f;
+      border-radius: 18px;
+      width: 100%;
+      left: 0;
+      top: 0;
+      height: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 0;
+
+      button, button:active, button:target, a, a:visited, a:hover {
+        color: #373d3f;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-flex;
+        vertical-align: middle;
+        background-color: inherit !important;
+        border: none !important;
+      }
+    }
+
+    .intro-response-button {
+      text-align: center;
+      border: 2px solid #a3b86c;
+      border-radius: 18px;
+      width: 100%;
+      left: 0;
+      top: 0;
+      height: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 0;
+
+      button, button:active, button:target, a, a:visited, a:hover {
+        color: #373d3f;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-flex;
+        vertical-align: middle;
+        background-color: inherit !important;
+        border: none !important;
+      }
+    }
+
+    // .intro-waiting {
+    //   text-align: center;
+    //   width: 80%;
+    //   margin: 0px auto;
+    //   height: 32px;
+    //   z-index: 0;
+    //   color: #373d3f;
+    //   display: none;
+    //   font-weight: 400;
+    // }
+
+    // .intro-confirmed {
+    //   text-align: center;
+    //   width: 80%;
+    //   margin: 0px auto;
+    //   height: 32px;
+    //   z-index: 0;
+    //   color: #373d3f;
+    //   display: none;
+    //   font-weight: 400;
+    // }
+  }
+}

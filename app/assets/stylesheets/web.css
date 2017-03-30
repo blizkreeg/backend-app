@@ -1,5 +1,7 @@
 /*
- *= require 'normalize'
- *= require 'bootstrap.min'
- *= require 'events'
+ *= require_self
+ *= require typography
+ *= require icons
+ *= require unslider
+ *= require brews
  */

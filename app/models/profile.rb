@@ -3,6 +3,7 @@ class Profile < ActiveRecord::Base
   include ProfileAttributeHelpers
   include ProfileStateMachine
   include ProfileBrewHelper
+  include ProfileIntroductionsHelper
 
   # https://libraries.io/rubygems/ar_doc_store/0.0.4
   # since we don't have a serial id column
@@ -19,6 +20,7 @@ class Profile < ActiveRecord::Base
   scope :of_faiths, -> (faiths) { where("profiles.properties->>'faith' IN (?)", faiths) }
   scope :of_gender, -> (gender) { with_gender(gender) }
   scope :possibly_not_single, -> { where("profiles.properties->>'possible_relationship_status' IN (?)", ['Married', 'In a relationship']) }
+  scope :not_staff, -> { where("(profiles.properties->>'staff_or_internal')::boolean IS NOT TRUE") }
 
   # seeking
   scope :seeking_older_than, -> (age) { where("(CAST(profiles.properties->>'seeking_minimum_age' AS integer)) <= ?", age) }
@@ -36,6 +38,10 @@ class Profile < ActiveRecord::Base
                                         state = 'show_matches_and_waiting_for_response'") }
   scope :within_distance, -> (lat, lng, meters=nil) { where("earth_box(ll_to_earth(?, ?), ?) @> ll_to_earth(profiles.search_lat, profiles.search_lng)", lat, lng, meters || Constants::NEAR_DISTANCE_METERS) }
   scope :ordered_by_distance, -> (lat, lng, dir='ASC') { select("*, earth_distance(ll_to_earth(profiles.search_lat,profiles.search_lng), ll_to_earth(#{lat}, #{lng})) as distance").order("distance #{dir}") }
+  scope :ordered_by_last_seen, -> { order("(profiles.properties->>'last_seen_at')::timestamp DESC") }
+
+  scope :youngest, -> { order("(profiles.properties->>'age')::integer ASC").limit(1).take }
+  scope :oldest, -> { order("(profiles.properties->>'age')::integer DESC").limit(1).take }
 
   has_many :social_authentications, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
   has_one  :facebook_authentication, -> { where(oauth_provider: 'facebook') }, primary_key: "uuid", foreign_key: "profile_uuid"
@@ -48,6 +54,12 @@ class Profile < ActiveRecord::Base
   has_many :real_dates, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
   has_many :event_logs, class_name: 'ProfileEventLog', primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
   has_many :event_rsvps, primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
+  has_many :brewings, primary_key: "uuid", foreign_key: "profile_uuid", dependent: :destroy
+  has_many :brews, through: :brewings, dependent: :restrict_with_exception
+  has_many :profile_interests, foreign_key: "profile_uuid", dependent: :destroy
+  has_many :interests, through: :profile_interests, dependent: :restrict_with_exception
+  has_many :asked_for_intros, class_name: 'IntroductionRequest', primary_key: "uuid", foreign_key: "by_profile_uuid", autosave: true, dependent: :destroy
+  has_many :got_intro_requests, class_name: 'IntroductionRequest', primary_key: "uuid", foreign_key: "to_profile_uuid", autosave: true, dependent: :destroy
 
   # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
   # set property tracking flags to 'flags'
@@ -79,6 +91,7 @@ class Profile < ActiveRecord::Base
     seeking_maximum_height
     seeking_faith
     disable_notifications_setting
+    has_new_butler_message
   )
 
   ATTRIBUTES = {
@@ -113,10 +126,13 @@ class Profile < ActiveRecord::Base
     about_me_ideal_weekend:       :string,
     about_me_bucket_list:         :string,
     about_me_quirk:               :string,
+    phone:                        :string,
     inactive:                     :boolean,
     inactive_reason:              :string,
     disable_notifications_setting: :boolean,
     force_device_update:          :boolean,
+    mobile_goto_uri:              :string,    # acts as a "state" tracker for where to take the user when they come back to the app
+    has_messages_waiting:         :boolean,
 
     # match preferences
     seeking_minimum_age:          :integer,
@@ -140,14 +156,21 @@ class Profile < ActiveRecord::Base
     substate_endpoint:            :string,
     butler_conversation_uuid:     :string,
     marked_for_deletion:          :boolean,
+    marked_for_deletion_at:       :date_time,
     # TBD: is there a better way to track this?
     sent_matches_notification_at: :date_time,
     has_new_butler_message:       :boolean,
+    needs_butler_attention:       :boolean,
     moderation_status:            :string,
     moderation_status_reason:     :string,
     visible:                      :boolean,
     staff_or_internal:            :boolean,
-    approved_for_stb:             :boolean,
+    administrator:                :boolean,
+    approved_for_stb:             :boolean, # NOT IN USE
+    can_post_brew:                :boolean,
+
+    # membership related
+    member:                       :boolean,
 
     # matching related
     desirability_score:           :decimal # overall desirability - appearance + accomplishments + ...
@@ -167,7 +190,6 @@ class Profile < ActiveRecord::Base
 
   BASIC_FIELDS = %i(
     height
-    faith
     highest_degree
     profession
     gender
@@ -195,15 +217,15 @@ class Profile < ActiveRecord::Base
   # attribute :age, Type::Integer.new
 
   # required properties
-  validates :latitude, :longitude, :intent, presence: true
+  # validates :latitude, :longitude, presence: true
   validates :email, jsonb_uniqueness: true
   validates :born_on_year, numericality: { only_integer: true, less_than_or_equal_to: Date.today.year-Constants::MIN_AGE }, allow_nil: true
   validates :born_on_month, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 12 }, allow_nil: true
   validates :born_on_day, numericality: { only_integer: true, greater_than_or_equal_to: 1, less_than_or_equal_to: 31 }, allow_nil: true
   validates :gender, inclusion: { in: %w(male female) }, allow_nil: true
-  validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
-  validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }
-  validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }
+  validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }, allow_nil: true
+  validates :longitude, numericality: { greater_than_or_equal_to: -180, less_than_or_equal_to: 180 }, allow_nil: true
+  validates :intent, inclusion: { in: Constants::INTENTIONS, message: "%{value} is not a valid intent" }, allow_nil: true, allow_blank: true
 
   # optional properties
   validates :faith, inclusion: { in: Constants::FAITHS }, allow_blank: true
@@ -229,8 +251,8 @@ class Profile < ActiveRecord::Base
 
   after_commit :upload_facebook_profile_photos, on: :create
   after_commit :update_clevertap, on: :create
-  after_validation :reverse_geocode, if: ->(profile){ profile.location_changed? && profile.latitude.present? && profile.longitude.present? }
-  before_save :set_search_latlng, if: Proc.new { |profile| profile.location_changed? }
+  after_validation :reverse_geocode, if: ->(profile){ profile.latitude.present? && profile.longitude.present? && profile.location_changed? }
+  before_save :set_search_latlng, if: Proc.new { |profile| profile.latitude.present? && profile.longitude.present? && profile.location_changed? }
   before_save :set_tz, if: Proc.new { |profile| profile.location_changed? }
   before_save :set_age, if: Proc.new { |profile| profile.dob_changed? }
   after_create :signed_up!, if: Proc.new { |profile| profile.none? }
@@ -464,6 +486,7 @@ class Profile < ActiveRecord::Base
     Profile.delay.seed_photos_from_facebook(self.uuid)
   end
 
+  # -- NOT IN USE --
   def create_initial_matches
     Matchmaker.create_first_matches(self.uuid)
     # Matchmaker.generate_new_matches_for(self.uuid, onesided: true)
@@ -514,6 +537,10 @@ class Profile < ActiveRecord::Base
       # TBD: transition guy's state to mutual match and send push notification to guy.
       return
     end
+  end
+
+  def set_mobile_goto!(uri)
+    self.update!(mobile_goto_uri: uri)
   end
 
   def active_mutual_match
@@ -676,6 +703,8 @@ class Profile < ActiveRecord::Base
   end
 
   def set_tz
+    return if self.latitude.blank? || self.longitude.blank?
+
     timezone = Timezone::Zone.new :latlon => [self.latitude, self.longitude]
     self.time_zone = timezone.zone if ActiveSupport::TimeZone::MAPPING.values.include?(timezone.zone)
     true
@@ -697,6 +726,8 @@ class Profile < ActiveRecord::Base
   end
 
   def validate_date_preferences
+    return if self.date_preferences.blank?
+
     unless self.date_preferences.is_a? Array
       errors.add(:date_preferences, "Date preferences should be a list") and return
     end
@@ -709,6 +740,7 @@ class Profile < ActiveRecord::Base
   def initialize_butler_conversation
     self.butler_conversation_uuid = SecureRandom.uuid
     self.has_new_butler_message = false
+    self.needs_butler_attention = false
 
     true
   end

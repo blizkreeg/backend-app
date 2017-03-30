@@ -1,0 +1,41 @@
+main
+  .full-width.cover-image
+    .mdl-grid.mdl-grid--no-spacing
+
+  .max960
+    .mdl-grid
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop.text-center style='justify-content: center; flex-flow: column nowrap;'
+        h2.mt-0.mb-10.logo-font.accent-color--title ekCoffee
+        h4.mt-10.mb-0 BREW
+        h6.mt-0.mb-10.accent-color
+          | /broo/
+        h5.mt-10 An Exclusive Community of Singles
+        hr style='border-top: 1px solid #eee;'
+
+        / h6 Welcome to ekCoffee Brew!
+        p We are a new way of meeting interesting &amp; <span class='underline'>educated singles</span> in your city, be part of an <span class='underline'>exclusive</span> social circle, and enjoy new <span class='underline'>experiences</span>.
+
+        - if live_in_user_location?
+          p We are accepting a limited number of people on a rolling basis. If you're interested, enter your cellphone.
+        - else
+          p.bold We have not launched in your city yet.
+          p We're currently in #{Rails.application.config.live_in_cities_names.to_sentence}.
+          p
+            small
+              | Enter your cell number if you're interested in knowing when we come to your city.
+
+        .phone-input style='width:auto;margin:0px auto;'
+          = form_tag update_phone_path, method: :post do
+            .mdl-grid.mdl-grid--no-spacing style='justify-content:center;flex-flow:row nowrap;align-items:center;'
+              .mdl-cell style='width:auto;'
+                = phone_field_tag :phone, @current_profile.phone, class: 'mdl-textfield__input', maxlength: 10, required: true, placeholder: '9821066894', style: 'width: 200px;height:50px;background-color:white;border:1px solid #ccc;padding: 0px 10px;font-size:26px;text-align:center;font-weight:200;letter-spacing:2.4px;'
+                .brew-optin-button.fixed-bottom style="position: fixed;justify-content:center;align-items:center;"
+                  = button_tag(method: :post) do
+                    | ADD ME TO THE WAITLIST
+      .mdl-layout-spacer
+
+javascript:
+  //$(function() {
+  //  $('.welcome-cover').css('height', $(window).height()/2);
+  //});

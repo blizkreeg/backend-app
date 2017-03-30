@@ -3,17 +3,20 @@ html
 head
   title Admin
   meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+  = stylesheet_link_tag 'https://fonts.googleapis.com/icon?family=Material+Icons'
   = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true
-  = javascript_include_tag 'application'
+  = javascript_include_tag 'admin'
   = javascript_include_tag 'https://use.fontawesome.com/ebabc2ab89.js'
   = csrf_meta_tags
-body
-  - if admin_user.present?
-    = render partial: 'header'
-    = render partial: 'navigation'
 
-  .container
-    .content
+body.page-header-fixed
+  = cloudinary_js_config
+  / javascript:
+  /   $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
+
+  .mdl-layout.mdl-js-layout.mdl-layout--fixed-header.mdl-layout--fixed-drawer
+
+    main.page-content.content-wrap
       - if flash[:error]
         .alert.alert-danger.text-center
           = flash[:error]
@@ -22,4 +25,15 @@ body
         .alert.alert-success.text-center
           = flash[:success]
           - flash[:success] = nil
-      = yield
+      - if admin_user.present?
+        = render partial: 'header'
+
+      .page-inner
+        .page-title
+          h3 #{raw(@page_title)}
+
+        #main-wrapper
+          = yield
+
+javascript:
+  window._rails_env = "#{Rails.env}";

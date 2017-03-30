@@ -1,0 +1,188 @@
+// references
+/*
+  https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+  http://stackoverflow.com/questions/7402635/css-make-content-appear-beneath-a-fixed-div-element
+  https://css-tricks.com/prefetching-preloading-prebrowsing/
+  http://stackoverflow.com/questions/18921880/keyboard-covers-text-input-in-webapp-ios
+  http://stackoverflow.com/questions/14492613/ios-ipad-fixed-position-breaks-when-keyboard-is-opened
+*/
+
+@import 'typography';
+@import 'colors';
+
+$bottom_menu_height: 50px;
+
+// https://maxogden.com/fast-webview-applications.html
+// http://stackoverflow.com/questions/10819565/user-selectnone-causes-input-field-to-be-inaccessible-on-safari
+*:not(input):not(textarea) {
+  /* prevent callout when holding tap on links (the native dialog that comes up) */
+  -webkit-touch-callout: none;
+
+  /* prevent webkit from resizing text to fit */
+  -webkit-text-size-adjust: none;
+
+  /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+  /* prevent copy paste, to allow, change 'none' to 'text' */
+  -webkit-user-select: none;
+}
+
+html {
+  touch-action: manipulation;
+  overflow: hidden; // prevents overscrolling
+  height: 100%; // prevents overscrolling
+}
+
+html, body {
+  font-family: $body_font;
+  font-size: 16px;
+  line-height: 22px;
+  background-color: white;
+  color: #1d1d1d;
+  height: 100%;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+}
+
+body.brews {
+  margin-bottom: 50px;
+  height: 100%; // prevents overscrolling
+  overflow: auto; // prevents overscrolling
+}
+
+main {
+  z-index: 1;
+  height: calc(100vh - #{$bottom_menu_height});
+}
+
+.accent-color {
+  color: $accent_color;
+}
+
+.accent-color--title {
+  color: $accent_color_title;
+}
+
+.accent-color--dark {
+  color: #e35159; // ef5948 too
+}
+
+.mustard-color {
+  color: #f4b50e;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.list--unstyled {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+a, a:hover, a:visited {
+  color: #fd5b63;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+a.no-decor, a.no-decor:visited, a.no-decor:hover {
+  text-decoration: none !important;
+  color: inherit !important;
+  touch-action: manipulation;
+  font-weight: normal;
+  display: inline-block;
+}
+
+a.disabled {
+  color: #888 !important;
+}
+
+@keyframes pulsate
+{
+  50%  {background: #dedede;}
+}
+
+.clicked {
+  background-color: #dedede !important;
+  animation: pulsate 1s infinite;
+}
+
+.text--light {
+  font-weight: 300;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.mt-0 {
+  margin-top: 0px;
+}
+
+.mt-10 {
+  margin-top: 10px;
+}
+
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+// hide scrollbars
+::-webkit-scrollbar {
+    display: none;
+}
+
+.cover-image {
+  background-size: cover;
+}
+
+.no-padding {
+  padding: 0
+}
+
+.padding-20 {
+  padding: 20px;
+}
+
+.pull-left {
+  float: left;
+}
+
+.pull-right {
+  float: right;
+}
+
+.max960 {
+  max-width: 960px;
+  margin: 0px auto;
+  padding: 0;
+  position: relative;
+}
+
+@media only screen and (max-width: 799px) {
+  .max960 {
+    // padding: 0px 10px;
+    // height: calc(100vh - #{$bottom_menu_height} - 48px);
+  }
+}
+
+.text-white {
+  color: white;
+}
+
+p {
+  font-size: 16px;
+}

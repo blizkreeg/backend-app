@@ -1,0 +1,7 @@
+h2 Create (new) Brew
+hr
+
+- brew = @brew || Brew.new
+= form_for brew, url: :admin_create_brew,  html: { class: 'form-horizontal'} do |f|
+  = render partial: 'admin/brews/form', locals: { brew: brew, f: f }
+

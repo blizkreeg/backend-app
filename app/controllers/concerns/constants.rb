@@ -71,17 +71,19 @@ module Constants
     6'10"
     6'11"
   )
-  DEGREES = %w(
-    Associates/Diploma
-    Associates / Diploma
-    Bachelors
-    Masters
-    Doctorate
-  )
+  DEGREES = [
+    'Associates/Diploma',
+    'Associates / Diploma',
+    'Bachelors',
+    'Masters',
+    'Doctorate'
+  ]
+
   INTENTIONS = %w(
     Dating
     Relationship
   )
+
   DATE_PREFERENCE_TYPES = %w(
     Coffee
     Brunch

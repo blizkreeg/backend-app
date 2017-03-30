@@ -24,8 +24,22 @@ server '128.199.234.90', user: 'deploy', roles: %w{migrator}
 
 role :app, %w{deploy@128.199.234.90 deploy@128.199.164.71}#, my_property: :my_value
 role :sidekiq, %w(deploy@128.199.234.90)
+role :master, %w(deploy@128.199.234.90)
 role :firebase, %w(deploy@128.199.164.71)
 role :migrator,  %w{deploy@128.199.234.90}
+
+namespace :deploy do
+  desc "Update crontab with whenever"
+  task :update_cron do
+    on roles(:master) do
+      within current_path do
+        execute :bundle, :exec, "whenever --update-crontab #{fetch(:application)}"
+      end
+    end
+  end
+
+  after :finishing, 'deploy:update_cron'
+end
 
 # Configuration
 # =============

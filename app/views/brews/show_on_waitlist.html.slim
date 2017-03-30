@@ -1,0 +1,57 @@
+main
+  .full-width
+    = render partial: 'brews/components/flash_message'
+
+  .max960
+    .mdl-grid
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop.text-center style='justify-content: center; flex-flow: column nowrap;'
+        h2.mt-0.mb-10.logo-font.accent-color--title ekCoffee
+        h4.mt-10.mb-0 BREW
+        h6.mt-0.mb-10.accent-color
+
+        - if live_in_user_location?
+          / when we've reviewed the user's profile and given a low score
+          - if @current_profile.low_desirability?
+            h4.mb-10
+              span.mustard-color #{@low_score_waitlist_size}
+            h6.mt-0 people are on the waitlist currently.
+          - else
+            / this should only be the case for a brief period of time
+            / when the profile has not yet been reviewed
+            h6.mb-0.bold WE'LL BE IN TOUCH SHORTLY.
+            p
+              small
+                | (make sure your app notifications are turned on)
+        - else
+          h6.bold WE'LL BE IN TOUCH AS SOON AS WE LAUNCH IN YOUR CITY!
+
+        hr style='border-top: 1px solid #eee;'
+
+        h6.bold What should I expect on ekCoffee?
+        p ekCoffee is an exclusive, real-life, members-only community of singles. Here you'll meet single people at group activities and events.
+
+        h6.bold Why is there a waitlist?
+        p We do this to maintain a balanced community and so that we deliver a good experience for everyone.
+
+        - if !live_in_user_location?
+          h6.bold When will you launch in my city?
+          p We are working hard to come to new cities but it's hard to say. We hope soon!
+
+        h6.bold Is this a dating app?
+        p ekCoffee is for single people but it is not a dating app like others.
+        p Join ekCoffee to meet amazing people, form friendships, do new activities, and grow your social circle.
+        p Of course, because everyone else will also be single, you may end up meeting someone you like :)
+
+        h6.bold Will I get matches here?
+        p Sorry, there are no &ldquo;matches&rdquo; on ekCoffee. But you'll meet people at our events that you may hit it off with!
+
+        h6.bold How will I meet people?
+        p You'll meet new and interesting singles at events and socials on the ekCoffee platform and get to know a diverse group of people. This will become your new social circle. We're confident of that!
+
+      .mdl-layout-spacer
+
+javascript:
+  //$(function() {
+  //  $('.welcome-cover').css('height', $(window).height()/2);
+  //});

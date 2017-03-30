@@ -1,0 +1,110 @@
+- if anonymous?
+  .action-bar
+    = render partial: 'brews/components/actionbar', locals: { title: 'Brew' }
+  .anonymous-notice
+    | To join this Brew and see who else is going, download the&nbsp;
+    = link_to 'ekCoffee app', 'http://goo.gl/JPLpqS'
+- else
+  - if mobile_device?
+    .action-bar
+      = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brews_path, title: 'Brew' }
+    .mobile-action-bar-holder
+
+main
+  .max960.comment
+    = render partial: 'brews/components/flash_message'
+    .mdl-grid
+      .mdl-layout-spacer
+      .brew-detail-outer.mdl-cell.mdl-cell--4-col-phone.mdl-cell--6-col-tablet.mdl-cell--6-col-desktop.comment
+        .brew-detail.activity
+          .brew-detail__info
+            / .icon
+            /   i.material-icons.md-36 motorcycle
+            - if current_profile.staff_or_internal
+              = link_to 'chat', brew_conversation_path(@brew.slug)
+            h4.text-center
+              span.brew-detail__info__title
+                = @brew.title
+
+            - if @brew.primary_image_cloudinary_id.present?
+              - if @brew.other_images_cloudinary_ids.present?
+                .image-carousel-slider
+                  ul
+                    li
+                      .brew-image.primary-image data-image-id="#{@brew.primary_image_cloudinary_id}"
+                    - if @brew.other_images_cloudinary_ids.present?
+                      - @brew.other_images_cloudinary_ids.each do |image_id|
+                        li
+                          .brew-image data-image-id="#{image_id}"
+              - else
+                .brew-image.primary-image data-image-id="#{@brew.primary_image_cloudinary_id}"
+
+            div.notes
+              = simple_format(@brew.notes)
+              = raw(@brew.formatted_details)
+
+            .details
+              = render partial: 'brews/components/details', locals: { brew: @brew, show_address: true }
+
+          - if anonymous?
+            - if @brew.profiles.count > 0
+              h5.text-center #{@brew.profiles.count} interested in going
+
+          - else
+            #profile-tiles
+              h6.text-center
+                | WHO'S GOING SO FAR?
+              - @brew.profiles.each_with_index do |profile, idx|
+                = render partial: 'brews/components/profile_tile', locals: { idx: idx, profile: profile, link_profile: true, brew: @brew }
+
+          - if anonymous?
+          - else
+            #profile-cards
+              - @brew.profiles.each do |profile|
+                = render partial: 'brews/profile_card', locals: { profile: profile }
+
+          - if anonymous?
+          - else
+            #join-cta.text-center
+              - if current_profile.interested_in_brew?(@brew)
+                h4 You're interested in going.
+              - elsif current_profile.going_to_brew?(@brew)
+                h4 You're going to this Brew &#x1F64C;
+              - else
+                h5 Interested in joining?
+                h6 Getting together #{format_date(@brew.happening_on)}
+
+      .mdl-layout-spacer
+  - if anonymous?
+  - else
+    - if current_profile.interested_in_brew?(@brew)
+      = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "You're going!", dest: '#' }
+      / = render partial: 'brews/components/purchase_button', locals: { placement: 'fixed', title: "Confirm", dest: @brew.payment_link }
+    - elsif current_profile.going_to_brew?(@brew)
+      = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "You're going!", dest: '#' }
+    - else
+      = render partial: 'brews/components/show_interest_button', locals: { placement: 'fixed', title: "I'm interested", dest: brew_show_interest_path(@brew.slug) }
+
+  / - if current_profile.rsvped_to_brew?(@brew)
+  /   = render partial: 'brews/components/registered_button', locals: { placement: 'fixed', title: "View Details &rarr;", dest: '#' }
+  / - else
+  /   - cta_title = @brew.full_for?(current_profile) ? 'Brew full!' : "Join this Brew"
+  /   - cta_dest = @brew.full_for?(current_profile) ? '#' : brew_register_path(@brew)
+  /   = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: cta_title, dest: cta_dest }
+
+javascript:
+  $(function() {
+    // fire loadProfilePhotos on a delayed timeout so that on Android, the profile photos load in full device height in the app webview.
+    // window.height returns 0 if this is fired immediately when rest of content is not yet rendered
+    window.setTimeout(loadProfilePhotos, 1000);
+    loadBrewImages();
+    $.cloudinary.responsive();
+  });
+
+/   $(function() {
+/     $('.face-squares__face-image').on('click', function() {
+/       var profileId = $(this).data('profile-id');
+/       $('.profile-card').hide();
+/       $('div.profile-card[data-id="' + profileId + '"]').css('display', 'flex');
+/     });
+/   });

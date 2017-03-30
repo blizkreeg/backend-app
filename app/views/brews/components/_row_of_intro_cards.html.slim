@@ -1,0 +1,179 @@
+.intro-row
+  - profiles.each_with_index do |profile, idx|
+
+    - primary_image_id = profile.photos.profile.try(:public_id)
+    - other_image_ids = profile.photos.others.map(&:public_id)
+    - requested_intro = IntroductionRequest.where(by: current_profile, to: profile).take
+    - incoming_intro = IntroductionRequest.where(by: profile, to: current_profile).take
+    - intro = IntroductionRequest.find_between(profile.uuid, current_profile.uuid)
+
+    span.intro-row__profile data-idx="#{idx}"
+      / primary photo + initial top card
+      = render partial: 'brews/components/introductions/primary_photo_card', locals: { profile: profile, primary_image_id: primary_image_id }
+
+      - if profile.about_me_i_love.present?
+        .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+          .blurb.text-card
+            .block
+              .blurb
+                h6.text-center loves &nbsp;
+                p.text-center #{profile.about_me_i_love[0..299]}
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+      - if profile.about_me_ideal_weekend.present?
+        .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+          .blurb.text-card
+            .block
+              .blurb
+                h6.text-center my ideal weekend &nbsp;
+                p.text-center #{profile.about_me_ideal_weekend[0..299]}
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+      - if profile.about_me_bucket_list.present?
+        .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+          .blurb.text-card
+            .block
+              .blurb
+                h6.text-center on my bucket list &nbsp;
+                p.text-center #{profile.about_me_bucket_list[0..299]}
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+      - image_id = other_image_ids.shift
+      - if image_id
+        .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+      / basic info card
+      .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+        .text-card
+          .block
+            span.info-label &nbsp;
+            span.info-value.bold #{profile.firstname}, #{profile.age}
+          .block
+            span.info-label lives in &nbsp;
+            span.info-value #{profile.location_city}
+
+          .block
+            span.info-label #{gender_pronoun_plural(profile)} a &nbsp;
+            span.info-value #{profile.profession}
+
+          .block
+            span.info-label has a &nbsp;
+            span.info-value #{raw(profile.highest_degree || '&mdash;')}
+
+          .block.schools
+            span.info-label went to &nbsp;
+            span.info-value #{profile.schools_attended.join(', ')}
+
+          .block
+            span.info-label is &nbsp;
+            span.info-value #{profile.height}
+
+      .bottom-pane
+        - if intro.present?
+
+          / mutual interest
+          - if intro.mutual
+            .intro-confirmed style='display: flex'
+              i.material-icons done
+              span &nbsp; We've introduced you both!
+
+          / i'm waiting for a response to my intro request
+          - elsif intro.from?(@current_profile.uuid)
+            .intro-waiting style='display: flex'
+              span We'll introduce you when #{profile.firstname} responds.
+
+          / i got an intro reequest that i haven't accepted
+          - else
+            = render partial: 'brews/components/introductions/profile_snippet', locals: { profile: profile }
+
+            .intro-response.intro-button
+              = button_to(accept_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { id: incoming_intro.id }) do
+                i.material-icons drafts
+                | &nbsp; Accept Introduction
+            .intro-confirmed
+              i.material-icons done
+              span &nbsp; We've introduced you both!
+
+        - else
+          = render partial: 'brews/components/introductions/profile_snippet', locals: { profile: profile }
+
+          .intro-request.intro-button
+            = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
+              i.material-icons mail
+              | &nbsp; Introduce us
+          .intro-waiting
+            span Got it! We'll introduce you both when #{profile.firstname} responds.
+
+      / i got an intro reequest that i haven't accepted
+      - if intro && !intro.mutual && intro.to?(@current_profile.uuid)
+        .intro-request-overlay
+          span.text #{profile.firstname} would like an intro to you!
+
+javascript:
+  $(function() {
+    var numCards = _.map($('.intro-row__profile'), function(card) { return $(card).find('.tap-card').length });
+    var cardTapCount = _.map($('.intro-row__profile'), function(card) { return 0 });
+    var tappedAllCards = _.map($('.intro-row__profile'), function(card) { return false });
+    var profileCardWidth = $('.max960').width();
+    if($('body').innerHeight() > 600) {
+      loadBrewImages(profileCardWidth, 300);
+    } else {
+      loadBrewImages(profileCardWidth, 250);
+    }
+
+    $('.bottom-pane .intro-request').on('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      $(this).find('form').submit();
+      $(this).hide();
+      $(this).siblings('.intro-waiting').css('display', 'flex');
+    });
+
+    $('.bottom-pane .intro-response').on('click', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      $(this).find('form').submit();
+      $(this).hide();
+      $(this).siblings('.intro-confirmed').css('display', 'flex');
+      $('.mobile-bottom-menu .conversations-menu .bubble').show();
+    });
+
+    $('.tap-card').on('click', function(e) {
+      var $thisProfile = $(this).closest('.intro-row__profile');
+      var $thisProfileCards = $thisProfile.children('.tap-card');
+      var $bottomCard = $thisProfile.children('.tap-card:last');
+      var profileCardIndex = $thisProfile.data('idx');
+
+      cardTapCount[profileCardIndex]++;
+      if((cardTapCount[profileCardIndex] >= numCards[profileCardIndex]) && !tappedAllCards[profileCardIndex]) {
+        tappedAllCards[profileCardIndex] = true;
+        $thisProfile.find('.bottom-pane .snippet').hide();
+        $thisProfile.find('.bottom-pane .intro-button').css('display', 'flex');
+      }
+
+      // hide this card and move it to the "bottom of the deck"
+      $(this).hide();
+      $(this).removeClass('tap-card-visible');
+      $(this).insertAfter($bottomCard);
+
+      // show the card on "top of the deck"
+      var $topCard = $thisProfile.children('.tap-card:first');
+      $($topCard).show();
+      $($topCard).addClass('tap-card-visible');
+    })
+  });

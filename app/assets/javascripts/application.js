@@ -12,7 +12,3 @@
 //
 //= require jquery.min
 //= require jquery_ujs
-//= require_tree .
-//= require firebase
-//= require highcharts
-//= require jquery.cloudinary

@@ -1,224 +1,180 @@
-h4 USER INFO
-hr
 .row
-  .col-xs-4
-    h4
-      | #{@profile.fullname}
-      span style='text-transform:uppercase'
-        | &nbsp; (#{@profile.moderation_status})
-  .col-xs-8.text-right
-    ul.unstyled-list
-      li.inline
-        = link_to admin_show_butler_chat_path(@profile.uuid), class: 'btn btn-info' do
-          i.fa.fa-comments
-          | &nbsp; Chat
-      li.inline
-        - if @profile.approved?
-          = button_to 'Flag', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'submit btn btn-danger', form_class: 'inline' }
-        - else
-          = button_to 'Approve', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'submit btn btn-success', form_class: 'inline' }
-      li.inline
-        - if @profile.blacklisted?
-          = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'submit btn btn-default', form_class: 'inline' }
-        - else
-          = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'submit btn', style: 'background-color: black; color: white;', form_class: 'inline' }
-      li.inline
-        - if @profile.approved_for_stb
-          = button_to 'Remove from STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: false }, class: 'submit btn btn-default', form_class: 'inline' }
-        - else
-          = button_to 'Approve for STB', admin_moderate_user_stb_path, { params: { uuid: @profile.uuid, approved_for_stb: true }, class: 'submit btn btn-info', form_class: 'inline' }
-      - if @profile.marked_for_deletion
-        li.inline
-          = button_to "Delete User", admin_destroy_user_path, {  params: { uuid: @profile.uuid }, class: 'submit btn btn-danger', form_class: 'inline', data: { confirm: "Are you sure you want to delete?\n\r#{@profile.firstname} #{@profile.lastname}\r#{@profile.uuid}" } }
-hr
-.row style='margin-bottom: 6px;'
-  .col-xs-12 style='float:right;'
-    div.score.text-center style='width:200px;'
-      | desirability score:
-      | &nbsp;
-      - if @profile.desirability_score.nil?
-        | &mdash;
-      - else
-        = @profile.desirability_score.to_f
-    = button_to '1', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 1 }, class: 'round-btn' }
-    = button_to '2', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 2 }, class: 'round-btn' }
-    = button_to '3', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 3 }, class: 'round-btn' }
-    = button_to '4', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 4 }, class: 'round-btn' }
-    = button_to '5', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 5 }, class: 'round-btn' }
-    = button_to '6', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 6 }, class: 'round-btn' }
-    = button_to '7', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 7 }, class: 'round-btn' }
-    = button_to '8', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 8 }, class: 'round-btn' }
-    = button_to '9', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 9 }, class: 'round-btn' }
-    = button_to '10', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 10 }, class: 'round-btn' }
-p: markdown: #{@profile.location_city} | #{@profile.gender} | #{@profile.age} | #{link_to @profile.email, "mailto:#{@profile.email}"} | App State: `#{@profile.state}` | Last Seen: #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)} | Profile: #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
-p: markdown: UUID: `#{@profile.uuid}` | Chat UUID: `#{@profile.butler_conversation_uuid}` | #{raw(@profile.visible ? '<span class="label label-success">INCLUDED IN MATCHING</span>' : '<span class="label label-danger">EXCLUDED FROM MATCHING</span>')}
-.row
-  .col-xs-12
+  .col-md-12
+    .panel.panel-white
+      / .panel-heading
+        / h4.panel-title Moderate
+      .panel-body
+        .btn-group
+          = link_to admin_show_butler_chat_path(@profile.uuid), class: 'btn btn-info button_to' do
+            i.fa.fa-comments>
+            | Chat
 
-.row
-  .col-xs-4
-    .row
-      .col-xs-12.box
-        h4 Matches
-        p In Queue #{content_tag(:span, @profile.matches.undecided.count, class: 'h4 text-right')}
-        p Liked #{content_tag(:span, @profile.matches.liked.count, class: 'h4 text-right')}
-        p Passed #{content_tag(:span, @profile.matches.passed.count, class: 'h4')}
-        h4 Matched With
-        p In Queue #{content_tag(:span, @profile.matched_with.undecided.count, class: 'h4 text-right')}
-        p Liked #{content_tag(:span, @profile.matched_with.liked.count, class: 'h4 text-right')}
-        p Passed #{content_tag(:span, @profile.matched_with.passed.count, class: 'h4')}
-    .row
-      .col-xs-12.box
-        h4 Conversations
-        - @profile.conversations.each do |c|
-          - other = c.the_other_who_is_not(@profile.uuid)
-          - if other.present?
-            = link_to other.try(:firstname), admin_show_user_path(other.uuid)
-            br
-            - if c.opened_at.present?
-              - c.conversation_healths.each do |h|
-                | #{h.profile.firstname}: #{h.value}
-                br
-            - else
-              | Didn't start
-          hr
-    .row
-      .col-xs-12.box
-        h4 Dates
-        - @profile.real_dates.each do |r|
-          - c = r.conversation
-          - other = r.date_profile
-          - if other.present?
-            = link_to other.try(:firstname), admin_show_user_path(other.uuid)
-            br
-            - if c.real_dates.present?
-              | Ready to Meet?
-              br
-              - c.real_dates.each do |d|
-                | #{d.profile.firstname}: #{d.ready_to_meet}
-                br
-              | Date
-              br
-              - c.real_dates.each do |d|
-                - if d.meeting_at_recorded_at.present?
-                  | at #{d.date_place.try(:name) || d.other_date_place_name} on #{d.meeting_day.to_s} #{d.meeting_at}
-              | Post-date feedback
-              - c.real_dates.each do |d|
-                - if d.post_date_rating.present?
-                  | #{d.profile.firstname}: #{d.post_date_rating} #{d.post_date_feedback}
-            - else
-              | Didn't meet
+          - if @profile.marked_for_deletion
+            = button_to "Delete Profile", admin_destroy_user_path, {  params: { uuid: @profile.uuid }, class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete?\n\r#{@profile.firstname} #{@profile.lastname}\r#{@profile.uuid}" } }
 
-
-  .col-xs-4.box
-    h4 Profile
-    hr
-    / ul.unstyled-list
-    span.clearfix
-      strong.prop FB Url:
-      = link_to "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}", "https://www.facebook.com/#{@profile.facebook_authentication.oauth_uid}"
-    span.clearfix
-      strong.prop Intent:
-      = @profile.intent || 'n/a'
-    span.clearfix
-      strong.prop FB Relationship Status:
-      = @profile.possible_relationship_status || 'n/a'
-    span.clearfix
-      strong.prop Height:
-      = @profile.height || 'n/a'
-    span.clearfix
-      strong.prop Profession:
-      = @profile.profession || 'n/a'
-    span.clearfix
-      strong.prop Schools attended:
-      - if @profile.schools_attended.blank?
-        = 'n/a'
-      - else
-        ul
-        - @profile.schools_attended.each do |school|
-          li #{school}
-    span.clearfix
-      strong.prop Faith:
-      = @profile.faith || 'n/a'
-    span.clearfix
-      strong.prop Degrees:
-      = @profile.earned_degrees.join(', ') || 'n/a'
-    span.clearfix
-      strong.prop Highest Degree:
-      = @profile.highest_degree || 'n/a'
-    span.clearfix
-      strong.prop Blurbs
-      - @profile.about_me_order.each do |blurb_property|
-        br #{@profile.send("#{blurb_property}_label".to_sym)} &mdash; #{@profile.send(blurb_property.to_sym)}
-    hr
-    h4 Seeking Matches
-    hr
-    span.clearfix
-      strong.prop Age:
-      = @profile.seeking_minimum_age
-      | &nbsp; to &nbsp;
-      = @profile.seeking_maximum_age
-    span.clearfix
-      strong.prop Height:
-      | #{@profile.seeking_minimum_height} (#{@profile.seeking_minimum_height_in} in)
-      | &nbsp; to &nbsp;
-      | #{@profile.seeking_maximum_height} (#{@profile.seeking_maximum_height_in} in)
-    span.clearfix
-      strong.prop Faith
-      = @profile.seeking_faith.join(', ')
-  .col-xs-4.box
-    - if @profile.waiting_for_matches? || @profile.waiting_for_matches_and_response?
-      h4 Waiting For Matches
-      - if @profile.active_mutual_match.present?
-        p Mutually matched with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid)}
-    - elsif @profile.has_matches? || @profile.has_matches_and_waiting_for_response?
-      h4 Ready For Matches
-    - elsif @profile.show_matches? || @profile.show_matches_and_waiting_for_response?
-      h4 Showing Matches
-    - elsif @profile.mutual_match?
-      h4 Mutual Match
-      p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid)}
-    - elsif @profile.in_conversation?
-      h4 In Conversation
-      p with #{link_to @profile.active_mutual_match.matched_profile.firstname, admin_show_user_path(@profile.active_mutual_match.matched_profile.uuid)}
-      dl
-        dt id
-        dd #{@profile.active_mutual_match.conversation.id}
-
-        dt uuid
-        dd #{@profile.active_mutual_match.conversation.uuid}
-
-        dt start
-        dd #{render_time(@profile.active_mutual_match.conversation.opened_at)}
-
-        dt end
-        dd #{render_time(@profile.active_mutual_match.conversation.closes_at)}
-
-        dt open
-        dd #{@profile.active_mutual_match.conversation.open}
-    hr
-    h4 Event Log
-    hr
-    - @profile.event_logs.each do |el|
-      p
-        = raw render_event_log(el)
-.row
-  .col-xs-12
-    h4 Photos
-    - @profile.photos.ordered.each do |photo|
-        div style='position:relative;width:250px;height:250px;float:left;margin:2px;'
-          = cl_image_tag "#{photo.public_id}.jpg", style: 'width:250px;height:250px;'
-          - if photo.reviewed
-            - if photo.approved
-              = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'submit btn btn-danger', style: 'position:absolute;top:0;right:0'
-            - else
-              = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'submit btn btn-success', style: 'position:absolute;top:0;left:0'
-            span style='position:absolute;bottom:0;left:45%;color:black;background-color:white;padding: 1px 2px;' #{photo.approved ? 'APPROVED' : 'REJECTED'}
-            - if photo.primary
-              span style='position:absolute;top:0;left:50%;color:white;background-color:black;padding: 1px 4px;font-weight:600;font-size:16px;' P
+          - if @profile.approved?
+            = button_to 'Flag', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'btn btn-default' }
           - else
-            - if photo.approved
-              = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'submit btn btn-danger', style: 'position:absolute;top:0;right:0'
-            - else
-              = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'submit btn btn-success', style: 'position:absolute;top:0;left:0'
+            = button_to 'Approve', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
 
+          - if @profile.blacklisted?
+            = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
+          - else
+            = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'btn btn-default' }
+
+        hr
+
+        p Desirability Score: <strong>#{@profile.desirability_score || 'Not Assigned'}</strong>
+        .btn-group
+          = button_to '1', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 1 }, class: 'btn btn-primary' }
+          = button_to '2', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 2 }, class: 'btn btn-primary' }
+          = button_to '3', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 3 }, class: 'btn btn-primary' }
+          = button_to '4', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 4 }, class: 'btn btn-primary' }
+          = button_to '5', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 5 }, class: 'btn btn-primary' }
+          = button_to '6', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 6 }, class: 'btn btn-primary' }
+          = button_to '7', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 7 }, class: 'btn btn-primary' }
+          = button_to '8', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 8 }, class: 'btn btn-primary' }
+          = button_to '9', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 9 }, class: 'btn btn-primary' }
+          = button_to '10', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 10 }, class: 'btn btn-primary' }
+
+  .col-md-12
+    .panel.panel-white
+      .panel-body
+        h3
+          | #{@profile.fullname} &nbsp;
+          span.label.label-info style='text-transform:uppercase' #{@profile.moderation_status}
+
+        p
+          | #{@profile.location_city}, #{@profile.gender}, #{@profile.age}
+
+        ul.list-unstyled.weather-info
+          li
+            | Email
+            p style='font-weight: 600;' #{link_to @profile.email, "mailto:#{@profile.email}"}
+          li
+            | Phone
+            p style='font-weight: 600;' #{@profile.phone}
+
+          li
+            | Last Seen
+            p style='font-weight: 600;' #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)}
+
+        p
+
+
+        - @profile.photos.ordered.each do |photo|
+            div.user-photo data-public-id=photo.public_id style='position:relative;width: 160px;height: 160px;float:left;margin:2px;'
+              = cl_image_tag "#{photo.public_id}.jpg", style: 'width: 160px;height: 160px;'
+              - if photo.reviewed
+                - if photo.approved
+                  = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'btn btn-danger', style: 'position:absolute;top:0;right:0'
+                - else
+                  = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'btn btn-success', style: 'position:absolute;top:0;left:0'
+                span style='position:absolute;bottom:0;left:45%;color:black;background-color:white;padding: 1px 2px;' #{photo.approved ? 'APPROVED' : 'REJECTED'}
+                - if photo.primary
+                  span style='position:absolute;top:0;left:50%;color:white;background-color:black;padding: 1px 4px;font-weight:600;font-size:16px;' P
+              - else
+                - if photo.approved
+                  = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'btn btn-danger', style: 'position:absolute;top:0;right:0'
+                - else
+                  = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'btn btn-success', style: 'position:absolute;top:0;left:0'
+
+  .col-md-12
+    .panel.panel-white
+      .panel-body
+        ul.list-unstyled.weather-info
+          li
+            | UUID
+            p style='font-weight: 600;' #{@profile.uuid}
+
+          li
+            | Chat UUID
+            p style='font-weight: 600;' #{@profile.butler_conversation_uuid}
+
+          li
+            | FB
+            p style='font-weight: 600;'
+              = link_to "https://www.facebook.com/#{@profile.try(:facebook_authentication).try(:oauth_uid)}", "https://www.facebook.com/#{@profile.try(:facebook_authentication).try(:oauth_uid)}"
+
+          li
+            | Intent
+            p style='font-weight: 600;' #{@profile.intent}
+
+          li
+            | FB Rel. Status
+            p style='font-weight: 600;' #{@profile.possible_relationship_status}
+
+          li
+            | Height
+            p style='font-weight: 600;'  #{@profile.height}
+
+          li
+            | Profession
+            p style='font-weight: 600;'  #{@profile.profession}
+
+          li
+            | Schools
+            p style='font-weight: 600;' #{raw(@profile.schools_attended.join('<br>'))}
+
+          li
+            | Faith
+            p style='font-weight: 600;' #{@profile.faith}
+
+          li
+            | Highest Degree
+            p style='font-weight: 600;' #{@profile.highest_degree}
+
+          li
+            | Height
+            p style='font-weight: 600;'  #{@profile.height}
+
+          li
+            | Complete?
+            p style='font-weight: 600;' #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
+
+
+        - @profile.about_me_order.each do |blurb_property|
+          p
+            | #{@profile.send("#{blurb_property}_label".to_sym).capitalize}
+            | &nbsp; #{@profile.send(blurb_property.to_sym)}
+
+        h4 Match Preference
+
+        ul.list-unstyled.weather-info
+          li
+            | Age
+            p style='font-weight: 600;'
+              = @profile.seeking_minimum_age
+              | &nbsp; to &nbsp;
+              = @profile.seeking_maximum_age
+
+          li
+            | Height
+            p style='font-weight: 600;'
+              | #{@profile.seeking_minimum_height} (#{@profile.seeking_minimum_height_in} in)
+              | &nbsp; to &nbsp;
+              | #{@profile.seeking_maximum_height} (#{@profile.seeking_maximum_height_in} in)
+
+          li
+            | Faith
+            p style='font-weight: 600;' #{@profile.seeking_faith.join(', ')}
+
+  .col-md-12
+    .panel.panel-white
+      .panel-body
+        h5 Home Screen View - what is the user seeing?
+        - url = Rails.env.development? ? 'http://localhost:3000' : 'https://brew.ekcoffee.com'
+        iframe src="#{url}?ekcapp=1&uuid=#{@profile.uuid}" frameborder=0 height=667 width=375
+
+javascript:
+  function zoomPhoto() {
+    $('div.user-photo').each(function() {
+      $(this).zoom({
+        url: $.cloudinary.image($(this).data('public-id')).attr('src')
+      });
+    });
+  }
+
+  $(function() {
+    zoomPhoto();
+  });

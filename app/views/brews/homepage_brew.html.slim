@@ -1,0 +1,98 @@
+main
+  .homepage-header.max960
+    .homepage-header__logo
+      = link_to '/' do
+        = image_tag 'brew.png', height: 60
+
+  .full-width.homepage-cover.cover-image
+    .cover-copy
+      / .cover-taglines
+        / h4.line-1 Tired of the same on dating apps?
+        / h3.line-2 Mix it up with a new way of meeting more people.
+
+      .notify-signup
+        = render partial: 'brews/components/invite_form'
+
+  .max960.notify-signup.notify-signup-xs.text-center
+    = render partial: 'brews/components/invite_form'
+
+  .max960.text-center
+    h3.mb-10 Group Socials That You'll Love.
+    h6.mt-10
+      | (with none of the tedium of endless chats &amp; dates that go nowhere)
+
+  .full-width.homepage-explain-container
+    .max960
+      .mdl-grid.mdl-grid--no-spacing.explain-brew
+        .mdl-cell.mdl-cell--12-col.mdl-cell--2-offset-desktop.mdl-cell--5-col-desktop
+          .explain-brew__container
+            h5 Dating apps can get monotonous.
+            / options for words - dull, tedious, boring, monotonous
+            / Get offline
+            p If endless swiping isn't going anywhere for you, you'll love Brew. This is a way for you to mix it up and see new faces, may be even without an agenda.
+            p Dating isn't the sole purpose here. Consider Brew as a real alternative to dating apps, but it could be what you make of it.
+        .mdl-cell.mdl-cell--12-col.mdl-cell--7-offset-desktop.mdl-cell--5-col-desktop
+          .explain-brew__container style='align-self: flex-end;'
+            h5 Get offline for a change!
+            p Brews range from brunches, happy hours, pickup games, dinners, or whatever else is interesting and fun to do as a group. Suggest and join Brews around your interests!
+        .mdl-cell.mdl-cell--12-col.mdl-cell--1-offset-desktop.mdl-cell--5-col-desktop
+          .explain-brew__container
+            h5
+              | With people you'd otherwise never meet.
+            p Every Brew is formed around other single people that match your type and age preference. You get to see who's going, so there are no surprises about who you'll meet.
+            p Urban professionals like you.
+
+  .full-width.homepage-closing
+    .max960.homepage-closing__taglines
+      div
+        h4.text-white Go <em>real-life</em>. Go Brew.
+      div
+        h5.text-white Meet more awesome people in a single evening.
+
+  .full-width
+    .footer
+      .max960
+        .copyright
+          | &copy; Copyright #{Date.today.year} ekCoffee, Inc. All rights reserved.
+
+    / .mdl-grid
+    /   .mdl-layout-spacer
+    /   .mdl-cell.mdl-cell--4-col.mdl-cell--6-col-desktop.text-center
+    /     h4 I'm down.
+    /     p Awesome! Login and join an upcoming Brew near you.
+    /     = link_to 'Continue with Facebook', '/auth/facebook', class: 'mdl-button mdl-js-button mdl-button--raised'
+    /     p
+    /       ul.list--unstyled.text--light.text-center
+    /         li - Facebook helps ensure group quality
+    /         li - Your activity is not shared on Facebook
+    /   .mdl-layout-spacer
+
+
+javascript:
+  function submitInvite() {
+    var submitValue = $('.notify-signup__invite-form .invite-input').val();
+    var authToken = $('.notify-signup__invite-form input[name="authenticity_token"]').val();
+    $.ajax({
+      url: '/add-to-invite-list?authenticity_token=' + encodeURIComponent(authToken),
+      method: 'POST',
+      data: { invite_to: submitValue }
+    })
+    .done(function(msg) {
+      if(msg === 'OK') {
+        $('.notify-signup__invite-form .notify-signup__input-container').html("<h5 class='mustard-color'>Thank you! We'll message you as soon as we're ready!</h5>")
+      }
+    });
+  }
+
+  $(function() {
+    $('.notify-signup__input-container').keypress(function (e) {
+      if(e.which == 13) {
+        submitInvite();
+        return false;
+      }
+    });
+
+    $('.notify-signup__input-container__submit-icon').on('click', function() {
+      submitInvite();
+    })
+  })

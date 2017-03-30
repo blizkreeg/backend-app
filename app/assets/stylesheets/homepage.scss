@@ -1,0 +1,265 @@
+@import 'typography';
+@import 'colors';
+@import 'common';
+
+body.homepage {
+  font-size: 16px;
+  color: #262626;
+  font-weight: 300;
+  height: 100%;
+}
+
+p {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+ul li {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.homepage-header {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0px;
+  margin: 25px auto;
+}
+
+.homepage-header__logo {
+  font-family: Brusher;
+  font-size: 60px;
+  height: 70px;
+  color: #ea5b5b;
+}
+
+.homepage-header__tagline {
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.homepage-header__tabs {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  a, a:visited, a:hover {
+    color: #262626;
+    font-weight: 300;
+    font-size: 16px;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid #e8e8e8;
+  }
+}
+
+.homepage-header__tab {
+  padding: 4px 15px;
+}
+
+.homepage-cover {
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  background-image: image-url('brew-home-cover.jpeg');
+  background-position: center center;
+  height: 600px;
+}
+
+.cover-copy {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-end;
+  justify-content: center;
+  align-content: flex-end;
+  text-align: center;
+  color: white;
+  width: 100%;
+  height: 100%;
+}
+
+.cover-taglines {
+  width: 100%;
+  padding: 25px 0px;
+
+  .line-1 {
+    color: #f4b50e;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  .line-2 {
+    color: white;
+    font-size: 2.2rem;
+    font-weight: 600;
+  }
+}
+
+.notify-signup {
+  width: 100%;
+  padding: 25px 0px 25px 0px;
+
+  p {
+    font-size: 1.1rem;
+    font-weight: 400;
+  }
+}
+
+.notify-signup__invite-form {
+  position: relative;
+}
+
+.notify-signup__input-container {
+  position: relative;
+  display: block;
+}
+
+.notify-signup__submit {
+  position: absolute;
+  top: 20px;
+  right: calc(50% - 160px);
+}
+
+.notify-signup__input-container__submit-icon {
+  position: absolute;
+  top: 0px;
+  right: calc(50% - 166px);
+  font-size: 18px;
+  color: white;
+  background-color: #f4b50e;
+  height: 54px;
+  vertical-align: middle;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+}
+
+.notify-signup-xs {
+  display: none;
+}
+
+@media only screen and (max-width: 1066px) {
+  .homepage-cover {
+    height: 500px;
+    background-position: center center;
+  }
+}
+
+@media only screen and (max-width: 890px) {
+  .homepage-cover {
+    height: 400px;
+    background-position: center center;
+  }
+
+  .notify-signup {
+    padding-bottom: 10px;
+
+    p {
+      font-size: 1rem;
+    }
+  }
+}
+
+@media only screen and (max-width: 799px) {
+  .homepage-cover {
+    height: 220px;
+    background-position: center center;
+  }
+
+  .cover-copy .notify-signup {
+    display: none;
+  }
+
+  .notify-signup-xs {
+    display: block;
+  }
+
+  .notify-signup-xs input {
+    background-color: #fdeddd;
+  }
+}
+
+.homepage-closing {
+  background-color: #f4b50e;
+}
+
+.homepage-closing__taglines {
+  color: white;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media only screen and (min-width: 800px) {
+  .homepage-closing__taglines {
+    padding: 25px 20px;
+  }
+}
+
+.homepage-explain-container {
+  padding: 10px 0px 20px 0px;
+}
+
+.explain-brew {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  width: inherit;
+  // background: rgba(242,186,102, 0.33);
+}
+
+.explain-brew__container {
+  // width: 40%;
+  .first {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+  }
+}
+
+.large-input {
+  height: 40px;
+  text-align: left;
+  padding: 4px 15px 8px 15px;
+  border: 1px solid #ddd;
+  border-radius: 1px;
+  font-size: 24px;
+  font-weight: 300;
+  vertical-align: middle;
+  color: #4a4a4b;
+}
+
+.large-input::-webkit-input-placeholder {
+  font-size: 22px;
+  color: #676767;
+}
+
+.large-input:focus::-webkit-input-placeholder {
+    opacity: 0;
+}
+
+.large-input__email {
+  width: 300px;
+
+}
+
+.footer {
+  background-color: #f4f5f7;
+  text-align: center;
+  padding: 20px;
+
+  .copyright {
+    color: #a1a3a6;
+    font-size: 13px;
+    font-weight: 100;
+  }
+}

@@ -1,0 +1,29 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { title: 'Conversations' }
+
+main
+  .mobile-action-bar-holder
+  .max960
+    .conversations-container
+      - if @conversations.blank?
+        .no-conversations
+          h5 Your conversations with other members will show here.
+      - else
+        .conversations-river
+          - @conversations.each do |conversation|
+            - profile = conversation.the_other_who_is_not(current_profile.uuid)
+            = link_to conversation_with_path(profile.uuid), class: 'no-decor link-conversation' do
+              .conversation-row
+                .picture
+                  = cl_image_tag "#{profile.photos.profile.public_id}.png", width: 60, height: 60, crop: :fill, radius: :max, gravity: :face
+                .preview
+                  .name.bold
+                    = profile.firstname
+                  .message
+                    / TBD: optimize!!
+                    - messages_hash = $firebase_conversations.get(conversation.firebase_messages_endpoint, "orderBy": '"$key"', limitToLast: 1).body
+                    - if messages_hash.present?
+                      = messages_hash.values.first["content"]
+                - if conversation.has_message_waiting_for?(current_profile.uuid)
+                  .new-message-bubble
+                    i.material-icons fiber_manual_record

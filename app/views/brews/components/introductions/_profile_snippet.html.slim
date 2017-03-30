@@ -1,0 +1,2 @@
+.snippet
+  | #{gender_pronoun_plural(profile)} #{%w(a e i o u).include?(profile.profession.first.downcase) ? 'an' : 'a'} #{profile.profession}

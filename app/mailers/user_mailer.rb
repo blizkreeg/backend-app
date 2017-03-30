@@ -1,4 +1,41 @@
 class UserMailer < ApplicationMailer
+  def welcome_email(profile_uuid)
+    profile = Profile.find(profile_uuid)
+
+    srand(Time.now.to_i)
+    cofounder = profile.male? ? "Vineet" : "Anushri"
+    cofounder_email = profile.male? ? "vineet@ekcoffee.com" : "anu@ekcoffee.com"
+
+    sendgrid_header_params =
+                      {
+                        filters: {
+                          subscriptiontrack: {
+                            settings: {
+                              enable: 0
+                            }
+                          },
+                          templates: {
+                            settings: {
+                              enable: 1,
+                              template_id: "783c67e7-6cb2-441e-9f43-d4c0b9f70b26"
+                            }
+                          }
+                        },
+                        sub: {
+                          "-fname-" => [profile.firstname],
+                          "-cofounder-" => [cofounder],
+                          "-cofounder_email-" => [cofounder_email]
+                        }
+                      }
+    headers['X-SMTPAPI'] = sendgrid_header_params.to_json
+
+    mail(
+      from: "ekCoffee <hello@ekcoffee.com>" ,
+      to: profile.email,
+      subject: "Welcome to ekCoffee, #{profile.firstname} 🙌",
+    )
+  end
+
   def remind_matches(profile_uuid, match_profiles_uuids)
     @profile = Profile.find(profile_uuid) rescue nil
     return if @profile.blank?
@@ -6,5 +43,32 @@ class UserMailer < ApplicationMailer
     return if @match_profiles.blank?
 
     mail(to: @profile.email, subject: "#{@profile.firstname}, you have #{@match_profiles.count} potential matches on ekCoffee.")
+  end
+
+  def send_email(template_id, email, subject, message_data_hash)
+    sendgrid_header_params =
+                      {
+                        filters: {
+                          subscriptiontrack: {
+                            settings: {
+                              enable: 0
+                            }
+                          },
+                          templates: {
+                            settings: {
+                              enable: 1,
+                              template_id: template_id
+                            }
+                          }
+                        },
+                        sub: message_data_hash
+                      }
+    headers['X-SMTPAPI'] = sendgrid_header_params.to_json
+
+    mail(
+      from: "ekCoffee <hello@ekcoffee.com>" ,
+      to: email,
+      subject: subject,
+    )
   end
 end

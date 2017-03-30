@@ -4,7 +4,13 @@ module ApplicationHelper
   end
 
   def homescreen_headline
-    return 'Complete Basic Details' if @current_profile.incomplete
+    if @current_profile.incomplete
+      return 'Complete Basic Details'
+    elsif @current_profile.phone.present?
+      return 'Go to a Brew'
+    else
+      return 'BREW'
+    end
 
     if @current_profile.in_match_waiting_state?
       if @current_profile.matches.undecided.count > 0
@@ -36,7 +42,13 @@ module ApplicationHelper
   end
 
   def homescreen_subheadline
-    return 'Your profile is missing a few things' if @current_profile.incomplete
+    if @current_profile.incomplete
+      return 'Your profile is missing a few things'
+    elsif @current_profile.phone.present?
+      return "Get matched with those you meet!"
+    else
+      return 'Introducing,'
+    end
 
     if @current_profile.in_match_waiting_state?
       if @current_profile.matches.undecided.count > 0
@@ -55,5 +67,9 @@ module ApplicationHelper
     return nil unless total > 0
 
     ((n.to_f / total) * 100).round(1)
+  end
+
+  def mobile_device?
+    @mobile_device
   end
 end

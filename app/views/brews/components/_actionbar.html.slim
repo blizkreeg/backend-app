@@ -1,0 +1,26 @@
+.action-bar
+  - if defined?(back) || defined?(close)
+    .action-bar__cancel
+      - if defined?(back)
+        = link_to back_url, class: 'no-decor' do
+          i.material-icons #{back_icon}
+      - elsif defined?(close)
+        - if close == 'text'
+          = close_text
+        - else
+          i.material-icons clear
+  div class="action-bar__title #{@section}"
+    = raw(title)
+
+  - submit_status = defined?(default_submit_disabled) && default_submit_disabled
+
+  / TODO class only if it's a submit button, can also be get
+  - if defined?(submit) && submit
+    - icon = defined?(submit_icon)
+    div class="action-bar__submit #{'action-bar__submit--icon' if icon}"
+      = link_to((submit_url rescue nil) || '#', class: "action-bar__submit-button #{'disabled' if submit_status}") do
+        - if defined?(submit_title)
+          = submit_title
+        - elsif defined?(submit_icon)
+          i.material-icons
+            = submit_icon

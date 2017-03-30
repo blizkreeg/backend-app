@@ -15,7 +15,11 @@ development:
   - name: 'Mumbai'
     lat: 18.98
     lng: 72.83
-    radius: 25_000
+    radius: 60_000
+  - name: 'New Delhi'
+    lat: 28.6139
+    lng: 77.2090
+    radius: 60_000
 test:
   - name: 'Pune'
     lat: 18.53
@@ -32,29 +36,9 @@ test:
   - name: 'New Delhi'
     lat: 28.6139
     lng: 77.2090
-    radius: 30_000
+    radius: 60_000
 production:
-  - name: 'Pune'
-    lat: 18.5204
-    lng: 73.8567
-    radius: 25_000
   - name: 'Mumbai'
     lat: 18.98
     lng: 72.83
     radius: 60_000
-  - name: 'Bengaluru'
-    lat: 12.9716
-    lng: 77.5946
-    radius: 60_000
-  - name: 'San Francisco'
-    lat: 37.7749
-    lng: -122.4194
-    radius: 50_000
-  - name: 'New Delhi'
-    lat: 28.6139
-    lng: 77.2090
-    radius: 30_000
-  - name: 'Boston'
-    lat: 42.364506
-    lng: -71.038887
-    radius: 50_000

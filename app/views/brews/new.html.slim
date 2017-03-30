@@ -1,0 +1,14 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: brews_path, title: 'Post a Brew', submit: true, submit_title: 'Post', default_submit_disabled: true }
+
+main
+  .mobile-action-bar-holder
+  .max960
+    .mdl-grid
+      .mdl-layout-spacer
+      .create-brew-container.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop
+        h6.mb-0
+          strong What are Brews?
+        h6.mt-0 Brews are groups of 6-10 singles who get together for a fun activity. Posting a Brew is free!
+        = render partial: 'brews/form'
+      .mdl-layout-spacer

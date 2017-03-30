@@ -1,0 +1,12 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { title: 'Upcoming Brews', submit: false, submit_icon: 'add_circle_outline', submit_url: new_brew_path }
+
+main
+  .mobile-action-bar-holder
+  .max960
+    = render partial: 'brews/components/flash_message'
+    .mdl-grid.mdl-grid--no-spacing
+      .mdl-layout-spacer
+      .mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--8-col-desktop
+        = render partial: 'brews/brews_grid', locals: { brews: @brews }
+      .mdl-layout-spacer

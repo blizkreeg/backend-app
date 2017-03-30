@@ -1,0 +1,30 @@
+= link_to("#_", class: 'no-decor profile-card-lightbox', id: "profile-#{profile.uuid}") do
+  .profile-card-lightbox__container
+    .action-bar.action-bar__close
+      i.material-icons clear
+    .profile-card data-id=profile.uuid
+      .profile-card__photo data-image-id=profile.photos.primary.take.try(:public_id)
+        = cl_image_tag profile.photos.primary.take.try(:public_id), width: 300, height: 500, crop: :fill, gravity: :face
+      .profile-card__details
+        .profile-card__identifying-info.separator
+          .profile-card__name-plate
+            | #{profile.firstname}, #{profile.age}, #{profile.location_city}
+          .profile-card__name-plate
+            | #{profile.profession}
+        .profile-card__education.separator
+          .profile-card__education__highest-degree
+            span.profile-card__supporting-text has a
+            span &nbsp;
+            span #{profile.highest_degree}
+            span.text--light&nbsp;degree
+          .profile-card__education__schools
+            span.profile-card__supporting-text went to
+            span &nbsp;
+            span #{profile.schools_attended.join(', ')}
+        / .profile-card__height.separator
+        /   span.profile-card__supporting-text height
+        /   span &nbsp;
+        /   span #{profile.height}
+        / .profile-card__interests.separator
+        /   span.profile-card__supporting-text interests
+        /   br

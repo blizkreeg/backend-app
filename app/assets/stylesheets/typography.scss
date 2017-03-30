@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400|Muli:300,400');
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: font-url('MaterialIcons-Regular.eot'); /* For IE6-8 */
+  src: font-url('MaterialIcons-Regular.woff2') format('woff2'),
+       font-url('MaterialIcons-Regular.woff') format('woff'),
+       font-url('MaterialIcons-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Brusher';
+  font-weight: normal;
+  src: font-url('Brusher.ttf') format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+$body_font: 'Avenir Next', Avenir, Lato, proxima-nova, BlinkMacSystemFont, Roboto, sans-serif !important;
+$heading_font: 'Avenir Next', Avenir, Muli, Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', 'Roboto', sans-serif;
+$subheading_font: 'Avenir Next', Avenir, Lato, Montserrat, proxima-nova, BlinkMacSystemFont, 'Noto Sans', Roboto, sans-serif, 'Bariol';
+$brew_color: #fd6b72;
+$heading_color: #262626; // 4f5057
+$subheading_color: #262626; //4f5057
+
+h1, h2, h3 {
+  font-family: $heading_font;
+  color: $heading_color;
+}
+
+h4, h5, h6 {
+  font-family: $subheading_font;
+  color: $subheading_color;
+}
+
+.logo-font {
+  font-family: Brusher, Lato, proxima-nova, BlinkMacSystemFont, Roboto, sans-serif !important;
+}
+
+small, .small {
+  font-size: 0.8rem;
+}
+
+// p {
+//   font-size: 16px;
+//   line-height: 22px;
+// }

@@ -11,4 +11,12 @@ module ProfileBrewHelper
 
     events
   end
+
+  def interested_in_brew?(brew)
+    self.brews.merge(Brewing.interested).where(brews: { id: brew.id }).exists?
+  end
+
+  def going_to_brew?(brew)
+    self.brews.merge(Brewing.going).where(brews: { id: brew.id }).exists?
+  end
 end

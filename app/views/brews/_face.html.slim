@@ -1,0 +1,5 @@
+- unless defined?(profile)
+  div class="face-squares__empty-face #{draw_gender == 'male' ? 'face-squares__empty-face--male' : 'face-squares__empty-face--female'}"
+- else
+  div.face-squares__face-image data-profile-idx=idx
+    = cl_image_tag profile.photos.primary.take.try(:public_id), gravity: :face, height: 60, width: 60, crop: :thumb, radius: :max

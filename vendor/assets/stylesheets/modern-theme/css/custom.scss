@@ -1,0 +1,115 @@
+/* Write your custom CSS here */
+
+.upcase {
+  text-transform: uppercase;
+}
+
+.page-inner {
+  min-height: 1200px;
+}
+
+.label-default {
+  color: #4E5E6A;
+}
+
+.weather-current {
+  overflow: visible;
+  max-width: 60%;
+}
+
+.sidebar-section-heading {
+  padding: 10px;
+  color: white;
+  text-align: center;
+}
+
+.menu.accordion-menu a {
+  padding: 8px 18px;
+}
+
+.btn-group .button_to {
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.conversation {
+  height: 600px;
+  padding: 10px 10px;
+  border: 1px solid #eee;
+  overflow: auto;
+  // min-height: 500px;
+  position: relative;
+}
+
+.conversation .messages {
+  clear: both;
+  overflow: auto;
+  width: 100%;
+  margin-bottom: 10px;
+  position: relative;
+  max-height: 100% !important;
+}
+
+.conversation .loading {
+  position: absolute;
+  top: 45%;
+  left: 40%;
+  color: black;
+  font-size: 16px;
+}
+
+.send-message {
+  background-color: #eee;
+  margin: 0px auto;
+  padding: 5px 10px;
+  height: 50px;
+}
+
+.message-box {
+  margin: 0px auto;
+  width: 100%;
+  height: 40px;
+  padding: 4px 8px;
+  border: none;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.messages .sent {
+  clear: both;
+  float: right;
+  background-color: #319cf8;
+  color: white;
+  padding: 8px 10px;
+  border: 1px solid lightblue;
+  border-radius: 15px;
+  max-width: 70%;
+}
+
+.messages .received {
+  clear: both;
+  float: left;
+  background-color: #efe8ec;
+  color: black;
+  padding: 8px 10px;
+  border: 1px solid gainsboro;
+  border-radius: 15px;
+  max-width: 70%;
+}
+
+.form-group label {
+  font-weight: bold !important;
+}
+
+.weather-info li {
+  padding: 2px 0px;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-flow: row nowrap;
+}
+

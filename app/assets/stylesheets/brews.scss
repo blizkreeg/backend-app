@@ -1,0 +1,1104 @@
+// Place all the styles related to the Brews controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+// a nice yellow-ish bg color #fff8ef
+
+@import 'typography';
+@import 'colors';
+@import 'common';
+@import 'actionbar';
+// @import 'homepage';
+@import 'introductions';
+@import 'conversations';
+
+.make-brew {
+}
+
+.make-brew .mdl-card__title {
+  height: 150px;
+  color: white;
+  background: image-url('grey_wash_wall.png') center / cover;
+}
+
+.make-brew__bottom-holder {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+}
+
+.welcome-cover {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+  background-image: image-url('brew-india-cover.jpg');
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  height: 250px;
+  color: white;
+}
+
+.header {
+}
+
+.header__nav {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.header__nav__item {
+  padding: 0px 10px;
+  align-self: center;
+
+  h3 {
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    line-height: 24px;
+
+    a {
+      color: #080808;
+      text-decoration: none;
+    }
+  }
+}
+
+.logo-container {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  // border: 1px solid #f68a8a;
+
+
+  .name {
+    font-size: 28px;
+    color: #ff6961;
+    font-weight: 400;
+  }
+}
+
+.cell-container {
+  padding: 20px;
+}
+
+.text-white {
+  color: white;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.centered-header-row {
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+#brews-main-header {
+  margin-bottom: 10px;
+}
+
+.activity-preview {
+  font-size: 14px;
+  border: 1px solid #dedcdf;
+}
+
+.activity-preview .icon {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+}
+
+.activity-preview .primary-image {
+  clear: both;
+  height: 180px;
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.activity-preview .notice {
+  padding: 6px 6px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+  background-color: #f6cf84;
+  color: #101010;
+}
+
+.activity-preview .title {
+  justify-content: center;
+  padding: 8px;
+}
+
+.activity-preview .title .mdl-card__title-text {
+  font-size: 20px;
+}
+
+.activity-preview .short-desc {
+  text-align: center;
+  padding: 8px;
+}
+
+.activity-preview .details-container {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 8px;
+  justify-content: flex-start;
+}
+
+@media screen and (min-width: 800px) {
+  .brew-detail-outer {
+    padding: 25px;
+    border-radius: 2px;
+  }
+
+  .create-brew-container {
+    border: 1px solid #e4e4e4;
+    padding: 25px;
+    border-radius: 2px;
+  }
+}
+
+.brew-detail {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.brew-detail__info__title {
+  color: #e35159;
+}
+
+.brew-detail > div {
+  width: 100%;
+  // text-align: center;
+}
+
+.details {
+  width: 100%;
+}
+
+.details i {
+  padding-right: 10px;
+}
+
+.activity .details .price,
+.activity .details .date,
+.activity .details .place {
+  width: 100%;
+  padding: 5px 0px;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: center;
+  font-family: $subheading_font;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.activity-preview .attending {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 8px;
+  justify-content: flex-start;
+  min-height: 100%;
+}
+
+.activity-preview .attending .summary {
+  margin: 4px;
+  justify-content: center;
+}
+
+.activity-preview .attending .summary .going {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.activity-preview .attending .picture {
+  width: 48px;
+  height: 48px;
+  margin: 4px;
+  border: 1px solid #d8d8d8;
+}
+
+.activity-preview .places-remaining {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 400;
+  font-family: $subheading_font;
+  color: #212a2f;
+  letter-spacing: 0.5px;
+  padding: 10px 0px 20px 0px;
+}
+
+.activity-preview .interested {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 8px;
+  justify-content: flex-start;
+  min-height: 100%;
+}
+
+.face-squares {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0px;
+  width: 100%;
+}
+
+.face-squares__face-image {
+  padding: 4px;
+  border-radius: 2px;
+}
+
+.face-squares__empty-face {
+  width: 60px;
+  height: 60px;
+  padding: 2px;
+  border-radius: 60px;
+}
+
+.face-squares__empty-face--male {
+  border: 1px solid blue;
+}
+.face-squares__empty-face--female {
+  border: 1px solid pink;
+}
+
+@media screen and (min-width: 800px) {
+  .face-squares__face-image {
+    cursor: pointer;
+  }
+}
+
+.group-stats {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+.group-stats__stat {
+  padding: 4px;
+  margin: 5px;
+  // border: 1px solid #ededed;
+  // border-radius: 2px;
+  // text-align: center;
+}
+
+.group-stats__stat__supporting-text {
+  // font-weight: 500;
+  // font-size: 14px;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.group-stats__stat__number {
+  // font-weight: 400;
+  // font-size: 18px;
+  font-weight: 300;
+  text-align: center;
+  font-size: 14px;
+}
+
+@media only screen and (max-width: 799px) {
+
+}
+
+#profile-cards {
+  display: block;
+  position: relative;
+}
+
+.profile-card-lightbox {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.profile-card-lightbox:target {
+  /** Remove default browser outline */
+  outline: none;
+
+  /** Unhide lightbox **/
+  display: block;
+}
+
+.profile-card-lightbox__container {
+  position: absolute;
+  background-color: white;
+}
+
+@media screen and (min-width: 800px) {
+  .profile-card-lightbox__container {
+    top: 10%;
+    height: auto;
+    left: calc(50% - 200px);
+  }
+}
+
+@media screen and (max-width: 799px) {
+  .profile-card-lightbox__container {
+    top: 0;
+    height: 100%;
+    width: 100%;
+    left: 0;
+  }
+}
+
+@media screen and (max-width: 799px) {
+  .profile-card-lightbox__container {
+    justify-content: flex-start;
+  }
+}
+
+.profile-card {
+  background-color: white;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 2px;
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+
+  .separator {
+    padding: 2px;
+  }
+}
+
+.profile-card__details {
+  width: 90%;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.92);
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 10px 10px;
+}
+
+.profile-card__supporting-text {
+  font-size: 14px;
+  color: #606060;
+}
+
+.profile-card__name-plate {
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 300;
+  padding: 8px 0px;
+}
+
+.profile-card__photo {
+  // height: 250px;
+  width: auto;
+  height: auto;
+  background-color: #fff;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  min-width: 300px;
+  min-height: 500px;
+}
+
+.profile-card__education__schools {
+}
+
+.profile-card__education__schools ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.profile-card__interests {
+  padding: 20px;
+}
+
+.brew-form {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.brew-form__field {
+  width: calc(100% - 20px);
+  padding: 10px 10px;
+  margin-bottom: 25px;
+  background-color: white;
+}
+
+.brew-form__field-title {
+  font-size: 18px;
+  font-weight: 400;
+  padding: 2px;
+}
+
+.brew-form__field-title__supporting-text {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 14px;
+  color: #686868;
+}
+
+.brew-form__field__helper-text {
+  font-size: 16px;
+}
+
+.brew-form .click-activity-title {
+  clear: both;
+  font-weight: 400;
+  color: #333;
+  font-size: 18px;
+  padding: 6px 0px;
+}
+
+.brew-form {
+  .mdl-textfield__label {
+    font-size: 16px;
+    color: #9a9b9c;
+    font-weight: 400;
+  }
+
+  .mdl-textfield__input {
+    height: 45px;
+    border: 1px solid rgba(0,0,0,.12);
+  }
+}
+
+.brew-form__select-datetime {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px 0px;
+}
+
+.brew-form__select-date {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.brew-form__select-time {
+  width: 90%;
+}
+
+.brew-form__select-time__range {
+}
+
+.brew-form__select-time-display {
+  text-align: center;
+  padding: 10px 0px 0px 0px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.brew-form__select-time-display__time {
+  display: inline-block;
+  padding-left: 3px;
+}
+
+.brew-form__select-tag {
+  color: #333;
+  background-color: #dedede;
+  border: 1px solid #cdcdcd;
+  padding: 8px;
+  margin: 0px 6px 4px 0px;
+  border-radius: 1px;
+  white-space: nowrap;
+}
+
+.brew-form__select-tag--chosen {
+  color: #ffffff;
+  background-color: #ff6961;
+  border: 1px solid #ffffff;
+}
+
+input[type=range]{
+  /*removes default webkit styles*/
+  -webkit-appearance: none;
+
+  /*fix for FF unable to apply focus style bug */
+  border: 1px solid white;
+
+  /*required for proper track sizing in FF*/
+  width: 100%;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ff6961;
+    margin-top: -4px;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+.brew-form__select-gender {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+#join-cta {
+
+}
+
+.brew-optin-button {
+  text-align: center;
+  background-color: #f4b50e; /* ffcd6e #ffac0c;*/
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+
+  button, button:active, button:target, a, a:visited, a:hover {
+    font-family: $subheading_font;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 24px;
+    display: inline-flex;
+    vertical-align: middle;
+    background-color: inherit !important;
+    border: none !important;
+  }
+}
+
+.join-brew-button {
+  text-align: center;
+  background-color: #fd5b63;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+
+  a, a:visited, a:hover {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 24px;
+    display: inline-flex;
+    vertical-align: middle;
+  }
+}
+
+.show-interest-button {
+  text-align: center;
+  background-color: #f9de56; /* ffcd6e #ffac0c;*/
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+
+  button, button:active, button:target, a, a:visited, a:hover {
+    color: #333;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 24px;
+    display: inline-flex;
+    vertical-align: middle;
+    background-color: inherit !important;
+    border: none !important;
+  }
+}
+
+.interested-button {
+  text-align: center;
+  background-color: #fefefe;
+  // background-color: #f4b50e;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+
+  a, a:visited, a:hover {
+    color: #eeac0c;
+    text-decoration: none;
+    font-size: 24px;
+    display: inline-flex;
+    vertical-align: middle;
+  }
+}
+
+.registered-button {
+  text-align: center;
+  background-color: #212a31;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+
+  a, a:visited, a:hover {
+    color: #ffac0c;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 24px;
+    display: inline-flex;
+    vertical-align: middle;
+  }
+}
+
+.fixed-bottom {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  content: "&nbsp;";
+}
+
+
+.purchase-button {
+  text-align: center;
+  background-color: #01ab44; /* #ffac0c;*/
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  a, a:visited, a:hover {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 24px;
+    display: inline-flex;
+    vertical-align: middle;
+  }
+}
+
+.mobile-bottom-menu-holder {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+}
+
+.mobile-bottom-menu {
+  background-color: $mobile_menu_bgcolor;
+  border-top: 0.5px solid $mobile_menu_bordercolor;
+  color: #2d2d2d;
+  width: 100%;
+  // height: 50px;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  z-index: 2;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 400;
+
+  a {
+    text-align: center;
+    padding: 0 8px;
+    position: relative;
+    // width: calc(100%/3)
+  }
+
+  .name.active, i.active {
+    color: #e46f57;
+  }
+
+  .bubble {
+    color: #fe6363;
+
+    i {
+      font-size: 18px;
+    }
+  }
+}
+
+.mobile-bottom-menu > .mdl-cell {
+  align-self: center;
+  height: auto;
+  width: auto;
+  padding: 6px 20px;
+  text-align: center;
+}
+
+.mobile-bottom-menu > .mdl-cell div.name {
+  display: block;
+  margin: 0px auto;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.mobile-bottom-menu > .mdl-cell i.material-icons {
+  font-size: 20px;
+}
+
+.mobile-bottom-menu > .mdl-cell a, a:active, a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+// http://codepen.io/rendro/pen/qazCG
+// https://rendro.github.io/easy-pie-chart/
+.time-remaining-chart {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 75px;
+  height: 75px;
+  vertical-align: top;
+  position: relative;
+  box-sizing: border-box;
+
+  span.time {
+    font-size: 2em;
+    font-weight: 300;
+  }
+
+  span.label {
+    font-size: 1em;
+    font-weight: 400;
+  }
+
+  canvas{
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+.flash-message {
+  text-align: center;
+  background-color: #ffdb00;
+  font-weight: 300;
+  padding: 10px 6px;
+  overflow: auto;
+}
+
+.index-nudges {
+  font-size: 16px;
+  font-weight: 300;
+  font-family: $subheading_font;
+  padding: 0px;
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.im-powered-link {
+  display: none !important;
+}
+
+.im-checkout {
+  max-width: 100% !important;
+}
+
+.im-checkout-btn.btn--flat {
+  border-radius: 0 !important;
+  background-color: #ffac0c !important;
+  border: none !important;
+  padding: 10px 0px !important;
+}
+
+.payments--close {
+  color: #000 !important;
+}
+
+.comment {
+  // nothing here - this is to throw off iOS Safari so it doesn't enter
+  // readability mode
+  // SO: http://stackoverflow.com/questions/2999600/how-to-disable-safari-reader-in-a-web-page/15418461#15418461
+}
+
+.images-carousel {
+  height: 180px !important;
+}
+
+.brew-image {
+  width: 100%;
+}
+
+.brew-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.images-carousel .owl-stage {
+  width: 100% !important;
+  height: 180px;
+}
+
+.images-carousel .owl-item {
+  width: 100% !important;
+  height: 180px !important;
+}
+
+.notes {
+  padding: 8px 0px;
+  position: relative;
+  text-align: center;
+}
+
+// .notes--shortened {
+//   max-height: 150px;
+//   position: relative;
+//   overflow: hidden;
+// }
+
+// .read-more {
+//   position: absolute;
+//   bottom: 0px;
+//   left: 0;
+//   width: 100%;
+//   text-align: center;
+//   padding: 1px 0;
+//   font-weight: bold;
+
+//   /* "transparent" only works here because == rgba(0,0,0,0) */
+//   background-image: linear-gradient(to bottom, transparent, #f9de56);
+// }
+
+.anonymous-notice {
+  margin-top: 60px;
+  padding: 20px 0px;
+  background-color: #f2ba66;
+  color: white;
+  font-weight: 400;
+  font-size: 18px;
+  text-align: center;
+  font-family: $subheading_font;
+
+  a, a:visited, a:hover {
+    color: white;
+    text-decoration: underline;
+  }
+}
+
+.hosted-by-ekcoffee {
+  display: flex;
+  // width: 100%;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  text-align: right;
+  align-items: center;
+  background-color: #fdf1ee;
+  padding: 6px 6px;
+  color: #888;
+  font-size: 14px;
+  font-weight: 200;
+  font-family: $subheading_font;
+
+  .logo-font {
+    font-size: 16px;
+    font-weight: normal;
+    color: #f37070;
+  }
+}
+
+.hosted-by-member {
+  display: flex;
+  // width: 100%;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  text-align: right;
+  align-items: center;
+  background-color: #eee;
+  padding: 6px 6px;
+  color: #888;
+  font-size: 14px;
+  font-weight: 200;
+  font-family: $subheading_font;
+
+  .trusted-member {
+    font-size: 16px;
+    font-weight: normal;
+    color: #f4b50e;
+  }
+}
+
+.profile-tile {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  margin: 4px 0px;
+  padding: 6px 0px;
+  background-color: white;
+}
+
+.profile-tile__info {
+  display: flex;
+  padding-left: 10px;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.brew-conversation__container {
+  height: auto;
+  overflow: auto;
+  min-height: 500px;
+  position: relative;
+
+  .messages {
+    clear: both;
+    overflow: auto;
+    width: 100%;
+    margin-bottom: 10px;
+    position: relative;
+
+    .sent {
+      clear: both;
+      float: right;
+      color: #2d2d2d;
+      text-align: right;
+      max-width: 70%;
+    }
+
+    .received {
+      clear: both;
+      float: left;
+      color: black;
+      text-align: left;
+      max-width: 70%;
+    }
+  }
+
+  .loading {
+    position: absolute;
+    top: 45%;
+    left: 40%;
+    color: black;
+    font-size: 16px;
+  }
+}
+
+.brew-conversation__send-message {
+  background-color: #eee;
+  margin: 0px auto;
+  padding: 5px 5px;
+  height: 50px;
+
+  .message-box {
+    margin: 0px auto;
+    width: calc(100% - 26px);
+    padding: 8px 8px;
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    vertical-align: center;
+    font-size: 16px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+.brew-conversation__chat-bubble {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
+  padding: 6px 0px;
+
+  .avatar {
+    padding: 2px 4px;
+  }
+
+  .text {
+    padding: 2px 4px;
+  }
+}
+
+.interests-list {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.interests-list__interest {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 15px 0px;
+
+  .name {
+    font-size: 16px;
+    padding-bottom: 6px;
+  }
+
+  .description {
+    font-size: 14px;
+  }
+
+  .people-snapshots {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0px;
+
+    .item {
+      padding: 0px 4px;
+      font-size: 13px;
+
+      img {
+        width: 30px;
+        height: 30px;
+        border-radius: 15px;
+        border: 1px solid $accent_color;
+      }
+    }
+  }
+}

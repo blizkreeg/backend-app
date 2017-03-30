@@ -1,6 +1,6 @@
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE unless Rails.env.production?
 
-class Api::V1::ProfilesController < ApplicationController
+class Api::V1::ProfilesController < ApiController
   respond_to :json
 
   PUBLIC_ACCESS_METHODS = [:create, :sign_in, :index, :add_to_waiting_list]
@@ -47,8 +47,6 @@ class Api::V1::ProfilesController < ApplicationController
 
     @profile.save!
 
-    @profile.create_initial_matches if @profile.gender.present?
-
     # since loading FB albums/photo is time-consuming, precache this
     Profile.delay.precache_facebook_albums(@profile.uuid)
 
@@ -57,7 +55,7 @@ class Api::V1::ProfilesController < ApplicationController
 
     render status: 201
   rescue ActiveRecord::RecordNotUnique => e
-    respond_with_error('Profile already exists', 400, 'none')
+    respond_with_error('Profile already exists', 400, 'email_already_exists')
   end
 
   def sign_in
@@ -102,7 +100,7 @@ class Api::V1::ProfilesController < ApplicationController
     @city = Geocoder.search("#{params[:latitude]}, #{params[:longitude]}").first.city
 
     found_city = nil
-    LIVE_CITIES.each do |city|
+    Rails.application.config.live_in_cities.each do |city|
       if Geocoder::Calculations.distance_between([params[:latitude], params[:longitude]], [city[:lat], city[:lng]]) * 1_000 <= city[:radius].to_f
         found_city = city
         break
@@ -176,7 +174,7 @@ class Api::V1::ProfilesController < ApplicationController
     # - what if this profile has been delivered as a match?
     # - what if this profile is in the middle of a conversation?
     # - what if this profile is delivered as a mutual match?
-    @current_profile.update!(inactive: true, marked_for_deletion: true)
+    @current_profile.update!(inactive: true, marked_for_deletion: true, marked_for_deletion_at: DateTime.now)
 
     Profile.delay.log_delete_request_data(@current_profile.uuid, params[:data][:reason])
 
@@ -281,55 +279,32 @@ class Api::V1::ProfilesController < ApplicationController
 
   # TBD: move this to a different controller
   def home
-    srand Time.now.to_i
+    # https://user-agents.me/cfnetwork-version-list
+    # TODO fix this hack and have special http headers passed from the app
+    #   doing this until the iOS app has Brew implemented as a tab
+    ios_request = (request.user_agent =~ /\AekCoffee.*CFNetwork.*Darwin\/[\d\.]+\z/i).present?
 
-    @content_type =
-      case Rails.env
-      when 'development'
-        'link'
-      when 'test'
-        'link'
-      when 'production'
-        if @current_profile.staff_or_internal
-          'link'
-        else
-          if !@current_profile.approved? || (@current_profile.desirability_score.present? && (@current_profile.desirability_score <= 4))
-            'none'
-          else
-            'link'
-          end
-        end
-      end
-
-    @cta_title = "Announcing, ekCoffee Brews"
-    @cta_content = <<eos
-    Don't you sometimes wish you could meet more singles over an activity that you enjoy doing? \r\n\r\n
-    If so, we've got just the thing for you. ekCoffee Brews is a new way for you to meet singles in a group.
-    Post an activity or join one and meet interesting people while doing something fun!
-eos
-
-    if @current_profile.staff_or_internal
-      @cta_url = ENV['EVENTS_HOST_URL'] + "/brews?uuid=#{@current_profile.uuid}"
-      @cta_button_title = 'See My Brews'
-    else
-      if @current_profile.upcoming_brews.present?
-        @cta_url = ENV['EVENTS_HOST_URL'] + "/brews?uuid=#{@current_profile.uuid}"
-        @cta_button_title = 'See My Brews'
+    if Rails.env.production?
+      if @current_profile.not_approved_or_low_dscore?
+        @content_type = 'none'
       else
-        @cta_url = ENV['EVENTS_HOST_URL'] + "/announce-interests?uuid=#{@current_profile.uuid}"
-        @cta_button_title = 'Learn More'
+        @content_type = ios_request ? 'link' : 'text'
       end
+    else
+      @content_type = ios_request ? 'link' : 'text'
     end
 
-    # override
-    if @current_profile.male?
-      @cta_title = "Are Your Photos Good?"
-      @cta_content = <<eos
-      9 out of 10 times you're not getting a match because your photos don't do justice to who you are. \r\n\r\n
-      Check out our guide to better photos. You'll be glad you did.
+    @cta_title = "Meet interesting singles in a group."
+    @cta_content = <<eos
+
+    🍸  ☕️  🍳  🎲  🎭  🙌
+
+    Get Offline. Do Stuff. Socialize.
 eos
-      @cta_button_title = "ekCoffee Man's Guide to Better Photos →"
-      @cta_url = "https://www.facebook.com/ekCoffee/photos/a.683382955012105.1073741825.118004881549918/1466375583379501/"
+
+    if @content_type == 'link'
+      @cta_url = "https://brew.ekcoffee.com?uuid=#{@current_profile.uuid}&ekcapp=1"
+      @cta_button_title = @current_profile.phone.nil? ? 'BREW' : 'My Brews'
     end
 
     render 'api/v1/shared/home', status: 200
@@ -347,6 +322,10 @@ eos
       attributes.delete(attr_name.to_sym) if type == :array
       attributes += [{ attr_name.to_sym => [] }]
     end
+
+    # if data is empty, .permit(...) on it throws an error
+    return if params[:data].blank?
+
     params.require(:data).permit(*attributes)
   end
 

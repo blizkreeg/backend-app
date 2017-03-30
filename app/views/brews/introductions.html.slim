@@ -1,0 +1,15 @@
+/ - if mobile_device?
+/   = render partial: 'brews/components/actionbar', locals: { title: 'Who can we introduce you to?' }
+
+main
+  / .mobile-action-bar-holder
+  .max960
+    .introductions-container
+      .heading
+        .title Introductions
+        .description Find your next new friend, activity buddy, business connection, or date!
+      = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }
+      .footer
+        | Recently active members.
+        br
+        | Next set of introductions in #{distance_of_time_in_words_to_now(@current_profile.intros_refreshed_at)}

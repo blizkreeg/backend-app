@@ -43,6 +43,8 @@ gem 'redcarpet'
 gem 'google_drive'
 gem 'highcharts-rails'
 gem 'roadie-rails', '~> 1.0'
+gem 'whenever', require: false
+gem 'rollbar'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -57,6 +59,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'quiet_assets'
   gem 'web-console', '~> 2.0'
   # gem 'spring'
   gem 'derailed'

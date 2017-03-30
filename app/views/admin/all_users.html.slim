@@ -1,47 +1,73 @@
-h3 All users
-hr
+.row
+  .col-md-4
+    = form_tag admin_search_users_path, class: 'form-horizontal', method: :get do
+      .form-group
+        .col-md-12
+          = label :search, :type, 'Email', value: 'email', class: 'radio-inline' do
+            = radio_button :search, :type, 'email', checked: false, id: 'search_type_email'
+            | Email
+
+          = label :search, :type, 'First Name', value: 'firstname', class: 'radio-inline' do
+            = radio_button :search, :type, 'firstname', checked: true, id: 'search_type_firstname'
+            | First Name
+
+          = label :search, :type, 'Last Name', value: 'lastname', class: 'radio-inline' do
+            = radio_button :search, :type, 'lastname', checked: false, id: 'search_type_lastname'
+            | Last Name
+
+          = label :search, :type, 'Full Name', value: 'fullname', class: 'radio-inline' do
+            = radio_button :search, :type, 'fullname', checked: false, id: 'search_type_fullname'
+            | Full Name
+
+      .form-group.has-feedback
+        .col-md-12
+          = text_field :search, :key, value: params[:search].try(:[], :key), placeholder: 'Search..', class: 'form-control'
+          span.glyphicon.glyphicon-search.form-control-feedback
+
 - if @profiles.present?
-  .row style='font-weight:600;margin-bottom:8px;border-bottom:1px solid #eee;padding:4px 0px;'
-    .col-xs-2
-      | NAME
-    .col-xs-2
-      | ASL
-    .col-xs-1
-      | SCORE
-    .col-xs-3
-      | STATE INFO
-    .col-xs-2
-      | LAST SEEN
-  - @profiles.each do |profile|
-    .row style='margin-bottom:8px;border-bottom:1px solid #eee;padding:4px 0px;'
-      .col-xs-2
-        = link_to profile.fullname, admin_show_user_path(profile.uuid)
-      .col-xs-2
-        | #{profile.age} &nbsp; #{profile.gender.first} &nbsp; #{profile.location_city}
-      .col-xs-1
-        - if profile.blacklisted? || profile.staff_or_internal
-          | &mdash;
-        - else
-          = profile.desirability_score || 'TBD'
-      .col-xs-3
-        span style='padding: 0px 4px;' class="#{moderation_status_label(profile.moderation_status)}"
-          = profile.moderation_status.first
-        span style='padding:0px 4px;'
-          - if profile.approved_for_stb
-            i.fa.fa-spoon
-        span style='padding:0px 4px;'
-          = profile.state
-      .col-xs-2
-        i.fa.fa-eye
-        | &nbsp; #{distance_of_time_in_words_to_now(profile.last_seen_at) if profile.last_seen_at.present?}
-      / .col-xs-3
-      /   small &nbsp; joined #{distance_of_time_in_words_to_now(profile.created_at)} ago
+  .row
+    .col-md-8.col-xs-12
+      .panel.panel-white
+        .panel-heading
+          h4.panel-title Ordered by last seen
+
+        .panel-body
+          .table-responsive
+            table.table
+              thead
+                tr
+                  th Name
+                  th Details
+                  th Des. Score
+                  th
+                    i.fa.fa-eye
+                    |&nbsp; Last Seen
+
+              tbody
+                - @profiles.each do |profile|
+                  tr
+                    td
+                      = link_to profile.fullname, admin_show_user_path(profile.uuid)
+                    td #{profile.age} &nbsp; #{profile.gender.first} &nbsp; #{profile.location_city}
+                    td
+                      - if profile.blacklisted?
+                        span.label.label-danger BLACKLISTED
+                      - elsif profile.administrator
+                        span.label.label-warning ADMINSTRATOR
+                      - elsif profile.staff_or_internal
+                        span.label.label-info STAFF
+                      - else
+                        span.label.label-primary
+                          = profile.desirability_score || 'UNASSIGNED'
+                    td
+                      | &nbsp; #{distance_of_time_in_words_to_now(profile.last_seen_at) if profile.last_seen_at.present?}
+
 - else
   h5 No more users
 
 p style='margin-top:25px;'
-  - if @page > 0
+  - if @page && @page > 0
     = link_to 'Previous Page', admin_all_users_path(page: @page - 1), class: 'btn btn-default'
     | &nbsp; &nbsp;
-  - if @profiles.present?
+  - @page && @profiles.present?
     = link_to 'Next Page', admin_all_users_path(page: @page + 1), class: 'btn btn-primary'

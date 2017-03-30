@@ -140,7 +140,7 @@ function processNewUserChatMessage(data) {
                   // the disconnected user has messages since being disconnected
                   unirest.post(process.env.HOST_URL + '/v1/accounts/send-push-notification')
                   .headers({'Accept': 'application/json', 'Content-Type': 'application/json'})
-                  .send({ "data": { "single_user": true, "uuid": uuid, "notification_type": "new_conversation_message", "notification_params": { name: senderName, title: 'ekCoffee', body: senderName + ': ' + mostRecentMessage } } })
+                  .send({ "data": { "conversation_uuid": data.conversation_uuid, "single_user": true, "uuid": uuid, "notification_type": "new_conversation_message", "notification_params": { name: senderName, title: 'ekCoffee', body: senderName + ': ' + mostRecentMessage } } })
                   .end(function (response) {
                     if(response.status == 200) {
                       metadataRef.child('sent_push_to_' + uuid).set((new Date).getTime());

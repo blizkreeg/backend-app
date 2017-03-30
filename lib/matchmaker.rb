@@ -20,10 +20,51 @@ module Matchmaker
 
   module_function
 
+  def introduction_suggestions_for(profile, skip_uuids=[])
+    # who should I skip in finding new introductions?
+    skip_uuids = [] if skip_uuids.nil?
+    passed_uuids = skip_uuids + SkippedProfile.where(by: profile).pluck(:skipped_profile_uuid)
+
+    # new requests first
+    interested_profiles = Profile.where.not(uuid: passed_uuids).where(uuid: profile.got_intro_requests.pluck(:by_profile_uuid))
+
+    # basic filters
+    #   - approved members only (visible)
+    #   - exclude myself, staff, those i've passed on, those i've already asked for an intro to, and mutually interested
+    #   - desirability score >= HIGH_DESIRABILITY (7)
+    profiles = Profile
+                  .active
+                  .visible
+                  .not_staff
+                  .where.not(uuid: profile.uuid)
+                  .desirability_score_gte(Profile::HIGH_DESIRABILITY)
+                  .where.not(uuid: passed_uuids)
+                  .where.not(uuid: interested_profiles.map(&:uuid))
+                  .where.not(uuid: profile.asked_for_intros.pluck(:to_profile_uuid)) # don't show people i've already asked an intro to
+                  .where.not(uuid: profile.got_intro_requests.where("CAST(properties->>'mutual' AS boolean) = true").pluck(:by_profile_uuid)) # don't show people who's intro request i've accepted
+
+    # only introduce women to men
+    profiles = profiles.of_gender(profile.seeking_gender) if profile.male?
+
+    # age filter
+    if profile.male?
+      profiles = profiles
+                    .age_gte(profile.age - 4)
+                    .age_lte(profile.age + 2)
+    else
+      profiles = profiles
+                  .age_gte(profile.age - 2)
+                  .age_lte(profile.age + 4)
+    end
+
+    # order by most recently active
+    interested_profiles + profiles.ordered_by_last_seen.limit(5 - interested_profiles.count)
+  end
+
   def create_first_matches(profile_uuid)
     profile = Profile.find(profile_uuid)
     existing_matches_sql = profile.matches.to_sql
-    matchmaking_query = Profile.visible.active.of_gender(profile.seeking_gender)
+    matchmaking_query = Profile.visible.not_staff.active.of_gender(profile.seeking_gender)
     matchmaking_query = matchmaking_query
                           .older_than(profile.seeking_minimum_age)
                           .younger_than(profile.seeking_maximum_age)
@@ -144,7 +185,7 @@ module Matchmaker
   def new_eligible_matches(profile, opts = {})
     existing_matches_sql = profile.matches.to_sql
 
-    matchmaking_query = Profile.visible.active.of_gender(profile.seeking_gender)
+    matchmaking_query = Profile.visible.not_staff.active.of_gender(profile.seeking_gender)
 
     if USE_MATCHING_MODELS.include? 'preferences'
       matchmaking_query =

@@ -1,0 +1,85 @@
+.mdl-grid
+  .mdl-cell.mdl-cell.mdl-cell--4-col-phone.mdl-cell--8-col-tablet.mdl-cell--12-col-desktop
+    .index-nudges
+      - show_nudge = nudges.sample
+      i.material-icons #{show_nudge[:mdl_icon]}
+      | &nbsp;
+      | #{raw(show_nudge[:text])}
+
+  - brews.each do |brew|
+    .mdl-card.mdl-cell.mdl-cell--4-col-phone.mdl-cell--4-col-tablet.mdl-cell--6-col-desktop.activity-preview.activity
+      = link_to(brew_path(brew.slug), class: 'no-decor') do
+        - if brew.hosted_by_ekcoffee
+          = render partial: 'brews/components/hosted_by_ekcoffee_banner'
+        - else
+          = render partial: 'brews/components/hosted_by_member'
+        / .icon
+        /   i.material-icons.md-36 motorcycle
+        - if notice(brew).present?
+          .notice
+            = notice(brew)
+        .title.mdl-card__title
+          h4.mdl-typography--text-center.accent-color--title
+            = brew.title
+        - if brew.primary_image_cloudinary_id.present?
+          - if brew.other_images_cloudinary_ids.present?
+            .image-carousel-slider
+              ul
+                li
+                  .brew-image.primary-image data-image-id="#{brew.primary_image_cloudinary_id}"
+                - if brew.other_images_cloudinary_ids.present?
+                  - brew.other_images_cloudinary_ids.each do |image_id|
+                    li
+                      .brew-image data-image-id="#{image_id}"
+          - else
+            .brew-image.primary-image data-image-id="#{brew.primary_image_cloudinary_id}"
+
+        - if brew.notes.present?
+          .short-desc
+            = simple_format(truncate(strip_tags(brew.notes), length: 250, omission: '...'))
+        .details-container
+          .details
+            = render partial: 'brews/components/details', locals: { brew: brew }
+        .attending
+          .summary.full-width.text-center
+            span.going
+              = names_snippet(brew)
+              = going_snippet(brew)
+          = render partial: 'brews/faces', locals: { brew: brew, profiles: brew.profiles, link_profile: false }
+
+          / - unless brew.tipped?
+          /   .interested
+          /     .time-remaining-chart data-percent='76'
+          /       span.time 1
+          /       span.label hour
+          /     div.clearfix
+          /       | 1 hour remaining for 2 men and 3 women to make this happen!
+          / - else
+          /   | 2 spots remaining.
+
+        - if places_remaining(brew).present?
+          .places-remaining
+            = raw(places_remaining(brew))
+
+        / dummy div to prevent the CTA button from overlapping content
+        / show only if there's a cta button below
+        / .fixed-bottom
+
+      .cta.hidden
+        - if current_profile.interested_in_brew?(brew)
+          - if brew.price.nil?
+            = render partial: 'brews/components/interested_button', locals: { placement: 'absolute', title: "Interested", dest: brew_path(brew.slug) }
+          - else
+            = render partial: 'brews/components/purchase_button', locals: { placement: 'absolute', title: "Confirm", dest: brew.payment_link, brew: brew }
+        - elsif current_profile.going_to_brew?(brew)
+          = render partial: 'brews/components/registered_button', locals: { placement: 'absolute', title: "You're going!", dest: brew_path(brew.slug) }
+        - else
+          = render partial: 'brews/components/show_interest_button', locals: { placement: 'absolute', title: "I'm interested", dest: brew_show_interest_path(brew.slug) }
+          / - btn_title = brew.full_for?(current_profile) ? 'FULL' : "I'm interested &rarr;"
+          / = render partial: 'brews/brew_cta_button', locals: { placement: 'absolute', title: btn_title, dest: brew_path(brew.slug) }
+
+javascript:
+  $(function() {
+    loadBrewImages();
+    // loadTimeCharts();
+  });
