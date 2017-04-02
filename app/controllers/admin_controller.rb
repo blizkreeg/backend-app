@@ -289,9 +289,9 @@ class AdminController < ApplicationController
     # post_in = (params[:post][:posted_on] || 0).to_i.hours
     params[:post][:posted_on] = Time.now.utc# + post_in
     post = Post.create!(post_params)
-    send_magazine_push(post)
+    notification_time = send_magazine_push(post).strftime("%-d %b @ %r %Z")
 
-    flash[:success] = "Successfully scheduled new content to be published"
+    flash[:success] = "Published magazine post! Push notification scheduled at #{notification_time}."
     redirect_to :back
   end
 
@@ -352,5 +352,7 @@ class AdminController < ApplicationController
     PushNotifier.delay_until(send_at).send_transactional_push(send_to_uuids,
                                                               'new_content',
                                                               body: "On the Magazine now: #{post.title}")
+
+    send_at
   end
 end
