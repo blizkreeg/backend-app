@@ -287,13 +287,11 @@ class AdminController < ApplicationController
 
   def create_content
     # post_in = (params[:post][:posted_on] || 0).to_i.hours
-
     params[:post][:posted_on] = Time.now.utc# + post_in
-
-    Post.create!(post_params)
+    post = Post.create!(post_params)
+    send_magazine_push(post)
 
     flash[:success] = "Successfully scheduled new content to be published"
-
     redirect_to :back
   end
 
@@ -340,5 +338,19 @@ class AdminController < ApplicationController
     @suspicious_cnt = Profile.with_moderation_status('unmoderated').possibly_not_single.count
     @unmoderated_photos_cnt = Photo.with_reviewed(false).count
     @profiles_marked_for_deletion_cnt = Profile.is_marked_for_deletion.count
+  end
+
+  def send_magazine_push(post)
+    # send push notification at 6pm
+    now_ist = Time.now.utc.in_time_zone('Kolkata')
+    send_to_uuids = Profile.members.pluck(:uuid)
+    if now_ist.hour <= 18
+      send_at = now_ist.change(hour: 18)
+    else
+      send_at = now_ist.change(hour: 18, day: (now_ist.day+1))
+    end
+    PushNotifier.delay_until(send_at).send_transactional_push(send_to_uuids,
+                                                              'new_content',
+                                                              body: "On the Magazine now: #{post.title}")
   end
 end
