@@ -255,7 +255,7 @@ class AdminController < ApplicationController
 
     Profile.find(params[:uuid]).destroy
 
-    redirect_to :back
+    redirect_to admin_profiles_marked_for_deletion_path
   end
 
   def new_brew
