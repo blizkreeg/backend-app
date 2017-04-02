@@ -10,7 +10,7 @@ class UserNotifier
   def self.send_welcome_messages_via_butler(uuid)
     p = Profile.find(uuid) rescue nil
 
-    return if p.blacklisted? || p.nil?
+    return if p.nil? || p.blacklisted?
 
     messages = [SALUTATION % {firstname: p.firstname}] + WELCOME_MESSAGES
     Profile.delay.send_butler_messages(p.uuid, messages)
