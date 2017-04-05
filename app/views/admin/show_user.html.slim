@@ -62,22 +62,19 @@
         p
 
 
-        - @profile.photos.ordered.each do |photo|
-            div.user-photo data-public-id=photo.public_id style='position:relative;width: 160px;height: 160px;float:left;margin:2px;'
-              = cl_image_tag "#{photo.public_id}.jpg", style: 'width: 160px;height: 160px;'
-              - if photo.reviewed
-                - if photo.approved
-                  = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'btn btn-danger', style: 'position:absolute;top:0;right:0'
-                - else
-                  = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'btn btn-success', style: 'position:absolute;top:0;left:0'
-                span style='position:absolute;bottom:0;left:45%;color:black;background-color:white;padding: 1px 2px;' #{photo.approved ? 'APPROVED' : 'REJECTED'}
+        div style='display: flex; flex-flow: row wrap; justify-content: flex-start;'
+          - @profile.photos.ordered.each do |photo|
+            span style='text-align: center;'
+              div.user-photo data-public-id=photo.public_id style='position:relative;width: 160px;height: 160px;float:left;margin:2px;'
                 - if photo.primary
-                  span style='position:absolute;top:0;left:50%;color:white;background-color:black;padding: 1px 4px;font-weight:600;font-size:16px;' P
+                  span style='position:absolute;bottom:0;left:30%;color:white;background-color:black;padding: 1px 4px;font-weight:600;font-size:16px;' PRIMARY
+                = cl_image_tag "#{photo.public_id}.jpg", style: 'width: 160px;height: 160px;'
+              - if photo.approved
+                = button_to admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'btn btn-danger' do
+                  i.fa.fa-close
               - else
-                - if photo.approved
-                  = button_to 'Reject', admin_moderate_photos_path(ids: [photo.id], approved: false), class: 'btn btn-danger', style: 'position:absolute;top:0;right:0'
-                - else
-                  = button_to 'Approve', admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'btn btn-success', style: 'position:absolute;top:0;left:0'
+                = button_to admin_moderate_photos_path(ids: [photo.id], approved: true), class: 'btn btn-success' do
+                  i.fa.fa-check
 
   .col-md-12
     .panel.panel-white

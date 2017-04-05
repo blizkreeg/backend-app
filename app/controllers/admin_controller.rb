@@ -111,8 +111,7 @@ class AdminController < ApplicationController
 
   def profiles_marked_for_deletion
     # USE : Profile.is_marked_for_deletion.with_gender('male').group("properties->>'location_city'").select("count(uuid)")
-    @profiles_marked_for_deletion_m = Profile.is_marked_for_deletion.with_gender('male')
-    @profiles_marked_for_deletion_w = Profile.is_marked_for_deletion.with_gender('female')
+    @profiles_marked_for_deletion = Profile.is_marked_for_deletion
   end
 
   def lookup_user
