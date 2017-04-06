@@ -79,6 +79,28 @@ body.introductions {
   }
 }
 
+.no-intros {
+  display: flex;
+  height: 100%;
+  flex-grow: 1;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 25px 25px;
+  text-align: center;
+
+  @media only screen and (min-height: 600px) {
+    $intro_card_height: 300px;
+    height: calc(#{$intro_card_height} + 50px);
+  }
+
+  @media only screen and (max-height: 600px) {
+    $intro_card_height: 250px;
+    height: calc(#{$intro_card_height} + 50px);
+  }
+}
+
 // horizontally scrolling cards
 .intro-row {
   display: flex;

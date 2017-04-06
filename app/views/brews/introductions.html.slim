@@ -8,8 +8,14 @@ main
       .heading
         .title Introductions
         .description Find your next new friend, activity buddy, business connection, or date!
-      = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }
-      .footer
-        | Recently active members.
-        br
-        | Next set of introductions in #{distance_of_time_in_words_to_now(@current_profile.intros_refreshed_at)}
+      - if @profiles.blank?
+        .no-intros
+          = image_tag 'sad.png'
+          h5.accent-color--title Whoops! Hang tight, #{current_profile.firstname}.
+          h6 We seem to have temporarily run out of introductions for you. We promise this won't last long.
+      - else
+        = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }
+        .footer
+          | Recently active members.
+          br
+          | Next set of introductions in #{distance_of_time_in_words_to_now(@current_profile.intros_refreshed_at)}
