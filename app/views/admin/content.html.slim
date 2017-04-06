@@ -4,7 +4,7 @@ h3 Magazine Content
     - @posts.each do |post|
       .panel.panel-white
         .panel-body
-          p #{post.posted_on.strftime("%B %d, %Y")}
+          p #{post.posted_on.in_time_zone('Kolkata').strftime("%c %Z")}
           strong.upcase #{post.post_type}
           h5 #{post.title}
           p #{post.excerpt}
