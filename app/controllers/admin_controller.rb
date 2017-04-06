@@ -38,11 +38,11 @@ class AdminController < ApplicationController
                               .count
     @latest_brewings = Brewing.ordered_by_recency.limit(10)
 
-    @usersthatmatter_yesterday = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).where("(properties->>'last_seen_at')::date = '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
-    @usersthatmatter_today = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).where("(properties->>'last_seen_at')::date = '#{Time.now.utc.to_date.to_s}'::date").count
-    @usersthatmatter_total = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).count
-    @usersthatmatter_men = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).with_gender('male').count
-    @usersthatmatter_women = Profile.visible.active.not_staff.desirability_score_gte(7).within_distance(18.98, 72.83).with_gender('female').count
+    @usersthatmatter_yesterday = Profile.members.not_staff.where("(properties->>'last_seen_at')::date = '#{(Time.now - 24.hours).utc.to_date.to_s}'::date").count
+    @usersthatmatter_today = Profile.members.not_staff.where("(properties->>'last_seen_at')::date = '#{Time.now.utc.to_date.to_s}'::date").count
+    @usersthatmatter_total = Profile.members.not_staff.count
+    @usersthatmatter_men = Profile.members.not_staff.with_gender('male').count
+    @usersthatmatter_women = Profile.members.not_staff.with_gender('female').count
 
     # @intent_dating = Profile.with_intent('Dating').count
     # @intent_relationship = Profile.with_intent('Relationship').count

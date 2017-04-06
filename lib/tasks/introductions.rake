@@ -1,7 +1,7 @@
 namespace :introductions do
 
   task :schedule_reminder => :environment do
-    Profile.active.not_staff.visible.desirability_score_gte(Profile::HIGH_DESIRABILITY).within_distance(18.98, 72.83).each do |profile|
+    Profile.members.not_staff.each do |profile|
       message = [
                   "We have new introductions for you, #{profile.firstname}!",
                   "Have you checked out today's introductions, #{profile.firstname}?"

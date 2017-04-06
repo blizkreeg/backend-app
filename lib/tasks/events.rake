@@ -56,7 +56,7 @@ namespace :events do
   end
 
   task :send_mailer => :environment do
-    @profiles = Profile.visible.desirability_score_gte(7).within_distance(18.98, 72.83)
+    @profiles = Profile.members.not_staff
     @profiles.each do |profile|
       skip_emails = %w(
         rahul.dsouza@gmail.com
