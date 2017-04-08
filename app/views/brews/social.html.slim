@@ -63,16 +63,14 @@ javascript:
   function makeActive($card) {
     $card.animate({
       width: '300px',
-      height: '300px',
-      box-shadow: '0px 0px 5px 4px #ededed'
+      height: '300px'
     }, 1500);
   }
 
   function makeInactive($card) {
     $card.animate({
       width: '270px',
-      height: '270px',
-      box-shadow: 'none'
+      height: '270px'
     }, 1500);
   }
 
@@ -93,7 +91,7 @@ javascript:
     //   scrollPos = currPos;
     // });
 
-    $('.social-card').on('swipeleft', function(e) {
+    $('.social-card').on('click', function(e) {
       showNextCard();
     });
 
