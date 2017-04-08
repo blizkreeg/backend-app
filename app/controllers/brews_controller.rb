@@ -6,8 +6,11 @@ class BrewsController < WebController
   WAITLIST_LAUNCH_DATE = Date.new(2017, 1, 31)
   PUBLIC_EXCEPTION_METHODS = [:show]
   WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
-  NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations]
-  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with]
+
+  # screens to show the bottom tabs on
+  NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations, :social]
+
+  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with, :social]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -116,9 +119,6 @@ class BrewsController < WebController
     @names_hash = @brew.profiles.inject({}) { |hash, profile| hash[profile.uuid] = profile.firstname; hash }
   end
 
-  def show_user_activity
-  end
-
   def add_to_waitlist; end
 
   def show_on_waitlist
@@ -186,6 +186,10 @@ class BrewsController < WebController
     respond_to do |format|
       format.json { render json: { success: false } }
     end
+  end
+
+  def social
+    @section = 'social'
   end
 
   def conversations

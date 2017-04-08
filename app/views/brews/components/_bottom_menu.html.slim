@@ -6,6 +6,14 @@
     .bubble style='display: none; position: absolute; top: 0; right: 0;'
       i.material-icons fiber_manual_record
 
+  - if current_profile.staff_or_internal
+    = link_to(social_path, class: 'no-decor social-menu') do
+      .mdl-cell
+        i class="material-icons #{'active' if active == 'social'}" group
+        / div class="name #{'active' if active == 'social'}" Introductions
+      .bubble style='display: none; position: absolute; top: 0; right: 0;'
+        i.material-icons fiber_manual_record
+
   = link_to(conversations_path, class: 'no-decor conversations-menu') do
     .mdl-cell
       i class="material-icons #{'active' if active == 'conversations'}" chat

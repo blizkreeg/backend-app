@@ -1,0 +1,78 @@
+main
+  .max960
+    .social-container
+      h2 SOCIAL
+      h5 Q of the day
+      .social-scroll
+        div.social-card.active data-idx="0" 1
+        div.social-card data-idx="1" 2
+        div.social-card data-idx="2" 3
+        div.social-card data-idx="3" 4
+
+
+
+javascript:
+  var screenWidth = $('body').innerWidth();
+  var $socialCards = $('.social-card');
+  var scrollPos = 0;
+
+  function getScrollPos() {
+    return $('.social-scroll').scrollLeft();
+  }
+
+  function showNextCard() {
+    var $activeCard = $('.social-card.active');
+    var cardIndex = $activeCard.data('idx');
+    var nextIndex = cardIndex + 1;
+    var currPos = getScrollPos();
+
+    if(cardIndex == ($socialCards.length - 1)) {
+      return;
+    }
+
+    $('.social-scroll').animate({ scrollLeft: currPos + 300 }, 1000);
+    $($socialCards[nextIndex]).toggleClass('active', 1500);
+    $activeCard.toggleClass('active', 1500);
+  }
+
+  function showPreviousCard() {
+    var $activeCard = $('.social-card.active');
+    var cardIndex = $activeCard.data('idx');
+    var nextIndex = cardIndex - 1;
+    var currPos = getScrollPos();
+
+    if(cardIndex == 0) {
+      return;
+    }
+
+    $('.social-scroll').animate({ scrollLeft: currPos - 300 }, 1000);
+
+    $($socialCards[nextIndex]).toggleClass('active', 1500);
+    $activeCard.toggleClass('active', 1500);
+  }
+
+  $(function() {
+    // $('.social-scroll').on('scroll', function(e) {
+    //   var currPos = $(this).scrollLeft();
+
+    //   if (scrollPos < currPos) {
+    //     console.log('scroll right');
+    //     showNextCard();
+    //   }
+    //   if (scrollPos > currPos)
+    //   {
+    //       console.log('scroll left');
+    //       showPreviousCard();
+    //   }
+
+    //   scrollPos = currPos;
+    // });
+
+    $('.social-card').on('swipeleft', function(e) {
+      showNextCard();
+    });
+
+    $('.social-card').on('swiperight', function(e) {
+      showPreviousCard();
+    });
+  });

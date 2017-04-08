@@ -13,10 +13,10 @@ Rails.application.routes.draw do
   get '/join-waitlist', to: 'brews#add_to_waitlist'
   get '/show-waitlist', to: 'brews#show_on_waitlist'
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
-  get '/activity', to: 'brews#show_user_activity', as: :brew_show_user_activity
-  get '/community', to: 'brews#community', as: :community
   get '/introductions', to: 'brews#introductions', as: :introductions
+  get '/social', to: 'brews#social', as: :social
   get '/conversations', to: 'brews#conversations', as: :conversations
+  get '/community', to: 'brews#community', as: :community
   get '/conversation-with/:profile_uuid', to: 'brews#conversation_with', as: :conversation_with
   post '/request-introduction', to: 'brews#request_introduction', as: :request_introduction
   post '/accept-introduction', to: 'brews#accept_introduction', as: :accept_introduction
