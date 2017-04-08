@@ -23,32 +23,57 @@ javascript:
   function showNextCard() {
     var $activeCard = $('.social-card.active');
     var cardIndex = $activeCard.data('idx');
-    var nextIndex = cardIndex + 1;
-    var currPos = getScrollPos();
 
     if(cardIndex == ($socialCards.length - 1)) {
       return;
     }
 
+    var nextIndex = cardIndex + 1;
+    var currPos = getScrollPos();
+    var $nextCard = $($socialCards[nextIndex]);
+
     $('.social-scroll').animate({ scrollLeft: currPos + 300 }, 1000);
-    $($socialCards[nextIndex]).toggleClass('active', 1500);
-    $activeCard.toggleClass('active', 1500);
+
+    makeActive($nextCard);
+    makeInactive($activeCard);
+    $nextCard.toggleClass('active');
+    $activeCard.toggleClass('active');
   }
 
   function showPreviousCard() {
     var $activeCard = $('.social-card.active');
     var cardIndex = $activeCard.data('idx');
-    var nextIndex = cardIndex - 1;
-    var currPos = getScrollPos();
 
     if(cardIndex == 0) {
       return;
     }
 
+    var nextIndex = cardIndex - 1;
+    var currPos = getScrollPos();
+    var $nextCard = $($socialCards[nextIndex]);
+
     $('.social-scroll').animate({ scrollLeft: currPos - 300 }, 1000);
 
-    $($socialCards[nextIndex]).toggleClass('active', 1500);
-    $activeCard.toggleClass('active', 1500);
+    makeActive($nextCard);
+    makeInactive($activeCard);
+    $nextCard.toggleClass('active');
+    $activeCard.toggleClass('active');
+  }
+
+  function makeActive($card) {
+    $card.animate({
+      width: '300px',
+      height: '300px',
+      box-shadow: '0px 0px 5px 4px #ededed'
+    }, 1500);
+  }
+
+  function makeInactive($card) {
+    $card.animate({
+      width: '270px',
+      height: '270px',
+      box-shadow: 'none'
+    }, 1500);
   }
 
   $(function() {
