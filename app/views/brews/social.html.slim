@@ -4,7 +4,7 @@ main
       h2 SOCIAL
       h5 Q of the day
       .social-scroll
-        div.social-card.active data-idx="0" 1
+        div.social-card.active style="width: 300px; height: 300px;" data-idx="0" 1
         div.social-card data-idx="1" 2
         div.social-card data-idx="2" 3
         div.social-card data-idx="3" 4
@@ -91,7 +91,7 @@ javascript:
     //   scrollPos = currPos;
     // });
 
-    $('.social-card').on('click', function(e) {
+    $('.social-card').on('swipeleft', function(e) {
       showNextCard();
     });
 
