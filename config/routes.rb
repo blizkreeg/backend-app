@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
   get '/introductions', to: 'brews#introductions', as: :introductions
   get '/social', to: 'brews#social', as: :social
+  get '/new-social', to: 'brews#new_social', as: :new_social
   get '/conversations', to: 'brews#conversations', as: :conversations
   get '/community', to: 'brews#community', as: :community
   get '/conversation-with/:profile_uuid', to: 'brews#conversation_with', as: :conversation_with
