@@ -83,6 +83,15 @@ body.social {
 .new-social-container {
 
   .text-input {
-    padding: 2px 5px;
+    margin: 0 0;
+    padding: 1px 10px;
+    color: white;
+    background-color: rgba(10, 10, 10, 0.6);
+    vertical-align: middle;
+    font-size: 14px;
+    user-select: none;
+    box-sizing: border-box;
+    height: 49px;
+    padding-right: 4px;
   }
 }

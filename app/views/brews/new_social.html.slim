@@ -6,6 +6,11 @@ main
   .max960
     .new-social-container
       h3.mt-0.text-center Q of the day
-      = cl_image_upload_tag :photo2
-      = file_field_tag :photo, accept: 'image/*;capture=camera'
-      = text_field_tag :text, '', placeholder: "...", class: 'mdl-textfield__input text-input'
+      = cl_image_upload_tag :photo2, name: "photo"
+      / = file_field_tag :photo, accept: 'image/*;capture=camera', name: "photo"
+      = text_field_tag :text, '', placeholder: "", class: 'mdl-textfield__input text-input'
+
+javascript:
+  $(function() {
+    $('.text-input').focus();
+  });
