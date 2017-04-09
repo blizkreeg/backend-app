@@ -19,7 +19,7 @@ javascript:
   var messageSendOpen = false;
   var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}conversations/#{@conversation.uuid}/messages");
   var disconnectedRef = new Firebase("#{Rails.application.config.firebase_db_url}users/#{current_profile.uuid}/disconnectedAt");
-  var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(50);
+  var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(100);
   var recipient_uuid = "#{@profile.uuid}";
   var sendingMessage = false;
 
