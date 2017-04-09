@@ -32,7 +32,7 @@ javascript:
     var currPos = getScrollPos();
     var $nextCard = $($socialCards[nextIndex]);
 
-    $('.social-scroll').animate({ scrollLeft: currPos + 300 }, 1000);
+    $('.social-scroll').animate({ scrollLeft: currPos + 300 }, 500);
 
     makeActive($nextCard);
     makeInactive($activeCard);
@@ -52,7 +52,7 @@ javascript:
     var currPos = getScrollPos();
     var $nextCard = $($socialCards[nextIndex]);
 
-    $('.social-scroll').animate({ scrollLeft: currPos - 300 }, 1000);
+    $('.social-scroll').animate({ scrollLeft: currPos - 300 }, 500);
 
     makeActive($nextCard);
     makeInactive($activeCard);
@@ -64,14 +64,14 @@ javascript:
     $card.animate({
       width: '300px',
       height: '300px'
-    }, 1500);
+    }, 500);
   }
 
   function makeInactive($card) {
     $card.animate({
       width: '270px',
       height: '270px'
-    }, 1500);
+    }, 500);
   }
 
   $(function() {
