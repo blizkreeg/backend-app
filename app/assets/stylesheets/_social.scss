@@ -22,11 +22,11 @@ body.social {
   align-items: center;
   overflow: scroll;
   margin: 0 0;
-  padding: 5px;
   box-sizing: border-box;
+  padding: 0 15px;
 
   .social-card {
-    width: 270px;
+    width: calc(100vw - 50px - 30px);
     overflow-y: scroll;
     flex-grow: 0;
     flex-shrink: 0;
