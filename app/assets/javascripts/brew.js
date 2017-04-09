@@ -21,3 +21,5 @@
 // require zepto.min
 //= require brew/index
 //= require brew/show
+
+$.mobile.autoInitializePage = false;
