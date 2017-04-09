@@ -192,6 +192,10 @@ class BrewsController < WebController
     @section = 'social'
   end
 
+  def new_social
+
+  end
+
   def conversations
     @section = 'conversations'
 

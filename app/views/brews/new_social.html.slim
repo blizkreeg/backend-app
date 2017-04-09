@@ -1,0 +1,11 @@
+- if mobile_device?
+  = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: social_path, title: '' }
+
+main
+  .mobile-action-bar-holder
+  .max960
+    .new-social-container
+      h3.mt-0.text-center Q of the day
+      = cl_image_upload_tag :photo2
+      = file_field_tag :photo, accept: 'image/*;capture=camera'
+      = text_field_tag :text, '', placeholder: "...", class: 'mdl-textfield__input text-input'
