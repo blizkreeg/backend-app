@@ -1,21 +1,27 @@
-- if mobile_device?
-  = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: social_path, title: '' }
+/ - if mobile_device?
+/   = render partial: 'brews/components/actionbar', locals: { back: true, back_icon: 'keyboard_arrow_left', back_url: social_path, title: '' }
 
 main
-  .mobile-action-bar-holder
+  / .mobile-action-bar-holder
   .max960
     .new-social-container
-      h3.mt-0.text-center Q of the day
-      = form_tag create_social_path, class: 'create-update' do
+      = cl_image_tag current_profile.photos.profile.public_id, width: 48, height: 48, radius: :max, gravity: :face
+      / h4.mt-10.mb-0 A book I'm reading now..
+      = form_tag create_social_path, class: 'create-update mt-10' do
+        .text
+          = text_field_tag :text, '', placeholder: "A book I'm reading now..", class: 'mdl-textfield__input text-input'
+
         .picture
           .abs-icon
             i.material-icons linked_camera
-          = cl_image_upload_tag :photo_id, resource_type: :image, name: "photo"
+
+          = cl_image_upload_tag :photo_id, name: "photo"
+          / = cl_image_upload_tag :photo_id, resource_type: :image, name: "photo"
+
+        div style='margin-top: 10px;'
+          | + say it with a picture
 
         / = file_field_tag :photo, accept: 'image/*;capture=camera', name: "photo"
-
-        .text
-          = text_field_tag :text, '', placeholder: "| ", class: 'mdl-textfield__input text-input'
 
 javascript:
   $(function() {
