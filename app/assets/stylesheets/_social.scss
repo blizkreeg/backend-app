@@ -57,6 +57,8 @@ body.social {
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
+  position: absolute;
+  bottom: -36px;
 
   .my-update {
     width: 96px;
@@ -64,8 +66,6 @@ body.social {
     border: 6px solid $accent_color;
     background-color: $accent_color;
     color: white;
-    position: absolute;
-    bottom: -36px;
     box-sizing: border-box;
     border-radius: 60px;
     text-align: center;
@@ -82,16 +82,39 @@ body.social {
 
 .new-social-container {
 
+  .create-update {
+    .picture {
+      position: relative;
+      text-align: center;
+      height: 50px;
+
+      .abs-icon {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        left: 0;
+        background-color: white;
+        pointer-events: none;
+        opacity: 1;
+
+        i {
+          font-size: 48px;
+        }
+      }
+    }
+  }
+
   .text-input {
     margin: 0 0;
     padding: 1px 10px;
-    color: white;
-    background-color: rgba(10, 10, 10, 0.6);
+    // color: white;
+    // background-color: rgba(10, 10, 10, 0.6);
     vertical-align: middle;
     font-size: 14px;
     user-select: none;
     box-sizing: border-box;
     height: 49px;
     padding-right: 4px;
+    border-radius: none;
   }
 }
