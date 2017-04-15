@@ -61,6 +61,8 @@ class Profile < ActiveRecord::Base
   has_many :interests, through: :profile_interests, dependent: :restrict_with_exception
   has_many :asked_for_intros, class_name: 'IntroductionRequest', primary_key: "uuid", foreign_key: "by_profile_uuid", autosave: true, dependent: :destroy
   has_many :got_intro_requests, class_name: 'IntroductionRequest', primary_key: "uuid", foreign_key: "to_profile_uuid", autosave: true, dependent: :destroy
+  has_many :skipped, class_name: 'SkippedProfile', primary_key: "uuid", foreign_key: "by_profile_uuid", autosave: true, dependent: :destroy
+  has_many :got_skipped, class_name: 'SkippedProfile', primary_key: "uuid", foreign_key: "skipped_profile_uuid", autosave: true, dependent: :destroy
 
   # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
   # set property tracking flags to 'flags'
