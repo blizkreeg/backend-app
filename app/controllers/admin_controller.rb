@@ -114,6 +114,15 @@ class AdminController < ApplicationController
     @profiles_marked_for_deletion = Profile.is_marked_for_deletion
   end
 
+  def delete_profiles_marked_for_deletion
+    profiles = params[:uuid].blank? ? Profile.is_marked_for_deletion : [Profile.find(params[:uuid])]
+    num = profiles.size
+    profiles.map(&:destroy)
+
+    flash[:success] = "Successfully deleted #{num} profile(s)"
+    redirect_to admin_profiles_marked_for_deletion_path
+  end
+
   def lookup_user
     @profile = Profile.find(params[:uuid])
     redirect_to admin_show_user_path(@profile.uuid)

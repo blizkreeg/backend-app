@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get '/introductions', to: 'brews#introductions', as: :introductions
   get '/social', to: 'brews#social', as: :social
   get '/new-social', to: 'brews#new_social', as: :new_social
+  post '/create-social', to: 'brews#create_social', as: :create_social
   get '/conversations', to: 'brews#conversations', as: :conversations
   get '/community', to: 'brews#community', as: :community
   get '/conversation-with/:profile_uuid', to: 'brews#conversation_with', as: :conversation_with
@@ -106,6 +107,7 @@ Rails.application.routes.draw do
     post '/send-butler-chat-notification', to: 'admin#send_butler_chat_notification', as: 'admin_send_butler_chat_notification'
     get '/logout', to: 'admin#logout', as: 'admin_logout'
     get '/profiles-marked-for-deletion', to: 'admin#profiles_marked_for_deletion', as: 'admin_profiles_marked_for_deletion'
+    post '/delete-profiles-marked-for-deletion', to: 'admin#delete_profiles_marked_for_deletion', as: 'admin_delete_profiles_marked_for_deletion'
     post '/assign-desirability-score', to: 'admin#assign_desirability_score_user', as: 'admin_assign_desirability_score_user'
     get '/conversations', to: 'admin#show_conversations'
     get '/dates', to: 'admin#show_dates'
