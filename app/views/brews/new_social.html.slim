@@ -8,6 +8,7 @@ main
       = cl_image_tag current_profile.photos.profile.public_id, width: 48, height: 48, radius: :max, gravity: :face
       / h4.mt-10.mb-0 A book I'm reading now..
       = form_tag create_social_path, class: 'create-update mt-10' do
+        = hidden_field_tag :photo_id
         .text
           = text_field_tag :text, '', placeholder: "A book I'm reading now..", class: 'mdl-textfield__input text-input'
 
@@ -15,15 +16,32 @@ main
           .abs-icon
             i.material-icons linked_camera
 
-          = cl_image_upload_tag :photo_id, name: "photo"
+          = cl_image_upload_tag :photo_id
           / = cl_image_upload_tag :photo_id, resource_type: :image, name: "photo"
+          / = file_field_tag :photo, accept: 'image/*;capture=camera', name: "photo"
 
         div style='margin-top: 10px;'
           | + say it with a picture
 
-        / = file_field_tag :photo, accept: 'image/*;capture=camera', name: "photo"
+    .picture-preview
+      .loading
+        = image_tag 'dots-fade.gif'
 
 javascript:
   $(function() {
-    $('.text-input').focus();
+    $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
+      $('.picture-preview .loading').show();
+
+      $('.picture-preview').html(
+        $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version, crop: 'fill', width: $('body').innerWidth(), height: $('body').innerWidth() })
+      );
+
+      $('input[name="photo_id"]').val(data.result.public_id);
+
+      return true;
+    });
+
+    $('.cloudinary-fileupload').bind('fileuploadprogress', function(e, data) {
+      $('.picture-preview .loading').show();
+    });
   });

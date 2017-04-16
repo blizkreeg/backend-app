@@ -89,6 +89,14 @@ body.social {
       height: 50px;
       margin-top: 10px;
 
+      input[type="file"]{
+        height: 60px;
+      }
+
+      input[type="file"]::-webkit-file-upload-button{
+        height: 60px;
+      }
+
       .abs-icon {
         position: absolute;
         width: 100%;
@@ -120,5 +128,19 @@ body.social {
     height: 49px;
     padding-right: 4px;
     border-radius: none;
+    border-bottom: 1px solid #424c4d;
+  }
+}
+
+.picture-preview {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  .loading {
+    display: none;
   }
 }

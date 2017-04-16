@@ -15,7 +15,7 @@
 //= require jquery.mobile.min
 //= require fastclick
 //= require firebase
-//= require jquery.cloudinary
+//= require cloudinary
 //= require underscore-min
 //= require unslider
 // require zepto.min
