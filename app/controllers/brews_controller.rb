@@ -10,7 +10,7 @@ class BrewsController < WebController
   # screens to show the bottom tabs on
   NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations, :social]
 
-  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with, :social]
+  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with, :social, :new_social]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -193,7 +193,13 @@ class BrewsController < WebController
   end
 
   def new_social
+    if params[:create] == 'true'
+      @social_update = SocialUpdate.create!(profile_uuid: @current_profile.uuid)
+    else
+      @social_update = SocialUpdate.find(session[:new_social_id]) rescue SocialUpdate.create!(profile_uuid: @current_profile.uuid)
+    end
 
+    session[:new_social_id] = @social_update.id
   end
 
   def create_social
