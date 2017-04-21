@@ -70,7 +70,7 @@ javascript:
 
   $(function() {
     if($('.picture-preview').data('picture-id') !== "") {
-      fillPicture($('.picture-preview > .image').data('picture-id'));
+      fillPicture($('.picture-preview').data('picture-id'));
     }
 
     $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
