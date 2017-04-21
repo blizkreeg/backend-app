@@ -16,4 +16,7 @@ class SocialUpdate < ActiveRecord::Base
   # store_accessor :properties, *(ATTRIBUTES.keys.map(&:to_sym))
   # jsonb_attr_helper :properties, ATTRIBUTES
   jsonb_accessor :properties, ATTRIBUTES
+
+  scope :published, -> { with_published(true) }
+  scope :not_published, -> { where("(profiles.properties->>'published')::boolean IS NOT TRUE") }
 end
