@@ -193,6 +193,8 @@ class BrewsController < WebController
   end
 
   def new_social
+    @section = 'new-social'
+
     if params[:create] == 'true'
       @social_update = SocialUpdate.create!(profile_uuid: @current_profile.uuid)
     else
@@ -202,7 +204,17 @@ class BrewsController < WebController
     session[:new_social_id] = @social_update.id
   end
 
+  def update_social
+    @social_update = SocialUpdate.find(params[:social_update][:id])
+    @social_update.update!(social_update_params)
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
+  end
+
   def create_social
+    @social_update = SocialUpdate.find(session[:new_social_id])
   end
 
   def conversations
@@ -251,6 +263,11 @@ class BrewsController < WebController
   def brew_params
     attributes = Brew::MASS_UPDATE_ATTRIBUTES
     params.require(:brew).permit(*attributes)
+  end
+
+  def social_update_params
+    attributes = SocialUpdate::MASS_UPDATE_ATTRIBUTES
+    params.require(:social_update).permit(*attributes)
   end
 
   def authenticated?

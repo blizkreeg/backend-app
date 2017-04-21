@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get '/introductions', to: 'brews#introductions', as: :introductions
   get '/social', to: 'brews#social', as: :social
   get '/new-social', to: 'brews#new_social', as: :new_social
+  patch '/update-social', to: 'brews#update_social', as: :update_social
   post '/create-social', to: 'brews#create_social', as: :create_social
   get '/conversations', to: 'brews#conversations', as: :conversations
   get '/community', to: 'brews#community', as: :community

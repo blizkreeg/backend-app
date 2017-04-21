@@ -6,6 +6,12 @@ body.social {
   }
 }
 
+body.new-social {
+  main {
+    height: 100vh;
+  }
+}
+
 .social-container {
   display: flex;
   flex-flow: column nowrap;
@@ -52,27 +58,26 @@ body.social {
 
 .social-container .update-container {
   width: 100%;
-  height: 96px;
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
   position: absolute;
-  bottom: -36px;
+  bottom: 0px;
 
   .my-update {
-    width: 96px;
-    height: 96px;
+    width: 60px;
+    height: 60px;
     border: 6px solid $accent_color;
     background-color: $accent_color;
     color: white;
     box-sizing: border-box;
-    border-radius: 60px;
     text-align: center;
     box-shadow: 0px 0px 5px 4px #efefef;
+    border-radius: 40px;
 
     i {
-      font-size: 48px;
+      font-size: 40px;
       vertical-align: middle;
       padding-top: 4px;
     }
@@ -81,40 +86,57 @@ body.social {
 
 
 .new-social-container {
-  padding: 10px 15px;
+  padding: 10px 15px 0px 15px;
 
-  .create-update {
-    .picture {
-      position: relative;
-      height: 50px;
-      margin-top: 10px;
+  .upper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-      input[type="file"]{
-        height: 60px;
-      }
+  .picture-uploader {
+    position: relative;
 
-      input[type="file"]::-webkit-file-upload-button{
-        height: 60px;
-      }
+    input[type="file"]{
+      height: 60px;
+    }
 
-      .abs-icon {
-        position: absolute;
-        width: 100%;
-        top: 0;
-        left: 0;
-        background-color: white;
-        pointer-events: none;
-        opacity: 1;
+    input[type="file"]::-webkit-file-upload-button{
+      height: 60px;
+    }
 
-        i {
-          font-size: 36px;
-          color: $accent_color;
-          border: 1px dashed $accent_color;
-          border-radius: 40px;
-          padding: 10px;
-        }
+    .abs-icon {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background-color: white;
+      pointer-events: none;
+      opacity: 1;
+
+      i {
+        font-size: 36px;
+        color: #26282f;
+        border: 1px dashed #26282f;
+        border-radius: 40px;
+        padding: 10px;
+        float: right;
       }
     }
+  }
+
+  .picture-uploader-caption {
+    position: absolute;
+    top: 20px;
+    right: 70px;
+    color: black;
+    z-index: 5;
+    float: right;
+    font-size: 20px;
+  }
+
+  .create-update {
   }
 
   .text-input {
@@ -128,7 +150,7 @@ body.social {
     height: 49px;
     padding-right: 4px;
     border-radius: none;
-    border-bottom: 1px solid #424c4d;
+    border-bottom: 1px solid #ddd;
   }
 }
 
@@ -139,8 +161,58 @@ body.social {
   align-items: center;
   width: 100%;
   height: 100%;
+  position: relative;
 
   .loading {
     display: none;
+  }
+
+  &.solid-bg {
+
+  }
+
+  .text-overlay {
+    background-color: rgba(250, 103, 96, 1);
+    display: none;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 25px;
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    .text {
+      color: white;
+      font-size: 20px;
+      line-height: 28px;
+      width: calc(100% - 50px);
+    }
+  }
+}
+
+.cancel-social {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+}
+
+.post-social {
+  position: fixed;
+  left: calc(50vw - 24px);
+  bottom: 10px;
+
+  i {
+    font-size: 48px;
+    color: #b0b0b0;
+  }
+
+  &.post-ready {
+    i {
+      color: $accent_color;
+    }
   }
 }
