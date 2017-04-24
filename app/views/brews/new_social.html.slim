@@ -31,9 +31,9 @@ main
       .image
 
       .loading
-        = image_tag 'dots-fade.gif'
+        = image_tag 'balls.svg'
 
-      .text-overlay
+      .text-overlay class="#{'show' if @social_update.text.present?} #{'show-on-image' if @social_update.picture_id.present?}"
         .text
           = @social_update.text
 
@@ -64,44 +64,69 @@ javascript:
 
   function shiftOverlayOnTop() {
     var $overlay = $('.text-overlay');
-    $overlay.css('background-color', 'rgba(250, 103, 96, 0.4)');
-    $overlay.find('.text').css({ position: 'absolute', 'bottom': '25px' });
+    $overlay.addClass('show');
+    $overlay.addClass('show-on-image');
   }
 
-  $(function() {
+  function showImageOnLoad() {
     if($('.picture-preview').data('picture-id') !== "") {
       fillPicture($('.picture-preview').data('picture-id'));
     }
+  }
 
-    $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
-      $('.picture-preview .loading').hide();
+  function updateTextValue() {
+    return $('input[name="social_update[text]"]').val();
+  }
 
-      $('.picture-preview > .image').html(
-        $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version, crop: 'fill', width: $('body').innerWidth(), height: $('body').innerWidth() })
-      );
+  function updateImagePresent() {
+    return ($('input[name="social_update[picture_id]"]').val() !== "");
+  }
 
-      $('input[name="social_update[picture_id]"]').val(data.result.public_id);
+  function imageUploadComplete(e, data) {
+    $('.picture-preview .loading').hide();
 
-      updateSocial({ social_update: { picture_id: data.result.public_id } });
+    $('.picture-preview > .image').html(
+      $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version, crop: 'fill', width: $('body').innerWidth(), height: $('body').innerWidth() })
+    );
+
+    $('input[name="social_update[picture_id]"]').val(data.result.public_id);
+
+    updateSocial({ social_update: { picture_id: data.result.public_id } });
+
+    if(updateTextValue() !== "") {
       shiftOverlayOnTop();
+    }
 
-      return true;
-    });
+    return true;
+  }
+
+  $(function() {
+    showImageOnLoad();
+
+    $('.cloudinary-fileupload').bind('cloudinarydone', imageUploadComplete);
 
     $('.cloudinary-fileupload').bind('fileuploadprogress', function(e, data) {
       $('.picture-preview .loading').show();
     });
 
     $('input[name="social_update[text]"]').on('keyup', function() {
-      var text = $(this).val()
       var $overlay = $('.text-overlay');
       $overlay.css('width', $('body').innerWidth());
       $overlay.css('height', $('body').innerWidth());
-      $overlay.css('display', 'flex');
-      $overlay.find('.text').text(text);
+      $overlay.addClass('show');
+      if(updateImagePresent()) {
+        $overlay.addClass('show-on-image');
+      }
+      $overlay.find('.text').text(updateTextValue());
     });
 
     $('input[name="social_update[text]"]').on('blur', function() {
-      updateSocial({ social_update: { text: $('input[name="social_update[text]"]').val() } });
+      updateSocial({ social_update: { text: updateTextValue() } });
     });
+
+    $('form').on('submit', function(e) {
+      e.preventDefault();
+      alert('hi');
+      return false;
+    })
   });
