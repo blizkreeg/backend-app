@@ -1,5 +1,6 @@
 - if mobile_device?
-  = render partial: 'brews/components/actionbar', locals: { title: "", back: true, back_icon: 'keyboard_arrow_left', back_url: social_path }
+  - titles = ['What do you think?', 'Comment on this', 'What did you like about it?']
+  = render partial: 'brews/components/actionbar', locals: { title: titles.sample, back: true, back_icon: 'keyboard_arrow_left', back_url: social_path }
 
 main style='margin-top: 61px;'
   .max960 style='height: 100%;'
@@ -20,7 +21,7 @@ main style='margin-top: 61px;'
 
 
     .conversation__send-message
-      = text_field_tag 'message', '', placeholder: 'your message', class: 'mdl-textfield__input message-box'
+      = text_field_tag 'message', '', placeholder: 'add your comment', class: 'mdl-textfield__input message-box'
       .send-message
         i.material-icons mode_comment
 
