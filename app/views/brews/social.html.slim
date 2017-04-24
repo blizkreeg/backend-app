@@ -4,10 +4,15 @@ main
       h2.text-center SOCIAL
       h5.text-center What's a good book you're reading at the moment?
       .social-scroll
-        div.social-card.active style="width: calc(100vw - 50px); height: calc(100vw - 50px);" data-idx="0" 1
-        div.social-card data-idx="1" 2
-        div.social-card data-idx="2" 3
-        div.social-card data-idx="3" 4
+        - @social_updates.each_with_index do |social_update, idx|
+          div class="social-card #{'active' if idx == 0}" style="width: calc(100vw - 50px); height: calc(100vw - 50px); #{'justify-content: center;' unless social_update.picture_id.present?}" data-idx="#{idx}"
+            - if social_update.picture_id.present?
+              .image data-picture-id="#{social_update.picture_id}"
+
+            .text
+              = social_update.text
+
+
       .update-container
         .my-update
           i.material-icons add
@@ -106,4 +111,13 @@ javascript:
     $('.my-update').on('click', function() {
       window.location = '/new-social?create=true';
     });
+
+    var $imageDivs = $('.image');
+    _.each($imageDivs, function(imageDiv) {
+      $imageDiv = $(imageDiv);
+      var imageId = $imageDiv.data('picture-id');
+      width = $imageDiv.width();
+      $imageDiv.html($.cloudinary.image(imageId, { height: $imageDiv.parent().innerHeight(), width: $imageDiv.parent().innerWidth(), crop: "fill", gravity: "north" }));
+    });
+
   });

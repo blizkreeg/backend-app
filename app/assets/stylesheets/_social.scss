@@ -50,9 +50,28 @@ body.new-social {
     }
 
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+    align-items: flex-start;
     font-size: 24px;
+
+    .image {
+      position: absolute;
+      width: calc(100vw - 50px - 30px);
+      height: calc(100vw - 50px - 30px);
+      top: 0;
+      left: 0;
+    }
+
+    .text {
+      background-color: rgba(20, 20, 20, 0.2);
+      color: white;
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.4px;
+      z-index: 0;
+      padding: 10px 25px;
+    }
   }
 }
 
@@ -218,6 +237,10 @@ body.new-social {
   left: calc(50vw - 24px);
   bottom: 10px;
 
+  a {
+    pointer-events: none;
+  }
+
   i {
     font-size: 48px;
     color: #b0b0b0;
@@ -226,6 +249,10 @@ body.new-social {
   &.post-ready {
     i {
       color: $accent_color;
+    }
+
+    a {
+      pointer-events: auto;
     }
   }
 }

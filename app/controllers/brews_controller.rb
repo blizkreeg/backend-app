@@ -190,6 +190,8 @@ class BrewsController < WebController
 
   def social
     @section = 'social'
+
+    @social_updates = SocialUpdate.published.order("posted_at DESC").limit(25)
   end
 
   def new_social
@@ -214,7 +216,10 @@ class BrewsController < WebController
   end
 
   def create_social
-    # @social_update = SocialUpdate.find(session[:new_social_id])
+    @social_update = SocialUpdate.find(session[:new_social_id]) rescue @current_profile.social_updates.not_published.order("created_at DESC").take
+    @social_update.update!(published: true, posted_at: Time.now.utc)
+
+    redirect_to social_path
   end
 
   def conversations

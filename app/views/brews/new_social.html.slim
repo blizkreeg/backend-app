@@ -42,7 +42,7 @@ main
       i.material-icons style='font-size: 32px;' clear
 
   .post-social
-    = link_to('#', class: 'no-decor') do
+    = link_to('#', class: 'no-decor post-link') do
       i.material-icons send
 
 javascript:
@@ -78,8 +78,22 @@ javascript:
     return $('input[name="social_update[text]"]').val();
   }
 
+  function updateTextPresent() {
+    return updateTextValue() !== "";
+  }
+
   function updateImagePresent() {
     return ($('input[name="social_update[picture_id]"]').val() !== "");
+  }
+
+  function testAndSetPostReady() {
+    if(updateTextPresent() || updateImagePresent()) {
+      $('.post-social').addClass('post-ready');
+    }
+  }
+
+  function okToPost() {
+    return $('.post-social').hasClass('post-ready');
   }
 
   function imageUploadComplete(e, data) {
@@ -97,11 +111,14 @@ javascript:
       shiftOverlayOnTop();
     }
 
+    testAndSetPostReady();
+
     return true;
   }
 
   $(function() {
     showImageOnLoad();
+    testAndSetPostReady();
 
     $('.cloudinary-fileupload').bind('cloudinarydone', imageUploadComplete);
 
@@ -122,11 +139,18 @@ javascript:
 
     $('input[name="social_update[text]"]').on('blur', function() {
       updateSocial({ social_update: { text: updateTextValue() } });
+
+      testAndSetPostReady();
     });
 
     $('form').on('submit', function(e) {
-      e.preventDefault();
-      alert('hi');
-      return false;
-    })
+      if(!okToPost()) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    $('.post-link').on('click', function(e) {
+      $('form').submit();
+    });
   });
