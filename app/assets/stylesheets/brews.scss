@@ -753,6 +753,13 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     color: #e46f57;
   }
 
+  i.callout {
+    background-color: #e7a61a;
+    border: 2px solid #e7a61a;
+    color: white;
+    border-radius: 18px;
+  }
+
   .bubble {
     color: #fe6363;
 
