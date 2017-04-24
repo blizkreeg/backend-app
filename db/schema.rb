@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170416190258) do
+ActiveRecord::Schema.define(version: 20170424064635) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -230,6 +230,28 @@ ActiveRecord::Schema.define(version: 20170416190258) do
   add_index "social_authentications", ["oauth_provider", "oauth_uid"], name: "index_social_authentications_on_oauth_provider_and_oauth_uid", unique: true, using: :btree
   add_index "social_authentications", ["profile_uuid"], name: "index_social_authentications_on_profile_uuid", using: :btree
 
+  create_table "social_comments", force: :cascade do |t|
+    t.jsonb    "properties",       default: {}, null: false
+    t.uuid     "profile_uuid",                  null: false
+    t.integer  "social_update_id"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "social_comments", ["profile_uuid"], name: "index_social_comments_on_profile_uuid", using: :btree
+  add_index "social_comments", ["social_update_id"], name: "index_social_comments_on_social_update_id", using: :btree
+
+  create_table "social_likes", force: :cascade do |t|
+    t.jsonb    "properties",       default: {}, null: false
+    t.uuid     "profile_uuid",                  null: false
+    t.integer  "social_update_id"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "social_likes", ["profile_uuid"], name: "index_social_likes_on_profile_uuid", using: :btree
+  add_index "social_likes", ["social_update_id"], name: "index_social_likes_on_social_update_id", using: :btree
+
   create_table "social_updates", force: :cascade do |t|
     t.jsonb    "properties",   default: {}, null: false
     t.uuid     "profile_uuid",              null: false
@@ -264,5 +286,9 @@ ActiveRecord::Schema.define(version: 20170416190258) do
   add_foreign_key "skipped_profiles", "profiles", column: "by_profile_uuid", primary_key: "uuid"
   add_foreign_key "skipped_profiles", "profiles", column: "skipped_profile_uuid", primary_key: "uuid"
   add_foreign_key "social_authentications", "profiles", column: "profile_uuid", primary_key: "uuid"
+  add_foreign_key "social_comments", "profiles", column: "profile_uuid", primary_key: "uuid"
+  add_foreign_key "social_comments", "social_updates"
+  add_foreign_key "social_likes", "profiles", column: "profile_uuid", primary_key: "uuid"
+  add_foreign_key "social_likes", "social_updates"
   add_foreign_key "social_updates", "profiles", column: "profile_uuid", primary_key: "uuid"
 end

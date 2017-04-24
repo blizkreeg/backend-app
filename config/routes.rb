@@ -10,19 +10,28 @@ Rails.application.routes.draw do
     get '/conversation', to: 'brews#conversation', as: :conversation
   end
 
+  # onboarding
   get '/join-waitlist', to: 'brews#add_to_waitlist'
   get '/show-waitlist', to: 'brews#show_on_waitlist'
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
+
+  # intros
   get '/introductions', to: 'brews#introductions', as: :introductions
+  post '/request-introduction', to: 'brews#request_introduction', as: :request_introduction
+  post '/accept-introduction', to: 'brews#accept_introduction', as: :accept_introduction
+
+  # social
   get '/social', to: 'brews#social', as: :social
   get '/new-social', to: 'brews#new_social', as: :new_social
   patch '/update-social', to: 'brews#update_social', as: :update_social
   post '/create-social', to: 'brews#create_social', as: :create_social
+  post '/toggle-social-like', to: 'brews#toggle_social_like', as: :toggle_social_like
+  get '/social/:social_update_id/talk', to: 'brews#social_comment_stream', as: :social_comment_stream
+  post '/social/:social_update_id/talk', to: 'brews#post_social_comment', as: :post_social_comment
+
   get '/conversations', to: 'brews#conversations', as: :conversations
   get '/community', to: 'brews#community', as: :community
   get '/conversation-with/:profile_uuid', to: 'brews#conversation_with', as: :conversation_with
-  post '/request-introduction', to: 'brews#request_introduction', as: :request_introduction
-  post '/accept-introduction', to: 'brews#accept_introduction', as: :accept_introduction
 
   root to: 'pages#homepage'
 

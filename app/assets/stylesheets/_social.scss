@@ -36,7 +36,7 @@ body.new-social {
 }
 
 // horizontally scrolling cards
-.social-scroll {
+.social-container .social-scroll {
   display: flex;
   flex-flow: row nowrap;
   flex-wrap: nowrap;
@@ -143,6 +143,14 @@ body.new-social {
       color: $accent_blue;
     }
   }
+}
+
+.social-container .nudge-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
 }
 
 .social-container .update-container {
@@ -323,6 +331,80 @@ body.new-social {
 
     a {
       pointer-events: auto;
+    }
+  }
+}
+
+.comments-container {
+  height: calc(100vh - 110px);
+  position: relative;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 10px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  .comment {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0px 10px 0px;
+    border-bottom: 1px solid #ededed;
+
+    .photo {
+      margin-right: 10px;
+    }
+
+    .text {
+      width: 100%;
+    }
+  }
+
+  .conversation__send-message {
+    border-top: 1px solid #ccc;
+    margin: 0px auto;
+    // position: fixed;
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    .message-box {
+      margin: 0 0;
+      padding: 1px 10px;
+      border: none;
+      background-color: white;
+      vertical-align: center;
+      font-size: 16px;
+      user-select: none;
+      // -moz-user-select: none;
+      // -webkit-user-select: none;
+      box-sizing: border-box;
+      height: 49px;
+      padding-right: 4px;
+    }
+
+    .send-message {
+      color: $accent_blue;
+      border-left: 1px solid #ddd;
+      display: flex;
+      flex-flow: column nowrap;
+      font-size: 16px;
+      height: 49px;
+      justify-content: center;
+      align-items: center;
+      width: 70px;
+      font-size: 16px;
     }
   }
 }

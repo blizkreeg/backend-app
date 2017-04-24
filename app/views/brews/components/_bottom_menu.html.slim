@@ -7,18 +7,20 @@
       i.material-icons fiber_manual_record
 
   - if current_profile.staff_or_internal
-    = link_to(social_path, class: 'no-decor social-menu') do
-      .mdl-cell
-        i class="material-icons #{'active' if active == 'social'}" public
-        / div class="name #{'active' if active == 'social'}" Introductions
-      .bubble style='display: none; position: absolute; top: 0; right: 0;'
-        i.material-icons fiber_manual_record
 
     - if @section == 'social'
       = link_to(new_social_path(create: true), class: 'no-decor social-menu') do
         .mdl-cell
           i class="material-icons callout" add
           / div class="name" Introductions
+
+    - else
+      = link_to(social_path, class: 'no-decor social-menu') do
+        .mdl-cell
+          i class="material-icons #{'active' if active == 'social'}" public
+          / div class="name #{'active' if active == 'social'}" Introductions
+        .bubble style='display: none; position: absolute; top: 0; right: 0;'
+          i.material-icons fiber_manual_record
 
   = link_to(conversations_path, class: 'no-decor conversations-menu') do
     .mdl-cell
@@ -28,12 +30,13 @@
     .bubble style="display: #{display}; position: absolute; top: 0; right: 0;"
       i.material-icons fiber_manual_record
 
-  = link_to(brews_path, class: 'no-decor brews-menu') do
-    .mdl-cell
-      i class="material-icons #{'active' if active == 'brews'}" local_cafe
-      / div class="name #{'active' if active == 'brews'}" Brews
-    .bubble style='display: none; position: absolute; top: 0; right: 0;'
-      i.material-icons fiber_manual_record
+  / = link_to(brews_path, class: 'no-decor brews-menu') do
+  /   .mdl-cell
+  /     i class="material-icons #{'active' if active == 'brews'}" local_cafe
+  /     / div class="name #{'active' if active == 'brews'}" Brews
+  /   .bubble style='display: none; position: absolute; top: 0; right: 0;'
+  /     i.material-icons fiber_manual_record
+
   / .mdl-cell
   /   = link_to(community_path) do
   /     i class="material-icons #{'active' if active == 'community'}" whatshot

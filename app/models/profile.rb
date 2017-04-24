@@ -64,6 +64,8 @@ class Profile < ActiveRecord::Base
   has_many :skipped, class_name: 'SkippedProfile', primary_key: "uuid", foreign_key: "by_profile_uuid", autosave: true, dependent: :destroy
   has_many :got_skipped, class_name: 'SkippedProfile', primary_key: "uuid", foreign_key: "skipped_profile_uuid", autosave: true, dependent: :destroy
   has_many :social_updates, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
+  has_many :social_likes, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
+  has_many :social_comments, primary_key: "uuid", foreign_key: "profile_uuid", autosave: true, dependent: :destroy
 
   # has_one :permission, dependent: :destroy, primary_key: "uuid", foreign_key: "profile_uuid"
   # set property tracking flags to 'flags'

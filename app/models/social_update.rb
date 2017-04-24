@@ -1,5 +1,7 @@
 class SocialUpdate < ActiveRecord::Base
   belongs_to :profile, foreign_key: "profile_uuid", touch: true
+  has_many :likes, class_name: 'SocialLike', dependent: :destroy
+  has_many :comments, class_name: 'SocialComment', dependent: :destroy
 
   MASS_UPDATE_ATTRIBUTES = %i(
     text

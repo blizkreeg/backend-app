@@ -259,6 +259,33 @@ class BrewsController < WebController
   def edit_interests
   end
 
+  def toggle_social_like
+    social_update = SocialUpdate.find(params[:social_update][:id])
+    like = SocialLike.where(social_update: social_update, profile: @current_profile).take
+    if like.present?
+      like.destroy!
+    else
+      social_update.likes << SocialLike.create!(profile: @current_profile)
+    end
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
+  end
+
+  def social_comment_stream
+    @social_update = SocialUpdate.find(params[:social_update_id])
+  end
+
+  def post_social_comment
+    @social_update = SocialUpdate.find(params[:social_update_id])
+    @social_update.comments << SocialComment.create!(profile: @current_profile, comment_text: params[:comment])
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
+  end
+
   private
 
   def set_goto_uri
