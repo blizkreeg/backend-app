@@ -19,4 +19,5 @@ class SocialUpdate < ActiveRecord::Base
 
   scope :published, -> { with_published(true) }
   scope :not_published, -> { where("(social_updates.properties->>'published')::boolean IS NOT TRUE") }
+  scope :ordered_by_recency, -> { order("(social_updates.properties->>'posted_at')::timestamp DESC NULLS LAST") }
 end

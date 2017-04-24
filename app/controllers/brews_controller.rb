@@ -191,7 +191,7 @@ class BrewsController < WebController
   def social
     @section = 'social'
 
-    @social_updates = SocialUpdate.published.order("posted_at DESC").limit(25)
+    @social_updates = SocialUpdate.published.ordered_by_recency.limit(25)
   end
 
   def new_social
