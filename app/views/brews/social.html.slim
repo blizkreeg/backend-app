@@ -1,16 +1,26 @@
 main
   .max960
     .social-container
-      h2.text-center SOCIAL
-      h5.text-center What's a good book you're reading at the moment?
+      .title SOCIAL
+      .question What's a good book you're reading at the moment?
       .social-scroll
         - @social_updates.each_with_index do |social_update, idx|
-          div class="social-card #{'active' if idx == 0}" style="width: calc(100vw - 50px); height: calc(100vw - 50px); #{'justify-content: center;' unless social_update.picture_id.present?}" data-idx="#{idx}"
-            - if social_update.picture_id.present?
-              .image data-picture-id="#{social_update.picture_id}"
+          .social-card-container
+            div class="social-card #{'active' if idx == 0}" style="width: calc(100vw - 50px); height: calc(100vw - 50px); #{'justify-content: center;' unless social_update.picture_id.present?}" data-idx="#{idx}"
+              - if social_update.picture_id.present?
+                .image data-picture-id="#{social_update.picture_id}"
 
-            .text
-              = social_update.text
+              .text
+                = social_update.text
+
+            .actions
+              .kudos
+                span 5
+                i.material-icons sentiment_very_satisfied
+
+              .talk
+                span 5
+                i.material-icons chat_bubble
 
 
       / .update-container

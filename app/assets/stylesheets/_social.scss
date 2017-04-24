@@ -17,6 +17,22 @@ body.new-social {
   flex-flow: column nowrap;
   justify-content: flex-start;
   min-height: 100%;
+
+  .title {
+    font-size: 32px;
+    line-height: 38px;
+    margin: 5px 0px 10px 0px;
+    text-align: center;
+    letter-spacing: 4px;
+  }
+
+  .question {
+    font-size: 20px;
+    line-height: 26px;
+    margin: 5px 0px 20px 0px;
+    text-align: center;
+    padding: 0px 10px;
+  }
 }
 
 // horizontally scrolling cards
@@ -30,6 +46,13 @@ body.new-social {
   margin: 0 0;
   box-sizing: border-box;
   padding: 0 15px;
+
+  .social-card-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
 
   .social-card {
     width: calc(100vw - 50px - 30px);
@@ -71,6 +94,28 @@ body.new-social {
       letter-spacing: 0.4px;
       z-index: 0;
       padding: 10px 25px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0px;
+    width: 100%;
+
+    > div {
+      margin: 0 10px;
+    }
+
+    .kudos, .talk {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
     }
   }
 }
