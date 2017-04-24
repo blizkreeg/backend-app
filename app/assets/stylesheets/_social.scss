@@ -60,10 +60,12 @@ body.new-social {
     flex-grow: 0;
     flex-shrink: 0;
     flex-basis: auto;
-    margin: 0 10px;
+    margin: 0 6px;
     position: relative;
     overflow: auto;
-    background-color: rgb(231, 166, 26);
+    // background-color: rgb(231, 166, 26);
+    // background: radial-gradient(circle, #b7efef, #ffffff);
+    background-color: white;
     height: 270px;
     box-sizing: border-box;
     border-radius: 2px;
@@ -78,6 +80,13 @@ body.new-social {
     align-items: flex-start;
     font-size: 24px;
 
+    .photo {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1;
+    }
+
     .image {
       position: absolute;
       width: calc(100vw - 50px - 30px);
@@ -87,7 +96,7 @@ body.new-social {
     }
 
     .text {
-      background-color: rgba(20, 20, 20, 0.2);
+      background-color: rgba(20, 20, 20, 0.3);
       color: white;
       font-size: 18px;
       font-weight: 400;
@@ -116,6 +125,22 @@ body.new-social {
       flex-flow: row nowrap;
       justify-content: center;
       align-items: center;
+
+      i {
+        font-size: 32px;
+      }
+
+      span.number {
+        font-size: 18px;
+      }
+    }
+
+    .kudos i.emphasis {
+      color: $accent_color;
+    }
+
+    .talk i.emphasis {
+      color: $accent_blue;
     }
   }
 }

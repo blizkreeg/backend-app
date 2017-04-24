@@ -6,7 +6,11 @@ main
       .social-scroll
         - @social_updates.each_with_index do |social_update, idx|
           .social-card-container
-            div class="social-card #{'active' if idx == 0}" style="width: calc(100vw - 50px); height: calc(100vw - 50px); #{'justify-content: center;' unless social_update.picture_id.present?}" data-idx="#{idx}"
+            div class="social-card #{'notext' if social_update.picture_id.blank?} #{'active' if idx == 0}" style="#{'width: calc(100vw - 50px); height: calc(100vw - 50px);' if idx == 0} #{'justify-content: center;' unless social_update.picture_id.present?}" data-idx="#{idx}"
+
+              .photo
+                = cl_image_tag social_update.profile.photos.profile.public_id, format: 'png', width: 60, height: 60, crop: :fill, radius: :max, border: { width: 1, color: '#ea5b5b' }
+
               - if social_update.picture_id.present?
                 .image data-picture-id="#{social_update.picture_id}"
 
@@ -15,12 +19,13 @@ main
 
             .actions
               .kudos
-                span 5
-                i.material-icons sentiment_very_satisfied
+                span.number 4
+                i.material-icons favorite_border
 
               .talk
-                span 5
-                i.material-icons chat_bubble
+                span.number 5
+                i.material-icons chat_bubble_outline
+                span talking
 
 
       / .update-container
@@ -51,7 +56,7 @@ javascript:
     var currPos = getScrollPos();
     var $nextCard = $($socialCards[nextIndex]);
 
-    $('.social-scroll').animate({ scrollLeft: nextIndex * (activeCardWidth - 10) }, 250);
+    $('.social-scroll').animate({ scrollLeft: nextIndex * (activeCardWidth - 6) }, 250);
     //$('.social-scroll').animate({ scrollLeft: currPos + scrollBy }, 250);
 
     makeActive($nextCard);
@@ -72,7 +77,7 @@ javascript:
     var currPos = getScrollPos();
     var $nextCard = $($socialCards[nextIndex]);
 
-    $('.social-scroll').animate({ scrollLeft: nextIndex * (activeCardWidth - 10) }, 250);
+    $('.social-scroll').animate({ scrollLeft: nextIndex * (activeCardWidth - 6) }, 250);
     // $('.social-scroll').animate({ scrollLeft: currPos - scrollBy }, 250);
 
     makeActive($nextCard);
@@ -96,6 +101,7 @@ javascript:
   }
 
   $(function() {
+    var textCardBgColors = ['#b7efef', '#ffd0a8', '#ffb1b1', '#e9f9d6', '#d9d1ff', '#b7efff'];
     // $('.social-scroll').on('scroll', function(e) {
     //   var currPos = $(this).scrollLeft();
 
@@ -127,7 +133,31 @@ javascript:
       $imageDiv = $(imageDiv);
       var imageId = $imageDiv.data('picture-id');
       width = $imageDiv.width();
-      $imageDiv.html($.cloudinary.image(imageId, { height: $imageDiv.parent().innerHeight(), width: $imageDiv.parent().innerWidth(), crop: "fill", gravity: "north" }));
+      $imageDiv.html($.cloudinary.image(imageId, { height: activeCardWidth, width: activeCardWidth, crop: "fill", gravity: "north" }));
     });
 
+    $('.kudos').on('click', function() {
+      var $icon = $(this).find('i');
+      var $number = $(this).find('.number');
+      var value = parseInt($number.text());
+
+      if($icon.text() == 'favorite') {
+        $icon.text('favorite_border');
+        $number.text(value - 1);
+      } else {
+        $icon.text('favorite');
+        $number.text(value + 1);
+      }
+
+      $icon.toggleClass('emphasis');
+    });
+
+    var $socialCards = $('.social-card');
+    _.each($socialCards, function(card) {
+      var $card = $(card);
+      if($card.hasClass('notext')) {
+        var bgColor = textCardBgColors[Math.floor(Math.random() * textCardBgColors.length)];
+        $card.css('background', 'radial-gradient(circle, ' + bgColor + ', #ffffff)');
+      }
+    });
   });
