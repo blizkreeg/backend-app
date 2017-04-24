@@ -41,9 +41,9 @@ javascript:
         data: { comment: $('#message').val() }
       })
       .done(function(msg) {
+        window.location.reload();
       });
 
-      window.location.reload();
       // input loses focus when click/tap on the "SEND" button -- keep it in focus
       // focusOnInput();
     });
