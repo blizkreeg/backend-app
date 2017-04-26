@@ -15,6 +15,9 @@ Rails.application.routes.draw do
   get '/show-waitlist', to: 'brews#show_on_waitlist'
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
 
+  # profile
+  get '/show-profile/:show_profile_uuid', to: 'brews#show_profile', as: :show_profile
+
   # intros
   get '/introductions', to: 'brews#introductions', as: :introductions
   post '/request-introduction', to: 'brews#request_introduction', as: :request_introduction

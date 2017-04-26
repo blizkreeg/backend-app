@@ -11,7 +11,8 @@ main
             div class="social-card #{'notext' if social_update.picture_id.blank?} #{'active' if idx == 0}" style="#{'width: calc(100vw - 50px); height: calc(100vw - 50px);' if idx == 0} #{'justify-content: center;' unless social_update.picture_id.present?}" data-idx="#{idx}"
 
               .photo
-                = cl_image_tag social_update.profile.photos.profile.public_id, format: 'png', width: 60, height: 60, crop: :fill, radius: :max, border: { width: 1, color: '#ffffff' }
+                = link_to show_profile_path(show_profile_uuid: social_update.profile.uuid), class: 'no-decor' do
+                  = cl_image_tag social_update.profile.photos.profile.public_id, format: 'png', width: 60, height: 60, crop: :fill, radius: :max, border: { width: 1, color: '#ffffff' }
 
               - if social_update.picture_id.present?
                 .image data-picture-id="#{social_update.picture_id}"
@@ -43,8 +44,6 @@ main
 
       .nudge-container
         .nudge-q what about you?
-        / i.material-icons play_for_work
-
 
 javascript:
   var screenWidth = $('body').innerWidth();

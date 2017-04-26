@@ -8,9 +8,9 @@ class BrewsController < WebController
   WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
 
   # screens to show the bottom tabs on
-  NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations, :social]
+  NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations, :social, :show_profile]
 
-  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with, :social, :new_social, :edit_social]
+  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with, :social, :new_social, :edit_social, :show_profile]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -186,6 +186,12 @@ class BrewsController < WebController
     respond_to do |format|
       format.json { render json: { success: false } }
     end
+  end
+
+  def show_profile
+    @section = 'profile'
+
+    @profile = Profile.find(params[:show_profile_uuid])
   end
 
   def social
