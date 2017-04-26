@@ -7,7 +7,9 @@ hr
         .open-chat data-profile-uuid="#{profile.uuid}"
           .link
             = link_to '#', class: 'no-decor' do
-              = profile.fullname
+              | #{profile.fullname}
+              br
+              small #{profile.age}, #{profile.location_city}
 
           .resolve
             - if profile.needs_butler_attention
