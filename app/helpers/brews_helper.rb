@@ -104,4 +104,8 @@ module BrewsHelper
   def gender_pronoun_plural(profile)
     profile.male? ? "he's" : "she's"
   end
+
+  def active_question
+    SocialQuestion.first_active
+  end
 end

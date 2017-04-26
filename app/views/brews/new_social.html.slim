@@ -21,7 +21,7 @@ main
         = hidden_field :social_update, :id, value: @social_update.id
         = hidden_field :social_update, :picture_id, value: @social_update.picture_id
         .text
-          = text_field :social_update, :text, value: @social_update.text, placeholder: "A book I'm reading now..", class: 'mdl-textfield__input text-input'
+          = text_field :social_update, :text, value: @social_update.text, placeholder: @social_update.social_question.question_lede, class: 'mdl-textfield__input text-input'
 
     .picture-preview data-picture-id="#{@social_update.picture_id}"
       .image

@@ -206,9 +206,9 @@ class BrewsController < WebController
     @section = 'new-social'
 
     if params[:create] == 'true'
-      @social_update = SocialUpdate.create!(profile_uuid: @current_profile.uuid)
+      @social_update = SocialUpdate.create_blank_for(@current_profile)
     else
-      @social_update = SocialUpdate.find(session[:new_social_id]) rescue @current_profile.social_updates.not_published.order("created_at DESC").take rescue SocialUpdate.create!(profile_uuid: @current_profile.uuid)
+      @social_update = SocialUpdate.find(session[:new_social_id]) rescue @current_profile.social_updates.not_published.order("created_at DESC").take rescue SocialUpdate.create_blank_for(@current_profile)
     end
 
     session[:new_social_id] = @social_update.id
