@@ -133,6 +133,9 @@ Rails.application.routes.draw do
     get '/search', to: 'admin#search', as: 'admin_search_users'
     get '/content', to: 'admin#content', as: 'admin_content'
     post '/create-content', to: 'admin#create_content', as: 'admin_create_content'
+    get '/tribe-questions', to: 'admin#social_questions', as: 'admin_social_questions'
+    post '/activate-social-question', to: 'admin#activate_social_question', as: 'admin_activate_social_question'
+    post '/create-social-question', to: 'admin#create_social_question', as: 'admin_create_social_question'
 
     # old admin dashboard - TBD: remove/merge this functionality into above
     get '/login', to: 'accounts#login'

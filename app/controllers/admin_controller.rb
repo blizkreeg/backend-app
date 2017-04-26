@@ -303,6 +303,25 @@ class AdminController < ApplicationController
     redirect_to :back
   end
 
+  def social_questions
+    @social_questions = SocialQuestion.order("created_at DESC")
+  end
+
+  def activate_social_question
+    @social_question = SocialQuestion.find(params[:social_question_id])
+    @social_question.promote_to_active!
+
+    flash[:success] = "Made question active!"
+    redirect_to :back
+  end
+
+  def create_social_question
+    SocialQuestion.create!(social_question_params)
+
+    flash[:success] = "Created question!"
+    redirect_to :back
+  end
+
   private
 
   def brew_params
@@ -326,6 +345,10 @@ class AdminController < ApplicationController
                                   :image_public_id,
                                   :video_url,
                                   :link_to_url)
+  end
+
+  def social_question_params
+    params.require(:social_question).permit(:question_text, :question_lede)
   end
 
   def load_admin_user
