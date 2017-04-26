@@ -26,4 +26,9 @@ class SocialQuestion < ActiveRecord::Base
   def self.first_active
     self.with_active(true).take || self.promote_random_to_active
   end
+
+  def promote_to_active!
+    self.update!(active: true)
+    SocialQuestion.with_active(true).where.not(id: [self.id]).map { |q| q.update!(active: nil) }
+  end
 end
