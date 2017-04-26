@@ -2,8 +2,12 @@ main
   .max960
     .social-container
       .title
-        i.material-icons mic
         span SOCIAL
+        sup
+          small beta
+      .subtitle updates from the community
+      .spacer
+        hr
       .question What's a good book you're reading at the moment?
       .social-scroll
         - @social_updates.each_with_index do |social_update, idx|

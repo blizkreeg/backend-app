@@ -21,15 +21,36 @@ body.new-social {
   .title {
     font-size: 32px;
     line-height: 38px;
-    margin: 5px 0px 10px 0px;
+    margin: 5px 0px 2px 0px;
     text-align: center;
     letter-spacing: 4px;
+
+    sup {
+      letter-spacing: 2px;
+    }
+  }
+
+  .subtitle {
+    font-size: 14px;
+    padding: 0px 0px;
+    text-align: center;
+  }
+
+  .spacer {
+    width: 25%;
+    text-align: center;
+    margin: 0px auto;
+
+    hr {
+      padding: 2px;
+      margin: 6px 0;
+    }
   }
 
   .question {
-    font-size: 20px;
-    line-height: 26px;
-    margin: 5px 0px 20px 0px;
+    font-size: 16px;
+    line-height: 20px;
+    margin: 0px 0px 10px 0px;
     text-align: center;
     padding: 0px 10px;
   }
