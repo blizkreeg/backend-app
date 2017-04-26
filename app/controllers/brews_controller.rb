@@ -191,6 +191,8 @@ class BrewsController < WebController
   def show_profile
     @section = 'profile'
 
+    @back_url = request.referrer || "/social"
+
     @profile = Profile.find(params[:show_profile_uuid])
   end
 

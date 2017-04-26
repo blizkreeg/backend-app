@@ -7,6 +7,10 @@
 main
   .max960
     .profile-container
+      .back
+        = link_to @back_url, class: 'no-decor' do
+          i.material-icons keyboard_arrow_left
+
       .name #{@profile.firstname}, #{@profile.age}
 
       .cards
