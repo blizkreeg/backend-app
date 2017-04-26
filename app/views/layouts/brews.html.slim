@@ -70,7 +70,7 @@ html
       $(function() {
         FastClick.attach(document.body);
 
-        $('a').on('click', function() {
+        $('a').not('.no-highlight').on('click', function() {
           $(this).addClass('clicked');
         });
       });

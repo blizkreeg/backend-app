@@ -108,11 +108,11 @@ a.disabled {
 
 @keyframes pulsate
 {
-  50%  {background: #dedede;}
+  50%  {background: #efefef;}
 }
 
 .clicked {
-  background-color: #dedede !important;
+  background-color: #efefef !important;
   animation: pulsate 1s infinite;
 }
 
