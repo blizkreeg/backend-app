@@ -11,7 +11,7 @@ main
             div class="social-card #{'notext' if social_update.picture_id.blank?} #{'active' if idx == 0}" style="#{'width: calc(100vw - 50px); height: calc(100vw - 50px);' if idx == 0} #{'justify-content: center;' unless social_update.picture_id.present?}" data-idx="#{idx}"
 
               .photo
-                = cl_image_tag social_update.profile.photos.profile.public_id, format: 'png', width: 60, height: 60, crop: :fill, radius: :max, border: { width: 1, color: '#ea5b5b' }
+                = cl_image_tag social_update.profile.photos.profile.public_id, format: 'png', width: 60, height: 60, crop: :fill, radius: :max, border: { width: 1, color: '#ffffff' }
 
               - if social_update.picture_id.present?
                 .image data-picture-id="#{social_update.picture_id}"
@@ -30,6 +30,11 @@ main
               .talk
                 = link_to social_comment_stream_path(social_update_id: social_update.id), class: 'no-decor' do
                     i.material-icons comment
+
+              - if social_update.profile.uuid == current_profile.uuid
+                .edit
+                  = link_to edit_social_path(social_update_id: social_update.id), class: 'no-decor' do
+                    i.material-icons more_vert
 
 
       / .update-container

@@ -10,7 +10,7 @@ class BrewsController < WebController
   # screens to show the bottom tabs on
   NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations, :social]
 
-  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with, :social, :new_social]
+  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with, :social, :new_social, :edit_social]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -206,6 +206,12 @@ class BrewsController < WebController
     session[:new_social_id] = @social_update.id
   end
 
+  def edit_social
+    @social_update = SocialUpdate.find(params[:social_update_id])
+
+    render 'new_social'
+  end
+
   def update_social
     @social_update = SocialUpdate.find(params[:social_update][:id])
     @social_update.update!(social_update_params)
@@ -220,6 +226,15 @@ class BrewsController < WebController
     @social_update.update!(published: true, posted_at: Time.now.utc)
 
     redirect_to social_path
+  end
+
+  def destroy_social
+    @social_update = SocialUpdate.find(params[:social_update][:id])
+    @social_update.destroy!
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
   end
 
   def conversations

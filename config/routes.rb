@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   # social
   get '/social', to: 'brews#social', as: :social
   get '/new-social', to: 'brews#new_social', as: :new_social
+  get '/edit-social/:social_update_id', to: 'brews#edit_social', as: :edit_social
+  post '/destroy-social', to: 'brews#destroy_social', as: :destroy_social
   patch '/update-social', to: 'brews#update_social', as: :update_social
   post '/create-social', to: 'brews#create_social', as: :create_social
   post '/toggle-social-like', to: 'brews#toggle_social_like', as: :toggle_social_like

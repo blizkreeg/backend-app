@@ -39,11 +39,14 @@ main
 
   .cancel-social
     = link_to(social_path, class: 'no-decor') do
-      i.material-icons style='font-size: 32px;' clear
+      i.material-icons style='font-size: 32px;' keyboard_arrow_left
 
   .post-social
     = link_to('#', class: 'no-decor post-link') do
       i.material-icons send
+
+  .destroy-social
+    i.material-icons delete
 
 javascript:
   function fillPicture(public_id) {
@@ -130,8 +133,8 @@ javascript:
       var $overlay = $('.text-overlay');
       $overlay.css('width', $('body').innerWidth());
       $overlay.css('height', $('body').innerWidth());
-      $overlay.addClass('show');
       if(updateImagePresent()) {
+        $overlay.addClass('show');
         $overlay.addClass('show-on-image');
       }
       $overlay.find('.text').text(updateTextValue());
@@ -152,5 +155,18 @@ javascript:
 
     $('.post-link').on('click', function(e) {
       $('form').submit();
+    });
+
+    $('.destroy-social').on('click', function(e) {
+      params = { social_update: { id: $('form.create-update input[name="social_update[id]"]').val() } };
+      var authToken = $('form.create-update input[name="authenticity_token"]').val();
+      $.ajax({
+        url: '/destroy-social?authenticity_token=' + encodeURIComponent(authToken),
+        method: 'POST',
+        data: params
+      })
+      .done(function(msg) {
+        window.location = "/social";
+      });
     });
   });
