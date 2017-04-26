@@ -33,7 +33,7 @@ main
       .loading
         = image_tag 'balls.svg'
 
-      .text-overlay class="#{'show' if @social_update.text.present?} #{'show-on-image' if @social_update.picture_id.present?}"
+      .text-overlay class="#{'show' if @social_update.picture_id.present?} #{'show-on-image' if @social_update.picture_id.present?}"
         .text
           = @social_update.text
 
