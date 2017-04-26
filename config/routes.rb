@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   post '/toggle-social-like', to: 'brews#toggle_social_like', as: :toggle_social_like
   get '/social/:social_update_id/talk', to: 'brews#social_comment_stream', as: :social_comment_stream
   post '/social/:social_update_id/talk', to: 'brews#post_social_comment', as: :post_social_comment
+  get '/social-rules', to: 'brews#rules_of_social_engagement', as: :social_rules
 
   get '/conversations', to: 'brews#conversations', as: :conversations
   get '/community', to: 'brews#community', as: :community

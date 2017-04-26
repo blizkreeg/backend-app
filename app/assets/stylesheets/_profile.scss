@@ -36,9 +36,12 @@ body.profile {
 
     .tap-gesture-hint {
       position: absolute;
-      bottom: 0;
-      left: calc(50vw - 12px);
+      bottom: 30%;
       z-index: 2;
+      text-align: center;
+      width: 100%;
+      color: mintcream;
+      pointer-events: none;
 
       i {
         color: mintcream;

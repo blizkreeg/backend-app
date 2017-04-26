@@ -454,6 +454,14 @@ body.new-social {
 }
 
 .rules-of-social-container {
+  height: calc(100vh - #{$bottom_menu_height});
   padding: 10px;
   text-align: center;
+  position: relative;
+
+  .back {
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+  }
 }

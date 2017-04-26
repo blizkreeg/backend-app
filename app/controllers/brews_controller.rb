@@ -245,6 +245,9 @@ class BrewsController < WebController
     end
   end
 
+  def rules_of_social_engagement
+  end
+
   def conversations
     @section = 'conversations'
 
