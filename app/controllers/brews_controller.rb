@@ -229,9 +229,11 @@ class BrewsController < WebController
     end
   end
 
-  def create_social
-    @social_update = SocialUpdate.find(session[:new_social_id]) rescue @current_profile.social_updates.not_published.order("created_at DESC").take
-    @social_update.update!(published: true, posted_at: Time.now.utc)
+  def publish_social
+    unless @social_update.published
+      @social_update = SocialUpdate.find(params[:social_update][:id])
+      @social_update.update!(published: true, posted_at: Time.now.utc)
+    end
 
     redirect_to social_path
   end

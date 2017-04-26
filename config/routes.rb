@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   get '/edit-social/:social_update_id', to: 'brews#edit_social', as: :edit_social
   post '/destroy-social', to: 'brews#destroy_social', as: :destroy_social
   patch '/update-social', to: 'brews#update_social', as: :update_social
-  post '/create-social', to: 'brews#create_social', as: :create_social
+  post '/publish-social', to: 'brews#publish_social', as: :publish_social
   post '/toggle-social-like', to: 'brews#toggle_social_like', as: :toggle_social_like
   get '/social/:social_update_id/talk', to: 'brews#social_comment_stream', as: :social_comment_stream
   post '/social/:social_update_id/talk', to: 'brews#post_social_comment', as: :post_social_comment

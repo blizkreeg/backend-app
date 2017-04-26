@@ -17,7 +17,7 @@ main
           / = cl_image_upload_tag :picture_id, resource_type: :image, name: "photo"
           / = file_field_tag :photo, accept: 'image/*;capture=camera', name: "photo"
 
-      = form_tag create_social_path, class: 'create-update mt-10' do
+      = form_tag publish_social_path, class: 'create-update mt-10' do
         = hidden_field :social_update, :id, value: @social_update.id
         = hidden_field :social_update, :picture_id, value: @social_update.picture_id
         .text
