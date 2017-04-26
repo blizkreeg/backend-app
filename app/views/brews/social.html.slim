@@ -1,6 +1,9 @@
 main
   .max960
     .social-container
+      / .rules
+      /   = link_to social_rules_path, class: 'no-decor no-highlight' do
+      /     i.material-icons info_outline
       .title
         span SOCIAL
         sup
@@ -36,7 +39,7 @@ main
                 = link_to social_comment_stream_path(social_update_id: social_update.id), class: 'no-decor no-highlight' do
                     i.material-icons comment
 
-              - if social_update.profile.uuid == current_profile.uuid
+              - if (social_update.profile.uuid == current_profile.uuid) || current_profile.staff_or_internal
                 .edit
                   = link_to edit_social_path(social_update_id: social_update.id), class: 'no-decor' do
                     i.material-icons more_vert

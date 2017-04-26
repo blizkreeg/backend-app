@@ -18,6 +18,12 @@ body.new-social {
   justify-content: flex-start;
   min-height: 100%;
 
+  .rules {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
   .title {
     font-size: 32px;
     line-height: 38px;
@@ -445,4 +451,9 @@ body.new-social {
       font-size: 16px;
     }
   }
+}
+
+.rules-of-social-container {
+  padding: 10px;
+  text-align: center;
 }
