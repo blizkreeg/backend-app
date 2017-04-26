@@ -230,10 +230,8 @@ class BrewsController < WebController
   end
 
   def publish_social
-    unless @social_update.published
-      @social_update = SocialUpdate.find(params[:social_update][:id])
-      @social_update.update!(published: true, posted_at: Time.now.utc)
-    end
+    @social_update = SocialUpdate.find(params[:social_update][:id])
+    @social_update.update!(published: true, posted_at: Time.now.utc) unless @social_update.published
 
     redirect_to social_path
   end
