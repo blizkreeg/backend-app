@@ -1,27 +1,52 @@
 h3 New Butler Chat Messages
 hr
 .row
-  .col-xs-6
-    h4 Men
-    ul
-    - if @new_butler_message_men_cnt == 0
-      h5 None
-    - else
-      - @profiles.select { |profile| profile.male? }.each do |profile|
-        li
-          = link_to profile.fullname, admin_show_butler_chat_path(profile.uuid)
-      - if @new_butler_message_men_cnt > 25
-        h5
-          = "#{@new_butler_message_men_cnt - 25} more"
-  .col-xs-6
-    h4 Women
-    ul
-    - if @new_butler_message_women_cnt == 0
-      h5 None
-    - else
-      - @profiles.select { |profile| profile.female? }.each do |profile|
-        li
-          = link_to profile.fullname, admin_show_butler_chat_path(profile.uuid)
-      - if @new_butler_message_women_cnt > 25
-        h5
-          = "#{@new_butler_message_women_cnt - 25} more"
+  .col-md-4
+    .butler-chat-list
+      - @profiles.each do |profile|
+        .open-chat data-profile-uuid="#{profile.uuid}"
+          .link
+            = link_to '#', class: 'no-decor' do
+              = profile.fullname
+
+          .resolve
+            - if profile.needs_butler_attention
+              = button_to admin_update_butler_chat_flag_path, { params: { profile_uuid: profile.uuid, resolved: true }, class: 'submit btn btn-success'} do
+                i.fa.fa-check
+            - else
+              = button_to admin_update_butler_chat_flag_path, { params: { profile_uuid: profile.uuid, resolved: false }, class: 'submit btn btn-danger'} do
+                i.fa.fa-close
+          .notify
+            = button_to admin_send_butler_chat_notification_path, { params: { profile_uuid: profile.uuid, myname: profile.firstname }, class: 'submit btn btn-default'} do
+                i.fa.fa-envelope
+
+          .pointer style='visibility:hidden;'
+            i.material-icons navigate_next
+
+  .col-md-8.chat-details
+
+javascript:
+  function showChat($chatRow) {
+    var uuid = $chatRow.data('profile-uuid');
+      $.get("/show-butler-chat/" + uuid, function(data) {
+        $('.chat-details').html($(data).find('#main-wrapper').html());
+      });
+
+      $('.pointer').css('visibility', 'hidden');
+      $chatRow.find('.pointer').css('visibility', 'visible');
+  }
+  function loadFirst() {
+    var $firstElem = $('.open-chat:first');
+    showChat($firstElem);
+  }
+
+  function loadOnClick() {
+    $('.open-chat').on('click', function() {
+      showChat($(this));
+    })
+  }
+
+  $(function() {
+    loadFirst();
+    loadOnClick();
+  });
