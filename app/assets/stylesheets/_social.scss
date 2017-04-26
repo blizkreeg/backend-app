@@ -461,7 +461,11 @@ body.new-social {
 
   .back {
     position: absolute;
-    bottom: 0;
+    bottom: -20px;
     left: 10px;
+
+    i {
+      font-size: 32px;
+    }
   }
 }
