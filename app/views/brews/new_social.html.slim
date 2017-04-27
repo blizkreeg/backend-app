@@ -13,7 +13,7 @@ main
           .abs-icon
             i.material-icons linked_camera
 
-          = cl_image_upload_tag :"social_update[picture_id]", html: { accept: "image/*" }
+          = cl_image_upload_tag :"social_update[picture_id]", html: { accept: "image/*", capture: "camera" }
           / = cl_image_upload_tag :picture_id, resource_type: :image, name: "photo"
           / = file_field_tag :photo, accept: 'image/*;capture=camera', name: "photo"
 
