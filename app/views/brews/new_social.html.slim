@@ -96,15 +96,15 @@ javascript:
   }
 
   function imageUploadComplete(e, data) {
-    $('.picture-preview .loading').hide();
+    // update the backend
+    updateSocial({ social_update: { picture_id: data.result.public_id } });
 
+    $('.picture-preview .loading').hide();
     $('.picture-preview > .image').html(
       $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version, crop: 'fill', width: $('body').innerWidth(), height: $('body').innerWidth() })
     );
 
     $('input[name="social_update[picture_id]"]').val(data.result.public_id);
-
-    updateSocial({ social_update: { picture_id: data.result.public_id } });
 
     if(updateTextValue() !== "") {
       shiftOverlayOnTop();
