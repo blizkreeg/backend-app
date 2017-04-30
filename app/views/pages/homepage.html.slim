@@ -1,9 +1,24 @@
 main
-  .full-width
-    .footer
-      .max960
-        .copyright
-          | &copy; Copyright #{Date.today.year} ekCoffee, Inc. &amp; ekCoffee Ventures LLP All rights reserved.
+  .full-width.full-height
+    .max960.full-height
+      .content-body.content-body-responsive
+        .pitch
+          / exclusive/social
+          h2.tagline The singles network.
+          .narrative
+            p We started with the question - what if there was a tribe, a community, a network of like-minded single people in your city that you could belong to? What would get out of it?
+            p Dating is one. May be you're new to a city and want to find your happy hour crew. Perhaps a hiking buddy. Or a professional intro. Or something else.
+            p Brew is that place.
+            h6.type
+
+        .logo
+          = image_tag 'brew-dot-logo.png'
+
+        / h6 Mumbai, San Francisco Bay Area, Boston &amp; surroundings
+    / .footer
+    /   .max960
+    /     .copyright
+    /       | &copy; Copyright #{Date.today.year} ekCoffee, Inc. &amp; ekCoffee Ventures LLP All rights reserved.
 
     / .mdl-grid
     /   .mdl-layout-spacer
@@ -16,3 +31,39 @@ main
     /         li - Facebook helps ensure group quality
     /         li - Your activity is not shared on Facebook
     /   .mdl-layout-spacer
+
+javascript:
+  $(function() {
+    // https://macarthur.me/typeit/
+    $('#type-describe').typeIt({
+      speed: 100,
+      autoStart: false,
+      loop: true,
+      cursorSpeed: 2000
+    })
+    .tiType('network')
+    .tiPause(2000)
+    .tiDelete()
+    .tiType('community')
+    .tiPause(7500);
+
+    $('.type').typeIt({
+      speed: 50,
+      autoStart: true,
+      cursor: false
+    })
+    .tiPause(5000)
+    .tiType("The social app to meet new people in your city. Online and in person.");
+
+    $('#type-why').typeIt({
+      speed: 50,
+      autoStart: true,
+      cursor: false
+    })
+    .tiType("You're probably using a dating app to meet new people")
+    .tiPause(1000)
+    .tiType(" (aren't they all the same, by the way?)")
+    .tiType("<br /> What if there was a singles network where you could socialize &amp; be part of a like-minded group?")
+    .tiType("<br /><br /> You'll meet new people, not just to date but make new friends, connections, and more. Welcome to Brew.")
+    .tiType("<br /> Meet your weekend crew here. More interesting people on one app than can you handle!");
+  });
