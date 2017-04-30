@@ -2,25 +2,25 @@ doctype html
 html
   head
     meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no"
-    title Brew
-    meta name="description" content="Brew is a way to meet people at group socials. Try something different than dating apps and meet more interesting people you'd otherwise never meet."
-    meta property='og:image' content='https://joinbrew.com/brew600x315.jpg'
+    title ekCoffee
+    meta name="description" content="ekCoffee is an exclusive community of singles in India. Here you'll meet interesting, educated, and ambitious singles in your city, be part of a great social circle, and enjoy new experiences."
+    meta property='og:image' content='https://ekcoffee.com/ekcoffee600x315.jpg'
     meta property='og:image:width' content='600'
     meta property='og:image:height' content='315'
-    meta property='og:title' content='Brew'
-    meta property="og:description" content="Brew is a way to meet people at group socials. Try something different than dating apps and meet more interesting people you'd otherwise never meet."
-    meta property="og:url" content="https://joinbrew.com"
+    meta property='og:title' content='ekCoffee'
+    meta property="og:description" content="ekCoffee is an exclusive community of singles in India. Here you'll meet interesting, educated, and ambitious singles in your city, be part of a great social circle, and enjoy new experiences."
+    meta property="og:url" content="https://ekcoffee.com"
     = stylesheet_link_tag 'https://fonts.googleapis.com/icon?family=Material+Icons'
     = stylesheet_link_tag 'https://code.getmdl.io/1.2.1/material.blue_grey-amber.min.css'
     = javascript_include_tag 'https://code.getmdl.io/1.2.1/material.min.js', defer: true
-    = stylesheet_link_tag 'web', media: 'all'
-    = javascript_include_tag 'application'
+    = stylesheet_link_tag 'home', media: 'all'
+    = javascript_include_tag 'home'
     = csrf_meta_tags
-
-    javascript:
-      $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
   body.homepage
     = render partial: 'shared/brew_google_analytics'
+
+    / header
+    = render partial: 'pages/global_header'
 
     / main body
     = yield
