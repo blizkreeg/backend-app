@@ -4,7 +4,6 @@
 
 body.homepage {
   font-size: 16px;
-  color: #fff;
   height: 100%;
   // background-color: floralwhite;
   background-color: #fb5360;
@@ -27,17 +26,19 @@ ul li {
   flex-flow: row nowrap;
 
   .pitch {
-    width: 50%;
+    width: 55%;
     box-sizing: border-box;
     padding: 0 25px 0 0;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: flex-start;
+    color: #fff;
 
     .tagline {
       font-weight: 600;
       letter-spacing: 1px;
+      color: #fffc00;
     }
 
     .narrative, .narrative p {
@@ -45,10 +46,14 @@ ul li {
       line-height: 22px;
       font-weight: 400;
     }
+
+    .closing {
+      color: #ffffff;
+    }
   }
 
   .logo {
-    width: 50%;
+    width: 45%;
     box-sizing: border-box;
     padding: 5%;
     display: flex;
@@ -84,7 +89,6 @@ ul li {
       align-items: center;
     }
 
-
     .logo {
       width: 100%;
       box-sizing: border-box;
@@ -95,7 +99,8 @@ ul li {
       align-items: center;
 
       img {
-        width: 50%;
+        width: 150px;
+        height: 150px
       }
     }
   }
