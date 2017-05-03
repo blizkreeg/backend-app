@@ -199,7 +199,11 @@ class BrewsController < WebController
   def social
     @section = 'social'
 
-    @social_updates = SocialUpdate.published.ordered_by_recency.limit(25)
+    if @current_profile.staff_or_internal
+      @social_updates = SocialUpdate.published.ordered_by_recency.limit(25)
+    else
+      @social_updates = SocialUpdate.published.near(@current_profile.latitude, @current_profile.longitude).ordered_by_recency.limit(25)
+    end
   end
 
   def new_social
