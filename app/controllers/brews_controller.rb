@@ -204,6 +204,11 @@ class BrewsController < WebController
     else
       @social_updates = SocialUpdate.published.near(@current_profile.latitude, @current_profile.longitude).ordered_by_recency.limit(25)
     end
+
+    if @social_updates.blank?
+      redirect_to action: :new_social, params: { create: true }
+      return
+    end
   end
 
   def new_social
