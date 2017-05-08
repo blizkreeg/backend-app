@@ -11,7 +11,9 @@ main
       .subtitle updates from the community
       .spacer
         hr
-      .question #{@social_updates.first.social_question.try(:question_lede) || active_question.question_lede}
+      .question
+        - if @social_updates.present?
+          | #{@social_updates.first.social_question.try(:question_lede) || active_question.question_lede}
       .social-scroll
         - @social_updates.each_with_index do |social_update, idx|
           .social-card-container
