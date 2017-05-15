@@ -213,9 +213,6 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "data"
-              ],
               "properties": {
                 "data": {
                   "type": "object",
