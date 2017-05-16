@@ -14,6 +14,8 @@ class WebController < ApplicationController
 
   helper_method :anonymous?, :current_profile_is_admin?, :is_joinbrew?, :is_ekcbrew?
 
+  rescue_from ActionView::MissingTemplate, with: :render_404
+
   protected
 
   def is_joinbrew?
@@ -98,5 +100,9 @@ class WebController < ApplicationController
     when 'production'
       response.headers['X-Frame-Options'] = "ALLOW-FROM https://admin.ekcoffee.com/"
     end
+  end
+
+  def render_404
+    render file: "#{Rails.root}/public/404.html", status: 404, layout: false
   end
 end

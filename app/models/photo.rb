@@ -97,6 +97,6 @@ class Photo < ActiveRecord::Base
   def delete_from_cloudinary
     return if self.public_id.nil?
 
-    Cloudinary::Uploader.destroy(self.public_id, invalidate: true)
+    Cloudinary::Uploader.delay.destroy(self.public_id, invalidate: true)
   end
 end

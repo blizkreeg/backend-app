@@ -9,11 +9,11 @@
 
       = button_to 'Send Notification', admin_send_butler_chat_notification_path, { params: { profile_uuid: @profile.uuid, myname: @profile.firstname }, class: 'submit btn btn-default'}
 
-      p If user is offline, don't send notification more than once
+      / p If user is offline, don't send notification more than once
 
   .clearfix
 
-  .col-md-4
+  .col-md-12
     .panel.panel-white
       .panel-heading
         h4.panel-title

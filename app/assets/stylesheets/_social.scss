@@ -1,0 +1,473 @@
+body.social {
+  background-color: white;
+
+  .max960 {
+    height: calc(100vh - #{$bottom_menu_height});
+  }
+}
+
+body.new-social {
+  main {
+    height: 100vh;
+  }
+}
+
+.social-container {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  min-height: 100%;
+
+  .rules {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .title {
+    font-size: 32px;
+    line-height: 38px;
+    margin: 1px 0px 2px 0px;
+    text-align: center;
+    letter-spacing: 4px;
+
+    sup {
+      letter-spacing: 2px;
+    }
+  }
+
+  .subtitle {
+    font-size: 14px;
+    padding: 0px 0px;
+    text-align: center;
+  }
+
+  .spacer {
+    width: 25%;
+    text-align: center;
+    margin: 0px auto;
+
+    hr {
+      padding: 2px;
+      margin: 6px 0;
+    }
+  }
+
+  .question {
+    font-size: 16px;
+    line-height: 20px;
+    margin: 0px 0px 10px 0px;
+    text-align: center;
+    padding: 0px 10px;
+  }
+}
+
+// horizontally scrolling cards
+.social-container .social-scroll {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  overflow: scroll;
+  margin: 0 0;
+  box-sizing: border-box;
+  padding: 0 15px;
+
+  .social-card-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .social-card {
+    width: calc(100vw - 50px - 30px);
+    overflow-y: scroll;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: auto;
+    margin: 0 10px;
+    position: relative;
+    overflow: auto;
+    // background-color: rgb(231, 166, 26);
+    // background: radial-gradient(circle, #b7efef, #ffffff);
+    background-color: white;
+    height: 270px;
+    box-sizing: border-box;
+    border-radius: 2px;
+    box-shadow: 0px 0px 5px 4px #ededed;
+
+    &.active {
+    }
+
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+    align-items: flex-start;
+    font-size: 24px;
+
+    .photo {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 1;
+    }
+
+    .image {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .text {
+      background-color: rgba(20, 20, 20, 0.3);
+      color: white;
+      font-size: 18px;
+      font-weight: 400;
+      letter-spacing: 0.4px;
+      z-index: 0;
+      padding: 10px 25px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0px;
+    width: 100%;
+    position: relative;
+
+    > div {
+      margin: 0 10px;
+    }
+
+    .kudos, .talk {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      align-items: center;
+
+      i {
+        font-size: 32px;
+      }
+
+      span.number {
+        font-size: 18px;
+      }
+    }
+
+    .kudos i.emphasis {
+      color: $accent_color;
+    }
+
+    .talk i.emphasis {
+      color: $accent_blue;
+    }
+
+    .talk a {
+      height: 32px;
+    }
+
+    .edit {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      z-index: 10;
+
+      i {
+        color: #2d2d2d;
+      }
+    }
+  }
+}
+
+.social-container .nudge-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 0px 10px;
+  box-sizing: border-box;
+}
+
+.social-container .update-container {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0px;
+
+  .my-update {
+    width: 60px;
+    height: 60px;
+    border: 6px solid $accent_color;
+    background-color: $accent_color;
+    color: white;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 0px 0px 5px 4px #efefef;
+    border-radius: 40px;
+
+    i {
+      font-size: 40px;
+      vertical-align: middle;
+      padding-top: 4px;
+    }
+  }
+}
+
+
+.new-social-container {
+  padding: 10px 15px 0px 15px;
+
+  .upper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .picture-uploader {
+    position: relative;
+
+    input[type="file"]{
+      height: 60px;
+    }
+
+    input[type="file"]::-webkit-file-upload-button{
+      height: 60px;
+    }
+
+    .abs-icon {
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background-color: white;
+      pointer-events: none;
+      opacity: 1;
+
+      i {
+        font-size: 36px;
+        color: #26282f;
+        border: 1px dashed #26282f;
+        border-radius: 40px;
+        padding: 10px;
+        float: right;
+      }
+    }
+  }
+
+  .picture-uploader-caption {
+    position: absolute;
+    top: 20px;
+    right: 70px;
+    color: black;
+    z-index: 5;
+    float: right;
+    font-size: 20px;
+  }
+
+  .create-update {
+  }
+
+  .text-input {
+    margin: 0 0;
+    // color: white;
+    // background-color: rgba(10, 10, 10, 0.6);
+    vertical-align: middle;
+    font-size: 20px;
+    user-select: none;
+    box-sizing: border-box;
+    height: 49px;
+    padding-right: 4px;
+    border-radius: none;
+    border-bottom: 1px solid #ddd;
+  }
+}
+
+.picture-preview {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+
+  .loading {
+    display: none;
+    z-index: 5;
+  }
+
+  &.solid-bg {
+
+  }
+
+  .text-overlay {
+    display: none;
+    flex-flow: column nowrap;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    .text {
+      color: white;
+      font-size: 20px;
+      line-height: 28px;
+      padding: 10px 25px;
+      width: calc(100% - 50px);
+      background: rgba(20, 20, 20, 0.3);
+    }
+
+    &.show {
+      display: flex;
+    }
+
+    &.show-on-image {
+      .text {
+        position: absolute;
+      }
+    }
+  }
+}
+
+.cancel-social {
+  position: fixed;
+  left: 10px;
+  bottom: 10px;
+}
+
+.post-social {
+  position: fixed;
+  left: calc(50vw - 24px);
+  bottom: 10px;
+
+  a {
+    pointer-events: none;
+  }
+
+  i {
+    font-size: 36px;
+    color: #b0b0b0;
+  }
+
+  &.post-ready {
+    i {
+      color: $accent_color;
+    }
+
+    a {
+      pointer-events: auto;
+    }
+  }
+}
+
+.destroy-social {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+}
+
+.comments-container {
+  height: calc(100vh - 110px);
+  position: relative;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 10px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+  .comment {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0px 10px 0px;
+    border-bottom: 1px solid #ededed;
+
+    .photo {
+      margin-right: 10px;
+    }
+
+    .text {
+      width: 100%;
+    }
+  }
+
+  .conversation__send-message {
+    border-top: 1px solid #ccc;
+    margin: 0px auto;
+    // position: fixed;
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+
+    .message-box {
+      margin: 0 0;
+      padding: 1px 10px;
+      border: none;
+      background-color: white;
+      vertical-align: center;
+      font-size: 16px;
+      user-select: none;
+      // -moz-user-select: none;
+      // -webkit-user-select: none;
+      box-sizing: border-box;
+      height: 49px;
+      padding-right: 4px;
+    }
+
+    .send-message {
+      color: $accent_blue;
+      border-left: 1px solid #ddd;
+      display: flex;
+      flex-flow: column nowrap;
+      font-size: 16px;
+      height: 49px;
+      justify-content: center;
+      align-items: center;
+      width: 70px;
+      font-size: 16px;
+    }
+  }
+}
+
+.rules-of-social-container {
+  height: calc(100vh - #{$bottom_menu_height});
+  padding: 10px;
+  text-align: center;
+  position: relative;
+
+  .back {
+    position: absolute;
+    bottom: -20px;
+    left: 10px;
+
+    i {
+      font-size: 32px;
+    }
+  }
+}

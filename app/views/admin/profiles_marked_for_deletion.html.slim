@@ -10,6 +10,7 @@ h3 Profile Delete Requests
           td City
           td Deleted
           td Joined
+          td
       - @profiles_marked_for_deletion.each do |profile|
         tr
           td
@@ -19,3 +20,10 @@ h3 Profile Delete Requests
           td #{profile.location_city}
           td #{distance_of_time_in_words_to_now(profile.marked_for_deletion_at)} ago
           td #{distance_of_time_in_words_to_now(profile.created_at)} ago
+          td
+            = button_to "x", { action: :delete_profiles_marked_for_deletion, uuid: profile.uuid }, method: :post, class: 'btn btn-sm btn-danger'
+
+- if @profiles_marked_for_deletion.count > 0
+  .row
+    .col-md-12
+      = button_to "Delete All", { action: :delete_profiles_marked_for_deletion }, method: :post, class: 'btn btn-sm btn-danger'

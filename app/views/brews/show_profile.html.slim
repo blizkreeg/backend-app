@@ -1,0 +1,174 @@
+- primary_image_id = @profile.photos.profile.try(:public_id)
+- other_image_ids = @profile.photos.others.map(&:public_id)
+- requested_intro = IntroductionRequest.where(by: current_profile, to: @profile).take
+- incoming_intro = IntroductionRequest.where(by: @profile, to: current_profile).take
+- intro = IntroductionRequest.find_between(@profile.uuid, current_profile.uuid)
+
+main
+  .max960
+    .profile-container
+      - unless @viewing_self
+        .back
+          = link_to @back_url, class: 'no-decor' do
+            i.material-icons keyboard_arrow_left
+
+      .name #{@profile.firstname}, #{@profile.age}
+
+      .cards
+        .tap-gesture-hint
+          i.material-icons touch_app
+          br
+          / | tap to see more
+
+        / primary photo + initial top card
+        .brew-image.picture.tap-card.tap-card-visible data-image-id="#{primary_image_id}"
+
+        - if @profile.about_me_i_love.present?
+          .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+            .blurb.text-card
+              .block
+                .blurb
+                  h6.text-center loves &nbsp;
+                  p.text-center #{@profile.about_me_i_love[0..299]}
+
+        - image_id = other_image_ids.shift
+        - if image_id
+          .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+        - image_id = other_image_ids.shift
+        - if image_id
+          .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+        - if @profile.about_me_ideal_weekend.present?
+          .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+            .blurb.text-card
+              .block
+                .blurb
+                  h6.text-center my ideal weekend &nbsp;
+                  p.text-center #{@profile.about_me_ideal_weekend[0..299]}
+
+        - image_id = other_image_ids.shift
+        - if image_id
+          .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+        - if @profile.about_me_bucket_list.present?
+          .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+            .blurb.text-card
+              .block
+                .blurb
+                  h6.text-center on my bucket list &nbsp;
+                  p.text-center #{@profile.about_me_bucket_list[0..299]}
+
+        - image_id = other_image_ids.shift
+        - if image_id
+          .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+        - image_id = other_image_ids.shift
+        - if image_id
+          .tap-card.brew-image.picture data-image-id="#{image_id}"
+
+        / basic info card
+        .brew-image.picture.tap-card data-image-id="#{primary_image_id}"
+          .text-card
+            .block
+              span.info-label lives in &nbsp;
+              span.info-value #{@profile.location_city}
+
+            .block
+              span.info-label #{gender_pronoun_plural(@profile)} a &nbsp;
+              span.info-value #{@profile.profession}
+
+            .block
+              span.info-label has a &nbsp;
+              span.info-value #{raw(@profile.highest_degree || '&mdash;')}
+
+            .block.schools
+              span.info-label went to &nbsp;
+              span.info-value #{@profile.schools_attended.join(', ')}
+
+            .block
+              span.info-label is &nbsp;
+              span.info-value #{@profile.height}
+
+      - if @profile.uuid != current_profile.uuid
+        .bottom-pane
+          - if intro.present?
+
+            / mutual interest
+            - if intro.mutual
+              .intro-confirmed style='display: flex'
+                i.material-icons done
+                span &nbsp; We've introduced you both!
+
+            / i'm waiting for a response to my intro request
+            - elsif intro.from?(@current_profile.uuid)
+              .intro-waiting style='display: flex'
+                span We'll introduce you when #{@profile.firstname} responds.
+
+            / i got an intro reequest that i haven't accepted
+            - else
+              .intro-response.intro-button
+                = button_to(accept_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { id: incoming_intro.id }) do
+                  i.material-icons drafts
+                  | &nbsp; Accept Introduction
+              .intro-confirmed style='display: none;'
+                i.material-icons done
+                span &nbsp; We've introduced you both!
+
+          - else
+            .intro-request.intro-button
+              = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: @profile.uuid }) do
+                i.material-icons mail
+                | &nbsp; Introduce us
+            .intro-waiting style='display: none;'
+              span Got it! We'll introduce you both when #{@profile.firstname} responds.
+
+      - if @viewing_self
+        .text-center.column-flex.justify-center.align-center style="width: 100%; height: 50px;"
+          | Tap on &nbsp;
+          .material-icons view_headline
+          | &nbsp; to update your profile.
+
+- content_for :javascript do
+  javascript:
+    $(function() {
+      var profileCardWidth = $('.max960').width();
+
+      loadBrewImages(profileCardWidth, $('body').innerHeight() - 150);
+
+      $('.tap-card').on('click', function(e) {
+        $('.tap-gesture-hint').hide();
+
+        var $thisProfileCards = $('.profile-container > .cards').children('.tap-card');
+        var $bottomCard = $('.profile-container > .cards').children('.tap-card:last');
+
+        // hide this card and move it to the "bottom of the deck"
+        $(this).hide();
+        $(this).removeClass('tap-card-visible');
+        $(this).insertAfter($bottomCard);
+
+        // show the card on "top of the deck"
+        var $topCard = $('.profile-container > .cards').children('.tap-card:first');
+        $($topCard).show();
+        $($topCard).addClass('tap-card-visible');
+      });
+
+      $('.bottom-pane .intro-request').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(this).find('form').submit();
+        $(this).hide();
+        $(this).siblings('.intro-waiting').css('display', 'flex');
+      });
+
+      $('.bottom-pane .intro-response').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(this).find('form').submit();
+        $(this).hide();
+        $(this).siblings('.intro-confirmed').css('display', 'flex');
+        $('.mobile-bottom-menu .conversations-menu .bubble').show();
+      });
+    });

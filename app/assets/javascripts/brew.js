@@ -12,11 +12,14 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.mobile.min
 //= require fastclick
 //= require firebase
-//= require jquery.cloudinary
+//= require cloudinary
 //= require underscore-min
 //= require unslider
 // require zepto.min
 //= require brew/index
 //= require brew/show
+
+$.mobile.autoInitializePage = false;

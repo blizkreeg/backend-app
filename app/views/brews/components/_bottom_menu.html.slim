@@ -1,38 +1,104 @@
-.mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
-  = link_to(introductions_path, class: 'no-decor introductions-menu') do
-    .mdl-cell
-      i class="material-icons #{'active' if active == 'introductions'}" group
-      / div class="name #{'active' if active == 'introductions'}" Introductions
-    .bubble style='display: none; position: absolute; top: 0; right: 0;'
-      i.material-icons fiber_manual_record
+- if current_profile.staff_or_internal
+  .mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
+    / intros
+    = link_to(introductions_path, class: 'no-decor no-highlight introductions-menu') do
+      .tab
+        i class="material-icons #{'active' if active == 'introductions'}" group
+        div class="name #{'active' if active == 'introductions'}" Intros
+      .bubble style='display: none; position: absolute; top: 0; right: 0;'
+        i.material-icons fiber_manual_record
 
-  = link_to(conversations_path, class: 'no-decor conversations-menu') do
-    .mdl-cell
-      i class="material-icons #{'active' if active == 'conversations'}" chat
-      / div class="name #{'active' if active == 'community'}" Conversations
-    - display = current_profile.has_messages_waiting ? 'block' : 'none'
-    .bubble style="display: #{display}; position: absolute; top: 0; right: 0;"
-      i.material-icons fiber_manual_record
+    / conversations
+    = link_to(conversations_path, class: 'no-decor no-highlight conversations-menu') do
+      .tab
+        i class="material-icons #{'active' if active == 'conversations'}" chat
+        div class="name #{'active' if active == 'conversations'}" Messages
+      - display = current_profile.has_messages_waiting ? 'block' : 'none'
+      .bubble style="display: #{display}; position: absolute; top: 0; right: 0;"
+        i.material-icons fiber_manual_record
 
-  = link_to(brews_path, class: 'no-decor brews-menu') do
-    .mdl-cell
-      i class="material-icons #{'active' if active == 'brews'}" local_cafe
-      / div class="name #{'active' if active == 'brews'}" Brews
-    .bubble style='display: none; position: absolute; top: 0; right: 0;'
-      i.material-icons fiber_manual_record
-  / .mdl-cell
-  /   = link_to(community_path) do
-  /     i class="material-icons #{'active' if active == 'community'}" whatshot
-  /     div class="name #{'active' if active == 'community'}" Community
-  / .mdl-cell
-  /   i.material-icons star
-  / .mdl-cell
-  /   = link_to(new_brew_path) do
-  /     i.material-icons add_circle
-  /     div.name Post
-  / .mdl-cell
-  /   = link_to(new_brew_path) do
-  /     i.material-icons notifications
-  /     div.name Updates
-  / .mdl-cell
-  /   i.material-icons notifications
+    / social
+    - if @section == 'social'
+      = link_to(new_social_path(create: true), class: 'no-decor no-highlight social-menu') do
+        .tab
+          i class="material-icons callout" add
+          div class="name" Add
+
+    - else
+      = link_to(social_path, class: 'no-decor no-highlight social-menu') do
+        .tab
+          i class="material-icons #{'active' if active == 'social'}" public
+          div class="name #{'active' if active == 'social'}" Social
+        .bubble style='display: none; position: absolute; top: 0; right: 0;'
+          i.material-icons fiber_manual_record
+
+    / premium membership
+    = link_to(membership_status_path, class: 'no-decor no-highlight brews-menu') do
+      .tab
+        i class="material-icons #{'active' if active == 'membership'}" grade
+        div class="name #{'active' if active == 'membership'}" Membership
+
+    / profile
+    = link_to(show_profile_path(show_profile_uuid: @current_profile.uuid, params: { self: 1 }), class: 'no-decor no-highlight brews-menu') do
+      .tab
+        i class="material-icons #{'active' if active == 'profile'}" face
+        div class="name #{'active' if active == 'profile'}" Me
+- else
+  .mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
+    / intros
+    = link_to(introductions_path, class: 'no-decor no-highlight introductions-menu') do
+      .tab
+        i class="material-icons #{'active' if active == 'introductions'}" group
+        div class="name #{'active' if active == 'introductions'}" Intros
+      .bubble style='display: none; position: absolute; top: 0; right: 0;'
+        i.material-icons fiber_manual_record
+
+    / social
+    - if @section == 'social'
+      = link_to(new_social_path(create: true), class: 'no-decor no-highlight social-menu') do
+        .tab
+          i class="material-icons callout" add
+          div class="name" Add
+
+    - else
+      = link_to(social_path, class: 'no-decor no-highlight social-menu') do
+        .tab
+          i class="material-icons #{'active' if active == 'social'}" public
+          div class="name #{'active' if active == 'social'}" Social
+        .bubble style='display: none; position: absolute; top: 0; right: 0;'
+          i.material-icons fiber_manual_record
+
+    / conversations
+    = link_to(conversations_path, class: 'no-decor no-highlight conversations-menu') do
+      .tab
+        i class="material-icons #{'active' if active == 'conversations'}" chat
+        div class="name #{'active' if active == 'conversations'}" Messages
+      - display = current_profile.has_messages_waiting ? 'block' : 'none'
+      .bubble style="display: #{display}; position: absolute; top: 0; right: 0;"
+        i.material-icons fiber_manual_record
+
+    / MORE - TBD
+
+    / = link_to(brews_path, class: 'no-decor no-highlight brews-menu') do
+    /   .tab
+    /     i class="material-icons #{'active' if active == 'brews'}" local_cafe
+    /     / div class="name #{'active' if active == 'brews'}" Brews
+    /   .bubble style='display: none; position: absolute; top: 0; right: 0;'
+    /     i.material-icons fiber_manual_record
+
+    / .tab
+    /   = link_to(community_path) do
+    /     i class="material-icons #{'active' if active == 'community'}" whatshot
+    /     div class="name #{'active' if active == 'community'}" Community
+    / .tab
+    /   i.material-icons star
+    / .tab
+    /   = link_to(new_brew_path) do
+    /     i.material-icons add_circle
+    /     div.name Post
+    / .tab
+    /   = link_to(new_brew_path) do
+    /     i.material-icons notifications
+    /     div.name Updates
+    / .tab
+    /   i.material-icons notifications

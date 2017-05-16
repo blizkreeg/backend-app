@@ -1,0 +1,14 @@
+main
+  .max960
+    .membership-container
+      - if current_profile.premium
+        h6.text-center.mt-0.mb-0 Your Insider Membership is valid until #{current_profile.premium_expires_on.strftime("%B %-d, %Y")}
+      - else
+
+      - if current_profile.premium
+      - else
+        p.text-center Upgrade
+
+      = link_to "Become an #{Constants::PREMIUM_TIER_NAME.capitalize}", @instamojo.payment_url, rel: "im-checkout", :"data-behaviour" => "remote", :"data-style" => "no-style", :"data-text" => "Become an Insider"
+
+= javascript_include_tag 'https://d2xwmjc4uy2hr5.cloudfront.net/im-embed/im-embed.min.js'

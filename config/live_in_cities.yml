@@ -41,4 +41,16 @@ production:
   - name: 'Mumbai'
     lat: 18.98
     lng: 72.83
-    radius: 60_000
+    radius: 35_000
+  - name: 'Pune'
+    lat: 18.53
+    lng: 73.87
+    radius: 15_000
+  - name: 'Bengaluru'
+    lat: 12.971
+    lng: 77.594
+    radius: 20_000
+  - name: 'New Delhi'
+    lat: 28.6139
+    lng: 77.2090
+    radius: 15_000

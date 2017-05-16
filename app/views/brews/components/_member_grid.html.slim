@@ -9,9 +9,9 @@
 
     = render partial: 'brews/profile_card', locals: { profile: profile }
 
-
-javascript:
-  $(function() {
-    loadBrewImages();
-    // loadTimeCharts();
-  });
+- content_for :javascript do
+  javascript:
+    $(function() {
+      loadBrewImages();
+      // loadTimeCharts();
+    });

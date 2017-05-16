@@ -10,20 +10,43 @@ Rails.application.routes.draw do
     get '/conversation', to: 'brews#conversation', as: :conversation
   end
 
+  # onboarding
   get '/join-waitlist', to: 'brews#add_to_waitlist'
   get '/show-waitlist', to: 'brews#show_on_waitlist'
   post '/update-phone', to: 'brews#update_phone', as: :update_phone
-  get '/activity', to: 'brews#show_user_activity', as: :brew_show_user_activity
-  get '/community', to: 'brews#community', as: :community
+
+  # profile
+  get '/show-profile/:show_profile_uuid', to: 'brews#show_profile', as: :show_profile
+
+  # intros
   get '/introductions', to: 'brews#introductions', as: :introductions
-  get '/conversations', to: 'brews#conversations', as: :conversations
-  get '/conversation-with/:profile_uuid', to: 'brews#conversation_with', as: :conversation_with
   post '/request-introduction', to: 'brews#request_introduction', as: :request_introduction
   post '/accept-introduction', to: 'brews#accept_introduction', as: :accept_introduction
 
+  # social
+  get '/social', to: 'brews#social', as: :social
+  get '/new-social', to: 'brews#new_social', as: :new_social
+  get '/edit-social/:social_update_id', to: 'brews#edit_social', as: :edit_social
+  post '/destroy-social', to: 'brews#destroy_social', as: :destroy_social
+  patch '/update-social', to: 'brews#update_social', as: :update_social
+  post '/publish-social', to: 'brews#publish_social', as: :publish_social
+  post '/toggle-social-like', to: 'brews#toggle_social_like', as: :toggle_social_like
+  get '/social/:social_update_id/talk', to: 'brews#social_comment_stream', as: :social_comment_stream
+  post '/social/:social_update_id/talk', to: 'brews#post_social_comment', as: :post_social_comment
+  get '/social-rules', to: 'brews#rules_of_social_engagement', as: :social_rules
+
+  get '/conversations', to: 'brews#conversations', as: :conversations
+  get '/community', to: 'brews#community', as: :community
+  get '/conversation-with/:profile_uuid', to: 'brews#conversation_with', as: :conversation_with
+
+  # membership
+  get '/membership-status', to: 'brews#membership_status', as: :membership_status
+  post '/paid-membership-instamojo', to: 'brews#process_instamojo_payment', as: :process_instamojo_payment
+
   root to: 'pages#homepage'
 
-  get '/membership', to: 'pages#membership'
+  get '/hp', to: 'pages#hp'
+  get '/insider-membership', to: 'pages#membership'
   get '/partnerships', to: 'pages#partnerships'
   get '/who-why-join-ekcoffee', to: 'pages#whyjoin'
   get '/faqs', to: 'pages#faqs'
@@ -105,6 +128,7 @@ Rails.application.routes.draw do
     post '/send-butler-chat-notification', to: 'admin#send_butler_chat_notification', as: 'admin_send_butler_chat_notification'
     get '/logout', to: 'admin#logout', as: 'admin_logout'
     get '/profiles-marked-for-deletion', to: 'admin#profiles_marked_for_deletion', as: 'admin_profiles_marked_for_deletion'
+    post '/delete-profiles-marked-for-deletion', to: 'admin#delete_profiles_marked_for_deletion', as: 'admin_delete_profiles_marked_for_deletion'
     post '/assign-desirability-score', to: 'admin#assign_desirability_score_user', as: 'admin_assign_desirability_score_user'
     get '/conversations', to: 'admin#show_conversations'
     get '/dates', to: 'admin#show_dates'
@@ -114,6 +138,9 @@ Rails.application.routes.draw do
     get '/search', to: 'admin#search', as: 'admin_search_users'
     get '/content', to: 'admin#content', as: 'admin_content'
     post '/create-content', to: 'admin#create_content', as: 'admin_create_content'
+    get '/tribe-questions', to: 'admin#social_questions', as: 'admin_social_questions'
+    post '/activate-social-question', to: 'admin#activate_social_question', as: 'admin_activate_social_question'
+    post '/create-social-question', to: 'admin#create_social_question', as: 'admin_create_social_question'
 
     # old admin dashboard - TBD: remove/merge this functionality into above
     get '/login', to: 'accounts#login'

@@ -10,9 +10,13 @@ main
         .description Find your next new friend, activity buddy, business connection, or date!
       - if @profiles.blank?
         .no-intros
+          hr
+          / using http://www.flaticon.com/free-icon/sad_123213#term=sad&page=1&position=38
           = image_tag 'sad.png'
           h5.accent-color--title Whoops! Hang tight, #{current_profile.firstname}.
-          h6 We seem to have temporarily run out of introductions for you. We promise this won't last long.
+          p We have temporarily run out of introductions for you. We promise this won't last long.
+
+          hr style='width: 75%'
       - else
         = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }
         .footer

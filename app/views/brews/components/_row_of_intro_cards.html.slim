@@ -122,58 +122,59 @@
         .intro-request-overlay
           span.text #{profile.firstname} would like an intro to you!
 
-javascript:
-  $(function() {
-    var numCards = _.map($('.intro-row__profile'), function(card) { return $(card).find('.tap-card').length });
-    var cardTapCount = _.map($('.intro-row__profile'), function(card) { return 0 });
-    var tappedAllCards = _.map($('.intro-row__profile'), function(card) { return false });
-    var profileCardWidth = $('.max960').width();
-    if($('body').innerHeight() > 600) {
-      loadBrewImages(profileCardWidth, 300);
-    } else {
-      loadBrewImages(profileCardWidth, 250);
-    }
-
-    $('.bottom-pane .intro-request').on('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-
-      $(this).find('form').submit();
-      $(this).hide();
-      $(this).siblings('.intro-waiting').css('display', 'flex');
-    });
-
-    $('.bottom-pane .intro-response').on('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-
-      $(this).find('form').submit();
-      $(this).hide();
-      $(this).siblings('.intro-confirmed').css('display', 'flex');
-      $('.mobile-bottom-menu .conversations-menu .bubble').show();
-    });
-
-    $('.tap-card').on('click', function(e) {
-      var $thisProfile = $(this).closest('.intro-row__profile');
-      var $thisProfileCards = $thisProfile.children('.tap-card');
-      var $bottomCard = $thisProfile.children('.tap-card:last');
-      var profileCardIndex = $thisProfile.data('idx');
-
-      cardTapCount[profileCardIndex]++;
-      if((cardTapCount[profileCardIndex] >= numCards[profileCardIndex]) && !tappedAllCards[profileCardIndex]) {
-        tappedAllCards[profileCardIndex] = true;
-        $thisProfile.find('.bottom-pane .snippet').hide();
-        $thisProfile.find('.bottom-pane .intro-button').css('display', 'flex');
+- content_for :javascript do
+  javascript:
+    $(function() {
+      var numCards = _.map($('.intro-row__profile'), function(card) { return $(card).find('.tap-card').length });
+      var cardTapCount = _.map($('.intro-row__profile'), function(card) { return 0 });
+      var tappedAllCards = _.map($('.intro-row__profile'), function(card) { return false });
+      var profileCardWidth = $('.max960').width();
+      if($('body').innerHeight() > 600) {
+        loadBrewImages(profileCardWidth, 300);
+      } else {
+        loadBrewImages(profileCardWidth, 250);
       }
 
-      // hide this card and move it to the "bottom of the deck"
-      $(this).hide();
-      $(this).removeClass('tap-card-visible');
-      $(this).insertAfter($bottomCard);
+      $('.bottom-pane .intro-request').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
 
-      // show the card on "top of the deck"
-      var $topCard = $thisProfile.children('.tap-card:first');
-      $($topCard).show();
-      $($topCard).addClass('tap-card-visible');
-    })
-  });
+        $(this).find('form').submit();
+        $(this).hide();
+        $(this).siblings('.intro-waiting').css('display', 'flex');
+      });
+
+      $('.bottom-pane .intro-response').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(this).find('form').submit();
+        $(this).hide();
+        $(this).siblings('.intro-confirmed').css('display', 'flex');
+        $('.mobile-bottom-menu .conversations-menu .bubble').show();
+      });
+
+      $('.tap-card').on('click', function(e) {
+        var $thisProfile = $(this).closest('.intro-row__profile');
+        var $thisProfileCards = $thisProfile.children('.tap-card');
+        var $bottomCard = $thisProfile.children('.tap-card:last');
+        var profileCardIndex = $thisProfile.data('idx');
+
+        cardTapCount[profileCardIndex]++;
+        if((cardTapCount[profileCardIndex] >= numCards[profileCardIndex]) && !tappedAllCards[profileCardIndex]) {
+          tappedAllCards[profileCardIndex] = true;
+          $thisProfile.find('.bottom-pane .snippet').hide();
+          $thisProfile.find('.bottom-pane .intro-button').css('display', 'flex');
+        }
+
+        // hide this card and move it to the "bottom of the deck"
+        $(this).hide();
+        $(this).removeClass('tap-card-visible');
+        $(this).insertAfter($bottomCard);
+
+        // show the card on "top of the deck"
+        var $topCard = $thisProfile.children('.tap-card:first');
+        $($topCard).show();
+        $($topCard).addClass('tap-card-visible');
+      });
+    });

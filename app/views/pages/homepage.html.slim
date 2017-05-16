@@ -1,18 +1,57 @@
-main
-  .full-width
-    .footer
-      .max960
-        .copyright
-          | &copy; Copyright #{Date.today.year} ekCoffee, Inc. &amp; ekCoffee Ventures LLP All rights reserved.
+main.homepage
+  .full-width.full-height
+    .max960.full-height
+      .content-body.content-body-responsive
+        .pitch
+          h2.tagline The singles network.
+          .narrative
+            p What if there was a community of like-minded single people in your city that you could belong to? What would you get out of it?
+            p A place where people meet to date, to make new friends, find a hiking buddy, a business connection, or something else. And the one thing they all have in common? They're single and open to new things.
+            p ekCoffee is that place. Online and in life out there.
+          .download
+            = link_to 'http://goo.gl/GGUesL', class: 'download-btn' do
+              = image_tag 'apple.png'
+              | iOS
+            = link_to 'https://goo.gl/OTYtXW', class: 'download-btn' do
+              .material-icons android
+              | Android
+          h5.closing
 
-    / .mdl-grid
-    /   .mdl-layout-spacer
-    /   .mdl-cell.mdl-cell--4-col.mdl-cell--6-col-desktop.text-center
-    /     h4 I'm down.
-    /     p Awesome! Login and join an upcoming Brew near you.
-    /     = link_to 'Continue with Facebook', '/auth/facebook', class: 'mdl-button mdl-js-button mdl-button--raised'
-    /     p
-    /       ul.list--unstyled.text--light.text-center
-    /         li - Facebook helps ensure group quality
-    /         li - Your activity is not shared on Facebook
-    /   .mdl-layout-spacer
+        .logo
+          = image_tag 'ekc-round.png'
+
+javascript:
+  $(function() {
+    // https://macarthur.me/typeit/
+    $('#type-describe').typeIt({
+      speed: 100,
+      autoStart: false,
+      loop: true,
+      cursorSpeed: 2000
+    })
+    .tiType('network')
+    .tiPause(2000)
+    .tiDelete()
+    .tiType('community')
+    .tiPause(7500);
+
+    $('.closing').typeIt({
+      speed: 50,
+      autoStart: true,
+      cursor: false
+    })
+    .tiPause(5000)
+    .tiType("The social app to meet new people in your city.");
+
+    $('#type-why').typeIt({
+      speed: 50,
+      autoStart: true,
+      cursor: false
+    })
+    .tiType("You're probably using a dating app to meet new people")
+    .tiPause(1000)
+    .tiType(" (aren't they all the same, by the way?)")
+    .tiType("<br /> What if there was a singles network where you could socialize &amp; be part of a like-minded group?")
+    .tiType("<br /><br /> You'll meet new people, not just to date but make new friends, connections, and more. Welcome to Brew.")
+    .tiType("<br /> Meet your weekend crew here. More interesting people on one app than can you handle!");
+  });

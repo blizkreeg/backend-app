@@ -1,0 +1,51 @@
+- if mobile_device?
+  - titles = ['What do you think?', 'Comment on this', 'What did you like about it?']
+  = render partial: 'brews/components/actionbar', locals: { title: titles.sample, back: true, back_icon: 'keyboard_arrow_left', back_url: social_path }
+
+main style='margin-top: 61px;'
+  .max960 style='height: 100%;'
+    .comments-container
+      - @social_update.comments.each do |comment|
+        .comment
+          .photo
+            = cl_image_tag comment.profile.photos.profile.public_id, width: 48, height: 48, radius: :max, crop: :fill
+
+          .text
+            strong
+              = comment.profile.firstname
+            br
+            = comment.comment_text
+            br
+            small
+              = time_ago_in_words(comment.created_at)
+
+
+    .conversation__send-message
+      = text_field_tag 'message', '', placeholder: 'add your comment', class: 'mdl-textfield__input message-box'
+      .send-message
+        i.material-icons mode_comment
+
+- content_for :javascript do
+  javascript:
+    function isMessageEmpty() {
+      return ($('#message').val() == "");
+    }
+
+    $(function() {
+      $('.conversation__send-message > .send-message').on('click', function(e) {
+        e.preventDefault();
+        if(isMessageEmpty()) return;
+
+        $.ajax({
+          url: "/social/#{@social_update.id}/talk",
+          method: 'POST',
+          data: { comment: $('#message').val() }
+        })
+        .done(function(msg) {
+          window.location.reload();
+        });
+
+        // input loses focus when click/tap on the "SEND" button -- keep it in focus
+        // focusOnInput();
+      });
+    })

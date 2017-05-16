@@ -14,6 +14,10 @@ class PagesController < WebController
     render 'pages/homepage', layout: 'homepage'
   end
 
+  def hp
+    render 'pages/homepage', layout: 'homepage'
+  end
+
   def whyjoin
   end
 

@@ -38,6 +38,7 @@ module Matchmaker
                   .not_staff
                   .where.not(uuid: profile.uuid)
                   .desirability_score_gte(Profile::HIGH_DESIRABILITY)
+                  .within_distance(profile.latitude, profile.longitude, Constants::NEAR_DISTANCE_METERS)
                   .where.not(uuid: passed_uuids)
                   .where.not(uuid: interested_profiles.map(&:uuid))
                   .where.not(uuid: profile.asked_for_intros.pluck(:to_profile_uuid)) # don't show people i've already asked an intro to
@@ -57,8 +58,10 @@ module Matchmaker
                   .age_lte(profile.age + 4)
     end
 
+    show_more = [0, (5-interested_profiles.count)].max
+
     # order by most recently active
-    interested_profiles + profiles.ordered_by_last_seen.limit(5 - interested_profiles.count)
+    interested_profiles + profiles.ordered_by_last_seen.limit(show_more)
   end
 
   def create_first_matches(profile_uuid)

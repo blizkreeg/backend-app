@@ -1,0 +1,169 @@
+main
+  .max960
+    .new-social-container
+      .upper
+        .profile-photo
+          = cl_image_tag current_profile.photos.profile.public_id, width: 60, height: 60, radius: :max, gravity: :face
+          / h4.mt-10.mb-0 A book I'm reading now..
+
+        .picture-uploader
+          .picture-uploader-caption
+            | +
+
+          .abs-icon
+            i.material-icons linked_camera
+
+          = cl_image_upload_tag :"social_update[picture_id]", html: { accept: "image/*", capture: "camera" }
+          / = cl_image_upload_tag :picture_id, resource_type: :image, name: "photo"
+          / = file_field_tag :photo, accept: 'image/*;capture=camera', name: "photo"
+
+      = form_tag publish_social_path, class: 'create-update mt-10' do
+        = hidden_field :social_update, :id, value: @social_update.id
+        = hidden_field :social_update, :picture_id, value: @social_update.picture_id
+        .text
+          = text_field :social_update, :text, value: @social_update.text, placeholder: @social_update.social_question.question_lede, class: 'mdl-textfield__input text-input'
+
+    .picture-preview data-picture-id="#{@social_update.picture_id}"
+      .image
+
+      .loading
+        = image_tag 'balls.svg'
+
+      .text-overlay class="#{'show' if @social_update.picture_id.present?} #{'show-on-image' if @social_update.picture_id.present?}"
+        .text
+          = @social_update.text
+
+  .cancel-social
+    = link_to(social_path, class: 'no-decor') do
+      i.material-icons keyboard_arrow_left
+
+  .post-social
+    = link_to('#', class: 'no-decor post-link') do
+      i.material-icons send
+
+  .destroy-social
+    i.material-icons delete
+
+- content_for :javascript do
+  javascript:
+    function fillPicture(public_id) {
+      $('.picture-preview > .image').html($.cloudinary.image(public_id, { crop: 'fill', width: $('body').innerWidth(), height: $('body').innerWidth() }));
+    }
+
+    function updateSocial(params) {
+      params.social_update.id = $('form.create-update input[name="social_update[id]"]').val();
+      var authToken = $('form.create-update input[name="authenticity_token"]').val();
+      $.ajax({
+        url: '/update-social?authenticity_token=' + encodeURIComponent(authToken),
+        method: 'PATCH',
+        data: params
+      })
+      .done(function(msg) {
+      });
+    }
+
+    function shiftOverlayOnTop() {
+      var $overlay = $('.text-overlay');
+      $overlay.addClass('show');
+      $overlay.addClass('show-on-image');
+    }
+
+    function showImageOnLoad() {
+      if($('.picture-preview').data('picture-id') !== "") {
+        fillPicture($('.picture-preview').data('picture-id'));
+      }
+    }
+
+    function updateTextValue() {
+      return $('input[name="social_update[text]"]').val();
+    }
+
+    function updateTextPresent() {
+      return updateTextValue() !== "";
+    }
+
+    function updateImagePresent() {
+      return ($('input[name="social_update[picture_id]"]').val() !== "");
+    }
+
+    function testAndSetPostReady() {
+      if(updateTextPresent() || updateImagePresent()) {
+        $('.post-social').addClass('post-ready');
+      }
+    }
+
+    function okToPost() {
+      return $('.post-social').hasClass('post-ready');
+    }
+
+    function imageUploadComplete(e, data) {
+      // update the backend
+      updateSocial({ social_update: { picture_id: data.result.public_id } });
+
+      $('.picture-preview .loading').hide();
+      $('.picture-preview > .image').html(
+        $.cloudinary.image(data.result.public_id, { format: data.result.format, version: data.result.version, crop: 'fill', width: $('body').innerWidth(), height: $('body').innerWidth() })
+      );
+
+      $('input[name="social_update[picture_id]"]').val(data.result.public_id);
+
+      if(updateTextValue() !== "") {
+        shiftOverlayOnTop();
+      }
+
+      testAndSetPostReady();
+
+      return true;
+    }
+
+    $(function() {
+      showImageOnLoad();
+      testAndSetPostReady();
+
+      $('.cloudinary-fileupload').bind('cloudinarydone', imageUploadComplete);
+
+      $('.cloudinary-fileupload').bind('fileuploadprogress', function(e, data) {
+        $('.picture-preview .loading').show();
+      });
+
+      $('input[name="social_update[text]"]').on('keyup', function() {
+        var $overlay = $('.text-overlay');
+        $overlay.css('width', $('body').innerWidth());
+        $overlay.css('height', $('body').innerWidth());
+        if(updateImagePresent()) {
+          $overlay.addClass('show');
+          $overlay.addClass('show-on-image');
+        }
+        $overlay.find('.text').text(updateTextValue());
+      });
+
+      $('input[name="social_update[text]"]').on('blur', function() {
+        updateSocial({ social_update: { text: updateTextValue() } });
+
+        testAndSetPostReady();
+      });
+
+      $('form').on('submit', function(e) {
+        if(!okToPost()) {
+          e.preventDefault();
+          return false;
+        }
+      });
+
+      $('.post-link').on('click', function(e) {
+        $('form').submit();
+      });
+
+      $('.destroy-social').on('click', function(e) {
+        params = { social_update: { id: $('form.create-update input[name="social_update[id]"]').val() } };
+        var authToken = $('form.create-update input[name="authenticity_token"]').val();
+        $.ajax({
+          url: '/destroy-social?authenticity_token=' + encodeURIComponent(authToken),
+          method: 'POST',
+          data: params
+        })
+        .done(function(msg) {
+          window.location = "/social";
+        });
+      });
+    });

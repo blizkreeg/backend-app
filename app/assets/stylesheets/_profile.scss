@@ -1,0 +1,144 @@
+body.profile {
+  background-color: white;
+
+  .max960 {
+    height: calc(100vh - #{$bottom_menu_height});
+  }
+}
+
+.profile-container {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+
+  .back {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+  }
+
+  .name {
+    width: 100%;
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 600;
+    text-align: center;
+    padding: 13px 0px;
+    height: 50px;
+    box-sizing: border-box;
+  }
+
+  .cards {
+    height: calc(100vh - 160px);
+    position: relative;
+
+    .tap-gesture-hint {
+      position: absolute;
+      bottom: 45%;
+      z-index: 2;
+      text-align: center;
+      width: 100%;
+      color: mintcream;
+      pointer-events: none;
+
+      i {
+        color: mintcream;
+        font-size: 36px;
+      }
+    }
+
+    .tap-card {
+      display: none;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .tap-card-visible {
+      display: block;
+      z-index: 1;
+    }
+
+    .text-card {
+      position: absolute;
+      left: 0;
+      top: 0;
+      background-color: white;
+      opacity: 0.85;
+      padding: 10px;
+      width: 100%;
+      height: 100%;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+      overflow: scroll;
+      font-weight: 400;
+
+      .block {
+        color: #1d1d1d;
+        padding: 3px 0px;
+        width: 100%;
+        box-sizing: border-box;
+
+        span.info-label {
+          float: left;
+          width: 30%;
+          text-align: right;
+          padding-right: 8px;
+          box-sizing: border-box;
+          font-size: 14px;
+        }
+
+        span.info-value {
+          float: left;
+          width: 70%;
+          text-align: left;
+          padding-left: 8px;
+          box-sizing: border-box;
+        }
+      }
+    }
+  }
+
+  .bottom-pane {
+    width: 100%;
+    height: 51px;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: white;
+    z-index: 1;
+    color: white;
+    font-size: 16px;
+
+    .intro-request, .intro-waiting, .intro-response, .intro-confirmed {
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f4c352;
+      height: 51px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .intro-request, .intro-response {
+      button, button:active, button:target, a, a:visited, a:hover {
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: inherit !important;
+        border: none !important;
+      }
+    }
+  }
+}
+

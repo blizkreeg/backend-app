@@ -3,8 +3,7 @@ class UserNotifier
 
   WELCOME_MESSAGES = [
     "This is #{Constants::COFOUNDERS.sample}, Co-founder of ekCoffee. Thanks for joining! :)",
-    "Reach out to us here at any time if you have questions or concerns.",
-    "By the way, how did you hear about us?"
+    "Reach out if you have questions or concerns."
   ]
 
   def self.send_welcome_messages_via_butler(uuid)

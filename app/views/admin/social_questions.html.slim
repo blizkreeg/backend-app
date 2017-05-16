@@ -1,0 +1,50 @@
+h3 Tribe Questions
+.row
+  .col-md-8
+    .table-responsive
+      table.table
+        thead
+          tr
+            th
+            th Question Text
+            th Question Short
+            th Status
+            th Make Active
+        tbody
+          - @social_questions.each do |social_question|
+            tr
+              td
+                | ##{social_question.id}
+              td
+                = social_question.question_text
+              td
+                = social_question.question_lede
+              td
+                = social_question.active ? 'Active' : '-'
+              td
+                - unless social_question.active
+                  = button_to "Make Active", { action: :activate_social_question, social_question_id: social_question.id }, method: :post, class: 'btn btn-sm btn-primary'
+
+  .col-md-4
+    .panel.panel-white
+      .panel-body
+        h3 Create new question/status
+        hr
+        = form_tag admin_create_social_question_path, method: :post, class: 'form-horizontal' do
+          .form-group
+            .col-md-2
+              = label :social_question, :question_text, 'Question Text'
+            .col-md-10
+              = text_field :social_question, :question_text, placeholder: 'The full question', class: 'form-control', required: true
+              p.help-block This shows up above the + button in the nav, leading the user to answer. This should be a question and should make me want to tap on the + sign.
+
+          .form-group
+            .col-md-2
+              = label :social_question, :question_lede, 'Short Form'
+            .col-md-10
+              = text_field :social_question, :question_lede, placeholder: 'Shortened form', class: 'form-control', rows: 3
+              p.help-block This shows up above the cards and is a short summary of what the update is about. E.g., "A book I'm reading.." is the short form for a question like "What is a good book you're reading now?"
+
+          .form-group
+            .col-md-12
+              = submit_tag 'Create', class: 'btn btn-info'

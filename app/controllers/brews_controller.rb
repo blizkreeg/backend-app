@@ -6,8 +6,26 @@ class BrewsController < WebController
   WAITLIST_LAUNCH_DATE = Date.new(2017, 1, 31)
   PUBLIC_EXCEPTION_METHODS = [:show]
   WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
-  NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations]
-  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with]
+
+  # screens to show the bottom tabs on
+  NAV_TABS_ONLY_METHODS = [:index,
+                           :community,
+                           :introductions,
+                           :conversations,
+                           :social,
+                           :show_profile,
+                           :membership_status]
+
+  TRACK_URI_GET_METHODS = [:index,
+                           :show,
+                           :introductions,
+                           :conversations,
+                           :conversation_with,
+                           :social,
+                           :new_social,
+                           :edit_social,
+                           :show_profile,
+                           :membership_status]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -116,9 +134,6 @@ class BrewsController < WebController
     @names_hash = @brew.profiles.inject({}) { |hash, profile| hash[profile.uuid] = profile.firstname; hash }
   end
 
-  def show_user_activity
-  end
-
   def add_to_waitlist; end
 
   def show_on_waitlist
@@ -188,12 +203,77 @@ class BrewsController < WebController
     end
   end
 
+  def show_profile
+    @viewing_self = (params[:self] == "1")
+    @section = 'profile' if @viewing_self
+
+    @back_url = request.referrer || "/social"
+
+    @profile = Profile.find(params[:show_profile_uuid])
+  end
+
+  def social
+    @section = 'social'
+
+    if @current_profile.staff_or_internal
+      @social_updates = SocialUpdate.published.ordered_by_recency.limit(25)
+    else
+      @social_updates = SocialUpdate.published.near(@current_profile.latitude, @current_profile.longitude).ordered_by_recency.limit(25)
+    end
+  end
+
+  def new_social
+    @section = 'new-social'
+
+    if params[:create] == 'true'
+      @social_update = SocialUpdate.create_blank_for(@current_profile)
+    else
+      @social_update = SocialUpdate.find(session[:new_social_id]) rescue @current_profile.social_updates.not_published.order("created_at DESC").take rescue SocialUpdate.create_blank_for(@current_profile)
+    end
+
+    session[:new_social_id] = @social_update.id
+  end
+
+  def edit_social
+    @social_update = SocialUpdate.find(params[:social_update_id])
+
+    render 'new_social'
+  end
+
+  def update_social
+    @social_update = SocialUpdate.find(params[:social_update][:id])
+    @social_update.update!(social_update_params)
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
+  end
+
+  def publish_social
+    @social_update = SocialUpdate.find(params[:social_update][:id])
+    @social_update.update!(published: true, posted_at: Time.now.utc) unless @social_update.published
+
+    redirect_to social_path
+  end
+
+  def destroy_social
+    @social_update = SocialUpdate.find(params[:social_update][:id])
+    @social_update.destroy!
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
+  end
+
+  def rules_of_social_engagement
+  end
+
   def conversations
     @section = 'conversations'
 
     Profile.delay_for(2.seconds).update(@current_profile.uuid, has_messages_waiting: false) if @current_profile.has_messages_waiting
 
-    @conversations = Conversation.with_open(true).participant_uuids_contains(@current_profile.uuid).order("updated_at DESC")
+    @conversations = Conversation.with_open(true).participant_uuids_contains(@current_profile.uuid).order("updated_at DESC").select { |c| c.participant_uuids.select { |u| Profile.exists?(u) }.count == 2 }
   end
 
   def conversation_with
@@ -225,6 +305,44 @@ class BrewsController < WebController
   def edit_interests
   end
 
+  def toggle_social_like
+    social_update = SocialUpdate.find(params[:social_update][:id])
+    like = SocialLike.where(social_update: social_update, profile: @current_profile).take
+    if like.present?
+      like.destroy!
+    else
+      social_update.likes << SocialLike.create!(profile: @current_profile)
+    end
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
+  end
+
+  def social_comment_stream
+    @social_update = SocialUpdate.find(params[:social_update_id])
+  end
+
+  def post_social_comment
+    @social_update = SocialUpdate.find(params[:social_update_id])
+    @social_update.comments << SocialComment.create!(profile: @current_profile, comment_text: params[:comment])
+
+    respond_to do |format|
+      format.json { render json: { success: true } }
+    end
+  end
+
+  def membership_status
+    @section = 'membership'
+
+    @instamojo = Instamojo::Payment.new(@current_profile)
+    @instamojo.create_link
+  end
+
+  def process_instamojo_payment
+    Rollbar.debug("INSTAMOJO PAID! #{params.inspect}")
+  end
+
   private
 
   def set_goto_uri
@@ -234,6 +352,11 @@ class BrewsController < WebController
   def brew_params
     attributes = Brew::MASS_UPDATE_ATTRIBUTES
     params.require(:brew).permit(*attributes)
+  end
+
+  def social_update_params
+    attributes = SocialUpdate::MASS_UPDATE_ATTRIBUTES
+    params.require(:social_update).permit(*attributes)
   end
 
   def authenticated?
