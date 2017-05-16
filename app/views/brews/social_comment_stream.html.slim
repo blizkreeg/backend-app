@@ -25,188 +25,27 @@ main style='margin-top: 61px;'
       .send-message
         i.material-icons mode_comment
 
-javascript:
-  function isMessageEmpty() {
-    return ($('#message').val() == "");
-  }
+- content_for :javascript do
+  javascript:
+    function isMessageEmpty() {
+      return ($('#message').val() == "");
+    }
 
-  $(function() {
-    $('.conversation__send-message > .send-message').on('click', function(e) {
-      e.preventDefault();
-      if(isMessageEmpty()) return;
+    $(function() {
+      $('.conversation__send-message > .send-message').on('click', function(e) {
+        e.preventDefault();
+        if(isMessageEmpty()) return;
 
-      $.ajax({
-        url: "/social/#{@social_update.id}/talk",
-        method: 'POST',
-        data: { comment: $('#message').val() }
-      })
-      .done(function(msg) {
-        window.location.reload();
+        $.ajax({
+          url: "/social/#{@social_update.id}/talk",
+          method: 'POST',
+          data: { comment: $('#message').val() }
+        })
+        .done(function(msg) {
+          window.location.reload();
+        });
+
+        // input loses focus when click/tap on the "SEND" button -- keep it in focus
+        // focusOnInput();
       });
-
-      // input loses focus when click/tap on the "SEND" button -- keep it in focus
-      // focusOnInput();
-    });
-  })
-
-// javascript:
-//   var current_profile_uuid = "#{current_profile.uuid}";
-//   var photo_ids = JSON.parse('#{@photo_ids_hash.to_json.to_s.html_safe}');
-//   var names = JSON.parse('#{@names_hash.to_json.to_s.html_safe}');
-//   var messageSendOpen = false;
-//   var conversationRef = new Firebase("#{Rails.application.config.firebase_db_url}conversations/#{@conversation.uuid}/messages");
-//   var disconnectedRef = new Firebase("#{Rails.application.config.firebase_db_url}users/#{current_profile.uuid}/disconnectedAt");
-//   var firstQuery = conversationRef.orderByChild("sent_at").limitToLast(100);
-//   var recipient_uuid = "#{@profile.uuid}";
-//   var sendingMessage = false;
-
-//   var ref = new Firebase("#{Rails.application.config.firebase_db_url}");
-//   ref.authWithCustomToken("#{firebase_token}", function(error, authData) {
-//     if (error) {
-//       console.log("Login Failed!", error);
-//     } else {
-//       console.log("Login Succeeded!", authData);
-//     }
-//   });
-
-//   var setConnectTime = function() {
-//     disconnectedRef.set(Date.now());
-//   }
-
-//   firstQuery.on('child_added', function(snapshot) {
-//     var $elem;
-//     var oldHeight = $('.messages').height();
-//     var data = snapshot.val();
-
-//     if((data.sender_uuid === undefined) || (data.recipient_uuid === undefined)) {
-//       $elem = $('<div class="conversation__chat-bubble system">' + '<span class="text">' + data.content + '</span>' + '</div>');
-//       $('.messages').append($elem);
-//     } else {
-//       if(data.sender_uuid === current_profile_uuid) {
-//         $elem = $('<div class="conversation__chat-bubble sent">' +
-//                                 '<div class="text">' + '<span class="accent-color--title bold">' + names[data.sender_uuid] + '</span>'  + '<br>' + data.content + '</div>' +
-//                                 '<div class="avatar"><image src="' +
-//                                   $.cloudinary.url(photo_ids[data.sender_uuid], { width: 48, height: 48, crop: 'fill', gravity: 'face', radius: 'max' })  +
-//                                 '"/></div>' +
-//                               '</div>');
-//         $('.messages').append($elem);
-//       } else {
-//         $elem = $('<div class="conversation__chat-bubble received">' +
-//                                 '<div class="avatar"><image src="' +
-//                                   $.cloudinary.url(photo_ids[data.sender_uuid], { width: 48, height: 48, crop: 'fill', gravity: 'face', radius: 'max' })  +
-//                                 '"/></div>' +
-//                                 '<div class="text">' + '<span class="accent-color--title bold">' + names[data.sender_uuid] + '</span>'  + '<br>' + data.content + '</div>' +
-//                               '</div>');
-//         $('.messages').append($elem);
-//       }
-//     }
-
-//     $(".conversation__container").scrollTop($(".conversation__container .messages")[0].scrollHeight);
-
-//     setConnectTime();
-//   });
-
-//   $('#message').on('keypress', function(e) {
-//     if(isMessageEmpty()) return;
-
-//     if(e.which == 13) {
-//       pushMessageToFirebase();
-//     }
-//   });
-
-//   $('.conversation__send-message > .send-message').on('click', function(e) {
-//     e.preventDefault();
-//     if(isMessageEmpty()) return;
-
-//     pushMessageToFirebase();
-
-//     sendingMessage = true;
-
-//     // input loses focus when click/tap on the "SEND" button -- keep it in focus
-//     focusOnInput();
-//   });
-
-//   $('#message').on('focus', function() {
-//     setTimeout(function () {
-//       if(messageSendOpen !== true) {
-//         //$('.conversation__send-message').css({ 'position': 'relative' });
-//         // android soft keyboard issue
-//         if(navigator.userAgent.indexOf('Android') > -1) {
-//           $('.conversation__send-message').css({ 'position': 'absolute', top: 10, left: 0, height: 50 });
-//         }
-//         window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-
-//         messageSendOpen = true;
-//       }
-//     }, 0);
-
-//     setTimeout(checkFocus, 1000);
-//   });
-
-//   $('.conversation__container .messages').on('click', function() {
-//     if(messageSendOpen) {
-//       snapInputBack();
-//     }
-//   });
-
-//   function isMessageEmpty() {
-//     return ($('#message').val() == "");
-//   }
-
-//   function focusOnInput() {
-//     sendingMessage = false;
-//     $('#message').focus();
-//   }
-
-//   function pushMessageToFirebase() {
-//     var $messageInput = $('#message');
-
-//     conversationRef.push({ content: $messageInput.val(),
-//                             sender_uuid: current_profile_uuid,
-//                             recipient_uuid: recipient_uuid,
-//                             sent_at: Date.now(),
-//                             processed: true });
-//     $messageInput.val('');
-//   }
-
-//   // the keyboard is closed -- snap the message input back to its original place
-//   function snapInputBack() {
-//     messageSendOpen = false;
-//     sendingMessage = false;
-
-//     setTimeout(function () {
-//       // android soft keyboard issue
-//       if(navigator.userAgent.indexOf('Android') > -1) {
-//         $('.conversation__send-message').css({ 'position': 'relative', height: 50, top: 0 });
-//       }
-//       window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-//       //$('.conversation__send-message').css({ 'position': 'fixed' });
-//     }, 0);
-//   }
-
-//   function checkFocus() {
-//     // was the message input open previously?
-//     if(messageSendOpen) {
-//       // is it now out of focus?
-//       if(!$('#message').is(":focus")) {
-//         // have we just temporarily lost focus because we clicked on "SEND"?
-//         if(sendingMessage === false) {
-//           // if not, push it back into place
-//           snapInputBack();
-//         }
-//       } else {
-//         // still in focus, check again in 1s
-//         setTimeout(checkFocus, 1000);
-//       }
-//     }
-//   }
-
-//   $(document).on('touchstart', 'input, textarea', function () {
-//     setTimeout(function () {
-//         window.scrollTo(document.body.scrollLeft, document.body.scrollTop);
-//     }, 0);
-//   });
-
-//   $(function() {
-//     setConnectTime();
-//   });
+    })

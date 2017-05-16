@@ -13,6 +13,7 @@
 @import 'conversations';
 @import 'social';
 @import 'profile';
+@import 'membership';
 
 .make-brew {
 }
@@ -725,28 +726,37 @@ input[type=range]:focus::-webkit-slider-runnable-track {
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 50px;
+  height: 60px;
 }
 
 .mobile-bottom-menu {
   background-color: $mobile_menu_bgcolor;
-  border-top: 0.5px solid $mobile_menu_bordercolor;
+  border-top: 1px solid $mobile_menu_bordercolor;
   color: #2d2d2d;
   width: 100%;
-  // height: 50px;
+  height: 59px;
   position: fixed;
   bottom: 0;
   display: flex;
   flex-flow: row nowrap;
-  z-index: 2;
+  z-index: 10000002;
   justify-content: space-between;
   align-items: center;
   font-weight: 400;
+  box-sizing: border-box;
+
+  .tab {
+    padding: 0px 4px;
+    width: calc(100vw/5);
+    box-sizing: border-box;
+    text-align: center;
+  }
 
   a {
     text-align: center;
-    padding: 0 8px;
+    padding: 3px 0px;
     position: relative;
+    font-size: 13px;
     // width: calc(100%/3)
   }
 
@@ -765,7 +775,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
     color: #fe6363;
 
     i {
-      font-size: 18px;
+      font-size: 16px;
     }
   }
 }

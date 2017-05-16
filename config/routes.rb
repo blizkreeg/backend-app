@@ -39,6 +39,10 @@ Rails.application.routes.draw do
   get '/community', to: 'brews#community', as: :community
   get '/conversation-with/:profile_uuid', to: 'brews#conversation_with', as: :conversation_with
 
+  # membership
+  get '/membership-status', to: 'brews#membership_status', as: :membership_status
+  post '/paid-membership-instamojo', to: 'brews#process_instamojo_payment', as: :process_instamojo_payment
+
   root to: 'pages#homepage'
 
   get '/hp', to: 'pages#hp'

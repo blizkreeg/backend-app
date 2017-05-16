@@ -1,0 +1,13 @@
+main
+  .max960
+    .membership-container
+      h6.text-center.mt-0.mb-0 Your Membership Tier
+      h3.text-center.mt-0 #{current_profile.membership_tier_name.upcase}
+
+      - if current_profile.premium
+      - else
+        p As a #{current_profile.membership_tier_name.capitalize} member, you :
+
+      = link_to 'Become Premium Member', @instamojo.payment_url, rel: "im-checkout", :"data-behaviour" => "remote", :"data-style" => "no-style", :"data-text" => "Become Premium Member"
+
+= javascript_include_tag 'https://d2xwmjc4uy2hr5.cloudfront.net/im-embed/im-embed.min.js'

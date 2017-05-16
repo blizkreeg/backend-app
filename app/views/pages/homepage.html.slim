@@ -1,36 +1,24 @@
-main
+main.homepage
   .full-width.full-height
     .max960.full-height
       .content-body.content-body-responsive
         .pitch
-          / exclusive/social
           h2.tagline The singles network.
           .narrative
-            p We started with the question - what if there was a <em>tribe</em>, a community, a network of like-minded single people in your city that you could belong to? What would you get out of it?
-            p Dating is one. But may be you're new to a city and want to find your happy hour crew. Or perhaps a hiking buddy. Or make some business connections. Or something else. And the one thing they all have in common? They're single and open to new things.
-            p Brew is that place. Online and in life out there.
-            h5.closing
+            p What if there was a community of like-minded single people in your city that you could belong to? What would you get out of it?
+            p A place where people meet to date, to make new friends, find a hiking buddy, a business connection, or something else. And the one thing they all have in common? They're single and open to new things.
+            p ekCoffee is that place. Online and in life out there.
+          .download
+            = link_to 'http://goo.gl/GGUesL', class: 'download-btn' do
+              = image_tag 'apple.png'
+              | iOS
+            = link_to 'https://goo.gl/OTYtXW', class: 'download-btn' do
+              .material-icons android
+              | Android
+          h5.closing
 
         .logo
-          = image_tag 'brew-dot-logo-rounded.png'
-
-        / h6 Mumbai, San Francisco Bay Area, Boston &amp; surroundings
-    / .footer
-    /   .max960
-    /     .copyright
-    /       | &copy; Copyright #{Date.today.year} ekCoffee, Inc. &amp; ekCoffee Ventures LLP All rights reserved.
-
-    / .mdl-grid
-    /   .mdl-layout-spacer
-    /   .mdl-cell.mdl-cell--4-col.mdl-cell--6-col-desktop.text-center
-    /     h4 I'm down.
-    /     p Awesome! Login and join an upcoming Brew near you.
-    /     = link_to 'Continue with Facebook', '/auth/facebook', class: 'mdl-button mdl-js-button mdl-button--raised'
-    /     p
-    /       ul.list--unstyled.text--light.text-center
-    /         li - Facebook helps ensure group quality
-    /         li - Your activity is not shared on Facebook
-    /   .mdl-layout-spacer
+          = image_tag 'ekc-round.png'
 
 javascript:
   $(function() {

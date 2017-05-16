@@ -1,0 +1,17 @@
+body.introductions {
+  background-color: white;
+
+  .max960 {
+    height: calc(100vh - #{$bottom_menu_height});
+  }
+}
+
+.membership-container {
+  padding: 10px 25px;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}

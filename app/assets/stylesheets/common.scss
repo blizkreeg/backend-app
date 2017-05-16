@@ -10,7 +10,7 @@
 @import 'typography';
 @import 'colors';
 
-$bottom_menu_height: 50px;
+$bottom_menu_height: 60px;
 
 // https://maxogden.com/fast-webview-applications.html
 // http://stackoverflow.com/questions/10819565/user-selectnone-causes-input-field-to-be-inaccessible-on-safari
@@ -189,4 +189,22 @@ a.disabled {
 
 p {
   font-size: 16px;
+}
+
+.row-flex {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.column-flex {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.align-center {
+  align-items: center;
 }

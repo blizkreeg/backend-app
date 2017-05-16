@@ -40,6 +40,7 @@ main
               .talk
                 = link_to social_comment_stream_path(social_update_id: social_update.id), class: 'no-decor no-highlight' do
                     i.material-icons comment
+                span.number #{social_update.comments.count if social_update.comments.count > 0}
 
               - if (social_update.profile.uuid == current_profile.uuid) || current_profile.staff_or_internal
                 .edit
@@ -54,142 +55,143 @@ main
       .nudge-container
         .nudge-q #{active_question.question_text}
 
-javascript:
-  var screenWidth = $('body').innerWidth();
-  var activeCardWidth = screenWidth - 50;
-  var inactiveCardWidth = activeCardWidth - 30;
-  var scrollBy = 5 + inactiveCardWidth;
-  var $socialCards = $('.social-card');
-  var scrollPos = 0;
+- content_for :javascript do
+  javascript:
+    var screenWidth = $('body').innerWidth();
+    var activeCardWidth = screenWidth - 50;
+    var inactiveCardWidth = activeCardWidth - 30;
+    var scrollBy = 5 + inactiveCardWidth;
+    var $socialCards = $('.social-card');
+    var scrollPos = 0;
 
-  function getScrollPos() {
-    return $('.social-scroll').scrollLeft();
-  }
-
-  function showNextCard() {
-    var $activeCard = $('.social-card.active');
-    var cardIndex = $activeCard.data('idx');
-
-    if(cardIndex == ($socialCards.length - 1)) {
-      return;
+    function getScrollPos() {
+      return $('.social-scroll').scrollLeft();
     }
 
-    var nextIndex = cardIndex + 1;
-    var currPos = getScrollPos();
-    var $nextCard = $($socialCards[nextIndex]);
+    function showNextCard() {
+      var $activeCard = $('.social-card.active');
+      var cardIndex = $activeCard.data('idx');
 
-    $('.social-scroll').animate({ scrollLeft: nextIndex * (activeCardWidth - 10) }, 250);
-    //$('.social-scroll').animate({ scrollLeft: currPos + scrollBy }, 250);
-
-    makeActive($nextCard);
-    makeInactive($activeCard);
-    $nextCard.toggleClass('active');
-    $activeCard.toggleClass('active');
-  }
-
-  function showPreviousCard() {
-    var $activeCard = $('.social-card.active');
-    var cardIndex = $activeCard.data('idx');
-
-    if(cardIndex == 0) {
-      return;
-    }
-
-    var nextIndex = cardIndex - 1;
-    var currPos = getScrollPos();
-    var $nextCard = $($socialCards[nextIndex]);
-
-    $('.social-scroll').animate({ scrollLeft: nextIndex * (activeCardWidth - 10) }, 250);
-    // $('.social-scroll').animate({ scrollLeft: currPos - scrollBy }, 250);
-
-    makeActive($nextCard);
-    makeInactive($activeCard);
-    $nextCard.toggleClass('active');
-    $activeCard.toggleClass('active');
-  }
-
-  function makeActive($card) {
-    $card.animate({
-      width: activeCardWidth + 'px',
-      height: activeCardWidth + 'px'
-    }, 250);
-
-    $('.question').text($card.data('question'));
-  }
-
-  function makeInactive($card) {
-    $card.animate({
-      width: inactiveCardWidth + 'px',
-      height: inactiveCardWidth + 'px'
-    }, 250);
-  }
-
-  $(function() {
-    var textCardBgColors = ['#b7efef', '#e7a61a', '#ffd0a8', '#ffb1b1', '#e9f9d6', '#b7efff'];
-    // $('.social-scroll').on('scroll', function(e) {
-    //   var currPos = $(this).scrollLeft();
-
-    //   if (scrollPos < currPos) {
-    //     console.log('scroll right');
-    //   }
-    //   if (scrollPos > currPos)
-    //   {
-    //       console.log('scroll left');
-    //   }
-
-    //   scrollPos = currPos;
-    // });
-
-    $('.social-card').on('swipeleft', function(e) {
-      showNextCard();
-    });
-
-    $('.social-card').on('swiperight', function(e) {
-      showPreviousCard();
-    });
-
-    $('.my-update').on('click', function() {
-      window.location = '/new-social?create=true';
-    });
-
-    var $imageDivs = $('.image');
-    _.each($imageDivs, function(imageDiv) {
-      $imageDiv = $(imageDiv);
-      var imageId = $imageDiv.data('picture-id');
-      width = $imageDiv.width();
-      $imageDiv.html($.cloudinary.image(imageId, { height: activeCardWidth, width: activeCardWidth, crop: "fill", gravity: "north" }));
-    });
-
-    $('.kudos').on('click', function() {
-      var $icon = $(this).find('i');
-      var $number = $(this).find('.number');
-      var value = parseInt($number.text());
-
-      if($icon.text() == 'favorite') {
-        $icon.text('favorite_border');
-        $number.text(value - 1);
-      } else {
-        $icon.text('favorite');
-        $number.text(value + 1);
+      if(cardIndex == ($socialCards.length - 1)) {
+        return;
       }
 
-      $icon.toggleClass('emphasis');
+      var nextIndex = cardIndex + 1;
+      var currPos = getScrollPos();
+      var $nextCard = $($socialCards[nextIndex]);
 
-      $.ajax({
-        url: '/toggle-social-like',
-        method: 'POST',
-        data: { social_update: { id: parseInt($(this).data('social-update-id')) } }
-      })
-      .done(function(msg) {
+      $('.social-scroll').animate({ scrollLeft: nextIndex * (activeCardWidth - 10) }, 250);
+      //$('.social-scroll').animate({ scrollLeft: currPos + scrollBy }, 250);
+
+      makeActive($nextCard);
+      makeInactive($activeCard);
+      $nextCard.toggleClass('active');
+      $activeCard.toggleClass('active');
+    }
+
+    function showPreviousCard() {
+      var $activeCard = $('.social-card.active');
+      var cardIndex = $activeCard.data('idx');
+
+      if(cardIndex == 0) {
+        return;
+      }
+
+      var nextIndex = cardIndex - 1;
+      var currPos = getScrollPos();
+      var $nextCard = $($socialCards[nextIndex]);
+
+      $('.social-scroll').animate({ scrollLeft: nextIndex * (activeCardWidth - 10) }, 250);
+      // $('.social-scroll').animate({ scrollLeft: currPos - scrollBy }, 250);
+
+      makeActive($nextCard);
+      makeInactive($activeCard);
+      $nextCard.toggleClass('active');
+      $activeCard.toggleClass('active');
+    }
+
+    function makeActive($card) {
+      $card.animate({
+        width: activeCardWidth + 'px',
+        height: activeCardWidth + 'px'
+      }, 250);
+
+      $('.question').text($card.data('question'));
+    }
+
+    function makeInactive($card) {
+      $card.animate({
+        width: inactiveCardWidth + 'px',
+        height: inactiveCardWidth + 'px'
+      }, 250);
+    }
+
+    $(function() {
+      var textCardBgColors = ['#b7efef', '#e7a61a', '#ffd0a8', '#ffb1b1', '#e9f9d6', '#b7efff'];
+      // $('.social-scroll').on('scroll', function(e) {
+      //   var currPos = $(this).scrollLeft();
+
+      //   if (scrollPos < currPos) {
+      //     console.log('scroll right');
+      //   }
+      //   if (scrollPos > currPos)
+      //   {
+      //       console.log('scroll left');
+      //   }
+
+      //   scrollPos = currPos;
+      // });
+
+      $('.social-card').on('swipeleft', function(e) {
+        showNextCard();
+      });
+
+      $('.social-card').on('swiperight', function(e) {
+        showPreviousCard();
+      });
+
+      $('.my-update').on('click', function() {
+        window.location = '/new-social?create=true';
+      });
+
+      var $imageDivs = $('.image');
+      _.each($imageDivs, function(imageDiv) {
+        $imageDiv = $(imageDiv);
+        var imageId = $imageDiv.data('picture-id');
+        width = $imageDiv.width();
+        $imageDiv.html($.cloudinary.image(imageId, { height: activeCardWidth, width: activeCardWidth, crop: "fill", gravity: "north" }));
+      });
+
+      $('.kudos').on('click', function() {
+        var $icon = $(this).find('i');
+        var $number = $(this).find('.number');
+        var value = parseInt($number.text());
+
+        if($icon.text() == 'favorite') {
+          $icon.text('favorite_border');
+          $number.text(value - 1);
+        } else {
+          $icon.text('favorite');
+          $number.text(value + 1);
+        }
+
+        $icon.toggleClass('emphasis');
+
+        $.ajax({
+          url: '/toggle-social-like',
+          method: 'POST',
+          data: { social_update: { id: parseInt($(this).data('social-update-id')) } }
+        })
+        .done(function(msg) {
+        });
+      });
+
+      var $socialCards = $('.social-card');
+      _.each($socialCards, function(card) {
+        var $card = $(card);
+        if($card.hasClass('notext')) {
+          var bgColor = textCardBgColors[Math.floor(Math.random() * textCardBgColors.length)];
+          $card.css('background', 'radial-gradient(circle, ' + '#ffffff, ' + bgColor + ')');
+        }
       });
     });
-
-    var $socialCards = $('.social-card');
-    _.each($socialCards, function(card) {
-      var $card = $(card);
-      if($card.hasClass('notext')) {
-        var bgColor = textCardBgColors[Math.floor(Math.random() * textCardBgColors.length)];
-        $card.css('background', 'radial-gradient(circle, ' + '#ffffff, ' + bgColor + ')');
-      }
-    });
-  });

@@ -7,9 +7,10 @@
 main
   .max960
     .profile-container
-      .back
-        = link_to @back_url, class: 'no-decor' do
-          i.material-icons keyboard_arrow_left
+      - unless @viewing_self
+        .back
+          = link_to @back_url, class: 'no-decor' do
+            i.material-icons keyboard_arrow_left
 
       .name #{@profile.firstname}, #{@profile.age}
 
@@ -122,45 +123,52 @@ main
             .intro-waiting style='display: none;'
               span Got it! We'll introduce you both when #{@profile.firstname} responds.
 
-javascript:
-  $(function() {
-    var profileCardWidth = $('.max960').width();
+      - if @viewing_self
+        .text-center.column-flex.justify-center.align-center style="width: 100%; height: 50px;"
+          | Tap on &nbsp;
+          .material-icons view_headline
+          | &nbsp; to update your profile.
 
-    loadBrewImages(profileCardWidth, $('body').innerHeight() - 150);
+- content_for :javascript do
+  javascript:
+    $(function() {
+      var profileCardWidth = $('.max960').width();
 
-    $('.tap-card').on('click', function(e) {
-      $('.tap-gesture-hint').hide();
+      loadBrewImages(profileCardWidth, $('body').innerHeight() - 150);
 
-      var $thisProfileCards = $('.profile-container > .cards').children('.tap-card');
-      var $bottomCard = $('.profile-container > .cards').children('.tap-card:last');
+      $('.tap-card').on('click', function(e) {
+        $('.tap-gesture-hint').hide();
 
-      // hide this card and move it to the "bottom of the deck"
-      $(this).hide();
-      $(this).removeClass('tap-card-visible');
-      $(this).insertAfter($bottomCard);
+        var $thisProfileCards = $('.profile-container > .cards').children('.tap-card');
+        var $bottomCard = $('.profile-container > .cards').children('.tap-card:last');
 
-      // show the card on "top of the deck"
-      var $topCard = $('.profile-container > .cards').children('.tap-card:first');
-      $($topCard).show();
-      $($topCard).addClass('tap-card-visible');
+        // hide this card and move it to the "bottom of the deck"
+        $(this).hide();
+        $(this).removeClass('tap-card-visible');
+        $(this).insertAfter($bottomCard);
+
+        // show the card on "top of the deck"
+        var $topCard = $('.profile-container > .cards').children('.tap-card:first');
+        $($topCard).show();
+        $($topCard).addClass('tap-card-visible');
+      });
+
+      $('.bottom-pane .intro-request').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(this).find('form').submit();
+        $(this).hide();
+        $(this).siblings('.intro-waiting').css('display', 'flex');
+      });
+
+      $('.bottom-pane .intro-response').on('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $(this).find('form').submit();
+        $(this).hide();
+        $(this).siblings('.intro-confirmed').css('display', 'flex');
+        $('.mobile-bottom-menu .conversations-menu .bubble').show();
+      });
     });
-
-    $('.bottom-pane .intro-request').on('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-
-      $(this).find('form').submit();
-      $(this).hide();
-      $(this).siblings('.intro-waiting').css('display', 'flex');
-    });
-
-    $('.bottom-pane .intro-response').on('click', function(e) {
-      e.stopPropagation();
-      e.preventDefault();
-
-      $(this).find('form').submit();
-      $(this).hide();
-      $(this).siblings('.intro-confirmed').css('display', 'flex');
-      $('.mobile-bottom-menu .conversations-menu .bubble').show();
-    });
-  });

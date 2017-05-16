@@ -176,7 +176,8 @@ class Profile < ActiveRecord::Base
     can_post_brew:                :boolean,
 
     # membership related
-    member:                       :boolean,
+    premium:                      :boolean,
+    premium_expires_on:           :date_time,
 
     # matching related
     desirability_score:           :decimal # overall desirability - appearance + accomplishments + ...
@@ -695,6 +696,10 @@ class Profile < ActiveRecord::Base
 
   def blacklist!
     self.update!(moderation_status: 'blacklisted', visible: false)
+  end
+
+  def membership_tier_name
+    self.premium ? 'premium' : 'basic'
   end
 
   private

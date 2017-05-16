@@ -21,7 +21,7 @@ main
 
   .fixed-bottom
 
-javascript:
+- content_for :javascript do
   javascript:
     var current_profile_uuid = "#{current_profile.uuid}";
     var photo_ids = JSON.parse('#{@photo_ids_hash.to_json.to_s.html_safe}')

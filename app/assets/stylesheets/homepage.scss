@@ -2,12 +2,18 @@
 @import 'colors';
 @import 'common';
 
-body.homepage {
+body {
   font-size: 16px;
   height: 100%;
-  // background-color: floralwhite;
+  background-color: floralwhite;
+}
+
+main {
+  height: calc(100% - 50px);
+}
+
+.homepage {
   background-color: #fb5360;
-  padding: 10px 0;
 }
 
 p {
@@ -47,8 +53,15 @@ ul li {
       font-weight: 400;
     }
 
-    .closing {
-      color: #ffffff;
+    .download {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: flex-start;
+      align-items: center;
+
+      a {
+        margin-right: 10px;
+      }
     }
   }
 
@@ -64,6 +77,10 @@ ul li {
     img {
       width: 100%;
     }
+  }
+
+  .closing {
+    color: #ffffff;
   }
 
   // @media only screen and (min-height: 600px) {
@@ -111,7 +128,9 @@ ul li {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  padding: 0px;
+  height: 50px;
+  padding: 10px 0px;
+  box-sizing: border-box;
   margin: 0px auto;
 }
 
@@ -152,7 +171,7 @@ ul li {
   padding: 0px;
 
   a, a:visited, a:hover {
-    color: #262626;
+    color: #2d2d2d;
     font-size: 16px;
     letter-spacing: 0.4px;
     border-bottom: 1px solid #e8e8e8;
@@ -362,5 +381,29 @@ ul li {
     color: #a1a3a6;
     font-size: 13px;
     font-weight: 300;
+  }
+}
+
+.download-btn {
+  display: flex;
+  background-color: white;
+  width: 150px;
+  height: 50px;
+  box-sizing: border-box;
+  padding: 9px;
+  color: #2d2d2d;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 4px;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+
+  .material-icons, img {
+    height: 20px;
+    margin-right: 10px;
+    font-size: 20px;
+    line-height: 1;
   }
 }

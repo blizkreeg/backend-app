@@ -8,9 +8,24 @@ class BrewsController < WebController
   WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
 
   # screens to show the bottom tabs on
-  NAV_TABS_ONLY_METHODS = [:index, :community, :introductions, :conversations, :social, :show_profile]
+  NAV_TABS_ONLY_METHODS = [:index,
+                           :community,
+                           :introductions,
+                           :conversations,
+                           :social,
+                           :show_profile,
+                           :membership_status]
 
-  TRACK_URI_GET_METHODS = [:index, :show, :introductions, :conversations, :conversation_with, :social, :new_social, :edit_social, :show_profile]
+  TRACK_URI_GET_METHODS = [:index,
+                           :show,
+                           :introductions,
+                           :conversations,
+                           :conversation_with,
+                           :social,
+                           :new_social,
+                           :edit_social,
+                           :show_profile,
+                           :membership_status]
 
   # except for the public pages and (potentially) SEO-able page for brew details,
   # all access should be gated
@@ -189,7 +204,8 @@ class BrewsController < WebController
   end
 
   def show_profile
-    @section = 'profile'
+    @viewing_self = (params[:self] == "1")
+    @section = 'profile' if @viewing_self
 
     @back_url = request.referrer || "/social"
 
@@ -314,6 +330,17 @@ class BrewsController < WebController
     respond_to do |format|
       format.json { render json: { success: true } }
     end
+  end
+
+  def membership_status
+    @section = 'membership'
+
+    @instamojo = Instamojo::Payment.new(@current_profile)
+    @instamojo.create_link
+  end
+
+  def process_instamojo_payment
+    Rollbar.debug("INSTAMOJO PAID! #{params.inspect}")
   end
 
   private

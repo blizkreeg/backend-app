@@ -92,19 +92,20 @@ main
   /   - cta_dest = @brew.full_for?(current_profile) ? '#' : brew_register_path(@brew)
   /   = render partial: 'brews/brew_cta_button', locals: { placement: 'fixed', title: cta_title, dest: cta_dest }
 
-javascript:
-  $(function() {
-    // fire loadProfilePhotos on a delayed timeout so that on Android, the profile photos load in full device height in the app webview.
-    // window.height returns 0 if this is fired immediately when rest of content is not yet rendered
-    window.setTimeout(loadProfilePhotos, 1000);
-    loadBrewImages();
-    $.cloudinary.responsive();
-  });
+- content_for :javascript do
+  javascript:
+    $(function() {
+      // fire loadProfilePhotos on a delayed timeout so that on Android, the profile photos load in full device height in the app webview.
+      // window.height returns 0 if this is fired immediately when rest of content is not yet rendered
+      window.setTimeout(loadProfilePhotos, 1000);
+      loadBrewImages();
+      $.cloudinary.responsive();
+    });
 
-/   $(function() {
-/     $('.face-squares__face-image').on('click', function() {
-/       var profileId = $(this).data('profile-id');
-/       $('.profile-card').hide();
-/       $('div.profile-card[data-id="' + profileId + '"]').css('display', 'flex');
-/     });
-/   });
+  /   $(function() {
+  /     $('.face-squares__face-image').on('click', function() {
+  /       var profileId = $(this).data('profile-id');
+  /       $('.profile-card').hide();
+  /       $('div.profile-card[data-id="' + profileId + '"]').css('display', 'flex');
+  /     });
+  /   });

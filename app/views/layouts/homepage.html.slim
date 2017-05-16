@@ -3,20 +3,20 @@ html
   head
     meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1, user-scalable=no"
     title ekCoffee
-    meta name="description" content="Brew is a singles network. Be part of a like-minded community of interesting singles in your city and make new experiences."
+    meta name="description" content="ekCoffee is a singles network. Be part of a like-minded community of interesting singles in your city."
     meta property='og:image' content='https://ekcoffee.com/ekcoffee600x315.jpg'
     meta property='og:image:width' content='600'
     meta property='og:image:height' content='315'
     meta property='og:title' content='ekCoffee'
-    meta property="og:description" content="Brew is a singles network. Be part of a like-minded community of interesting singles in your city and make new experiences."
-    meta property="og:url" content="https://getbrew.co"
+    meta property="og:description" content="ekCoffee is a singles network. Be part of a like-minded community of interesting singles in your city."
+    meta property="og:url" content="https://ekcoffee.com"
     = stylesheet_link_tag 'https://fonts.googleapis.com/icon?family=Material+Icons'
     = stylesheet_link_tag 'https://code.getmdl.io/1.2.1/material.blue_grey-amber.min.css'
     = javascript_include_tag 'https://code.getmdl.io/1.2.1/material.min.js', defer: true
     = stylesheet_link_tag 'home', media: 'all'
     = javascript_include_tag 'home'
     = csrf_meta_tags
-  body.homepage
+  body
     = render partial: 'shared/brew_google_analytics'
 
     / header
@@ -24,3 +24,6 @@ html
 
     / main body
     = yield
+
+    / header
+    = render partial: 'pages/global_footer'
