@@ -15,8 +15,9 @@ main
         - if current_profile.premium
         - else
           .full-width
-            h5.mt-0.mb-10.text-center &#8377; 499 for 3 months
-            = link_to "Upgrade to #{Constants::PREMIUM_TIER_NAME.capitalize}", @instamojo.payment_url, rel: "im-checkout", :"data-behaviour" => "remote", :"data-style" => "flat", :"data-text" => "Become an Insider", class: 'im-checkout-btn btn--flat join-brew-button fixed-bottom'
+            h5.mt-0.mb-0.text-center &#8377; 499 for 3 months
+            h6.mt-0.mb-0.text-center.upcase.small-font introductory pricing
+            = link_to "Upgrade to #{Constants::PREMIUM_TIER_NAME.capitalize}", @instamojo.payment_url, rel: "im-checkout", :"data-behaviour" => "remote", :"data-style" => "flat", :"data-text" => "BECOME AN INSIDER", class: 'im-checkout-btn btn--flat join-brew-button fixed-bottom'
 
       hr style='margin: 10px 0px 10px 0px; width: 50%; border-top: 1px solid #ededed;'
       h6.mt-0.mb-10 What's in it for you?
