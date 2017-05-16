@@ -1,14 +1,44 @@
 main
-  .max960
-    .membership-container
-      - if current_profile.premium
-        h6.text-center.mt-0.mb-0 Your Insider Membership is valid until #{current_profile.premium_expires_on.strftime("%B %-d, %Y")}
-      - else
+  .max960.full-height
+    .membership-container.full-height
+      = image_tag 'insider-badge.png', height: 60, style: 'margin-bottom: 5px;'
 
       - if current_profile.premium
+        h4.mt-0.mb-10.accent-color--title You're an Insider!
+        h6.text-center.mt-0.mb-0
+          | Your Membership
+          br
+          | is valid until #{current_profile.premium_expires_on.strftime("%B %-d, %Y")}
       - else
-        p.text-center Upgrade
+        h4.mt-0.accent-color--title Be an Insider
+        / hr style='margin: 0px 0px 10px 0px; width: 80%; border-top: 1px solid #ededed;'
+        - if current_profile.premium
+        - else
+          .full-width
+            h5.mt-0.mb-10.text-center &#8377; 499 for 3 months
+            = link_to "Upgrade to #{Constants::PREMIUM_TIER_NAME.capitalize}", @instamojo.payment_url, rel: "im-checkout", :"data-behaviour" => "remote", :"data-style" => "flat", :"data-text" => "Become an Insider", class: 'im-checkout-btn btn--flat join-brew-button fixed-bottom'
 
-      = link_to "Become an #{Constants::PREMIUM_TIER_NAME.capitalize}", @instamojo.payment_url, rel: "im-checkout", :"data-behaviour" => "remote", :"data-style" => "no-style", :"data-text" => "Become an Insider"
+      hr style='margin: 10px 0px 10px 0px; width: 50%; border-top: 1px solid #ededed;'
+      h6.mt-0.mb-10 What's in it for you?
+      hr style='margin: 0px 0px 10px 0px; width: 50%; border-top: 1px solid #ededed;'
+      .mt-10.material-icons sms
+      h5.mt-10.mb-0.accent-color--title Unlimited Conversations
+      p.text-center Non-Insiders have a limit of only 1 conversation at a time. You will have no such limit. Be introduced to &amp; talk to as many people as you like.
+
+      .material-icons star
+      h5.mt-10.mb-0.accent-color--title No need to wait
+      p.text-center As an Insider, you have no restrictions. Like someone or want to be connected to someone on Social? Go right ahead &amp; message them! As a non-insider, you cannot initiate introductions.
+
+      = image_tag 'insider-badge-filled.png', height: 20
+      h5.mt-10.mb-0.accent-color--title Skip The Line
+      p.text-center Every day we'll give you three Profile Boosts. Be ahead in the Introductions queue for those that you're interested in!
+
+      = image_tag 'insider-badge-filled.png', height: 20
+      h5.mt-10.mb-0.accent-color--title Insider Badge
+      p.text-center Be noticed! You'll have a badge on their profile to let others know of your Insider status. Establish a more credible reputation.
+
+      .material-icons more_horiz
+      h5.mt-10.mb-0.accent-color--title Lots More To Come
+      p.text-center We have many more community-related features coming up, especially for ekCoffee Insiders. Get access to them as we bring them to you.
 
 = javascript_include_tag 'https://d2xwmjc4uy2hr5.cloudfront.net/im-embed/im-embed.min.js'

@@ -1,8 +1,13 @@
-body.introductions {
+body.membership {
   background-color: white;
 
+  main {
+    min-height: calc(100vh - #{$bottom_menu_height});
+    height: auto;
+  }
+
   .max960 {
-    height: calc(100vh - #{$bottom_menu_height});
+    min-height: calc(100vh - #{$bottom_menu_height});
   }
 }
 
@@ -10,8 +15,13 @@ body.introductions {
   padding: 10px 25px;
   display: flex;
   flex-flow: column nowrap;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+
+  p {
+    font-size: 14px;
+  }
 }

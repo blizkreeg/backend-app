@@ -15,6 +15,10 @@ main
       .name #{@profile.firstname}, #{@profile.age}
 
       .cards
+        - if @profile.premium
+          .insider-badge
+            = image_tag 'insider-badge-filled.png', style: "width: 80px"
+
         .tap-gesture-hint
           i.material-icons touch_app
           br

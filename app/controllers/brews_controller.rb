@@ -337,9 +337,15 @@ class BrewsController < WebController
 
     @instamojo = Instamojo::Payment.new(@current_profile)
     @instamojo.create_link
+    @current_profile.update!(instamojo_payment_req_id: @instamojo.id)
   end
 
   def process_instamojo_payment
+    profile = Profile.where(instamojo_payment_req_id: params[:payment_request_id]).take
+    if profile.present? && params[:status] == 'Credit'
+      profile.update!(instamojo_payment_id: params[:payment_id], premium: true, premium_expires_on: DateTime.now+90.days)
+    end
+
     Rollbar.debug("INSTAMOJO PAID! #{params.inspect}")
   end
 

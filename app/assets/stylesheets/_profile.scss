@@ -34,6 +34,13 @@ body.profile {
     height: calc(100vh - 160px);
     position: relative;
 
+    .insider-badge {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      z-index: 2;
+    }
+
     .tap-gesture-hint {
       position: absolute;
       bottom: 45%;

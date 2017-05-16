@@ -178,6 +178,8 @@ class Profile < ActiveRecord::Base
     # membership related
     premium:                      :boolean,
     premium_expires_on:           :date_time,
+    instamojo_payment_req_id:     :string,
+    instamojo_payment_id:         :string,
 
     # matching related
     desirability_score:           :decimal # overall desirability - appearance + accomplishments + ...

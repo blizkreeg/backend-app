@@ -55,14 +55,14 @@ html
       / main body
       = yield
 
-      / in-page js
-      = yield :javascript
-
       / a bottom anchored menu if logged in and mobile device/ekc app webview
       - if show_menu?
         .mobile-bottom-menu-holder
         .mobile-bottom-menu
           = render partial: 'brews/components/bottom_menu', locals: { active: @section }
+
+      / in-page js
+      = yield :javascript
 
     javascript:
       $(window).load(function() {

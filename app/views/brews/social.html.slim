@@ -22,6 +22,9 @@ main
               .photo
                 = link_to show_profile_path(show_profile_uuid: social_update.profile.uuid), class: 'no-decor no-highlight' do
                   = cl_image_tag social_update.profile.photos.profile.public_id, format: 'png', width: 60, height: 60, crop: :fill, radius: :max, border: { width: 1, color: '#ffffff' }
+              - if social_update.profile.premium
+                .photo-insider-badge
+                  = image_tag 'insider-badge-filled.png', width: 20
 
               - if social_update.picture_id.present?
                 .image data-picture-id="#{social_update.picture_id}"

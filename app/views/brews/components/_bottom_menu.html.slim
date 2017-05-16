@@ -102,3 +102,13 @@
     /     div.name Updates
     / .tab
     /   i.material-icons notifications
+
+- content_for :javascript do
+  javascript:
+    $(function() {
+      $('.tab').on('click', function() {
+        $('.active').removeClass('active');
+        $(this).children('.material-icons').addClass('active');
+        $(this).children('.name').addClass('active');
+      });
+    });
