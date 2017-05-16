@@ -698,10 +698,6 @@ class Profile < ActiveRecord::Base
     self.update!(moderation_status: 'blacklisted', visible: false)
   end
 
-  def membership_tier_name
-    self.premium ? 'premium' : 'basic'
-  end
-
   private
 
   def ensure_attribute_types

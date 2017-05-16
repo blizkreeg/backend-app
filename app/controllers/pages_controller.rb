@@ -27,9 +27,6 @@ class PagesController < WebController
   def membership
   end
 
-  def premium_membership
-  end
-
   def partnerships
   end
 end

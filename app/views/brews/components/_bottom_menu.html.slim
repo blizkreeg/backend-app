@@ -1,7 +1,7 @@
 - if current_profile.staff_or_internal
   .mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
     / intros
-    = link_to(introductions_path, class: 'no-decor introductions-menu') do
+    = link_to(introductions_path, class: 'no-decor no-highlight introductions-menu') do
       .tab
         i class="material-icons #{'active' if active == 'introductions'}" group
         div class="name #{'active' if active == 'introductions'}" Intros
@@ -9,7 +9,7 @@
         i.material-icons fiber_manual_record
 
     / conversations
-    = link_to(conversations_path, class: 'no-decor conversations-menu') do
+    = link_to(conversations_path, class: 'no-decor no-highlight conversations-menu') do
       .tab
         i class="material-icons #{'active' if active == 'conversations'}" chat
         div class="name #{'active' if active == 'conversations'}" Messages
@@ -19,13 +19,13 @@
 
     / social
     - if @section == 'social'
-      = link_to(new_social_path(create: true), class: 'no-decor social-menu') do
+      = link_to(new_social_path(create: true), class: 'no-decor no-highlight social-menu') do
         .tab
           i class="material-icons callout" add
           div class="name" Add
 
     - else
-      = link_to(social_path, class: 'no-decor social-menu') do
+      = link_to(social_path, class: 'no-decor no-highlight social-menu') do
         .tab
           i class="material-icons #{'active' if active == 'social'}" public
           div class="name #{'active' if active == 'social'}" Social
@@ -33,20 +33,20 @@
           i.material-icons fiber_manual_record
 
     / premium membership
-    = link_to(membership_status_path, class: 'no-decor brews-menu') do
+    = link_to(membership_status_path, class: 'no-decor no-highlight brews-menu') do
       .tab
         i class="material-icons #{'active' if active == 'membership'}" grade
         div class="name #{'active' if active == 'membership'}" Membership
 
     / profile
-    = link_to(show_profile_path(show_profile_uuid: @current_profile.uuid, params: { self: 1 }), class: 'no-decor brews-menu') do
+    = link_to(show_profile_path(show_profile_uuid: @current_profile.uuid, params: { self: 1 }), class: 'no-decor no-highlight brews-menu') do
       .tab
         i class="material-icons #{'active' if active == 'profile'}" face
         div class="name #{'active' if active == 'profile'}" Me
 - else
   .mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
     / intros
-    = link_to(introductions_path, class: 'no-decor introductions-menu') do
+    = link_to(introductions_path, class: 'no-decor no-highlight introductions-menu') do
       .tab
         i class="material-icons #{'active' if active == 'introductions'}" group
         div class="name #{'active' if active == 'introductions'}" Intros
@@ -55,13 +55,13 @@
 
     / social
     - if @section == 'social'
-      = link_to(new_social_path(create: true), class: 'no-decor social-menu') do
+      = link_to(new_social_path(create: true), class: 'no-decor no-highlight social-menu') do
         .tab
           i class="material-icons callout" add
           div class="name" Add
 
     - else
-      = link_to(social_path, class: 'no-decor social-menu') do
+      = link_to(social_path, class: 'no-decor no-highlight social-menu') do
         .tab
           i class="material-icons #{'active' if active == 'social'}" public
           div class="name #{'active' if active == 'social'}" Social
@@ -69,7 +69,7 @@
           i.material-icons fiber_manual_record
 
     / conversations
-    = link_to(conversations_path, class: 'no-decor conversations-menu') do
+    = link_to(conversations_path, class: 'no-decor no-highlight conversations-menu') do
       .tab
         i class="material-icons #{'active' if active == 'conversations'}" chat
         div class="name #{'active' if active == 'conversations'}" Messages
@@ -79,7 +79,7 @@
 
     / MORE - TBD
 
-    / = link_to(brews_path, class: 'no-decor brews-menu') do
+    / = link_to(brews_path, class: 'no-decor no-highlight brews-menu') do
     /   .tab
     /     i class="material-icons #{'active' if active == 'brews'}" local_cafe
     /     / div class="name #{'active' if active == 'brews'}" Brews

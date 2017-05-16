@@ -46,7 +46,7 @@ Rails.application.routes.draw do
   root to: 'pages#homepage'
 
   get '/hp', to: 'pages#hp'
-  get '/membership', to: 'pages#membership'
+  get '/insider-membership', to: 'pages#membership'
   get '/partnerships', to: 'pages#partnerships'
   get '/who-why-join-ekcoffee', to: 'pages#whyjoin'
   get '/faqs', to: 'pages#faqs'

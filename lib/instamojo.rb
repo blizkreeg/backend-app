@@ -14,7 +14,7 @@ module Instamojo
       }
 
       payload = {
-        purpose: 'ekCoffee Premium Membership',
+        purpose: "ekCoffee #{Constants::PREMIUM_TIER_NAME.capitalize} Membership",
         amount: Constants::PREMIUM_TIER_PRICE.to_s,
         buyer_name: self.profile.fullname,
         email: self.profile.email,

@@ -12,6 +12,7 @@ module Constants
   COFOUNDERS = %w(Vineet Anu)
   PREMIUM_TIER_PRICE = 499
   PREMIUM_TIER_PERIOD = 90.days
+  PREMIUM_TIER_NAME = "Insider"
 
   MIN_AGE = 18
   FAITHS = %w(
