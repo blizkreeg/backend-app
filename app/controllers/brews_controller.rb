@@ -3,7 +3,6 @@ class BrewsController < WebController
 
   helper_method :live_in_user_location?
 
-  WAITLIST_LAUNCH_DATE = Date.new(2017, 1, 31)
   PUBLIC_EXCEPTION_METHODS = [:show]
   WAITLIST_EXCEPTION_METHODS = [:add_to_waitlist, :show_on_waitlist, :update_phone] + PUBLIC_EXCEPTION_METHODS
 
@@ -137,15 +136,6 @@ class BrewsController < WebController
   def add_to_waitlist; end
 
   def show_on_waitlist
-    # these are users who had been on the app and
-    # if we are showing them a waitlist, it means they are either not approved
-    # or have a low desirability score (see show_waitlist_screen?)
-    if live_in_user_location? && (@current_profile.created_at <= WAITLIST_LAUNCH_DATE) && @current_profile.low_desirability?
-      flash[:message] = "We are making some changes to \
-                        ekCoffee in 2017 and are rolling out these changes in a gradual fashion. We \
-                        have added you to our waitlist. Please bear with us while we roll this out."
-    end
-
     @low_score_waitlist_size = Profile.desirability_score_lte(Profile::LOW_DESIRABILITY).count
   end
 
@@ -218,7 +208,7 @@ class BrewsController < WebController
     if @current_profile.staff_or_internal
       @social_updates = SocialUpdate.published.ordered_by_recency.limit(25)
     else
-      @social_updates = SocialUpdate.published.near(@current_profile.latitude, @current_profile.longitude).ordered_by_recency.limit(25)
+      @social_updates = SocialUpdate.published.for(@current_profile).ordered_by_recency.limit(25)
     end
   end
 

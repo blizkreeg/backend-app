@@ -26,18 +26,18 @@ module Matchmaker
     passed_uuids = skip_uuids + SkippedProfile.where(by: profile).pluck(:skipped_profile_uuid)
 
     # new requests first
-    interested_profiles = Profile.where.not(uuid: passed_uuids).where(uuid: profile.got_intro_requests.pluck(:by_profile_uuid))
+    interested_profiles = Profile.desirability_score_gte(profile.desirability_score).where.not(uuid: passed_uuids).where(uuid: profile.got_intro_requests.pluck(:by_profile_uuid))
 
     # basic filters
     #   - approved members only (visible)
     #   - exclude myself, staff, those i've passed on, those i've already asked for an intro to, and mutually interested
-    #   - desirability score >= HIGH_DESIRABILITY (7)
+    #   - desirability score >= my desirability
     profiles = Profile
                   .active
                   .visible
                   .not_staff
                   .where.not(uuid: profile.uuid)
-                  .desirability_score_gte(Profile::HIGH_DESIRABILITY)
+                  .desirability_score_gte(profile.desirability_score)
                   .within_distance(profile.latitude, profile.longitude, Constants::NEAR_DISTANCE_METERS)
                   .where.not(uuid: passed_uuids)
                   .where.not(uuid: interested_profiles.map(&:uuid))

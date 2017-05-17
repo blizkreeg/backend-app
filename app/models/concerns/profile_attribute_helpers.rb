@@ -3,7 +3,7 @@ module ProfileAttributeHelpers
 
   GENDER_MALE = 'male'
   GENDER_FEMALE = 'female'
-  LOW_DESIRABILITY = 6
+  LOW_DESIRABILITY = 5
   HIGH_DESIRABILITY = 7
 
   def male?

@@ -22,6 +22,7 @@ class SocialUpdate < ActiveRecord::Base
   scope :not_published, -> { where("(social_updates.properties->>'published')::boolean IS NOT TRUE") }
   scope :ordered_by_recency, -> { order("(social_updates.properties->>'posted_at')::timestamp DESC NULLS LAST") }
   scope :near, -> (lat, lng, distance_meters=nil) { joins(:profile).where("earth_box(ll_to_earth(?, ?), ?) @> ll_to_earth(profiles.search_lat, profiles.search_lng)", lat, lng, distance_meters || Constants::NEAR_DISTANCE_METERS) }
+  scope :for, -> (profile) { joins(:profile).where("(((profiles.properties) ->> 'desirability_score')::decimal = ?)", profile.desirability_score).near(profile.latitude, profile.longitude) }
 
   def self.create_blank_for(profile)
     self.create!(profile_uuid: profile.uuid, social_question: SocialQuestion.first_active)
