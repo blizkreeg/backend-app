@@ -96,7 +96,7 @@ class AdminController < ApplicationController
   end
 
   def unmoderated
-    @unmoderated = Profile.with_moderation_status('unmoderated').order("created_at DESC")
+    @unmoderated = Profile.with_moderation_status('unmoderated').order("created_at DESC").select { |p| p.phone.present? }
 
     @page_title = 'Unmoderated (new) users'
   end
