@@ -118,6 +118,7 @@ Rails.application.routes.draw do
     get  '/show-user/:uuid', to: 'admin#show_user', as: 'admin_show_user'
     get '/all-users', to: 'admin#all_users', as: 'admin_all_users'
     get  '/unmoderated', to: 'admin#unmoderated'
+    get  '/others', to: 'admin#others'
     get  '/suspicious', to: 'admin#suspicious'
     post '/moderate_user', to: 'admin#moderate_user', as: 'admin_moderate_user'
     get  '/review-photos', to: 'admin#review_photos'

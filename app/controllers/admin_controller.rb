@@ -96,9 +96,15 @@ class AdminController < ApplicationController
   end
 
   def unmoderated
-    @unmoderated = Profile.with_moderation_status('unmoderated').order("created_at DESC").select { |p| p.phone.present? }
+    @unmoderated = to_be_moderated_profiles
 
-    @page_title = 'Unmoderated (new) users'
+    @page_title = 'To be Moderated (new) users'
+  end
+
+  def others
+    @others = other_profiles
+
+    @page_title = 'Other users'
   end
 
   def suspicious
@@ -365,7 +371,8 @@ class AdminController < ApplicationController
   def load_metrics
     @new_butler_chats_cnt = Profile.with_needs_butler_attention(true).count
     @profiles_cnt = Profile.count
-    @unmoderated_cnt = Profile.with_moderation_status('unmoderated').order("created_at ASC").count
+    @unmoderated_cnt = to_be_moderated_profiles.size
+    @others_cnt = other_profiles.size
     @suspicious_cnt = Profile.with_moderation_status('unmoderated').possibly_not_single.count
     @unmoderated_photos_cnt = Photo.with_reviewed(false).count
     @profiles_marked_for_deletion_cnt = Profile.is_marked_for_deletion.count
@@ -385,5 +392,13 @@ class AdminController < ApplicationController
                                                               body: "On the Magazine now: #{post.title}")
 
     send_at
+  end
+
+  def to_be_moderated_profiles
+    @tbm ||= Profile.with_moderation_status('unmoderated').order("created_at DESC").select { |p| p.phone.present? && Ekc.launched_in?(p.latitude, p.longitude) }
+  end
+
+  def other_profiles
+    Profile.with_moderation_status('unmoderated').select { |p| p.phone.blank? || p.latitude.nil? || p.longitude.nil? || !Ekc.launched_in?(p.latitude, p.longitude) }
   end
 end

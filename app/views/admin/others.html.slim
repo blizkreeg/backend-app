@@ -4,7 +4,8 @@
   .col-md-5.col-xs-12
     .panel.panel-white
       .panel-heading
-        h4.panel-title Ordered by recently joined who have provided phone and we've launched in their city
+        h4.panel-title
+          | Users from cities we're not yet in OR who have not provided phone OR we don't have location for them
 
       .panel-body
         .table-responsive
@@ -18,7 +19,7 @@
                 th
 
             tbody
-              - @unmoderated.each do |profile|
+              - @others.each do |profile|
                 tr.has-profile-preview data-profile-uuid="#{profile.uuid}" style='position:relative;'
                   td
                     = link_to profile.fullname, admin_show_user_path(profile.uuid)
