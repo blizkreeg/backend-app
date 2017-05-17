@@ -399,6 +399,6 @@ class AdminController < ApplicationController
   end
 
   def other_profiles
-    Profile.with_moderation_status('unmoderated').select { |p| p.phone.blank? || p.latitude.nil? || p.longitude.nil? || !Ekc.launched_in?(p.latitude, p.longitude) }
+    @others ||= Profile.with_moderation_status('unmoderated').select { |p| p.phone.blank? || p.latitude.nil? || p.longitude.nil? || !Ekc.launched_in?(p.latitude, p.longitude) }
   end
 end
