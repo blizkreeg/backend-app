@@ -6,7 +6,11 @@ main
   .max960
     .introductions-container
       .heading
-        .title Introductions
+        .title
+          - if params[:show_skipped]
+            | Missed Introductions
+          - else
+            | Today's Introductions
         .description Find a new friend, activity buddy, connection, or a date!
       - if @profiles.blank?
         .no-intros
