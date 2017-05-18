@@ -371,8 +371,6 @@ class AdminController < ApplicationController
   def load_metrics
     @new_butler_chats_cnt = Profile.with_needs_butler_attention(true).count
     @profiles_cnt = Profile.count
-    @unmoderated_cnt = to_be_moderated_profiles.size
-    @others_cnt = other_profiles.size
     @suspicious_cnt = Profile.with_moderation_status('unmoderated').possibly_not_single.count
     @unmoderated_photos_cnt = Photo.with_reviewed(false).count
     @profiles_marked_for_deletion_cnt = Profile.is_marked_for_deletion.count
