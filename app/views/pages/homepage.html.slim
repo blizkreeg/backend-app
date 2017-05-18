@@ -3,10 +3,10 @@ main.homepage
     .max960.full-height
       .content-body.content-body-responsive
         .pitch
-          h2.tagline The singles network.
+          .tagline The singles network.
           .narrative
-            p What if there was a community of like-minded single people in your city that you could belong to? What would you get out of it?
-            p A place where people meet to date, to make new friends, find a hiking buddy, a business connection, or something else. And the one thing they all have in common? They're single and open to new things.
+            p What if there was a network for like-minded single people in your city?
+            p A place where people meet to date, to make new friends, find a friend to go to a concert with, or to go on a hike, a business connection, or something else. And the one thing they all have in common? They're single and open to new things.
             p ekCoffee is that place. Online and in life out there.
           .download
             = link_to 'http://goo.gl/GGUesL', class: 'download-btn' do
@@ -19,6 +19,13 @@ main.homepage
 
         .logo
           = image_tag 'ekc-round.png'
+
+.max960.column-flex.align-center
+  h6.text-center MENTIONED IN
+  .row-flex.justify-center.align-center
+    = image_tag 'md-logo.gif', style: 'width: 160px; margin-right: 40px;'
+    = image_tag 'et-logo.jpg', style: 'width: 160px;'
+
 
 javascript:
   $(function() {
@@ -40,8 +47,8 @@ javascript:
       autoStart: true,
       cursor: false
     })
-    .tiPause(5000)
-    .tiType("The social app to meet new people in your city.");
+    .tiPause(1000)
+    .tiType("The app for the modern single.");
 
     $('#type-why').typeIt({
       speed: 50,

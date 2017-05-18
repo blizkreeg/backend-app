@@ -5,11 +5,28 @@
 body {
   font-size: 16px;
   height: 100%;
-  background-color: floralwhite;
+  background-color: white;
+  overflow: scroll;
+}
+
+@media only screen and (max-width: 699px) {
+  body, p {
+    font-size: 14px !important;
+  }
+
+  .tagline {
+    font-size: 20px !important;
+    padding: 15px 0px;
+  }
 }
 
 main {
-  height: calc(100% - 50px);
+  // height: calc(100% - 50px);
+  height: 100vh;
+}
+
+.max960 {
+  padding: 0 10px;
 }
 
 .homepage {
@@ -34,7 +51,7 @@ ul li {
   .pitch {
     width: 55%;
     box-sizing: border-box;
-    padding: 0 25px 0 0;
+    padding: 0 0 0 0;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
@@ -45,6 +62,8 @@ ul li {
       font-weight: 600;
       letter-spacing: 1px;
       color: #fffc00;
+      font-size: 32px;
+      padding: 25px 0px;
     }
 
     .narrative, .narrative p {
@@ -68,7 +87,7 @@ ul li {
   .logo {
     width: 45%;
     box-sizing: border-box;
-    padding: 5%;
+    padding: 10%;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
@@ -89,17 +108,17 @@ ul li {
   // }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 699px) {
   .content-body-responsive {
     flex-flow: column nowrap;
-    justify-content: flex-start;
+    justify-content: flex-end;
     align-items: center;
     flex-direction: column-reverse;
 
     .pitch {
       width: 100%;
       box-sizing: border-box;
-      padding: 25px 25px;
+      padding: 10px 10px;
       display: flex;
       flex-flow: column nowrap;
       justify-content: center;
@@ -109,7 +128,7 @@ ul li {
     .logo {
       width: 100%;
       box-sizing: border-box;
-      padding: 5%;
+      padding: 10px 10px;
       display: flex;
       flex-flow: column nowrap;
       justify-content: center;
@@ -124,14 +143,11 @@ ul li {
 }
 
 .homepage-header {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
   height: 50px;
   padding: 10px 0px;
   box-sizing: border-box;
   margin: 0px auto;
+  background-color: floralwhite;
 }
 
 .homepage-header__logo {
@@ -172,7 +188,7 @@ ul li {
 
   a, a:visited, a:hover {
     color: #2d2d2d;
-    font-size: 16px;
+    font-size: 1em;
     letter-spacing: 0.4px;
     border-bottom: 1px solid #e8e8e8;
   }
