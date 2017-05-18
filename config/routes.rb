@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   get '/partnerships', to: 'pages#partnerships'
   get '/who-why-join-ekcoffee', to: 'pages#whyjoin'
   get '/faqs', to: 'pages#faqs'
+  get '/privacy', to: 'pages#privacy'
 
   # ekCoffee app API
 

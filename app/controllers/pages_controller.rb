@@ -29,4 +29,7 @@ class PagesController < WebController
 
   def partnerships
   end
+
+  def privacy
+  end
 end

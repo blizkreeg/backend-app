@@ -21,7 +21,11 @@ body {
 }
 
 main {
-  // height: calc(100% - 50px);
+  min-height: 100vh;
+  height: auto;
+}
+
+main.homepage {
   height: 100vh;
 }
 
