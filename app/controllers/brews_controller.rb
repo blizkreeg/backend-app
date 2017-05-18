@@ -148,17 +148,21 @@ class BrewsController < WebController
   def introductions
     @section = 'introductions'
 
-    @current_profile.checked_intros_at = Time.now.utc
-
-    if @current_profile.needs_intros?
-      @current_profile.skip_stale_intros
-
-      @profiles = Matchmaker.introduction_suggestions_for(@current_profile)
-
-      @current_profile.intros_generated_at = Time.now.utc
-      @current_profile.current_intros_profiles = @profiles
+    if params[:show_skipped]
+      @profiles = @current_profile.skipped.order("created_at DESC").limit(10).map(&:skipped)
     else
-      @profiles = @current_profile.current_intros_profiles
+      @current_profile.checked_intros_at = Time.now.utc
+
+      if @current_profile.needs_intros?
+        @current_profile.skip_stale_intros
+
+        @profiles = Matchmaker.introduction_suggestions_for(@current_profile)
+
+        @current_profile.intros_generated_at = Time.now.utc
+        @current_profile.current_intros_profiles = @profiles
+      else
+        @profiles = @current_profile.current_intros_profiles
+      end
     end
   end
 

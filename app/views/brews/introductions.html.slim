@@ -7,16 +7,19 @@ main
     .introductions-container
       .heading
         .title Introductions
-        .description Find your next new friend, activity buddy, business connection, or date!
+        .description Find a new friend, activity buddy, connection, or a date!
       - if @profiles.blank?
         .no-intros
           hr
           / using http://www.flaticon.com/free-icon/sad_123213#term=sad&page=1&position=38
           = image_tag 'sad.png'
-          h5.accent-color--title Whoops! Hang tight, #{current_profile.firstname}.
-          p We have temporarily run out of introductions for you. We promise this won't last long.
-
+          h5 Whoops, #{current_profile.firstname}
+          p We've temporarily run out of introductions for you.
           hr style='width: 75%'
+          - if current_profile.skipped.count > 0
+            h6.mb-0 You missed some Intros in the past.
+            h6.mt-0.mb-10 Check them again?
+            = link_to "Missed Introductions", '/introductions?show_skipped=1'
       - else
         = render partial: 'brews/components/row_of_intro_cards', locals: { profiles: @profiles }
         .footer
