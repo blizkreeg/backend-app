@@ -11,16 +11,14 @@ main
         hr style='border-top: 1px solid #eee;'
 
         - if live_in_user_location?
-          p We review every profile before approving and accept a limited number of people every day.
-          p This is to ensure genuine people on the app.
-          h6 Please enter your mobile to join.
+          h6.mt-0 Please enter your mobile to join.
         - else
           p
             = image_tag 'sad.png'
           h6 Sorry #{current_profile.firstname}, we don't have any members in your city.
           p Enter your mobile if you want us to notify you when we have new members near you.
 
-        .phone-input style='width:auto;margin:0px auto;'
+        .phone-input style='width:auto;margin:0px auto;padding-bottom: 20px;'
           = form_tag update_phone_path, method: :post do
             .mdl-grid.mdl-grid--no-spacing style='justify-content:center;flex-flow:row nowrap;align-items:center;'
               .mdl-cell style='width:auto;'
@@ -31,5 +29,8 @@ main
                       | I'M INTERESTED
                     - else
                       | NOTIFY ME
+
+        - if live_in_user_location?
+          p Note: we review every profile before approving and accept a limited number of people every day.
 
       .mdl-layout-spacer
