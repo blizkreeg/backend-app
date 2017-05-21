@@ -13,54 +13,48 @@
             = button_to "Delete Profile", admin_destroy_user_path, {  params: { uuid: @profile.uuid }, class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete?\n\r#{@profile.firstname} #{@profile.lastname}\r#{@profile.uuid}" } }
 
           - if @profile.approved?
-            = button_to 'Flag', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'btn btn-default' }
+            = button_to 'Flag User', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'btn btn-default' }
           - else
-            = button_to 'Approve', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
+            = button_to 'Approve User', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
 
           - if @profile.blacklisted?
             = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
           - else
-            = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'btn btn-default' }
+            = button_to 'Blacklist User', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'btn btn-default' }
 
         hr
 
-        p Desirability Score: <strong>#{@profile.desirability_score || 'Not Assigned'}</strong>
-        .btn-group
-          = button_to '1', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 1 }, class: 'btn btn-primary' }
-          = button_to '2', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 2 }, class: 'btn btn-primary' }
-          = button_to '3', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 3 }, class: 'btn btn-primary' }
-          = button_to '4', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 4 }, class: 'btn btn-primary' }
-          = button_to '5', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 5 }, class: 'btn btn-primary' }
-          = button_to '6', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 6 }, class: 'btn btn-primary' }
-          = button_to '7', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 7 }, class: 'btn btn-primary' }
-          = button_to '8', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 8 }, class: 'btn btn-primary' }
-          = button_to '9', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 9 }, class: 'btn btn-primary' }
-          = button_to '10', admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: 10 }, class: 'btn btn-primary' }
+        .row
+          .col-xs-12
+            strong Set d-score to &nbsp;
+          .col-xs-12
+            .btn-group
+              - (1..10).to_a.each do |score|
+                = button_to score, admin_assign_desirability_score_user_path, { params: { uuid: @profile.uuid, score: score }, class: "btn #{@profile.desirability_score.to_i == score ? 'btn-primary' : 'btn-info'}" }
+
+        hr
+
+        .row
+          .col-xs-12
+            strong Change city to &nbsp;
+          .col-xs-12
+            .btn-group
+              - Rails.application.config.live_in_cities.each do |city|
+                = button_to city[:name], admin_update_profile_path, { params: { uuid: @profile.uuid, properties: { latitude: city[:lat], longitude: city[:lng] }.to_json }, class: 'btn btn-default' }
 
   .col-md-12
     .panel.panel-white
       .panel-body
-        h3
-          | #{@profile.fullname} &nbsp;
-          span.label.label-info style='text-transform:uppercase' #{@profile.moderation_status}
-
+        p.label.label-info style='text-transform:uppercase' #{@profile.moderation_status}
+        h4 #{@profile.fullname}
         p
-          | #{@profile.location_city}, #{@profile.gender}, #{@profile.age}
+          | #{@profile.location_city}, #{@profile.gender}, #{@profile.age} &nbsp;
 
         ul.list-unstyled.weather-info
+          li <strong>email</strong> #{link_to @profile.email, "mailto:#{@profile.email}"}
+          li <strong>phone</strong> #{@profile.phone}
           li
-            | Email
-            p style='font-weight: 600;' #{link_to @profile.email, "mailto:#{@profile.email}"}
-          li
-            | Phone
-            p style='font-weight: 600;' #{@profile.phone}
-
-          li
-            | Last Seen
-            p style='font-weight: 600;' #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)}
-
-        p
-
+            | <strong>last seen</strong> #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)}
 
         div style='display: flex; flex-flow: row wrap; justify-content: flex-start;'
           - @profile.photos.ordered.each do |photo|

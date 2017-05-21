@@ -328,6 +328,16 @@ class AdminController < ApplicationController
     redirect_to :back
   end
 
+  def update_profile
+    profile = Profile.find(params[:uuid])
+
+    # expects jsonified hash of properties in params[:properties]
+    profile.update!(JSON.parse(params[:properties]))
+
+    flash[:success] = "profile updated!"
+    redirect_to :back
+  end
+
   private
 
   def brew_params

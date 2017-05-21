@@ -143,6 +143,7 @@ Rails.application.routes.draw do
     get '/tribe-questions', to: 'admin#social_questions', as: 'admin_social_questions'
     post '/activate-social-question', to: 'admin#activate_social_question', as: 'admin_activate_social_question'
     post '/create-social-question', to: 'admin#create_social_question', as: 'admin_create_social_question'
+    post '/admin-update-profile', to: 'admin#update_profile', as: 'admin_update_profile'
 
     # old admin dashboard - TBD: remove/merge this functionality into above
     get '/login', to: 'accounts#login'
