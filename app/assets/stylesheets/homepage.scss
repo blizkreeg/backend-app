@@ -10,12 +10,8 @@ body {
 }
 
 @media only screen and (max-width: 699px) {
-  body, p {
-    font-size: 14px !important;
-  }
-
   .tagline {
-    font-size: 20px !important;
+    font-size: 24px !important;
     padding: 15px 0px;
   }
 }
@@ -84,7 +80,12 @@ ul li {
 
       a {
         margin-right: 10px;
+        color: #2d2d2d;
       }
+    }
+
+    .cities {
+      color: white;
     }
   }
 
@@ -103,6 +104,7 @@ ul li {
   }
 
   .closing {
+    margin: 5px 0px;
     color: #ffffff;
   }
 
@@ -127,6 +129,10 @@ ul li {
       flex-flow: column nowrap;
       justify-content: center;
       align-items: center;
+    }
+
+    .narrative, .narrative p {
+      font-size: 16px;
     }
 
     .logo {
@@ -425,6 +431,7 @@ ul li {
   align-items: center;
 
   .material-icons, img {
+    color: #2d2d2d;
     height: 20px;
     margin-right: 10px;
     font-size: 20px;
