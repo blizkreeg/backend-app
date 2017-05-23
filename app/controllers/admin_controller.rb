@@ -403,10 +403,10 @@ class AdminController < ApplicationController
   end
 
   def to_be_moderated_profiles
-    @tbm ||= Profile.with_moderation_status('unmoderated').order("created_at DESC").select { |p| p.phone.present? && Ekc.launched_in?(p.latitude, p.longitude) }
+    @tbm ||= Profile.with_moderation_status('unmoderated').order("created_at DESC").select { |p| Ekc.launched_in?(p.latitude, p.longitude) }
   end
 
   def other_profiles
-    @others ||= Profile.with_moderation_status('unmoderated').order("created_at DESC").select { |p| p.phone.blank? || p.latitude.nil? || p.longitude.nil? || !Ekc.launched_in?(p.latitude, p.longitude) }
+    @others ||= Profile.with_moderation_status('unmoderated').order("created_at DESC").select { |p| p.latitude.nil? || p.longitude.nil? || !Ekc.launched_in?(p.latitude, p.longitude) }
   end
 end

@@ -366,11 +366,7 @@ class BrewsController < WebController
   end
 
   def show_waitlist_screen?
-    if @current_profile.phone.present?
-      redirect_to action: :show_on_waitlist and return
-    else
-      redirect_to action: :add_to_waitlist and return
-    end
+    redirect_to action: :show_on_waitlist
   end
 
   def live_in_user_location?

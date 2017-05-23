@@ -5,8 +5,8 @@ main
   .max960.full-height
     .mdl-grid.full-height
       .mdl-layout-spacer
-      .mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop.text-center.column-flex.full-height.justify-center
-        h2.mt-0.logo-font.accent-color--title ekCoffee
+      .mdl-cell.mdl-cell--4-col.mdl-cell--4-col-desktop.text-center
+        h4.mt-0.mb-0.logo-font.accent-color--title ekCoffee
 
         - if live_in_user_location?
           / when we've reviewed the user's profile and given a low score
@@ -28,13 +28,19 @@ main
             h6.mb-0.bold WE'RE REVIEWING YOUR PROFILE.
             p
               small
-                | (make sure your app notifications are turned on)
+                | (we'll send you a notification within 24 hours)
+
+            h6.bold Why do we screen profiles?
+            p We are building a community of similar-minded, educated single people. To maintain the quality of interactions on the platform, we screen profiles to ensure that everyone who joins meets this criteria.
 
             h6.bold How soon will I hear back?
-            p We review every profile before approving it. This usually takes less than 24 hours.
+            p Profile review typically takes less than 24 hours.
 
             h6.bold What to expect on ekCoffee?
-            p ekCoffee is an exclusive singles network. It's a new way to meet people for friendships, dating, networking, or more. We like to call it "the app for the urban single".
+            p ekCoffee is an exclusive network of singles in your city. It's a new way to meet people for friendships, dating, networking, or more. We like to call it "the app for the urban single".
+
+            h6
+              | - Vineet &amp; Anushri (Co-Founders)
 
         - else
           h6.bold WE'LL LET YOU KNOW AS SOON AS WE HAVE MEMBERS IN YOUR CITY!
