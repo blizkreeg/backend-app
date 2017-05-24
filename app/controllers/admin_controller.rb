@@ -369,7 +369,11 @@ class AdminController < WebController
   end
 
   def load_admin_user
-    @admin_user = Profile.find(session[:profile_uuid]) if session[:profile_uuid].present?
+    if current_profile_is_admin?
+      @admin_user = @current_profile
+    else
+      @admin_user = Profile.find(session[:profile_uuid]) if session[:profile_uuid].present?
+    end
   end
 
   def admin_authenticated?
