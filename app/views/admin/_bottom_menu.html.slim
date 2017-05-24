@@ -17,10 +17,10 @@
   = link_to('/new-butler-chats', class: 'no-decor no-highlight introductions-menu') do
     .tab
       i class="material-icons" message
-      div class="name" Butler
+      div class="name" Butler (#{@new_butler_chats_cnt})
 
   = link_to('/profiles-marked-for-deletion', class: 'no-decor no-highlight introductions-menu') do
     .tab
       i class="material-icons" delete
-      div class="name" Deletes
+      div class="name" Delete (#{@profiles_marked_for_deletion_cnt})
 

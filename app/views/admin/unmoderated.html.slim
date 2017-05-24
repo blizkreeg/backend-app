@@ -55,6 +55,8 @@ javascript:
   }
 
   $(function() {
-    loadFirst();
-    loadOnClick();
+    if($(window).width() > 699) {
+      loadFirst();
+      loadOnClick();
+    }
   });

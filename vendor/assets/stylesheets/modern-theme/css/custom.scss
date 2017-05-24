@@ -23,6 +23,14 @@ a.no-decor, a.no-decor:visited, a.no-decor:hover {
   min-height: 1200px;
 }
 
+.page-header-fixed:not(.page-sidebar-fixed):not(.page-horizontal-bar) .page-inner {
+    padding: 0px 0 50px;
+}
+
+.page-title h3 {
+  font-weight: 400;
+}
+
 .label-default {
   color: #4E5E6A;
 }

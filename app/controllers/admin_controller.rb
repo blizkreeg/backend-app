@@ -4,7 +4,7 @@ class AdminController < WebController
   before_action :load_admin_user, except: [:logout]
   before_action :admin_authenticated?, except: [:dashboard, :logout]
   before_action :load_metrics, if: lambda { @admin_user.present? }
-  before_action :show_bottom_menu, if: lambda { logged_in? && (from_app? || mobile_device?) }
+  before_action :show_bottom_menu, if: lambda { mobile_device? }
 
   def dashboard
     session[:redirect_to] = '/dashboard'
