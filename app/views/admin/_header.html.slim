@@ -4,7 +4,7 @@
       = link_to '/dashboard', class: 'logo-text' do
         span ekc
 
-.page-sidebar.sidebar
+.page-sidebar.sidebar.visible-lg
   .page-sidebar-inner
     .sidebar-header
       .sidebar-profile
@@ -14,8 +14,8 @@
     ul.menu.accordion-menu
       li
         = link_to 'Dashboard', '/dashboard'
-      li
-        = link_to 'Brews', brew_dashboard_path
+      / li
+      /   = link_to 'Brews', brew_dashboard_path
       li
         = link_to "Users (#{@profiles_cnt})", '/all-users'
 

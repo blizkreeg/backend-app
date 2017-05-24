@@ -1,4 +1,11 @@
-/* Write your custom CSS here */
+@import 'typography';
+@import 'colors';
+
+body {
+  margin-bottom: 50px;
+  height: 100%; // prevents overscrolling
+  overflow: auto; // prevents overscrolling
+}
 
 a.no-decor, a.no-decor:visited, a.no-decor:hover {
   text-decoration: none !important;
@@ -174,4 +181,87 @@ span.info-box-title {
     width: 100%;
     height: 100%;
   }
+}
+
+.mobile-bottom-menu-holder {
+  position: relative;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+}
+
+.mobile-bottom-menu {
+  background-color: $mobile_menu_bgcolor;
+  border-top: 1px solid $mobile_menu_bordercolor;
+  color: #2d2d2d;
+  width: 100%;
+  height: 59px;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  z-index: 10000002;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 400;
+  box-sizing: border-box;
+
+  .tab {
+    padding: 0px 4px;
+    width: calc(100vw/5);
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  a {
+    text-align: center;
+    padding: 3px 0px;
+    position: relative;
+    font-size: 13px;
+    // width: calc(100%/3)
+  }
+
+  .name.active, i.active {
+    color: #e46f57;
+  }
+
+  i.callout {
+    background-color: #e7a61a;
+    border: 2px solid #e7a61a;
+    color: white;
+    border-radius: 18px;
+  }
+
+  .bubble {
+    color: #fe6363;
+
+    i {
+      font-size: 16px;
+    }
+  }
+}
+
+.mobile-bottom-menu > .mdl-cell {
+  align-self: center;
+  height: auto;
+  width: auto;
+  padding: 6px 20px;
+  text-align: center;
+}
+
+.mobile-bottom-menu > .mdl-cell div.name {
+  display: block;
+  margin: 0px auto;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.mobile-bottom-menu > .mdl-cell i.material-icons {
+  font-size: 20px;
+}
+
+.mobile-bottom-menu > .mdl-cell a, a:active, a:hover {
+  color: inherit;
+  text-decoration: none;
 }

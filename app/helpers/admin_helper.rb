@@ -51,4 +51,8 @@ module AdminHelper
       'label label-warning'
     end
   end
+
+  def show_menu?
+    @show_bottom_menu
+  end
 end

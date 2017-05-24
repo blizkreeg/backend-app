@@ -1,0 +1,26 @@
+.mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
+  = link_to('/introductions', class: 'no-decor no-highlight introductions-menu') do
+    .tab
+      i class="material-icons" home
+      div class="name" Main App
+
+  = link_to('/all-users', class: 'no-decor no-highlight introductions-menu') do
+    .tab
+      i class="material-icons" group
+      div class="name" All
+
+  = link_to('/unmoderated', class: 'no-decor no-highlight introductions-menu') do
+    .tab
+      i class="material-icons" visibility
+      div class="name" New
+
+  = link_to('/new-butler-chats', class: 'no-decor no-highlight introductions-menu') do
+    .tab
+      i class="material-icons" message
+      div class="name" Butler
+
+  = link_to('/profiles-marked-for-deletion', class: 'no-decor no-highlight introductions-menu') do
+    .tab
+      i class="material-icons" delete
+      div class="name" Deletes
+

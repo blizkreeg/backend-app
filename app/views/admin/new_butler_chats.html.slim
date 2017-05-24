@@ -1,29 +1,18 @@
 h3 New Butler Chat Messages
 hr
 .row
-  .col-md-4
+  .col-xs-12.col-sm-12.col-md-4
     .butler-chat-list
       - @profiles.each do |profile|
-        .open-chat data-profile-uuid="#{profile.uuid}"
-          .link
-            = link_to '#', class: 'no-decor' do
+        = link_to "/show-butler-chat/#{profile.uuid}", class: 'no-decor' do
+          .open-chat data-profile-uuid="#{profile.uuid}"
+            .link
               | #{profile.fullname}
               br
-              small #{profile.age}, #{profile.location_city}
+              | #{profile.age}, #{profile.location_city}
 
-          .resolve
-            - if profile.needs_butler_attention
-              = button_to admin_update_butler_chat_flag_path, { params: { profile_uuid: profile.uuid, resolved: true }, class: 'submit btn btn-success'} do
-                i.fa.fa-check
-            - else
-              = button_to admin_update_butler_chat_flag_path, { params: { profile_uuid: profile.uuid, resolved: false }, class: 'submit btn btn-danger'} do
-                i.fa.fa-close
-          .notify
-            = button_to admin_send_butler_chat_notification_path, { params: { profile_uuid: profile.uuid, myname: profile.firstname }, class: 'submit btn btn-default'} do
-                i.fa.fa-envelope
-
-          .pointer style='visibility:hidden;'
-            i.material-icons navigate_next
+            .pointer.hidden-xs.hidden-sm style='visibility: hidden;'
+              i.material-icons navigate_next
 
   .col-md-8.chat-details
 
@@ -49,6 +38,8 @@ javascript:
   }
 
   $(function() {
-    loadFirst();
-    loadOnClick();
+    if($(window).width() > 699) {
+      loadFirst();
+      loadOnClick();
+    }
   });

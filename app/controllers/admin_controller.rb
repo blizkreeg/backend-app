@@ -1,9 +1,10 @@
-class AdminController < ApplicationController
+class AdminController < WebController
   layout 'admin'
 
   before_action :load_admin_user, except: [:logout]
   before_action :admin_authenticated?, except: [:dashboard, :logout]
   before_action :load_metrics, if: lambda { @admin_user.present? }
+  before_action :show_bottom_menu, if: lambda { logged_in? && (from_app? || mobile_device?) }
 
   def dashboard
     session[:redirect_to] = '/dashboard'
@@ -169,7 +170,7 @@ class AdminController < ApplicationController
                                                   body: "Woohoo #{p.firstname}! You're now part of the ekCoffee community. Welcome!")
     end
 
-    redirect_to :back
+    redirect_to action: :unmoderated
   end
 
   def review_photos
@@ -408,5 +409,9 @@ class AdminController < ApplicationController
 
   def other_profiles
     @others ||= Profile.with_moderation_status('unmoderated').order("created_at DESC").select { |p| p.latitude.nil? || p.longitude.nil? || !Ekc.launched_in?(p.latitude, p.longitude) }
+  end
+
+  def show_bottom_menu
+    @show_bottom_menu = true
   end
 end

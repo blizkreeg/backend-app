@@ -38,11 +38,17 @@
         i class="material-icons #{'active' if active == 'membership'}" grade
         div class="name #{'active' if active == 'membership'}" Membership
 
-    / profile
-    = link_to(show_profile_path(show_profile_uuid: @current_profile.uuid, params: { self: 1 }), class: 'no-decor no-highlight brews-menu') do
+    / admin
+    = link_to('/dashboard', class: 'no-decor no-highlight brews-menu') do
       .tab
-        i class="material-icons #{'active' if active == 'profile'}" face
-        div class="name #{'active' if active == 'profile'}" Me
+        i class="material-icons #{'active' if active == 'profile'}" settings
+        div class="name" Admin
+
+    / profile
+    / = link_to(show_profile_path(show_profile_uuid: @current_profile.uuid, params: { self: 1 }), class: 'no-decor no-highlight brews-menu') do
+    /   .tab
+    /     i class="material-icons #{'active' if active == 'profile'}" face
+    /     div class="name #{'active' if active == 'profile'}" Me
 - else
   .mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
     / intros

@@ -15,7 +15,6 @@ body.page-header-fixed
   /   $.cloudinary.config({ cloud_name: 'ekcoffee', api_key: '732927735938394'});
 
   .mdl-layout.mdl-js-layout.mdl-layout--fixed-header.mdl-layout--fixed-drawer
-
     main.page-content.content-wrap
       - if flash[:error]
         .alert.alert-danger.text-center
@@ -34,6 +33,11 @@ body.page-header-fixed
 
         #main-wrapper
           = yield
+
+  - if show_menu?
+    .mobile-bottom-menu-holder
+    .mobile-bottom-menu
+      = render partial: 'admin/bottom_menu'
 
 javascript:
   window._rails_env = "#{Rails.env}";
