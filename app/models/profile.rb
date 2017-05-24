@@ -272,6 +272,7 @@ class Profile < ActiveRecord::Base
   before_save :set_default_seeking_preference, if: Proc.new { |profile| profile.any_seeking_preference_blank? }
   before_save :update_height_in_values, if: Proc.new { |profile| profile.height_changed? || profile.seeking_minimum_height_changed? || profile.seeking_maximum_height_changed? }
   before_save :ensure_attribute_types
+  after_create :notify_admins
 
   def auth_token_payload
     { 'profile_uuid' => self.uuid }
@@ -803,5 +804,18 @@ class Profile < ActiveRecord::Base
     UserNotifier.delay_for(60.minutes).send_welcome_messages_via_butler(self.uuid) rescue nil
 
     true
+  end
+
+  def notify_admins
+    admin_accounts = [Profile.with_email('vinthanedar@gmail.com').take, Profile.with_email('anushri.thanedar@gmail.com').take]
+    if self.latitude.present? && self.longitude.present?
+      if Ekc.launched_in?(self.latitude, self.longitude)
+        PushNotifier.delay.send_transactional_push(admin_accounts.map(&:uuid), 'general_announcement', body: "New signup: #{self.firstname} from #{self.location_city}.")
+      end
+    else
+      PushNotifier.delay.send_transactional_push(admin_accounts.map(&:uuid), 'general_announcement', body: "New signup: #{self.firstname}, location not available.")
+    end
+  rescue StandardError => e
+    Rollbar.error("[notify_admins] (post create) #{e.name}: #{e.message}")
   end
 end
