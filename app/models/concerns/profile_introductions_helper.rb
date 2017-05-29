@@ -63,6 +63,8 @@ module ProfileIntroductionsHelper
     return if self.current_intros_profile_uuids.blank?
 
     self.current_intros_profile_uuids.each do |uuid|
+      next unless Profile.exists?(uuid)
+
       SkippedProfile.find_or_create_by!(by_profile_uuid: self.uuid, skipped_profile_uuid: uuid)
     end
   end
