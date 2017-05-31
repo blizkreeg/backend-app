@@ -12,8 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery.mobile.min
-//= require fastclick
+// require jquery.mobile.min
+// require fastclick
 //= require cloudinary
 //= require clipboard.min
 //= require firebase
