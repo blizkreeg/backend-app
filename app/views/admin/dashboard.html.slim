@@ -6,7 +6,7 @@
           .info-box-stats
             p.counter
               | #{@usersthatmatter_total}
-            span.info-box-title Users from Mumbai
+            span.info-box-title Approved Users
           .info-box-icon
             i.material-icons bookmark
 
@@ -23,7 +23,7 @@
               - else
                 i.material-icons trending_down
               | &nbsp; #{@usersthatmatter_today}
-            span.info-box-title Users from Mumbai, yesterday &amp; today
+            span.info-box-title Active yesterday &amp; today
           .info-box-icon
             i.material-icons group
 
@@ -32,7 +32,7 @@
         .panel-body
           .info-box-stats
             p.counter #{@usersthatmatter_men} m, #{@usersthatmatter_women} f
-            span.info-box-title Mumbai men and women
+            span.info-box-title Approved gender split
           .info-box-icon
             i.material-icons face
 
@@ -51,7 +51,7 @@
                 i.material-icons trending_down
               | &nbsp;
               span.label.label-success #{@new_in_last_48h}
-            span.info-box-title New signups a week ago vs last 48 hours
+            span.info-box-title New signups over 48h (w-o-w)
           .info-box-icon
             i.material-icons mood
     .col-md-3.col-xs-12
@@ -69,7 +69,7 @@
                 i.material-icons trending_down
               | &nbsp;
               span.label.label-danger #{@deleted_in_last_48h}
-            span.info-box-title Deletes a week ago vs last 48 hours
+            span.info-box-title Deletes over 48h (w-o-w)
           .info-box-icon
             i.material-icons delete
     .col-md-3.col-xs-12
@@ -77,7 +77,7 @@
         .panel-body
           .info-box-stats
             p.counter #{@men} m, #{@women} f
-            span.info-box-title Total men and women
+            span.info-box-title Total
           .info-box-icon
             i.material-icons face
 
