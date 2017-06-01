@@ -75,7 +75,8 @@ class WebController < ApplicationController
 
     @current_profile = Profile.find(uuid)
     session[:uuid] = @current_profile.uuid
-    @current_profile.update(last_seen_at: DateTime.now) if @current_profile.present?
+
+    @current_profile.update(last_seen_at: DateTime.now) if @current_profile.present? && (request.headers[EKCOFFEE_APP_HEADER] == '1')
   rescue ActiveRecord::RecordNotFound => err
     raise err
   rescue => err
