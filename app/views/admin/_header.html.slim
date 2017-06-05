@@ -17,7 +17,9 @@
       / li
       /   = link_to 'Brews', brew_dashboard_path
       li
-        = link_to "Users (#{@profiles_cnt})", '/all-users'
+        = link_to "Approved Users (#{@profiles_cnt})", '/all-users?approved=1'
+      li
+        = link_to "All Users (#{@profiles_cnt})", '/all-users'
 
     .sidebar-section-heading
       span MODERATION

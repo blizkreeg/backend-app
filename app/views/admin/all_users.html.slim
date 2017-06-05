@@ -69,5 +69,5 @@ p style='margin-top:25px;'
   - if @page && @page > 0
     = link_to 'Previous Page', admin_all_users_path(page: @page - 1), class: 'btn btn-default'
     | &nbsp; &nbsp;
-  - @page && @profiles.present?
+  - if @page && @profiles.present?
     = link_to 'Next Page', admin_all_users_path(page: @page + 1), class: 'btn btn-primary'

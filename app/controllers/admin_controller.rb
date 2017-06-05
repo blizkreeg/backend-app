@@ -91,7 +91,12 @@ class AdminController < WebController
 
   def all_users
     @page = (params[:page] || 0).to_i
-    @profiles = Profile.ordered_by_last_seen.offset(@page * 25).limit(25)
+
+    if params[:approved]
+      @profiles = Profile.members.not_staff.ordered_by_last_seen.offset(@page * 25).limit(25)
+    else
+      @profiles = Profile.ordered_by_last_seen.offset(@page * 25).limit(25)
+    end
 
     @page_title = 'Users'
   end
