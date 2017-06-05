@@ -13,14 +13,14 @@
             = button_to "Delete Profile", admin_destroy_user_path, {  params: { uuid: @profile.uuid }, class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete?\n\r#{@profile.firstname} #{@profile.lastname}\r#{@profile.uuid}" } }
 
           - if @profile.approved?
-            = button_to 'Flag User', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'btn btn-default' }
+            = button_to 'Unapprove', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'flagged' }, class: 'btn btn-default' }
           - else
-            = button_to 'Approve User', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
+            = button_to 'Approve', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
 
           - if @profile.blacklisted?
             = button_to 'Remove from Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'approved' }, class: 'btn btn-default' }
           - else
-            = button_to 'Blacklist User', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'btn btn-default' }
+            = button_to 'Blacklist', admin_moderate_user_path, { params: { uuid: @profile.uuid, moderation_status: 'blacklisted' }, class: 'btn btn-default' }
 
         hr
 
@@ -51,8 +51,6 @@
           | #{@profile.location_city}, #{@profile.gender}, #{@profile.age} &nbsp;
 
         ul.list-unstyled.weather-info
-          li <strong>email</strong> #{link_to @profile.email, "mailto:#{@profile.email}"}
-          li <strong>phone</strong> #{@profile.phone}
           li
             | <strong>last seen</strong> #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)}
 
@@ -75,14 +73,6 @@
       .panel-body
         ul.list-unstyled.weather-info
           li
-            | UUID
-            p style='font-weight: 600;' #{@profile.uuid}
-
-          li
-            | Chat UUID
-            p style='font-weight: 600;' #{@profile.butler_conversation_uuid}
-
-          li
             | FB
             p style='font-weight: 600;'
               = link_to "https://www.facebook.com/#{@profile.try(:facebook_authentication).try(:oauth_uid)}", "https://www.facebook.com/#{@profile.try(:facebook_authentication).try(:oauth_uid)}"
@@ -94,10 +84,6 @@
           li
             | FB Rel. Status
             p style='font-weight: 600;' #{@profile.possible_relationship_status}
-
-          li
-            | Height
-            p style='font-weight: 600;'  #{@profile.height}
 
           li
             | Profession
@@ -123,11 +109,27 @@
             | Complete?
             p style='font-weight: 600;' #{raw(@profile.incomplete ? '<span style="color:red">incomplete</span>' : '<span style="color:green">complete</span>')}
 
+          li
+            | email
+            p #{link_to @profile.email, "mailto:#{@profile.email}"}
+          li
+            | phone
+            p #{@profile.phone}
 
-        - @profile.about_me_order.each do |blurb_property|
-          p
-            | #{@profile.send("#{blurb_property}_label".to_sym).capitalize}
-            | &nbsp; #{@profile.send(blurb_property.to_sym)}
+
+          - @profile.about_me_order.each do |blurb_property|
+            li
+              p
+                strong #{@profile.send("#{blurb_property}_label".to_sym).capitalize}
+                | &nbsp; #{raw(@profile.send(blurb_property.to_sym) || '&mdash;')}
+
+          li
+            | UUID
+            p style='font-weight: 600;' #{@profile.uuid}
+
+          li
+            | Chat UUID
+            p style='font-weight: 600;' #{@profile.butler_conversation_uuid}
 
         h4 Match Preference
 
@@ -155,7 +157,9 @@
       .panel-body
         h5 Home Screen View - what is the user seeing?
         - url = Rails.env.development? ? 'http://localhost:3000' : 'https://brew.ekcoffee.com'
-        iframe src="#{url}?ekcapp=1&uuid=#{@profile.uuid}" frameborder=0 height=667 width=375
+        .user-home-screen data-src="#{url}?ekcapp=1&testuuid=#{@profile.uuid}"
+          | Show Home Screen
+
 
 javascript:
   function zoomPhoto() {
@@ -166,6 +170,14 @@ javascript:
     });
   }
 
+  function showUserHomeScreen() {
+    $('.user-home-screen').on('click', function() {
+      var url = $(this).data('src');
+      $(this).replaceWith($.get(url));
+    });
+  }
+
   $(function() {
     zoomPhoto();
+    showUserHomeScreen();
   });

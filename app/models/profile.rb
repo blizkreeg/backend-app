@@ -701,6 +701,13 @@ class Profile < ActiveRecord::Base
     self.update!(moderation_status: 'blacklisted', visible: false)
   end
 
+  # used to log into admin dashboard from the app
+  # append ?login_with=<thiscode> and check against
+  def timebound_login_code
+    login_hash = { 'created_at' => Time.now.utc.to_i, 'uuid' => self.uuid, valid_for: 5.minutes.to_i }
+    JWT.encode(login_hash, Rails.application.secrets.secret_key_base, 'HS256')
+  end
+
   private
 
   def ensure_attribute_types

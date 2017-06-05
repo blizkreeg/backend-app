@@ -72,4 +72,26 @@ module ApplicationHelper
   def mobile_device?
     @mobile_device
   end
+
+  def admin_url
+    case Rails.env
+    when "development"
+      "http://localhost:3000"
+    when "production"
+      "https://admin.ekcoffee.com"
+    when "test"
+      "https://test-app.ekcoffee.com"
+    end
+  end
+
+  def app_web_url
+    case Rails.env
+    when "development"
+      "http://localhost:3000"
+    when "production"
+      "https://brew.ekcoffee.com"
+    when "test"
+      "https://test-app.ekcoffee.com"
+    end
+  end
 end

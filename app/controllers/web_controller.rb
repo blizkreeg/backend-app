@@ -69,12 +69,16 @@ class WebController < ApplicationController
   end
 
   def load_ekcoffee_profile
-    uuid = request_uuid || session[:uuid]
+    uuid = request_uuid || session[:uuid] || session[:testuuid]
 
     raise "You're not logged in" if uuid.blank?
 
     @current_profile = Profile.find(uuid)
-    session[:uuid] = @current_profile.uuid
+    if params[:testuuid].present?
+      session[:testuuid] = @current_profile.uuid
+    else
+      session[:uuid] = @current_profile.uuid
+    end
 
     @current_profile.update(last_seen_at: DateTime.now) if @current_profile.present? && (request.headers[EKCOFFEE_APP_HEADER] == '1')
   rescue ActiveRecord::RecordNotFound => err
@@ -90,7 +94,8 @@ class WebController < ApplicationController
 
   def request_uuid
     request.headers[EKCOFFEE_APP_PROFILE_UUID_HEADER] ||
-    params[:uuid] # #NotProudOfThis #HackSoWeCanTestInBrowser #AlsoNeededForEarlierAppVersions
+    params[:uuid] || # #NotProudOfThis #HackSoWeCanTestInBrowser #AlsoNeededForEarlierAppVersions
+    params[:testuuid]
   end
 
   def set_response_headers

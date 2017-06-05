@@ -140,7 +140,7 @@ class AdminController < WebController
   end
 
   def moderate_user
-    p = Profile.find params[:uuid]
+    p = Profile.find(params[:uuid])
     p.moderation_status = params[:moderation_status]
     p.visible = params[:moderation_status] == 'approved' ? true : false
     p.save!
@@ -369,6 +369,19 @@ class AdminController < WebController
   end
 
   def load_admin_user
+    if params[:login_with].present?
+      token = JWT.decode(params[:login_with], Rails.application.secrets.secret_key_base).try(:first)
+      if token
+        seconds_since_token = Time.now.to_i - token['created_at'].to_i
+        if seconds_since_token <= token['valid_for'].to_i
+          @current_profile = Profile.find(token['uuid'])
+          session[:profile_uuid] = @current_profile.uuid
+        else
+          raise "Login token is invalid"
+        end
+      end
+    end
+
     if current_profile_is_admin?
       @admin_user = @current_profile
     else

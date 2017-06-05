@@ -1,8 +1,8 @@
 .mdl-grid.mdl-grid--no-spacing.mobile-bottom-menu
-  = link_to('https://brew.ekcoffee.com', class: 'no-decor no-highlight introductions-menu') do
+  = link_to(app_web_url + "?ekcapp=1&uuid=#{current_profile.uuid}", class: 'no-decor no-highlight introductions-menu') do
     .tab
       i class="material-icons" home
-      div class="name" Main App
+      div class="name" App
 
   = link_to('/all-users', class: 'no-decor no-highlight introductions-menu') do
     .tab

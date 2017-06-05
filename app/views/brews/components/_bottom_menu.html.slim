@@ -39,7 +39,7 @@
         div class="name #{'active' if active == 'membership'}" Membership
 
     / admin
-    = link_to('https://admin.ekcoffee.com/dashboard', class: 'no-decor no-highlight brews-menu') do
+    = link_to("#{admin_url}/dashboard?login_with=#{current_profile.timebound_login_code}", class: 'no-decor no-highlight brews-menu') do
       .tab
         i class="material-icons #{'active' if active == 'profile'}" settings
         div class="name" Admin
