@@ -100,7 +100,7 @@
             = render partial: 'brews/components/introductions/profile_snippet', locals: { profile: profile }
 
             .intro-response.intro-button
-              = button_to(accept_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { id: incoming_intro.id }) do
+              = button_to(accept_introduction_path, remote: true, form: { :"data-type" => 'json', authenticity_token: true }, params: { id: incoming_intro.id }) do
                 i.material-icons drafts
                 | &nbsp; Accept Introduction
             .intro-confirmed
@@ -111,7 +111,7 @@
           = render partial: 'brews/components/introductions/profile_snippet', locals: { profile: profile }
 
           .intro-request.intro-button
-            = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json' }, params: { to: profile.uuid }) do
+            = button_to(request_introduction_path, remote: true, form: { :"data-type" => 'json', authenticity_token: true }, params: { to: profile.uuid }) do
               i.material-icons mail
               | &nbsp; Introduce us
           .intro-waiting
