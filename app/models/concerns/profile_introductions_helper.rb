@@ -75,6 +75,12 @@ module ProfileIntroductionsHelper
     Matchmaker.introduction_suggestions_for(self, skip_uuids_in_matching).present?
   end
 
+  def intros_in_queue
+    skip_uuids_in_matching = self.current_intros_profile_uuids
+
+    Matchmaker.introduction_suggestions_for(self, skip_uuids_in_matching)
+  end
+
   def sent_reminder_at
     t = $redis.get("intros_reminder_at:#{self.uuid}")
     t.nil? ? nil : Time.at(t.to_i)

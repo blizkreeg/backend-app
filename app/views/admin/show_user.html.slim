@@ -52,7 +52,20 @@
 
         ul.list-unstyled.weather-info
           li
-            | <strong>last seen</strong> #{render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)}
+            strong> last seen:
+            = render_time(@profile.last_seen_at, tz: @profile.time_zone, local: false)
+          li
+            strong> visible?
+            = @profile.visible ? 'yes' : 'no'
+          li
+            strong> active?
+            = @profile.inactive ? 'deactivated' : 'active'
+          li
+            strong> current intros:
+            = @profile.current_intros_profile_uuids.count
+          li
+            strong> intros in queue:
+            = @profile.intros_in_queue.count
 
         div style='display: flex; flex-flow: row wrap; justify-content: flex-start;'
           - @profile.photos.ordered.each do |photo|
