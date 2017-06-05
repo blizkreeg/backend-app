@@ -66,6 +66,12 @@
           li
             strong> intros in queue:
             = @profile.intros_in_queue.count
+          li
+            strong> open conversations:
+            = Conversation.with_open(true).participant_uuids_contains(@profile.uuid).count
+          li
+            strong> closed conversations:
+            = Conversation.with_open(false).participant_uuids_contains(@profile.uuid).count
 
         div style='display: flex; flex-flow: row wrap; justify-content: flex-start;'
           - @profile.photos.ordered.each do |photo|
