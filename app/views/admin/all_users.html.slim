@@ -67,7 +67,7 @@
 
 p style='margin-top:25px;'
   - if @page && @page > 0
-    = link_to 'Previous Page', admin_all_users_path(page: @page - 1), class: 'btn btn-default'
+    = link_to 'Previous Page', admin_all_users_path(page: @page - 1, approved: params[:approved] || '0'), class: 'btn btn-default'
     | &nbsp; &nbsp;
   - if @page && @profiles.present?
-    = link_to 'Next Page', admin_all_users_path(page: @page + 1), class: 'btn btn-primary'
+    = link_to 'Next Page', admin_all_users_path(page: @page + 1, approved: params[:approved] || '0'), class: 'btn btn-primary'
