@@ -131,6 +131,33 @@
     .col-md-4
       .panel.panel-white
         .panel-heading
+          h4.panel-title Mutual Introductions
+        .panel-body
+          - IntroductionRequest.is_mutual.order("created_at DESC").each do |intro|
+            p
+              = link_to intro.by.fullname, admin_show_user_path(intro.by.uuid)
+              | >>
+              = link_to intro.to.fullname, admin_show_user_path(intro.to.uuid)
+              br
+              small.pull-left #{distance_of_time_in_words_to_now(intro.created_at)} ago
+
+    .col-md-4
+      .panel.panel-white
+        .panel-heading
+          h4.panel-title Ongoing Conversations
+        .panel-body
+          - Conversation.is_open.order("created_at DESC").each do |c|
+            - next if c.intro.blank?
+            p
+              = link_to c.initiator.fullname, admin_show_user_path(c.initiator.uuid)
+              | &nbsp; &lt; &gt; &nbsp;
+              = link_to c.responder.fullname, admin_show_user_path(c.responder.uuid)
+              br
+              small.pull-left #{distance_of_time_in_words_to_now(c.created_at)} ago
+
+    .col-md-4.hidden
+      .panel.panel-white
+        .panel-heading
           h4.panel-title Recent Brew activity
         .panel-body
           ul.list-unstyled
@@ -153,16 +180,12 @@
     .col-md-4
       .panel.panel-white
         .panel-heading
-          h4.panel-title GOALS
+          h4.panel-title Goals
         .panel-body
-          h5 End of April
-          p #{raw("\u2610")} DAUs from Mumbai: 50
-          p #{raw("\u2610")} Total users from Mumbai: 350
-          p #{raw("\u2610")} Figure out and beta launch a daily engagement feature
-          p #{raw("\u2610")} Magazine posts: 10
-          p #{raw("\u2610")} Plan and announce 1 Brew for end of month or early May
-          p #{raw("\u2610")} Update homepage to reflect new focus as a singles community
-
+          h5 End of June
+          p #{raw("\u2610")} DAUs: 100
+          p #{raw("\u2610")} Beta launch Monetization
+          p #{raw("\u2610")} Ongoing Open Conversations: 25
 
   / .row
   /   #mfratio.col-xs-3.text-center

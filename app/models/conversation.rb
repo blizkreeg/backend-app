@@ -103,7 +103,7 @@ class Conversation < ActiveRecord::Base
   end
 
   def intro
-    IntroductionRequest.find(self.introduction_id)
+    IntroductionRequest.find(self.introduction_id) rescue nil
   end
 
   # who is supposed to start the conv?
