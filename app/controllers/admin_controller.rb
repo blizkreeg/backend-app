@@ -92,11 +92,16 @@ class AdminController < WebController
   def all_users
     @page = (params[:page] || 0).to_i
 
+    query = Profile
+
     if params[:approved] == '1'
-      @profiles = Profile.members.not_staff.ordered_by_last_seen.offset(@page * 25).limit(25)
+      query = query.members.not_staff
+      query = query.with_gender(params[:gender]) if params[:gender].present?
     else
-      @profiles = Profile.ordered_by_last_seen.offset(@page * 25).limit(25)
+      query = query
     end
+
+    @profiles = query.ordered_by_last_seen.offset(@page * 25).limit(25)
 
     @page_title = 'Users'
   end
