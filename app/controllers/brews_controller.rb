@@ -32,7 +32,7 @@ class BrewsController < WebController
 
   # if the user is from the mobile app OR they're an existing user but don't meet the criteria for Brew membership
   # then, show them the "you're on a waitlist" screen
-  before_action :show_waitlist_screen?, except: WAITLIST_EXCEPTION_METHODS, if: lambda { user_not_admitted? }
+  # before_action :show_waitlist_screen?, except: WAITLIST_EXCEPTION_METHODS, if: lambda { user_not_admitted? }
 
   # store the path where the user last left off
   before_action :set_goto_uri, only: TRACK_URI_GET_METHODS
