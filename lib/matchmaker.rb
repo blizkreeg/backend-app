@@ -37,7 +37,7 @@ module Matchmaker
                   .visible
                   .not_staff
                   .where.not(uuid: profile.uuid)
-                  .desirability_score_gte(profile.desirability_score)
+                  .desirability_score_gte(profile.desirability_score || Profile::HIGH_DESIRABILITY)
                   .within_distance(profile.latitude, profile.longitude, Constants::NEAR_DISTANCE_METERS)
                   .where.not(uuid: passed_uuids)
                   .where.not(uuid: interested_profiles.map(&:uuid))
