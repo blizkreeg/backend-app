@@ -22,6 +22,9 @@ namespace :engagement do
     end
 
     puts "Emailed #{people.count} users who've uninstalled the app between #{ARGV[1]} and #{ARGV[2]} and have introductions waiting for them."
+    people.each do |p|
+      puts [p.firstname, p.age, p.gender].join(' - ')
+    end
   end
 
   task :day7_comeback => :environment do
