@@ -20,7 +20,13 @@ Rails.application.configure do
   config.cache_store = :redis_store, "redis://#{ENV['REDIS_HOST']}:6379/#{config.redis_db_cache}/cache", { expires_in: 24.hours }
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = false
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { host: 'http://localhost:3000' }
+
+  # for url helpers
+  routes.default_url_options = { host: 'http://localhost:3000' }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
