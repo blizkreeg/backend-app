@@ -1,21 +1,18 @@
 namespace :engagement do
-  # run as: rake introductions:email_app_deleted 'YYYYMMDD' 'YYYYMMDD'
+  # run as: rake engagement:email_app_deleted 'YYYYMMDD' 'YYYYMMDD'
   task :email_app_deleted => :environment do
     ARGV.each { |a| task a.to_sym do ; end }
 
     sendgrid_template_id = '4962017f-c98e-4962-bcdc-dddbb0307469'
-    seen_since_date = Date.today - 60.days
     uuids = Clevertap.profiles_by_event("App Uninstalled", ARGV[1], ARGV[2]).map { |x| x["profileData"]["uuid"] }.uniq
     people = Profile
               .where(uuid: uuids)
               .active
               .visible
               .desirability_score_gte(Profile::HIGH_DESIRABILITY)
-              .select { |p| p.last_seen_at.present? &&
-                            (p.last_seen_at < seen_since_date) &&
-                            p.email.present? &&
+              .select { |p| p.email.present? &&
                             p.has_current_intros? &&
-                            (p.intros_in_queue > 5) }
+                            p.has_more_intros? }
 
     people.each do |p|
       UserMailer.send_email(sendgrid_template_id,
