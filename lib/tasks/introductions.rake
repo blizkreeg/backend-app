@@ -1,5 +1,4 @@
 namespace :introductions do
-
   task :schedule_reminder => :environment do
     Profile.members.not_staff.each do |profile|
       message = [
@@ -46,5 +45,4 @@ namespace :introductions do
       profile.sent_reminder_at = time
     end
   end
-
 end

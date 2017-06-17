@@ -1,4 +1,32 @@
 namespace :engagement do
+  # run as: rake introductions:email_app_deleted 'YYYYMMDD' 'YYYYMMDD'
+  task :email_app_deleted => :environment do
+    ARGV.each { |a| task a.to_sym do ; end }
+
+    sendgrid_template_id = '4962017f-c98e-4962-bcdc-dddbb0307469'
+    seen_since_date = Date.today - 60.days
+    uuids = Clevertap.profiles_by_event("App Uninstalled", ARGV[1], ARGV[2]).map { |x| x["profileData"]["uuid"] }.uniq
+    people = Profile
+              .where(uuid: uuids)
+              .active
+              .visible
+              .desirability_score_gte(Profile::HIGH_DESIRABILITY)
+              .select { |p| p.last_seen_at.present? &&
+                            (p.last_seen_at < seen_since_date) &&
+                            p.email.present? &&
+                            p.has_current_intros? &&
+                            (p.intros_in_queue > 5) }
+
+    people.each do |p|
+      UserMailer.send_email(sendgrid_template_id,
+                            p.email,
+                            "Come back and see your introductions, #{p.firstname}!",
+                            { "-fname-" => ["#{p.firstname}"] }).deliver_later
+    end
+
+    puts "Emailed #{people.count} users who've uninstalled the app between #{ARGV[1]} and #{ARGV[2]} and have introductions waiting for them."
+  end
+
   task :day7_comeback => :environment do
     not_active_have_matches = Profile.visible.last_seen_at_before(DateTime.now-7.days).select { |p| p.matches.undecided.count > 0 }
     not_active_have_matches.each do |p|
