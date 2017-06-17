@@ -150,7 +150,6 @@
             - next if c.intro.blank?
             - messages_hash = $firebase_conversations.get(c.firebase_messages_endpoint, "orderBy": '"$key"', limitToLast: 1).body
             p
-              i.material-icons event
               | started #{distance_of_time_in_words_to_now(c.created_at)} ago
               br
               = link_to c.initiator.fullname, admin_show_user_path(c.initiator.uuid), target: '_blank'
@@ -162,7 +161,7 @@
                   = c.initiator.firstname
                 - else
                   = c.responder.firstname
-                | &mdash; &nbsp;
+                | &nbsp; &mdash; &nbsp;
                 | #{messages_hash.values.first["content"]}
                 br
                 | #{distance_of_time_in_words_to_now(Time.at(messages_hash.values.first["sent_at"]/1000))} ago
