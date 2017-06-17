@@ -7,6 +7,10 @@ body {
   overflow: auto; // prevents overscrolling
 }
 
+p {
+  clear: both;
+}
+
 a.no-decor, a.no-decor:visited, a.no-decor:hover {
   text-decoration: none !important;
   color: inherit !important;

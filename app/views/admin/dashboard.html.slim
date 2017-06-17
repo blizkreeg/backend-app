@@ -148,12 +148,24 @@
         .panel-body
           - Conversation.is_open.order("created_at DESC").each do |c|
             - next if c.intro.blank?
+            - messages_hash = $firebase_conversations.get(c.firebase_messages_endpoint, "orderBy": '"$key"', limitToLast: 1).body
             p
               = link_to c.initiator.fullname, admin_show_user_path(c.initiator.uuid)
-              | &nbsp; &lt; &gt; &nbsp;
+              | and
               = link_to c.responder.fullname, admin_show_user_path(c.responder.uuid)
+              | started #{distance_of_time_in_words_to_now(c.created_at)} ago
               br
-              small.pull-left #{distance_of_time_in_words_to_now(c.created_at)} ago
+              em last msg:&nbsp;
+              - if messages_hash.present?
+                - if messages_hash.values.first["sender_uuid"] == c.initiator.uuid
+                  = c.initiator.firstname
+                - else
+                  = c.responder.firstname
+                | :&nbsp;
+                = messages_hash.values.first["content"]
+                br
+                = distance_of_time_in_words_to_now(Time.at(messages_hash.values.first["sent_at"]/1000))
+            hr
 
     .col-md-4.hidden
       .panel.panel-white
