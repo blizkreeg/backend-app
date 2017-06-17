@@ -20,3 +20,7 @@ end
 every :day, at: "4:30am", roles: [:master] do
   rake "introductions:schedule_reminder"
 end
+
+every 15.days, at: "4:30am", roles: [:master] do
+  rake "engagement:email_app_deleted '#{(Time.now - 15.days).utc.strftime("%Y%m%d")}' '#{Time.now.utc.strftime("%Y%m%d")}'"
+end
