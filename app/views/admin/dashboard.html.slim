@@ -136,10 +136,10 @@
           - IntroductionRequest.is_mutual.order("created_at DESC").each do |intro|
             p
               = link_to intro.by.fullname, admin_show_user_path(intro.by.uuid)
-              | >>
+              | →
               = link_to intro.to.fullname, admin_show_user_path(intro.to.uuid)
               br
-              small.pull-left #{distance_of_time_in_words_to_now(intro.created_at)} ago
+              | #{distance_of_time_in_words_to_now(intro.created_at)} ago
 
     .col-md-4
       .panel.panel-white
@@ -150,21 +150,22 @@
             - next if c.intro.blank?
             - messages_hash = $firebase_conversations.get(c.firebase_messages_endpoint, "orderBy": '"$key"', limitToLast: 1).body
             p
+              i.material-icons event
+              | started #{distance_of_time_in_words_to_now(c.created_at)} ago
+              br
               = link_to c.initiator.fullname, admin_show_user_path(c.initiator.uuid), target: '_blank'
               |&nbsp;and&nbsp;
               = link_to c.responder.fullname, admin_show_user_path(c.responder.uuid), target: '_blank'
-              | started #{distance_of_time_in_words_to_now(c.created_at)} ago
               br
-              em last msg:&nbsp;
               - if messages_hash.present?
                 - if messages_hash.values.first["sender_uuid"] == c.initiator.uuid
                   = c.initiator.firstname
                 - else
                   = c.responder.firstname
-                | :&nbsp;
-                = messages_hash.values.first["content"]
+                | &mdash; &nbsp;
+                | #{messages_hash.values.first["content"]}
                 br
-                small #{distance_of_time_in_words_to_now(Time.at(messages_hash.values.first["sent_at"]/1000))} ago
+                | #{distance_of_time_in_words_to_now(Time.at(messages_hash.values.first["sent_at"]/1000))} ago
             hr
 
     .col-md-4.hidden
