@@ -172,10 +172,10 @@ class AdminController < WebController
 
     if notify_user
       # send email
-      UserMailer.delay.welcome_email(p.uuid)
+      # UserMailer.delay.welcome_email(p.uuid)
 
       # send push notification
-      PushNotifier.delay.send_transactional_push([p.uuid],
+      # PushNotifier.delay.send_transactional_push([p.uuid],
                                                   'general_announcement',
                                                   body: "Woohoo #{p.firstname}! You're now part of the ekCoffee community. Welcome!")
     end
