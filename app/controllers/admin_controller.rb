@@ -176,8 +176,8 @@ class AdminController < WebController
 
       # send push notification
       # PushNotifier.delay.send_transactional_push([p.uuid],
-                                                  'general_announcement',
-                                                  body: "Woohoo #{p.firstname}! You're now part of the ekCoffee community. Welcome!")
+                                                  # 'general_announcement',
+                                                  # body: "Woohoo #{p.firstname}! You're now part of the ekCoffee community. Welcome!")
     end
 
     redirect_to action: :unmoderated
