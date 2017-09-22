@@ -262,7 +262,7 @@ class Api::V1::ProfilesController < ApiController
 
   def deactivate
     @profile = @current_profile
-    @profile.update!(inactive: true, inactive_reason: params[:data][:reason])
+    @profile.update!(inactive: true, inactive_reason: params.try(:[], :data).try(:[], :reason))
 
     @profile.update_clevertap
 
