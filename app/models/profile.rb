@@ -455,7 +455,7 @@ class Profile < ActiveRecord::Base
     ws[row, col+=1] = profile.email
     ws.save
   rescue ActiveRecord::RecordNotFound
-    EKC.logger.error("Profile #{uuid} not found while logging delete request data")
+    EKC.logger.warn("Profile #{uuid} not found while logging delete request data")
   end
 
   def self.report(reporting_profile_uuid, reported_profile_uuid, reason)
