@@ -396,7 +396,7 @@ class Profile < ActiveRecord::Base
       self.delay.precache_facebook_photo(uuid, album['cover_photo']) if album['cover_photo'].present?
     end
   rescue ActiveRecord::RecordNotFound
-    EKC.logger.error "Profile not found when precaching FB albums, uuid: #{uuid}"
+    EKC.logger.warn "Profile not found when precaching FB albums, uuid: #{uuid}"
   rescue StandardError => e
     ExceptionNotifier.notify_exception(e)
   end
