@@ -131,8 +131,8 @@ class FacebookAuthentication < SocialAuthentication
     begin
       fbgraph.get_object endpoint
     rescue Koala::Facebook::AuthenticationError => e
-      # log_fb_error(e)
-      raise Errors::FacebookAuthenticationError, "Your Facebook session needs to be refreshed. Please login again to continue."
+      log_fb_error(e)
+      # raise Errors::FacebookAuthenticationError, "Your Facebook session needs to be refreshed. Please login again to continue."
     rescue Koala::Facebook::ClientError => e
     rescue Koala::Facebook::ServerError => e
     rescue Koala::Facebook::BadFacebookResponse => e
@@ -140,8 +140,8 @@ class FacebookAuthentication < SocialAuthentication
         @first_try = false
         retry
       end
-      # log_fb_error(e)
-      raise Errors::FacebookAuthenticationError, "There was a problem accessing your Facebook account. Please login again to continue."
+      log_fb_error(e)
+      # raise Errors::FacebookAuthenticationError, "There was a problem accessing your Facebook account. Please login again to continue."
     end
   end
 
@@ -152,7 +152,8 @@ class FacebookAuthentication < SocialAuthentication
   end
 
   def log_fb_error(e)
-    EKC.logger.error "ERROR: Facebook exception! profile-uuid: #{self.profile.uuid}, type: #{e.fb_error_type}, code: #{e.fb_error_code}, error_subcode: #{e.fb_error_subcode}, message: #{e.fb_error_message}"
+    Rollbar.error("ERROR: Facebook exception! profile-uuid: #{self.profile.uuid}, type: #{e.fb_error_type}, code: #{e.fb_error_code}, error_subcode: #{e.fb_error_subcode}, message: #{e.fb_error_message}")
+    EKC.logger.error("ERROR: Facebook exception! profile-uuid: #{self.profile.uuid}, type: #{e.fb_error_type}, code: #{e.fb_error_code}, error_subcode: #{e.fb_error_subcode}, message: #{e.fb_error_message}")
   end
 
   def check_facebook_permissions!
